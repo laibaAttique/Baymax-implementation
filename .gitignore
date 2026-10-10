@@ -1,0 +1,17 @@
+# secrets and local config
+.env
+*.env.local
+# Firebase client config (regenerate with `flutterfire configure`)
+app/lib/firebase_options.dart
+app/android/app/google-services.json
+app/ios/Runner/GoogleService-Info.plist
+# dependencies and build output
+node_modules/
+build/
+.dart_tool/
+app/ml/.venv/
+app/ml/data/
+*.log
+__pycache__/
+.DS_Store
+.idea/

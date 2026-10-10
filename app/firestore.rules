@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Shared, read-only reference data (food catalogue). Only the seed
+    // tool, which uses admin credentials and bypasses these rules, can write.
+    match /foods/{foodId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /exercises/{exerciseId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /meta/{docId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

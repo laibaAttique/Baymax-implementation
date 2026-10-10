@@ -1,0 +1,826 @@
+[
+ {
+  "id": "warmup",
+  "name": "Dynamic Warm-Up",
+  "icon": "🔥",
+  "group": "mobility",
+  "muscles": [
+   "Full body"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.5,
+  "compendium": "02030",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 180,
+  "tags": [],
+  "steps": [
+   "March in place for 30 seconds, swinging your arms.",
+   "Do 10 slow arm circles forward and 10 backward.",
+   "Do 10 hip circles each way and 10 gentle bodyweight squats."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "cooldown",
+  "name": "Cool-Down Stretch",
+  "icon": "🧘",
+  "group": "mobility",
+  "muscles": [
+   "Full body"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 300,
+  "tags": [],
+  "steps": [
+   "Walk slowly for one minute until your breathing settles.",
+   "Hold each stretch for 20–30 seconds: quads, hamstrings, calves, chest, shoulders.",
+   "Breathe deeply and never stretch into pain."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "brisk_walk",
+  "name": "Brisk Walk",
+  "icon": "🚶",
+  "group": "cardio",
+  "muscles": [
+   "Legs",
+   "Heart"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.8,
+  "compendium": "17190",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 600,
+  "tags": [],
+  "steps": [
+   "Walk at a pace where you can talk but not sing.",
+   "Keep your shoulders relaxed and swing your arms.",
+   "Land heel to toe and keep your head up."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "march",
+  "name": "March in Place",
+  "icon": "🚶‍♂️",
+  "group": "cardio",
+  "muscles": [
+   "Legs",
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.8,
+  "compendium": "17190*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 300,
+  "tags": [],
+  "steps": [
+   "Stand tall and lift your knees to hip height alternately.",
+   "Swing your opposite arm with each step.",
+   "Keep a steady rhythm and breathe evenly."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "step_ups",
+  "name": "Step-Ups",
+  "icon": "🪜",
+  "group": "cardio",
+  "muscles": [
+   "Glutes",
+   "Hamstrings",
+   "Quadriceps"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 4.5,
+  "compendium": "17133*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 300,
+  "tags": [],
+  "steps": [
+   "Use a sturdy step or bottom stair.",
+   "Step up with one foot, bring the other up, then step down.",
+   "Alternate the leading leg every minute."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Step-up_with_Knee_Raise",
+  "referenceMatch": "related"
+ },
+ {
+  "id": "shadow_boxing",
+  "name": "Shadow Boxing",
+  "icon": "🥊",
+  "group": "cardio",
+  "muscles": [
+   "Shoulders",
+   "Core",
+   "Arms"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 5.8,
+  "compendium": "15110*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 300,
+  "tags": [],
+  "steps": [
+   "Stand with feet shoulder-width apart, hands up.",
+   "Throw controlled jabs and crosses in the air.",
+   "Stay light on your feet and keep your core tight."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "jumping_jacks",
+  "name": "Jumping Jacks",
+  "icon": "🤾",
+  "group": "cardio",
+  "muscles": [
+   "Full body"
+  ],
+  "impact": "high",
+  "level": 2,
+  "met": 7.5,
+  "compendium": "02020",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 60,
+  "tags": [],
+  "steps": [
+   "Start standing with feet together.",
+   "Jump feet out while raising arms overhead.",
+   "Jump back and repeat at a steady pace."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "high_knees",
+  "name": "High Knees",
+  "icon": "🏃",
+  "group": "cardio",
+  "muscles": [
+   "Legs",
+   "Core"
+  ],
+  "impact": "high",
+  "level": 3,
+  "met": 7.5,
+  "compendium": "02020*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 45,
+  "tags": [
+   "hiit"
+  ],
+  "steps": [
+   "Run in place driving your knees up to hip height.",
+   "Pump your arms and stay on the balls of your feet.",
+   "Keep your chest tall and your core braced."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "mountain_climbers",
+  "name": "Mountain Climbers",
+  "icon": "🧎",
+  "group": "cardio",
+  "muscles": [
+   "Quadriceps",
+   "Chest",
+   "Hamstrings",
+   "Shoulders"
+  ],
+  "impact": "high",
+  "level": 3,
+  "met": 7.5,
+  "compendium": "02020*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 40,
+  "tags": [
+   "hiit"
+  ],
+  "steps": [
+   "Start in a high plank, hands under shoulders.",
+   "Drive one knee toward your chest, then switch quickly.",
+   "Keep your hips low and your back flat."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Mountain_Climbers",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "burpees",
+  "name": "Burpees",
+  "icon": "💥",
+  "group": "cardio",
+  "muscles": [
+   "Full body"
+  ],
+  "impact": "high",
+  "level": 3,
+  "met": 7.5,
+  "compendium": "02020",
+  "timed": false,
+  "baseReps": 8,
+  "baseSeconds": 30,
+  "tags": [
+   "hiit",
+   "plyo"
+  ],
+  "steps": [
+   "Squat down and place your hands on the floor.",
+   "Jump or step your feet back into a plank.",
+   "Return your feet in and jump up with arms overhead."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "jump_squats",
+  "name": "Jump Squats",
+  "icon": "⬆️",
+  "group": "cardio",
+  "muscles": [
+   "Quadriceps",
+   "Calves",
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "high",
+  "level": 3,
+  "met": 6.5,
+  "compendium": "02057",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "tags": [
+   "hiit",
+   "plyo"
+  ],
+  "steps": [
+   "Lower into a squat with chest up.",
+   "Explode upward, leaving the ground.",
+   "Land softly with bent knees and go straight into the next rep."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Freehand_Jump_Squat",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "chair_squat",
+  "name": "Sit-to-Stand (Chair Squat)",
+  "icon": "🪑",
+  "group": "legs",
+  "muscles": [
+   "Quads",
+   "Glutes"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Sit on the front of a sturdy chair, feet hip-width apart.",
+   "Stand up by pushing through your heels without using your hands.",
+   "Lower slowly back down with control."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "squat",
+  "name": "Bodyweight Squat",
+  "icon": "🏋️",
+  "group": "legs",
+  "muscles": [
+   "Quadriceps",
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Stand with feet shoulder-width apart, toes slightly out.",
+   "Push your hips back and bend your knees to about 90°.",
+   "Drive through your heels to stand, keeping your chest up."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Bodyweight_Squat",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "lunge",
+  "name": "Lunges",
+  "icon": "🧘",
+  "group": "legs",
+  "muscles": [
+   "Quadriceps",
+   "Calves",
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.8,
+  "compendium": "02022",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Step forward with one leg and lower until both knees are about 90°.",
+   "Keep your front knee over your ankle and your torso upright.",
+   "Push back to standing and alternate legs."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Bodyweight_Walking_Lunge",
+  "referenceMatch": "related"
+ },
+ {
+  "id": "glute_bridge",
+  "name": "Glute Bridge",
+  "icon": "🦵",
+  "group": "legs",
+  "muscles": [
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back, knees bent, feet flat.",
+   "Squeeze your glutes and lift your hips until your body forms a line.",
+   "Pause for a second, then lower slowly."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Butt_Lift_Bridge",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "calf_raise",
+  "name": "Calf Raises",
+  "icon": "🦶",
+  "group": "legs",
+  "muscles": [
+   "Calves"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": false,
+  "baseReps": 15,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Stand tall, holding a wall for balance if needed.",
+   "Rise onto your toes as high as possible.",
+   "Lower slowly with control."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "wall_sit",
+  "name": "Wall Sit",
+  "icon": "🧱",
+  "group": "legs",
+  "muscles": [
+   "Quads",
+   "Glutes"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "isometric"
+  ],
+  "steps": [
+   "Lean your back against a wall and slide down until your knees are about 90°.",
+   "Keep your knees over your ankles and breathe normally.",
+   "Hold, then slide back up."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "wall_pushup",
+  "name": "Wall Push-Up",
+  "icon": "🧱",
+  "group": "push",
+  "muscles": [
+   "Chest",
+   "Shoulders",
+   "Triceps"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Stand an arm's length from a wall, hands on it at shoulder height.",
+   "Bend your elbows to bring your chest toward the wall.",
+   "Push back to the start."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "knee_pushup",
+  "name": "Knee Push-Up",
+  "icon": "🤸",
+  "group": "push",
+  "muscles": [
+   "Chest",
+   "Shoulders",
+   "Triceps"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Start on hands and knees, hands slightly wider than shoulders.",
+   "Lower your chest toward the floor with a straight line from head to knees.",
+   "Press back up."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "pushup",
+  "name": "Push-Ups",
+  "icon": "🤸",
+  "group": "push",
+  "muscles": [
+   "Chest",
+   "Shoulders",
+   "Triceps"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.8,
+  "compendium": "02022",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Start in a high plank, hands under shoulders.",
+   "Lower your chest to just above the floor, elbows at 45°.",
+   "Press up while keeping your body in one straight line."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Pushups",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "tricep_dip",
+  "name": "Chair Dips",
+  "icon": "🪑",
+  "group": "push",
+  "muscles": [
+   "Triceps",
+   "Chest",
+   "Shoulders"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Sit on a sturdy chair edge, hands beside your hips.",
+   "Slide forward and lower your body by bending your elbows to 90°.",
+   "Press back up without shrugging your shoulders."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Bench_Dips",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "shoulder_taps",
+  "name": "Shoulder Taps",
+  "icon": "🙌",
+  "group": "push",
+  "muscles": [
+   "Shoulders",
+   "Core"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.0,
+  "compendium": "02056",
+  "timed": false,
+  "baseReps": 16,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Start in a high plank with feet wide for stability.",
+   "Tap one shoulder with the opposite hand.",
+   "Keep your hips still and alternate sides."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "superman",
+  "name": "Superman",
+  "icon": "🦸",
+  "group": "back",
+  "muscles": [
+   "Lower back",
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.5,
+  "compendium": "02030",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie face down with arms extended in front.",
+   "Lift your arms, chest and legs a few centimetres off the floor.",
+   "Hold for a second and lower slowly."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Superman",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "bird_dog",
+  "name": "Bird Dog",
+  "icon": "🐕",
+  "group": "back",
+  "muscles": [
+   "Lower back",
+   "Core",
+   "Glutes"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.5,
+  "compendium": "02030",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Start on hands and knees.",
+   "Extend your right arm and left leg until level with your back.",
+   "Return and switch sides without rotating your hips."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "reverse_snow_angel",
+  "name": "Reverse Snow Angels",
+  "icon": "👼",
+  "group": "back",
+  "muscles": [
+   "Upper back",
+   "Shoulders"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.5,
+  "compendium": "02030",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie face down, arms by your sides, palms down.",
+   "Lift your chest slightly and sweep your arms out and overhead.",
+   "Sweep back down with control."
+  ],
+  "techniqueSource": "team"
+ },
+ {
+  "id": "dead_bug",
+  "name": "Dead Bug",
+  "icon": "🪲",
+  "group": "core",
+  "muscles": [
+   "Abs"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.8,
+  "compendium": "02024",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back, arms up, knees bent over hips.",
+   "Lower your opposite arm and leg toward the floor.",
+   "Keep your lower back pressed down, then switch sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Dead_Bug",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "plank",
+  "name": "Plank Hold",
+  "icon": "💪",
+  "group": "core",
+  "muscles": [
+   "Abs"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 2.8,
+  "compendium": "02024",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "isometric"
+  ],
+  "steps": [
+   "Rest on your forearms and toes with elbows under your shoulders.",
+   "Keep your body in one straight line and your glutes tight.",
+   "Breathe steadily for the prescribed time; stop early if your hips sag or your lower back hurts."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Plank",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "bicycle_crunch",
+  "name": "Bicycle Crunch",
+  "icon": "🚴",
+  "group": "core",
+  "muscles": [
+   "Abs"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 2.8,
+  "compendium": "02024",
+  "timed": false,
+  "baseReps": 16,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back, hands lightly behind your head.",
+   "Bring one elbow toward the opposite knee while extending the other leg.",
+   "Alternate sides in a slow, controlled pedal."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Air_Bike",
+  "referenceMatch": "exact"
+ },
+ {
+  "id": "leg_raise",
+  "name": "Lying Leg Raise",
+  "icon": "🦿",
+  "group": "core",
+  "muscles": [
+   "Abs"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 2.8,
+  "compendium": "02024",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie flat with legs straight and hands under your hips.",
+   "Raise your legs to vertical keeping your lower back down.",
+   "Lower slowly without touching the floor."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Flat_Bench_Lying_Leg_Raise",
+  "referenceMatch": "related"
+ },
+ {
+  "id": "side_plank_knee",
+  "name": "Knee Side Plank",
+  "icon": "🧍",
+  "group": "core",
+  "muscles": [
+   "Abs",
+   "Shoulders"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.8,
+  "compendium": "02024",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 20,
+  "tags": [
+   "isometric"
+  ],
+  "steps": [
+   "Lie on your side, forearm under your shoulder, knees bent.",
+   "Lift your hips so your body forms a line from knees to head.",
+   "Hold, then switch sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Side_Bridge",
+  "referenceMatch": "related"
+ },
+ {
+  "id": "cat_cow",
+  "name": "Cat-Cow",
+  "icon": "🐈",
+  "group": "mobility",
+  "muscles": [
+   "Lower back",
+   "Middle back",
+   "Traps"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 60,
+  "tags": [],
+  "steps": [
+   "On hands and knees, arch your back and look up (cow).",
+   "Round your back and tuck your chin (cat).",
+   "Move slowly with your breath."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Cat_Stretch",
+  "referenceMatch": "related"
+ },
+ {
+  "id": "single_leg_balance",
+  "name": "Single-Leg Balance",
+  "icon": "🦩",
+  "group": "mobility",
+  "muscles": [
+   "Ankles",
+   "Hips",
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "balance"
+  ],
+  "steps": [
+   "Stand near a wall or chair for support.",
+   "Lift one foot slightly and balance on the other leg.",
+   "Switch legs after the hold."
+  ],
+  "techniqueSource": "team"
+ }
+]
