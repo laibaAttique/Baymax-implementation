@@ -29,6 +29,19 @@ class FoodLogService {
     });
   }
 
+  /// Total calories logged per day between two date keys (inclusive). Days without entries are absent.
+  Future<Map<String, double>> kcalByDate(String from, String to) {
+    return RealtimeDb.guard(() async {
+      final snap = await RealtimeDb.userRef('foodLog').orderByKey().startAt(from).endAt(to).get();
+      if (!snap.exists) return <String, double>{};
+      final days = RealtimeDb.plain(snap.value) as Map<String, dynamic>;
+      return {
+        for (final d in days.entries)
+          d.key: (d.value as Map).values.fold<double>(0, (s, e) => s + (((e as Map)['kcal'] as num?)?.toDouble() ?? 0)),
+      };
+    });
+  }
+
   Future<void> add(List<FoodEntry> entries) async {
     if (entries.isEmpty) return;
     await RealtimeDb.guard(() async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'calorie_target_screen.dart';
 import '../../models/plan.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_theme.dart';
@@ -106,6 +107,13 @@ class NutritionPlanScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CalorieTargetScreen())),
+                    child: const Text('How is my target worked out? →'),
+                  ),
+                ),
 
                 Container(
                   width: double.infinity,

@@ -15,3 +15,8 @@ app/ml/data/
 __pycache__/
 .DS_Store
 .idea/
+
+# trained food model + a plot of scraped training images: built on web images whose licence is unverified,
+# so they are not published until the team has confirmed the licence (see app/ml/food_classifier/build_final_dataset.py output ATTRIBUTION.md)
+app/assets/models/food_classifier.tflite
+app/ml/food_classifier/results_2026-10-12/flagged_label_noise.png

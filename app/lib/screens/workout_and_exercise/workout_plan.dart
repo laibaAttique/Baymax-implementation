@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../models/plan.dart';
+import '../../services/activity_service.dart';
+import '../../services/api_client.dart';
 import '../../services/exercise_library.dart';
+import '../../services/food_log_service.dart';
+import '../../services/gamification.dart';
+import '../../services/notification_service.dart';
+import '../../services/progress_service.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_theme.dart';
 import '../health_profiling/health_classification.dart';
@@ -22,6 +28,81 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
 
   int? _selectedDay;
   bool _regenerating = false;
+
+  /// Dates (YYYY-MM-DD) of this week's completed workouts (Module 11/14 activity log).
+  Set<String> _done = {};
+  bool _marking = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDone();
+  }
+
+  Future<void> _loadDone() async {
+    try {
+      final today = Gamification.dateOnly(DateTime.now());
+      final entries = await ActivityService.instance.range(FoodLogService.dateKey(Gamification.weekStart(today)), FoodLogService.dateKey(today));
+      if (mounted) setState(() => _done = entries.keys.toSet());
+    } catch (_) {
+      // Not signed in or offline: the button simply starts unticked.
+    }
+  }
+
+  Future<void> _toggleDone(DateTime date, WorkoutDay day, double weightKg, PersonalizedPlan plan, bool wasDone) async {
+    setState(() => _marking = true);
+    try {
+      if (wasDone) {
+        await ActivityService.instance.undo(date);
+      } else {
+        await ActivityService.instance.markDone(date, minutes: day.durationMin, kcal: day.kcal(weightKg));
+      }
+      await _loadDone();
+      NotificationService.instance.refreshFromAccount(plan);
+      if (!wasDone) {
+        final progress = await ProgressService.instance.load(plan);
+        if (mounted && progress.newBadges.isNotEmpty) {
+          final names = Gamification.catalogue.where((b) => progress.newBadges.contains(b.id)).map((b) => '${b.emoji} ${b.title}').join(', ');
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('New badge: $names')));
+        }
+      }
+    } on ApiException catch (e) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    } finally {
+      if (mounted) setState(() => _marking = false);
+    }
+  }
+
+  Widget _completionCard(int selected, WorkoutDay day, double weightKg, PersonalizedPlan plan) {
+    final today = Gamification.dateOnly(DateTime.now());
+    final date = Gamification.weekStart(today).add(Duration(days: selected));
+    final done = _done.contains(FoodLogService.dateKey(date));
+    final future = date.isAfter(today);
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(color: done ? AppTheme.primaryLight : AppTheme.card, borderRadius: BorderRadius.circular(14)),
+      child: Row(
+        children: [
+          Text(done ? '✅' : '🎯', style: const TextStyle(fontSize: 22)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              done ? 'Workout completed' : (future ? 'You can tick this off on the day' : 'Finished this workout?'),
+              style: const TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textPrimary, fontSize: 13),
+            ),
+          ),
+          if (!future)
+            _marking
+                ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                : TextButton(
+                    onPressed: () => _toggleDone(date, day, weightKg, plan, done),
+                    child: Text(done ? 'Undo' : 'Mark as completed'),
+                  ),
+        ],
+      ),
+    );
+  }
 
   int _defaultDay(PersonalizedPlan plan) {
     final today = DateTime.now().weekday - 1;
@@ -265,6 +346,8 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                           ],
                         ),
                       ),
+                      _completionCard(selected, day, profile.weightKg, plan),
+                      const SizedBox(height: 8),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(

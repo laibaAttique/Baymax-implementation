@@ -7,6 +7,10 @@ import '../../theme/app_theme.dart';
 import '../auth/splash_screen.dart';
 import '../health_profiling/health_classification.dart';
 import '../health_profiling/step1_personal_info.dart';
+import '../community/community_screen.dart';
+import 'settings_screen.dart';
+import '../nutrition/calorie_target_screen.dart';
+import '../../services/gamification.dart' show UserRole, UserRoleRules;
 import 'sources_screen.dart';
 
 /// Shows the signed-in user's real data as stored in the Realtime Database
@@ -130,6 +134,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
+                      if (session.role != UserRole.user)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Center(child: Text('Role: ${session.role.label}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12))),
+                        ),
                       const SizedBox(height: 20),
                       _section('Body', [
                         ('Age', p.age == null ? 'Not set' : '${p.age} years'),
@@ -170,6 +179,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         icon: const Icon(Icons.edit),
                         label: const Text('Update my details'),
+                      ),
+                      const SizedBox(height: 10),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CalorieTargetScreen())),
+                        icon: const Icon(Icons.monitor_weight_outlined),
+                        label: const Text('Calorie target & weight check-in'),
+                      ),
+                      const SizedBox(height: 10),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CommunityScreen())),
+                        icon: const Icon(Icons.emoji_events_outlined),
+                        label: const Text('Community & progress'),
+                      ),
+                      const SizedBox(height: 10),
+                      OutlinedButton.icon(
+                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
+                        icon: const Icon(Icons.notifications_active_outlined),
+                        label: const Text('Reminders & community settings'),
                       ),
                       const SizedBox(height: 10),
                       OutlinedButton.icon(

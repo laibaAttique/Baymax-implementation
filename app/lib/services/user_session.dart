@@ -3,13 +3,19 @@ import 'package:flutter/services.dart' show rootBundle;
 import '../models/health_profile.dart';
 import '../models/plan.dart';
 import 'api_client.dart';
+import 'calorie_optimizer.dart';
+import 'food_log_service.dart';
+import 'weight_service.dart';
 import 'exercise_library.dart';
+import 'gamification.dart' show UserRole;
 import 'food_database.dart';
 import 'health_classifier.dart';
 import 'ml/gradient_boosting_model.dart';
 import 'ml/health_risk_model.dart';
+import 'notification_service.dart';
 import 'plan_generator.dart';
 import 'profile_service.dart';
+import 'role_service.dart';
 
 /// Holds the signed-in user's profile and everything derived from it
 /// (classification → plan) so every screen shares one source of truth.
@@ -23,6 +29,12 @@ class UserSession extends ChangeNotifier {
   HealthProfile? profile;
   ClassificationResult? classification;
   PersonalizedPlan? plan;
+
+  /// Module 3 (FR-4): what the user's own weight and food logs say about their maintenance calories (null until first computed).
+  CalorieEstimate? calorieEstimate;
+
+  /// Module 14 (FR-2): the user's role; a plain member unless an administrator set another one.
+  UserRole role = UserRole.user;
 
   bool get hasProfile => profile != null;
 
@@ -59,6 +71,9 @@ class UserSession extends ChangeNotifier {
       return false;
     }
     await setProfile(HealthProfile.fromJson(data));
+    role = await RoleService.instance.fetchMine();
+    notifyListeners();
+    refreshCalorieEstimate(); // personalises the target in the background
     return true;
   }
 
@@ -70,8 +85,66 @@ class UserSession extends ChangeNotifier {
     profile = p;
     classification = classifier.classify(p);
     p.healthClassification = classification!.category;
-    plan = PlanGenerator(foods, workoutModel: workoutModel).generate(p, classification!, variant: p.planVariant);
+    // An estimate built on a different weight/activity level no longer applies.
+    final est = calorieEstimate;
+    if (est != null && (est.priorTdee - p.tdee).abs() > 1) calorieEstimate = null;
+    plan = PlanGenerator(foods, workoutModel: workoutModel, optimizer: AdaptiveCalorieOptimizer(calorieEstimate)).generate(p, classification!, variant: p.planVariant);
     notifyListeners();
+  }
+
+  Future<void> _rebuildPlan() async {
+    final p = profile, c = classification;
+    if (p == null || c == null) return;
+    final foods = await FoodDatabase.load();
+    plan = PlanGenerator(foods, workoutModel: workoutModel, optimizer: AdaptiveCalorieOptimizer(calorieEstimate)).generate(p, c, variant: p.planVariant);
+  }
+
+  /// Module 3, FR-4: reads the last 28 days of weigh-ins and food logs, updates [calorieEstimate] and rebuilds the plan so the
+  /// calorie target and meal plan follow it. Best effort: offline or signed out, the previous estimate is kept.
+  Future<void> refreshCalorieEstimate({DateTime? today}) async {
+    final p = profile;
+    if (p == null) return;
+    final blocked = CalorieOptimizerRules.adaptationBlockedReason(p);
+    if (blocked != null) {
+      calorieEstimate = CalorieEstimate.disabled(p.tdee, blocked);
+    } else {
+      try {
+        final t = DateTime(today?.year ?? DateTime.now().year, today?.month ?? DateTime.now().month, today?.day ?? DateTime.now().day);
+        final from = FoodLogService.dateKey(t.subtract(const Duration(days: CalorieOptimizerRules.windowDays - 1)));
+        final to = FoodLogService.dateKey(t);
+        final weights = await WeightService.instance.range(from, to);
+        final kcal = await FoodLogService.instance.kcalByDate(from, to);
+        final intake = <IntakeDay>[
+          for (final e in kcal.entries)
+            if (DateTime.tryParse(e.key) != null) IntakeDay(DateTime.parse(e.key), e.value),
+        ];
+        calorieEstimate = estimateMaintenance(priorTdee: p.tdee, bmr: p.bmr, weights: weights, intake: intake, today: t);
+      } catch (_) {
+        return; // keep whatever we had
+      }
+    }
+    await _rebuildPlan();
+    notifyListeners();
+  }
+
+  /// Saves today's weight, keeps the profile's weight current (BMI, BMR and macros depend on it), and recomputes the target.
+  Future<void> logWeight(double kg, {DateTime? date}) async {
+    final p = profile;
+    if (p == null) throw const ApiException('Complete your health profile first.');
+    final day = date ?? DateTime.now();
+    await WeightService.instance.set(day, kg);
+    final isToday = DateTime(day.year, day.month, day.day) == DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+    if (isToday) {
+      p.weightValue = p.weightUnit == 'lbs' ? kg / 0.45359237 : kg;
+      await setProfile(p);
+      try {
+        await ProfileService.instance.saveMine(p);
+      } finally {
+        await refreshCalorieEstimate(); // the weigh-in itself is saved either way
+      }
+    } else {
+      await refreshCalorieEstimate();
+    }
   }
 
   /// Module 3, FE-7. Returns false if the new variant could not be saved
@@ -90,6 +163,8 @@ class UserSession extends ChangeNotifier {
   }
 
   void clear() {
+    // Reminders belong to the person who signed out.
+    NotificationService.instance.cancelAll();
     _reset();
     notifyListeners();
   }
@@ -98,5 +173,7 @@ class UserSession extends ChangeNotifier {
     profile = null;
     classification = null;
     plan = null;
+    calorieEstimate = null;
+    role = UserRole.user;
   }
 }

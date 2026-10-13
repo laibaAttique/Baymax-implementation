@@ -18,8 +18,6 @@ class FoodScanScreen extends StatefulWidget {
 }
 
 class _FoodScanScreenState extends State<FoodScanScreen> {
-  static const _minConfidence = 0.35;
-
   FoodImageClassifier _classifier = const UnavailableFoodImageClassifier();
   final _picker = ImagePicker();
   Uint8List? _image;
@@ -53,7 +51,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
         final found = await _classifier.classify(bytes, topK: 3);
         if (!mounted) return;
         setState(() {
-          _guesses = found.where((g) => g.confidence >= _minConfidence && _db?.byId(g.foodId) != null).toList();
+          _guesses = found.where((g) => g.confidence >= _classifier.minConfidence && _db?.byId(g.foodId) != null).toList();
           _busy = false;
         });
       }
@@ -100,6 +98,8 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
               ),
             ),
             const SizedBox(height: 12),
+            if (_classifier.experimental)
+              _notice('Experimental recognition model — still being validated, so it is only available in test builds. Always check the suggestion before logging.', AppTheme.warning),
             if (!_classifier.available)
               _notice('Automatic food recognition is not installed yet, so pick what you ate from the food list and we\'ll log it with the photo.', AppTheme.warning),
             if (_busy) const Padding(padding: EdgeInsets.symmetric(vertical: 8), child: LinearProgressIndicator()),
@@ -151,9 +151,11 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
           return ListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
+            isThreeLine: _classifier.weakLabels.contains(g.foodId),
             leading: Text(item.icon, style: const TextStyle(fontSize: 26)),
             title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-            subtitle: Text('${(g.confidence * 100).round()}% match · ${item.kcal.round()} kcal per ${item.servingLabel}'),
+            subtitle: Text('${(g.confidence * 100).round()}% match · ${item.kcal.round()} kcal per ${item.servingLabel}'
+                '${_classifier.weakLabels.contains(g.foodId) ? '\nLess reliable for this dish — please double-check' : ''}'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => _confirm([g.foodId]),
           );

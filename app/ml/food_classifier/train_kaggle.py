@@ -5,6 +5,8 @@ Transfer learning: ImageNet-pretrained MobileNetV2, new classification head, the
 fine-tune the top layers. Trains only on classes that map to a food in the app's
 catalogue (see class_map.py), exports a small TFLite model + labels.json.
 
+RECOMMENDED: run clean_images.py first, then train with  --prepared <clean folder>.
+
 DATASETS (download links are in ml/README.md)
   --food101  Food-101 root (the folder that contains `images/`, ideally also `meta/`)
              Kaggle copy: https://www.kaggle.com/datasets/kmader/food41  -> /kaggle/input/food41
@@ -129,6 +131,7 @@ def compile_model(model, lr):
 # ---------------------------------------------------------------- main
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument('--prepared', help='folder produced by clean_images.py (images/, split.csv, labels.json) — recommended')
     ap.add_argument('--food101')
     ap.add_argument('--extra', action='append', default=[])
     ap.add_argument('--custom', action='append', default=[])
@@ -145,27 +148,50 @@ def main():
     os.makedirs(args.out, exist_ok=True)
 
     files, report = defaultdict(list), defaultdict(list)
-    if args.food101:
-        collect_food101(args.food101, files, report)
-    for r in args.extra:
-        collect_extra(r, files, report)
-    for r in args.custom:
-        collect_extra(r, files, report, custom=True)
-    if not files:
-        raise SystemExit('No training images found. Pass --food101, --extra or --custom.')
+    dropped = []
+    if args.prepared:
+        # Cleaned dataset with a fixed, leakage-free train/validation split.
+        import csv
+        train, val = [], []
+        with open(os.path.join(args.prepared, 'split.csv')) as fh:
+            for r in csv.DictReader(fh):
+                item = (os.path.join(args.prepared, r['path']), r['label'])
+                (train if r['split'] == 'train' else val).append(item)
+                files[r['label']].append((item[0], 'prepared'))
+        if args.limit_per_class:  # quick trials only
+            def limited(items):
+                seen = Counter()
+                out = []
+                for p, l in items:
+                    if seen[l] < args.limit_per_class:
+                        seen[l] += 1
+                        out.append((p, l))
+                return out
+            train, val = limited(train), limited(val)
+        labels = sorted(files)
+        random.shuffle(train)
+    else:
+        if args.food101:
+            collect_food101(args.food101, files, report)
+        for r in args.extra:
+            collect_extra(r, files, report)
+        for r in args.custom:
+            collect_extra(r, files, report, custom=True)
+        if not files:
+            raise SystemExit('No training images found. Pass --prepared, --food101, --extra or --custom.')
 
-    cap = args.limit_per_class or args.max_per_class
-    labels = sorted(l for l, v in files.items() if len(v) >= args.min_per_class)
-    dropped = sorted(set(files) - set(labels))
-    train, val = [], []
-    for l in labels:
-        items = files[l][:]
-        random.shuffle(items)
-        items = items[:cap]
-        n_val = max(1, int(0.15 * len(items)))
-        val += [(p, l) for p, _ in items[:n_val]]
-        train += [(p, l) for p, _ in items[n_val:]]
-    random.shuffle(train)
+        cap = args.limit_per_class or args.max_per_class
+        labels = sorted(l for l, v in files.items() if len(v) >= args.min_per_class)
+        dropped = sorted(set(files) - set(labels))
+        train, val = [], []
+        for l in labels:
+            items = files[l][:]
+            random.shuffle(items)
+            items = items[:cap]
+            n_val = max(1, int(0.15 * len(items)))
+            val += [(p, l) for p, _ in items[:n_val]]
+            train += [(p, l) for p, _ in items[n_val:]]
+        random.shuffle(train)
 
     print(f'\n{len(labels)} classes, {len(train)} train / {len(val)} val images')
     for l in labels:

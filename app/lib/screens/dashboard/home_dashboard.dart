@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import '../../models/plan.dart';
+import '../../services/activity_service.dart';
 import '../../services/auth_service.dart';
+import '../../services/notification_service.dart';
+import '../../services/progress_service.dart';
 import '../../services/food_log_service.dart';
+import '../../services/gamification.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_theme.dart';
 import '../allergy/allergy_scanner.dart';
 import '../auth/splash_screen.dart';
 import '../chatbot/chatbot_screen.dart';
+import '../community/community_screen.dart';
 import '../posture_detection/posture_mode.dart';
 
 class HomeDashboard extends StatefulWidget {
@@ -19,18 +24,93 @@ class HomeDashboard extends StatefulWidget {
 
 class _HomeDashboardState extends State<HomeDashboard> {
   double _eatenToday = 0;
+  ProgressSnapshot? _progress;
 
   @override
   void initState() {
     super.initState();
     _loadIntake();
+    _loadProgress();
     FoodLogService.instance.changes.addListener(_loadIntake);
+    FoodLogService.instance.changes.addListener(_loadProgress);
+    ActivityService.instance.changes.addListener(_loadProgress);
+    // Rebuild the scheduled reminders from the saved settings (only does anything if the user turned them on).
+    NotificationService.instance.refreshFromAccount(UserSession.instance.plan);
   }
 
   @override
   void dispose() {
     FoodLogService.instance.changes.removeListener(_loadIntake);
+    FoodLogService.instance.changes.removeListener(_loadProgress);
+    ActivityService.instance.changes.removeListener(_loadProgress);
     super.dispose();
+  }
+
+  Future<void> _loadProgress() async {
+    final plan = UserSession.instance.plan;
+    if (plan == null) return;
+    try {
+      final p = await ProgressService.instance.load(plan);
+      if (mounted) setState(() => _progress = p);
+    } catch (_) {
+      // Offline or signed out: the cards below simply stay hidden.
+    }
+  }
+
+  void _openCommunity() => Navigator.push(context, MaterialPageRoute(builder: (_) => const CommunityScreen()));
+
+  Widget _progressCard(ProgressSnapshot p) {
+    final inactive = p.inactivity;
+    return Column(
+      children: [
+        if (inactive != null)
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(color: AppTheme.warning.withOpacity(0.12), borderRadius: BorderRadius.circular(16)),
+            child: Row(
+              children: [
+                const Text('👋', style: TextStyle(fontSize: 24)),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    "It's been ${inactive.daysSinceWorkout} days since your last workout and you missed ${inactive.missedPlannedDays} planned "
+                    "${inactive.missedPlannedDays == 1 ? 'session' : 'sessions'}. A short one still counts.",
+                    style: const TextStyle(color: AppTheme.textPrimary, fontSize: 13, height: 1.35),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        GestureDetector(
+          onTap: _openCommunity,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
+            child: Row(
+              children: [
+                const Text('🏆', style: TextStyle(fontSize: 26)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('THIS WEEK', style: TextStyle(fontSize: 10, letterSpacing: 1, color: AppTheme.textSecondary)),
+                      Text('Fitness score ${p.week.total.round()}/100 · ${p.level.label}',
+                          style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+                      Text('🔥 ${p.workoutStreak} workout streak · 🏅 ${p.earned.length} badges',
+                          style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right, color: AppTheme.textSecondary),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Future<void> _loadIntake() async {
@@ -219,6 +299,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                 ),
 
                 _workoutCard(plan, profile?.weightKg ?? 70),
+                if (_progress != null) _progressCard(_progress!),
 
                 // Emotion Banner (Module 6 - later phase)
                 Container(
@@ -265,7 +346,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       _buildQuickTile(context, '🧘', 'Posture\nCheck',
                           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PostureModeSelection()))),
                       _buildQuickTile(context, '📊', 'Body\nTransform'),
-                      _buildQuickTile(context, '🏆', 'Leader\nboard'),
+                      _buildQuickTile(context, '🏆', 'Leader\nboard', onTap: _openCommunity),
                       _buildQuickTile(context, '🛡️', 'Allergy\nScanner',
                           onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AllergyScanner()))),
                       _buildQuickTile(context, '🤖', 'AI\nChatbot',

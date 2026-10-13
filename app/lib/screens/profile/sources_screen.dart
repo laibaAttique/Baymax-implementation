@@ -109,6 +109,64 @@ class SourcesScreen extends StatelessWidget {
       caveat: 'Mixed home-cooked dishes (biryani, karahi, daal, etc.) vary widely with recipe and oil used. The Pakistan table exists only on paper, so values for those dishes are estimates and are labelled as such.',
     ),
     _Source(
+      'Food photo recognition (machine learning)',
+      'An EfficientNetV2-B0 image classifier, fine-tuned from ImageNet weights and running on your phone, suggests up to three catalogue foods for a photo. You always confirm the food and the portion; nothing is logged automatically. '
+          'It knows 22 foods: 13 from Food-101 (samosa also has Kaggle photos) and 9 South-Asian dishes (aloo gobi, bhindi, butter chicken, chicken biryani, chicken tikka, haleem, paratha, roti, chai) from a Kaggle "Pakistani Dishes" dataset.',
+      [
+        'Bossard L, Guillaumin M, Van Gool L. Food-101 — mining discriminative components with random forests. ECCV 2014.',
+        'Kaggle "Pakistani Dishes Dataset" (useractivated/dataset). Web-collected images; licence not verified by the team.',
+        'Tan M, Le QV. EfficientNetV2: smaller models and faster training. ICML 2021.',
+      ],
+      caveat: 'On held-out test photos it picked the right food about 93% of the time overall, but only about 85% and 76% on the test photos from the two Kaggle sets, which come from the same web collections as their training photos; '
+          'phone photos will be harder. Aloo gobi and paratha were right only about 65% of the time, below the team\'s 70% bar, so the model has NOT passed the team\'s release gate: it is available in test builds only, and release builds ask you to pick the food. '
+          'Photos are processed on the device. The model recognises the dish, not the portion size.',
+    ),
+    _Source(
+      'Personalised calorie target',
+      'Your starting estimate is the Mifflin–St Jeor formula times your activity factor. Once you have logged your weight at least 4 times over 14 or more days and fully logged your food on at least 10 of those days, the app also works out what your own data implies: '
+          'average calories eaten minus the daily weight change (from a straight line fitted to your weigh-ins) times about 7,700 kcal per kg. The two estimates are combined in proportion to how reliable each is (a Bayesian update), '
+          'so noisy weights count for less. The result may raise the formula estimate by at most 15% and lower it by at most 10%, never gives the data more than 70% of the say, is ignored if it is more than 30% away from the formula, and is switched off for under-18s and for anyone who reported heart disease or diabetes. '
+          'The usual minimum intake (1,200 kcal women, 1,500 kcal men) and the no-deficit rule for underweight still apply.',
+      [
+        'Mifflin MD, St Jeor ST, et al. A new predictive equation for resting energy expenditure in healthy individuals. Am J Clin Nutr 1990; 51(2): 241–247.',
+        'Wishnofsky M. Caloric equivalents of gained or lost weight. Am J Clin Nutr 1958; 6(5): 542–546 (the 3,500 kcal per pound rule of thumb).',
+        'Hall KD, Sacks G, Chandramohan D, et al. Quantification of the effect of energy imbalance on bodyweight. Lancet 2011; 378: 826–837 (why the rule of thumb is only approximate).',
+      ],
+      caveat: 'The 7,700 kcal per kg figure is an approximation; real energy changes depend on what is gained or lost and shift over time. The assumed 10% uncertainty of the formula and of calorie logging, the 28-day window, the 60%-of-BMR "fully logged day" rule and the safety limits are choices made by the project team, not published values. '
+          'Under-logging food makes your needs look lower than they are; the limits above are there to contain that. This is NOT the Gradient Boosting model named in the project scope: that needs measured daily-energy data (the IAEA doubly-labelled-water database is released on request), which the team does not have yet.',
+    ),
+    _Source(
+      'Fitness score, levels, badges and leaderboard',
+      'Your weekly fitness score (0–100) is 50% workouts you marked completed out of the planned workout days so far this week, 25% days on which you logged food, and 25% of your logged days that landed within 15% of your calorie target. '
+          'Your level is the average of your recent weekly scores: Beginner below 40, Intermediate 40–69, Advanced 70 and above. Badges follow fixed rules over your last four weeks of logs. '
+          'The weekly leaderboard is opt-in. With at least 15 participants the app groups them as beginner, intermediate or advanced with K-Means clustering (3 groups, using score, workouts and logging days); with fewer people it uses the score thresholds above and says so.',
+      [
+        'Project team design: no published standard defines these weights, tolerances or thresholds, and they are not clinically validated.',
+        'Lloyd SP. Least squares quantization in PCM. IEEE Transactions on Information Theory 1982; 28(2): 129–137 (the K-Means algorithm).',
+        'Arthur D, Vassilvitskii S. k-means++: the advantages of careful seeding. Proceedings of SODA 2007: 1027–1035 (cluster seeding).',
+      ],
+      caveat: 'Only workouts you tick off and meals you log are counted; there is no link to a fitness tracker. A day with only some meals logged will usually miss the calorie window. '
+          'Scores are calculated on each phone, so a modified app could submit a false score: the ranking is for motivation, not a verified result.',
+    ),
+    _Source(
+      'Reminders and inactivity alerts',
+      'If you turn them on, the app schedules a reminder on your phone at your chosen time on each planned workout day. You are treated as inactive when at least 3 days have passed since your last workout and at least one planned workout day has gone by without one; '
+          'rest days alone never count. The alert is a single notification, and notifications never show health details on the lock screen.',
+      [
+        'Project team design (3-day threshold and wording).',
+      ],
+      caveat: 'Reminders are scheduled on the phone, so they need no internet, but Android may delay them to save battery. Push notifications sent from a server are not part of this version.',
+    ),
+    _Source(
+      'Accounts and roles',
+      'Every account is a standard member who can see and change only their own data. Doctor, nutritionist, trainer and administrator roles exist in the app, but a role can only be set by an administrator in the Firebase console, never from the app.',
+      [
+        'Project team design (role list from the project scope, Module 14).',
+      ],
+      caveat: 'Today the security rules give nobody access to another person\'s data: assigning patients to clinicians belongs to the consultation module, which is not built yet. '
+          'The app does not add its own AES encryption layer on top of the database; that part of the scope is not implemented in this version.',
+    ),
+    _Source(
       'Allergen detection',
       'Your allergies are matched against the ingredient text using a synonym list (for example "whey" and "casein" for dairy), tolerance for scanning errors, and a separate warning for "may contain" statements. '
           'The allergen groups follow the major food allergens in the Codex labelling standard.',
