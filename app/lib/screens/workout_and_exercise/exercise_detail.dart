@@ -142,6 +142,27 @@ class ExerciseDetail extends StatelessWidget {
                     ],
                   ),
                 ),
+                if (planned.reasons.isNotEmpty || e.equipment != 'none')
+                  Container(
+                    margin: const EdgeInsets.fromLTRB(20, 0, 20, 4),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(color: AppTheme.primaryLight, borderRadius: BorderRadius.circular(14)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (planned.reasons.isNotEmpty) ...[
+                          const Text('Why this exercise for you', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.primary)),
+                          for (final r in planned.reasons)
+                            Padding(padding: const EdgeInsets.only(top: 4), child: Text('• $r', style: const TextStyle(fontSize: 13, color: AppTheme.textPrimary, height: 1.35))),
+                        ],
+                        if (e.equipment != 'none')
+                          Padding(
+                            padding: EdgeInsets.only(top: planned.reasons.isNotEmpty ? 8 : 0),
+                            child: Text('You will need: ${e.equipment}', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                          ),
+                      ],
+                    ),
+                  ),
                 _heading('Technique'),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),

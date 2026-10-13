@@ -189,6 +189,11 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                       ),
                     ],
                   ),
+                  if (p.reasons.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(p.reasons.first, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: AppTheme.primary, height: 1.3)),
+                    ),
                 ],
               ),
             ),

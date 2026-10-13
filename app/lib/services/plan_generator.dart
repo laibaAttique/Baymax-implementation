@@ -3,6 +3,7 @@ import '../models/health_profile.dart';
 import '../models/plan.dart';
 import '../utils/health_calc.dart';
 import 'exercise_library.dart';
+import 'exercise_selector.dart';
 import 'food_database.dart';
 import 'health_classifier.dart';
 import 'ml/gradient_boosting_model.dart';
@@ -124,9 +125,12 @@ class PlanGenerator {
     final days = profile.workoutFrequency.clamp(2, restrictions.maxDays);
     final slots = _schedule[days]!;
     final week = List<WorkoutDay?>.filled(7, null);
+    // FR-2/FR-3: within the exercises the safety rules allow, the selector ranks by this person's body parameters and answers.
+    final selector = ExerciseSelector(BodyProfile.from(profile), variant: variant);
+    final weekUsage = <String, int>{};
     for (var i = 0; i < slots.length; i++) {
       final template = templates[(i + variant) % templates.length];
-      week[slots[i]] = _withModelEstimate(_buildDay(template, intensity, restrictions, variant * 2 + i, profile.weightKg), profile);
+      week[slots[i]] = _withModelEstimate(_buildDay(template, intensity, restrictions, profile.weightKg, selector, weekUsage), profile);
     }
 
     return PersonalizedPlan(
@@ -232,21 +236,17 @@ class PlanGenerator {
 
   // --- FR-2 / FR-5: templates and weekly schedule --------------------------
 
-  WorkoutDay _buildDay(_Template t, String intensity, PlanRestrictions r, int offset, double weightKg) {
+  WorkoutDay _buildDay(_Template t, String intensity, PlanRestrictions r, double weightKg, ExerciseSelector selector, Map<String, int> weekUsage) {
     final usedIds = <String>{};
     final main = <PlannedExercise>[];
 
     for (final slot in t.slots) {
-      final pool = ExerciseLibrary.all.where((e) => e.group == slot.group && r.allows(e)).toList()
-        ..sort((a, b) => a.level != b.level ? a.level.compareTo(b.level) : a.id.compareTo(b.id));
+      final pool = ExerciseLibrary.all.where((e) => e.group == slot.group && r.allows(e) && !usedIds.contains(e.id)).toList();
       if (pool.isEmpty) continue;
-      var taken = 0;
-      for (var i = 0; taken < slot.count && i < pool.length * 2; i++) {
-        final e = pool[(offset + i) % pool.length];
-        if (usedIds.add(e.id)) {
-          main.add(_prescribe(e, intensity, maxHold: r.maxHoldSeconds));
-          taken++;
-        }
+      for (final picked in selector.rank(pool, weekUsage: weekUsage).take(slot.count)) {
+        usedIds.add(picked.exercise.id);
+        weekUsage[picked.exercise.id] = (weekUsage[picked.exercise.id] ?? 0) + 1;
+        main.add(_prescribe(picked.exercise, intensity, maxHold: r.maxHoldSeconds).withReasons(picked.reasons));
       }
     }
 
@@ -257,19 +257,22 @@ class PlanGenerator {
       final eachSec = ((totalMin * 60 / steady.length) / 30).round() * 30;
       for (final s in steady) {
         final i = main.indexOf(s);
-        main[i] = PlannedExercise(exercise: s.exercise, sets: 1, reps: 0, seconds: eachSec, restSeconds: s.restSeconds);
+        main[i] = PlannedExercise(exercise: s.exercise, sets: 1, reps: 0, seconds: eachSec, restSeconds: s.restSeconds, reasons: s.reasons);
       }
     }
 
     if (r.includeBalance) {
       final balance = ExerciseLibrary.all.firstWhere((e) => e.id == 'single_leg_balance');
-      main.add(_prescribe(balance, intensity, maxHold: r.maxHoldSeconds));
+      main.add(_prescribe(balance, intensity, maxHold: r.maxHoldSeconds).withReasons(const ['Balance training is recommended from age 65']));
     }
+
+    // Cool-down: up to two static stretches for the body regions this session actually worked.
+    final stretches = _cooldownStretches(main, r, selector, weekUsage);
 
     final warm = _prescribe(ExerciseLibrary.warmUp, intensity);
     final cool = _prescribe(ExerciseLibrary.coolDown, intensity);
 
-    List<PlannedExercise> all() => [warm, ...main, cool];
+    List<PlannedExercise> all() => [warm, ...main, ...stretches, cool];
     int minutes() => WorkoutDay(name: '', focus: '', exercises: all()).durationMin;
     while (main.length > 3 && minutes() > r.maxSessionMin) {
       main.removeLast();
@@ -277,6 +280,41 @@ class PlanGenerator {
 
     return WorkoutDay(name: t.name, focus: t.focus, exercises: all(), kind: t.kind);
   }
+
+  List<PlannedExercise> _cooldownStretches(List<PlannedExercise> main, PlanRestrictions r, ExerciseSelector selector, Map<String, int> weekUsage) {
+    final worked = bodyRegions(main.where((p) => p.exercise.group != 'mobility').expand((p) => p.exercise.muscles));
+    if (worked.isEmpty) return const [];
+    final pool = ExerciseLibrary.all
+        .where((e) => e.group == 'mobility' && !e.tags.contains('dynamic') && !e.tags.contains('balance') && r.allows(e))
+        .where((e) => !main.any((p) => p.exercise.id == e.id))
+        .toList();
+    final scored = <(ScoredExercise, Set<String>)>[];
+    for (final e in pool) {
+      final overlap = bodyRegions(e.muscles).intersection(worked);
+      if (overlap.isEmpty) continue;
+      scored.add((selector.score(e, weekUsage: weekUsage), overlap));
+    }
+    // most relevant first (more worked regions stretched), then the person-fit score
+    scored.sort((a, b) {
+      final byOverlap = b.$2.length.compareTo(a.$2.length);
+      return byOverlap != 0 ? byOverlap : b.$1.score.compareTo(a.$1.score);
+    });
+    final out = <PlannedExercise>[];
+    final covered = <String>{};
+    for (final (s, overlap) in scored) {
+      if (out.length == 2) break;
+      if (overlap.every(covered.contains)) continue; // would only repeat a region already stretched
+      covered.addAll(overlap);
+      weekUsage[s.exercise.id] = (weekUsage[s.exercise.id] ?? 0) + 1;
+      out.add(_prescribe(s.exercise, 'Low').withReasons(['Stretches what you just worked: ${overlap.map(_regionLabel).join(', ')}']));
+    }
+    return out;
+  }
+
+  static String _regionLabel(String r) => const {
+        'lowerBack': 'lower back',
+        'upperBack': 'upper back',
+      }[r] ?? r;
 
   /// Replaces the MET calorie estimate with the Gradient Boosting prediction when a model is loaded.
   WorkoutDay _withModelEstimate(WorkoutDay day, HealthProfile p) {

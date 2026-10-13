@@ -81,13 +81,29 @@ class SourcesScreen extends StatelessWidget {
       'Exercise library',
       'The exercises are stored in Cloud Firestore so they can be corrected or extended without an app update, with an offline copy bundled in the app. '
           'Each exercise records its energy value (Compendium code), its muscle groups, and where its technique text comes from. '
-          '15 of the 32 entries are matched to the free-exercise-db open dataset for muscles and technique; the other 17 (for example brisk walking, jumping jacks, burpees, wall sit, bird dog) have no suitable entry and are written by the team.',
+          'The library has 73 bodyweight exercises: 32 written by the team (15 of them matched to the free-exercise-db open dataset for muscles) and 41 curated from that dataset. '
+          'For the curated ones only the exercise, its muscles and its difficulty come from the dataset; the technique cues are written by the team, because several of the dataset\'s own instructions assume gym equipment or maximal effort. '
+          'Of 188 no-equipment entries reviewed, those needing a bar, bench, machine or partner, expert-level moves and athletic drills were left out.',
       [
         'free-exercise-db — open public-domain (Unlicense) exercise dataset, github.com/yuhonas/free-exercise-db.',
         'Herrmann SD, et al. 2024 Adult Compendium of Physical Activities. J Sport Health Sci 2024; 13(1): 6–12 (energy values).',
       ],
-      caveat: 'free-exercise-db is community-maintained, not clinically reviewed, and its wording is written for gym training (for example it says to hold a plank "as long as possible"), so the cues are rewritten here for the prescribed dosage. '
-          'The team-written cues should be reviewed by a qualified trainer or physiotherapist before release.',
+      caveat: 'free-exercise-db is community-maintained and not clinically reviewed. The curated exercises have no exact Compendium entry of their own: each uses the energy value of the closest movement class already used in the library (marked *). '
+          'The body-load fields (which joints a move stresses, whether you need to get down to the floor, how much coordination it needs) are assigned by the team. '
+          'All team-written cues and these fields should be reviewed by a qualified trainer or physiotherapist before release.',
+    ),
+    _Source(
+      'How exercises are chosen for you',
+      'First the safety rules remove every exercise that is not allowed for you (your conditions, BMI and age). Then the remaining exercises for each part of the session are ranked using your answers: '
+          'your fitness capacity (from your activity level, lowered a little for age 50+ and for BMI 30+) against each exercise\'s difficulty; your goal (weight loss favours higher energy use, muscle gain favours strength moves); '
+          'which joints the movement loads against your BMI and age; whether the exercise needs you to get down to the floor (age 65+ or BMI 35+); coordination demand (age 60+); and variety across the week. '
+          'Your height and weight also set your calorie estimates, and your gender only affects the energy calculation, not which exercises you get. After training, the cool-down picks static stretches for the body regions you worked. Each choice shows the reason.',
+      [
+        'WHO. Guidelines on physical activity and sedentary behaviour. Geneva, 2020 (balance training for adults 65+).',
+        'Project team design: the ranking weights, the capacity scale and the joint-load values are not from a published formula.',
+      ],
+      caveat: 'The safety rules always come first; the ranking only orders what is already allowed. The weights are team choices and have not been validated against outcomes or reviewed by a trainer. '
+          'The profile does not ask about injuries or joint pain, so the app cannot adjust for them: stop any exercise that hurts, and see a professional for a problem.',
     ),
     _Source(
       'Calories burned in workouts',
