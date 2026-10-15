@@ -20,7 +20,12 @@
    "Do 10 slow arm circles forward and 10 backward.",
    "Do 10 hip circles each way and 10 gentle bodyweight squats."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "cooldown",
@@ -43,7 +48,12 @@
    "Hold each stretch for 20–30 seconds: quads, hamstrings, calves, chest, shoulders.",
    "Breathe deeply and never stretch into pain."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "brisk_walk",
@@ -67,7 +77,12 @@
    "Keep your shoulders relaxed and swing your arms.",
    "Land heel to toe and keep your head up."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "march",
@@ -91,7 +106,12 @@
    "Swing your opposite arm with each step.",
    "Keep a steady rhythm and breathe evenly."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "step_ups",
@@ -118,7 +138,14 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Step-up_with_Knee_Raise",
-  "referenceMatch": "related"
+  "referenceMatch": "related",
+  "joints": [
+   "knee"
+  ],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "compound",
+  "equipment": "sturdy step"
  },
  {
   "id": "shadow_boxing",
@@ -143,7 +170,14 @@
    "Throw controlled jabs and crosses in the air.",
    "Stay light on your feet and keep your core tight."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "jumping_jacks",
@@ -166,7 +200,15 @@
    "Jump feet out while raising arms overhead.",
    "Jump back and repeat at a steady pace."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "knee",
+   "ankle"
+  ],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "high_knees",
@@ -192,7 +234,15 @@
    "Pump your arms and stay on the balls of your feet.",
    "Keep your chest tall and your core braced."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "knee",
+   "ankle"
+  ],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "mountain_climbers",
@@ -222,7 +272,15 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Mountain_Climbers",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "floor",
+  "complexity": 2,
+  "mechanic": "compound",
+  "equipment": "none"
  },
  {
   "id": "burpees",
@@ -248,7 +306,16 @@
    "Jump or step your feet back into a plank.",
    "Return your feet in and jump up with arms overhead."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "knee",
+   "wrist",
+   "shoulder"
+  ],
+  "position": "floor",
+  "complexity": 3,
+  "mechanic": "compound",
+  "equipment": "none"
  },
  {
   "id": "jump_squats",
@@ -279,7 +346,15 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Freehand_Jump_Squat",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [
+   "knee",
+   "ankle"
+  ],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "compound",
+  "equipment": "none"
  },
  {
   "id": "chair_squat",
@@ -303,7 +378,14 @@
    "Stand up by pushing through your heels without using your hands.",
    "Lower slowly back down with control."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "knee"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "chair"
  },
  {
   "id": "squat",
@@ -330,7 +412,14 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Bodyweight_Squat",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [
+   "knee"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none"
  },
  {
   "id": "lunge",
@@ -358,7 +447,14 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Bodyweight_Walking_Lunge",
-  "referenceMatch": "related"
+  "referenceMatch": "related",
+  "joints": [
+   "knee"
+  ],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "compound",
+  "equipment": "none"
  },
  {
   "id": "glute_bridge",
@@ -384,7 +480,12 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Butt_Lift_Bridge",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "calf_raise",
@@ -407,7 +508,14 @@
    "Rise onto your toes as high as possible.",
    "Lower slowly with control."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "ankle"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none"
  },
  {
   "id": "wall_sit",
@@ -433,7 +541,14 @@
    "Keep your knees over your ankles and breathe normally.",
    "Hold, then slide back up."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "knee"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "wall"
  },
  {
   "id": "wall_pushup",
@@ -458,7 +573,15 @@
    "Bend your elbows to bring your chest toward the wall.",
    "Push back to the start."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "wall"
  },
  {
   "id": "knee_pushup",
@@ -483,7 +606,15 @@
    "Lower your chest toward the floor with a straight line from head to knees.",
    "Press back up."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "wrist",
+   "knee"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none"
  },
  {
   "id": "pushup",
@@ -510,7 +641,15 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Pushups",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none"
  },
  {
   "id": "tricep_dip",
@@ -537,7 +676,15 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Bench_Dips",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "seated",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "chair"
  },
  {
   "id": "shoulder_taps",
@@ -561,7 +708,15 @@
    "Tap one shoulder with the opposite hand.",
    "Keep your hips still and alternate sides."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "floor",
+  "complexity": 2,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "superman",
@@ -588,7 +743,14 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Superman",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "bird_dog",
@@ -613,7 +775,15 @@
    "Extend your right arm and left leg until level with your back.",
    "Return and switch sides without rotating your hips."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "wrist",
+   "knee"
+  ],
+  "position": "floor",
+  "complexity": 2,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "reverse_snow_angel",
@@ -637,7 +807,15 @@
    "Lift your chest slightly and sweep your arms out and overhead.",
    "Sweep back down with control."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [
+   "shoulder",
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "dead_bug",
@@ -662,7 +840,12 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Dead_Bug",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [],
+  "position": "floor",
+  "complexity": 2,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "plank",
@@ -689,7 +872,15 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Plank",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "bicycle_crunch",
@@ -714,7 +905,14 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Air_Bike",
-  "referenceMatch": "exact"
+  "referenceMatch": "exact",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 2,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "leg_raise",
@@ -739,7 +937,14 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Flat_Bench_Lying_Leg_Raise",
-  "referenceMatch": "related"
+  "referenceMatch": "related",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "side_plank_knee",
@@ -767,7 +972,16 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Side_Bridge",
-  "referenceMatch": "related"
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "shoulder",
+   "knee"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "cat_cow",
@@ -794,7 +1008,15 @@
   ],
   "techniqueSource": "free-exercise-db",
   "referenceId": "Cat_Stretch",
-  "referenceMatch": "related"
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "knee"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none"
  },
  {
   "id": "single_leg_balance",
@@ -821,6 +1043,1411 @@
    "Lift one foot slightly and balance on the other leg.",
    "Switch legs after the hold."
   ],
-  "techniqueSource": "team"
+  "techniqueSource": "team",
+  "joints": [],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "",
+  "equipment": "wall or chair for support"
+ },
+ {
+  "id": "incline_pushup",
+  "name": "Incline Push-Up",
+  "icon": "💪",
+  "group": "push",
+  "muscles": [
+   "Chest",
+   "Shoulders",
+   "Triceps"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Place your hands on a sturdy table, counter or sofa edge, a little wider than your shoulders, and step your feet back until your body is one straight line.",
+   "Bend your elbows to lower your chest toward the surface, then press back up. Keep your tummy gently tight.",
+   "Use a higher surface to make it easier and a lower one to make it harder."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Incline_Push-Up",
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "sturdy table, counter or wall",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "incline_pushup_wide",
+  "name": "Wide Incline Push-Up",
+  "icon": "💪",
+  "group": "push",
+  "muscles": [
+   "Chest",
+   "Core",
+   "Shoulders",
+   "Triceps"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Place your hands on a sturdy table or counter, clearly wider than your shoulders, and walk your feet back into a straight line.",
+   "Lower your chest between your hands, keeping your elbows slightly angled back, then press up.",
+   "Stop if you feel pinching at the front of your shoulders."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Incline_Push-Up_Wide",
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "sturdy table, counter or wall",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "incline_pushup_close",
+  "name": "Close-Hand Incline Push-Up",
+  "icon": "💪",
+  "group": "push",
+  "muscles": [
+   "Triceps",
+   "Chest",
+   "Shoulders"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Place your hands close together under your chest on a sturdy table or counter and walk your feet back into a straight line.",
+   "Lower your chest toward your hands with your elbows close to your sides, then press up.",
+   "This works the backs of the arms more than a standard push-up."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Incline_Push-Up_Close-Grip",
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "sturdy table, counter or wall",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "pushup_wide",
+  "name": "Wide Push-Up",
+  "icon": "💪",
+  "group": "push",
+  "muscles": [
+   "Chest",
+   "Core",
+   "Shoulders",
+   "Triceps"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.8,
+  "compendium": "02022*",
+  "timed": false,
+  "baseReps": 8,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Start in a plank with your hands wider than your shoulders and your body in one straight line.",
+   "Lower your chest toward the floor, then press back up without letting your hips sag.",
+   "If this is too hard, do it on your knees or with your hands on a table."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Push-Up_Wide",
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "pushup_close",
+  "name": "Close-Hand Push-Up",
+  "icon": "💪",
+  "group": "push",
+  "muscles": [
+   "Triceps",
+   "Chest",
+   "Shoulders"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.8,
+  "compendium": "02022*",
+  "timed": false,
+  "baseReps": 8,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Start in a plank with your hands closer than shoulder width and your body in one straight line.",
+   "Lower your chest toward your hands, keeping your elbows close to your sides, then press back up.",
+   "If this is too hard, do it on your knees or with your hands on a table."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Push-Ups_-_Close_Triceps_Position",
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "single_leg_bridge",
+  "name": "Single-Leg Glute Bridge",
+  "icon": "🦵",
+  "group": "legs",
+  "muscles": [
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 3.0,
+  "compendium": "02056*",
+  "timed": false,
+  "baseReps": 8,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back with your knees bent and feet flat, then lift one leg so your knee points up.",
+   "Press through the planted heel to lift your hips until your body is a straight line from shoulders to knee.",
+   "Lower slowly. Finish all repetitions on one side, then switch."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Single_Leg_Glute_Bridge",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "floor",
+  "complexity": 2,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "glute_kickback",
+  "name": "Kneeling Glute Kickback",
+  "icon": "🦵",
+  "group": "legs",
+  "muscles": [
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 3.0,
+  "compendium": "02056*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Get on your hands and knees on a mat, hands under shoulders and knees under hips.",
+   "Keeping your knee bent, lift one leg until your thigh is in line with your back, squeezing your buttock. Do not arch your lower back.",
+   "Lower with control and finish all repetitions on one side before switching."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Glute_Kickback",
+  "referenceMatch": "related",
+  "joints": [
+   "knee",
+   "wrist"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "mat or folded towel",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "crunch",
+  "name": "Crunch",
+  "icon": "🧘",
+  "group": "core",
+  "muscles": [
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.8,
+  "compendium": "02024*",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back with your knees bent and feet flat, hands lightly at the sides of your head with your elbows wide.",
+   "Breathe out and curl your head and shoulders a short way off the floor, keeping your chin off your chest.",
+   "Lower slowly. Do not pull on your neck."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Crunches",
+  "referenceMatch": "related",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "reverse_crunch",
+  "name": "Reverse Crunch",
+  "icon": "🧘",
+  "group": "core",
+  "muscles": [
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.8,
+  "compendium": "02024*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back with your arms by your sides and your knees bent above your hips.",
+   "Breathe out and curl your hips a short way off the floor, bringing your knees toward your chest.",
+   "Lower slowly without swinging your legs."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Reverse_Crunch",
+  "referenceMatch": "related",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "oblique_crunch_floor",
+  "name": "Side Crunch",
+  "icon": "🧘",
+  "group": "core",
+  "muscles": [
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.8,
+  "compendium": "02024*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on one side with your knees slightly bent and your top hand lightly behind your head.",
+   "Breathe out and lift your top shoulder toward your hip, using the side of your tummy.",
+   "Lower slowly. Finish all repetitions on one side, then switch."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Oblique_Crunches_-_On_The_Floor",
+  "referenceMatch": "related",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "cross_body_crunch",
+  "name": "Cross-Body Crunch",
+  "icon": "🧘",
+  "group": "core",
+  "muscles": [
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.8,
+  "compendium": "02024*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back with your knees bent and feet flat, hands lightly behind your head.",
+   "Breathe out, lift one shoulder and turn to bring it toward the opposite knee.",
+   "Lower and alternate sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Cross-Body_Crunch",
+  "referenceMatch": "related",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "heel_touches",
+  "name": "Heel Touches",
+  "icon": "🧘",
+  "group": "core",
+  "muscles": [
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.8,
+  "compendium": "02024*",
+  "timed": false,
+  "baseReps": 16,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back with your knees bent and feet flat, about shoulder width apart, arms by your sides.",
+   "Lift your head and shoulders slightly and reach your right hand toward your right heel.",
+   "Return to centre and reach toward the left heel. Keep the movement small and controlled."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Alternate_Heel_Touchers",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "russian_twist",
+  "name": "Seated Twist",
+  "icon": "🧘",
+  "group": "core",
+  "muscles": [
+   "Core",
+   "Lower back"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 2.8,
+  "compendium": "02024*",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Sit with your knees bent and feet on the floor, lean back slightly with a long straight back and your hands together in front of your chest.",
+   "Turn your chest to one side, then the other, in a slow controlled way.",
+   "Keep your feet on the floor to make it easier. Stop if your lower back complains."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Russian_Twist",
+  "referenceMatch": "related",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "seated",
+  "complexity": 2,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "hip_raise_bent_knee",
+  "name": "Bent-Knee Leg Lift",
+  "icon": "🧘",
+  "group": "core",
+  "muscles": [
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.8,
+  "compendium": "02024*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back with your arms by your sides and your knees bent about 90 degrees.",
+   "Lift your feet a few centimetres off the floor, keeping your lower back gently pressed down.",
+   "Lower slowly. Do not let your back arch."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Bent-Knee_Hip_Raise",
+  "referenceMatch": "related",
+  "joints": [
+   "lowerBack"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "spider_crawl",
+  "name": "Plank Knee Drive",
+  "icon": "🧘",
+  "group": "core",
+  "muscles": [
+   "Core",
+   "Chest",
+   "Shoulders",
+   "Triceps"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 2.8,
+  "compendium": "02024*",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Start in a straight-arm plank with your hands under your shoulders.",
+   "Lift one foot and bring that knee out toward the same elbow, then return it.",
+   "Alternate sides slowly, keeping your hips level."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Spider_Crawl",
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "floor",
+  "complexity": 2,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "star_jump",
+  "name": "Star Jump",
+  "icon": "🏃",
+  "group": "cardio",
+  "muscles": [
+   "Quads",
+   "Calves",
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "high",
+  "level": 3,
+  "met": 7.5,
+  "compendium": "02020*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "hiit",
+   "plyo"
+  ],
+  "steps": [
+   "Stand with your feet together and your arms by your sides.",
+   "Hop and spread your arms and legs out wide, then hop back to the start. Land softly on the balls of your feet with your knees slightly bent.",
+   "Stop and rest if you feel any pain in your knees or ankles."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Star_Jump",
+  "referenceMatch": "related",
+  "joints": [
+   "knee",
+   "ankle"
+  ],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "split_jump",
+  "name": "Jumping Lunge",
+  "icon": "🏃",
+  "group": "cardio",
+  "muscles": [
+   "Quads",
+   "Calves",
+   "Glutes",
+   "Hamstrings"
+  ],
+  "impact": "high",
+  "level": 3,
+  "met": 6.5,
+  "compendium": "02057*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "hiit",
+   "plyo"
+  ],
+  "steps": [
+   "Stand in a lunge position with one foot forward and your hands on your hips.",
+   "Hop and switch your legs in the air, landing softly in a lunge with the other foot forward. Keep your front knee over your foot.",
+   "Keep the hops low and controlled. Use a regular lunge instead if your knees or balance are a concern."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Split_Jump",
+  "referenceMatch": "related",
+  "joints": [
+   "knee",
+   "ankle"
+  ],
+  "position": "standing",
+  "complexity": 3,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "hip_circles",
+  "name": "Standing Hip Circles",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Hips",
+   "Inner thighs"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "dynamic"
+  ],
+  "steps": [
+   "Stand holding a wall or chair, lift one knee to about hip height.",
+   "Slowly draw circles with your knee, five in each direction.",
+   "Switch legs."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Standing_Hip_Circles",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "isolation",
+  "equipment": "wall or chair for support",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "arm_circles",
+  "name": "Arm Circles",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Shoulders",
+   "Upper back"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "dynamic"
+  ],
+  "steps": [
+   "Stand tall with your arms out to the sides at shoulder height.",
+   "Make slow circles about the size of a dinner plate, breathing normally.",
+   "Reverse direction halfway."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Arm_Circles",
+  "referenceMatch": "related",
+  "joints": [
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "shoulder_rolls",
+  "name": "Shoulder Rolls",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Shoulders",
+   "Upper back"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "dynamic"
+  ],
+  "steps": [
+   "Stand or sit tall with your arms loose.",
+   "Roll your shoulders forward, up, back and down in a slow circle.",
+   "Reverse direction halfway."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Shoulder_Circles",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "ankle_circles",
+  "name": "Ankle Circles",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Calves"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "dynamic"
+  ],
+  "steps": [
+   "Hold a wall or chair and lift one foot slightly off the floor.",
+   "Draw slow circles with your toes, five in each direction.",
+   "Switch feet."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Ankle_Circles",
+  "referenceMatch": "related",
+  "joints": [
+   "ankle"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "wall or chair for support",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "wrist_circles",
+  "name": "Wrist Circles",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Forearms"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "dynamic"
+  ],
+  "steps": [
+   "Hold your arms out in front of you with relaxed fists.",
+   "Rotate your wrists slowly, five circles in each direction.",
+   "Keep the rest of your body still."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Wrist_Circles",
+  "referenceMatch": "related",
+  "joints": [
+   "wrist"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "childs_pose",
+  "name": "Child's Pose",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Lower back",
+   "Glutes",
+   "Upper back"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Kneel on a mat and sit back toward your heels, then reach your hands forward along the floor.",
+   "Let your head rest and breathe slowly into your back.",
+   "If your knees complain, place a folded towel behind them or skip this one."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Childs_Pose",
+  "referenceMatch": "related",
+  "joints": [
+   "knee"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "mat",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "hamstring_stretch_lying",
+  "name": "Lying Hamstring Stretch",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Hamstrings"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back and loop a towel or belt around the ball of one foot.",
+   "Gently straighten that leg toward the ceiling until you feel a mild stretch behind the thigh.",
+   "Hold, breathe, then switch legs."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Hamstring_Stretch",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "towel or belt",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "calf_stretch_wall",
+  "name": "Calf Stretch at the Wall",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Calves"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Stand facing a wall with your hands on it and one foot stepped back, heel flat on the floor.",
+   "Bend the front knee and lean in until you feel a mild stretch in the back calf.",
+   "Hold, then switch legs."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Calf_Stretch_Hands_Against_Wall",
+  "referenceMatch": "related",
+  "joints": [
+   "ankle"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "wall",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "kneeling_hip_flexor",
+  "name": "Kneeling Hip Flexor Stretch",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Quads"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Kneel on a mat with one foot forward in a lunge position.",
+   "Tuck your tailbone under and shift forward until you feel a stretch at the front of the back hip.",
+   "Hold, then switch sides. Pad your knee with a towel if needed."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Kneeling_Hip_Flexor",
+  "referenceMatch": "related",
+  "joints": [
+   "knee"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "mat",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "standing_hip_flexor",
+  "name": "Standing Hip Flexor Stretch",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Quads"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Stand with one foot a step in front of the other and your knees slightly bent.",
+   "Tuck your tailbone under and press your hips gently forward until you feel a stretch at the front of the back hip.",
+   "Hold, then switch sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Standing_Hip_Flexors",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "side_quad_stretch",
+  "name": "Side-Lying Quad Stretch",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Quads"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on one side with your bottom knee bent for balance.",
+   "Bend your top knee and hold your foot or ankle, bringing your heel gently toward your buttock.",
+   "Hold, then roll over and switch sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "On_Your_Side_Quad_Stretch",
+  "referenceMatch": "related",
+  "joints": [
+   "knee"
+  ],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "mat",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "knee_across_body",
+  "name": "Lying Glute Twist",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Glutes",
+   "Hips",
+   "Lower back"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back with one leg straight and the other knee bent.",
+   "Guide the bent knee across your body toward the floor with the opposite hand, keeping your shoulders down.",
+   "Hold, then switch sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Knee_Across_The_Body",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "knee_to_chest",
+  "name": "Single Knee to Chest",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Glutes",
+   "Hamstrings",
+   "Lower back"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back and pull one knee toward your chest, holding behind the thigh (not on the kneecap).",
+   "Keep the other leg relaxed and your lower back resting on the floor.",
+   "Hold, then switch legs."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "One_Knee_To_Chest",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "hug_knees",
+  "name": "Both Knees to Chest",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Lower back",
+   "Glutes"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Lie on your back and bring both knees toward your chest.",
+   "Hold behind your thighs, not on your kneecaps, and breathe slowly.",
+   "Release gently."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Hug_Knees_To_Chest",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "seated_hamstring_stretch",
+  "name": "Seated Hamstring Stretch",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Hamstrings",
+   "Calves"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Sit with one leg straight and the other foot resting against your inner thigh.",
+   "Lean forward from your hips with a long back until you feel a mild stretch behind the straight leg.",
+   "Hold, then switch legs."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Seated_Floor_Hamstring_Stretch",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "floor",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "mat",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "triceps_stretch",
+  "name": "Triceps Stretch",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Triceps",
+   "Back"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Reach one hand behind your head and down your back.",
+   "Use the other hand to ease your elbow gently back and up.",
+   "Hold, then switch arms."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Triceps_Stretch",
+  "referenceMatch": "related",
+  "joints": [
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "shoulder_cross_stretch",
+  "name": "Cross-Body Shoulder Stretch",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Shoulders"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Bring one arm straight across your chest.",
+   "Hold it with the other hand just above the elbow and draw it gently closer.",
+   "Hold, then switch arms."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Shoulder_Stretch",
+  "referenceMatch": "related",
+  "joints": [
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "chest_opener",
+  "name": "Standing Chest Opener",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Chest",
+   "Shoulders"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Stand tall and place your hands on your lower back with your elbows out.",
+   "Draw your elbows gently back and lift your chest until you feel a mild stretch across the front.",
+   "Hold and breathe normally."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Elbows_Back",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "upper_back_stretch",
+  "name": "Upper Back Stretch",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Upper back"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Clasp your hands in front of you with your palms turned out.",
+   "Reach forward and round your upper back, letting your head drop gently.",
+   "Hold and breathe normally."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Upper_Back_Stretch",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "seated_twist",
+  "name": "Seated Spinal Twist",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Upper back",
+   "Back",
+   "Lower back",
+   "Neck"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Sit tall on a chair with your feet flat on the floor.",
+   "Turn your upper body to one side, holding the chair back or your thigh, keeping your hips facing forward.",
+   "Hold, then switch sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Spinal_Stretch",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "seated",
+  "complexity": 1,
+  "mechanic": "isolation",
+  "equipment": "chair",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "side_bend",
+  "name": "Standing Side Bend",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Core"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Stand with your feet a little wider than your hips and your knees soft.",
+   "Reach one arm overhead and lean gently to the opposite side, with your other hand on your hip.",
+   "Hold, then switch sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Standing_Lateral_Stretch",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "overhead_reach",
+  "name": "Overhead Reach",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Core",
+   "Chest",
+   "Forearms",
+   "Back"
+  ],
+  "impact": "low",
+  "level": 1,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [],
+  "steps": [
+   "Stand tall and interlace your fingers, turning your palms up toward the ceiling.",
+   "Reach up with your shoulders relaxed and your ribs gently drawn in.",
+   "Hold and breathe normally."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Overhead_Stretch",
+  "referenceMatch": "related",
+  "joints": [],
+  "position": "standing",
+  "complexity": 1,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "inchworm",
+  "name": "Inchworm",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Hamstrings"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "dynamic"
+  ],
+  "steps": [
+   "Stand tall, then bend forward and place your hands on the floor (bend your knees as much as you need).",
+   "Walk your hands forward to a plank, pause, then walk them back to your feet.",
+   "Stand up slowly."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Inchworm",
+  "referenceMatch": "related",
+  "joints": [
+   "wrist",
+   "shoulder"
+  ],
+  "position": "standing",
+  "complexity": 2,
+  "mechanic": "compound",
+  "equipment": "none",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
+ },
+ {
+  "id": "worlds_greatest_stretch",
+  "name": "Lunge with Rotation",
+  "icon": "🤸",
+  "group": "mobility",
+  "muscles": [
+   "Hamstrings",
+   "Calves",
+   "Glutes",
+   "Quads"
+  ],
+  "impact": "low",
+  "level": 2,
+  "met": 2.3,
+  "compendium": "02101*",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "tags": [
+   "dynamic"
+  ],
+  "steps": [
+   "Step into a long lunge and place both hands on the floor inside your front foot.",
+   "Lift the inside hand toward the ceiling, turning your chest open, and follow it with your eyes.",
+   "Return the hand to the floor, then switch sides."
+  ],
+  "techniqueSource": "free-exercise-db",
+  "referenceId": "Worlds_Greatest_Stretch",
+  "referenceMatch": "related",
+  "joints": [
+   "knee",
+   "wrist"
+  ],
+  "position": "floor",
+  "complexity": 3,
+  "mechanic": "",
+  "equipment": "mat",
+  "curated": "free-exercise-db, reviewed 2026-10-13"
  }
 ]

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app/theme/app_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/models/health_profile.dart';
 import 'package:app/models/plan.dart';
@@ -30,7 +31,7 @@ Future<void> _pump(WidgetTester tester, Widget screen) async {
   tester.view.physicalSize = const Size(1170, 2532); // 390x844 logical @3x
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(MaterialApp(theme: ThemeData.light(), home: screen));
+  await tester.pumpWidget(MaterialApp(theme: AppTheme.lightTheme, home: screen));
   await tester.pumpAndSettle();
 }
 
@@ -59,7 +60,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('AT-RISK'), findsOneWidget);
     expect(find.textContaining('Hypertension'), findsWidgets);
-    expect(find.text('View Workout Plan'), findsOneWidget);
+    expect(find.text('View workout plan'), findsOneWidget);
   });
 
   testWidgets('Workout plan lists exercises, shows medical notes and can switch days', (tester) async {
@@ -67,8 +68,8 @@ void main() {
     await _pump(tester, const WorkoutPlan());
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Your Workout Plan'), findsOneWidget);
-    expect(find.text('CARDIAC'), findsOneWidget);
+    expect(find.text('Your workout plan'), findsOneWidget);
+    expect(find.text('Cardiac'), findsOneWidget);
     expect(find.text('Dynamic Warm-Up'), findsWidgets);
 
     // Tap a rest day (Sunday) – cardiac plans never train 7 days.
@@ -85,7 +86,7 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('Technique'), findsOneWidget);
-    expect(find.text('Start Exercise →'), findsOneWidget);
+    expect(find.text('Start exercise'), findsOneWidget);
   });
 
   testWidgets('Nutrition plan shows macros and no allergens', (tester) async {
@@ -94,9 +95,9 @@ void main() {
     await _pump(tester, const NutritionPlanScreen());
 
     expect(tester.takeException(), isNull);
-    expect(find.textContaining('${UserSession.instance.plan!.nutrition.targetKcal} kcal'), findsOneWidget);
-    expect(find.text('Dairy products'), findsOneWidget); // in "Foods to Avoid"
-    await tester.scrollUntilVisible(find.text('💡 Pro Tips'), 300, scrollable: find.byType(Scrollable).first);
+    expect(find.text('${UserSession.instance.plan!.nutrition.targetKcal}'), findsOneWidget);
+    expect(find.text('Dairy products'), findsOneWidget); // in "Foods to avoid"
+    await tester.scrollUntilVisible(find.text('Pro tips'), 300, scrollable: find.byType(Scrollable).first);
     expect(tester.takeException(), isNull);
   });
 

@@ -5,6 +5,7 @@ import '../../services/api_client.dart';
 import '../../services/ocr_service.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/glass.dart';
 import 'allergen_result_screen.dart';
 
 /// Module 8: scan a product label (FR-1), extract text with Google Vision
@@ -77,53 +78,44 @@ class _AllergyScannerState extends State<AllergyScanner> {
   Widget build(BuildContext context) {
     final allergies = _allergies;
     return Scaffold(
-      appBar: AppBar(title: const Text('Allergy Scanner')),
+      appBar: AppBar(title: const Text('Allergy scanner')),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 32),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('🛡️ Your allergies', style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-                  const SizedBox(height: 8),
-                  if (allergies.isEmpty)
-                    const Text('No food allergies on your profile, so nothing will be flagged.',
-                        style: TextStyle(color: AppTheme.textSecondary, fontSize: 13))
-                  else
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        for (final a in allergies)
-                          Chip(
-                            label: Text(a),
-                            backgroundColor: AppTheme.error.withOpacity(0.1),
-                            labelStyle: const TextStyle(color: AppTheme.error, fontWeight: FontWeight.w600),
-                            side: BorderSide.none,
-                          ),
-                      ],
-                    ),
-                ],
+            Reveal(
+              child: SizedBox(
+                width: double.infinity,
+                child: GlassCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(children: [
+                        IconWell(icon: Icons.shield_rounded, color: AppTheme.teal, size: 38),
+                        SizedBox(width: 12),
+                        Text('Your allergies', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: AppTheme.textPrimary, letterSpacing: -0.2)),
+                      ]),
+                      const SizedBox(height: 12),
+                      if (allergies.isEmpty)
+                        const Text('No food allergies on your profile, so nothing will be flagged.', style: TextStyle(color: AppTheme.textSecondary, fontSize: 13.5, height: 1.4))
+                      else
+                        Wrap(spacing: 8, runSpacing: 8, children: [for (final a in allergies) InfoChip(a, icon: Icons.warning_amber_rounded, color: AppTheme.error)]),
+                    ],
+                  ),
+                ),
               ),
             ),
-            const SizedBox(height: 24),
-            const Text('Scan a product label', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-            const SizedBox(height: 4),
+            const SectionHeader('Scan a product label', padding: EdgeInsets.fromLTRB(0, 26, 0, 4)),
             const Text('Photograph the ingredient list, keeping the text flat, sharp and well lit.',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
-            const SizedBox(height: 12),
+                style: TextStyle(color: AppTheme.textSecondary, fontSize: 13.5, height: 1.4, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 14),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: _busy ? null : () => _scan(ImageSource.camera),
-                    icon: const Icon(Icons.photo_camera),
+                    icon: const Icon(Icons.photo_camera_rounded),
                     label: const Text('Scan'),
                   ),
                 ),
@@ -131,7 +123,7 @@ class _AllergyScannerState extends State<AllergyScanner> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: _busy ? null : () => _scan(ImageSource.gallery),
-                    icon: const Icon(Icons.photo_library),
+                    icon: const Icon(Icons.photo_library_rounded),
                     label: const Text('Gallery'),
                   ),
                 ),
@@ -144,28 +136,36 @@ class _AllergyScannerState extends State<AllergyScanner> {
                   children: [
                     const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)),
                     const SizedBox(width: 12),
-                    Text(_status, style: const TextStyle(color: AppTheme.textSecondary)),
+                    Text(_status, style: const TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
-            const SizedBox(height: 28),
-            const Text('Or type / paste the ingredients', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-            const SizedBox(height: 12),
+            const SectionHeader('Or type / paste the ingredients', padding: EdgeInsets.fromLTRB(0, 30, 0, 12)),
             TextField(
               controller: _textCtrl,
               minLines: 4,
               maxLines: 8,
               decoration: const InputDecoration(hintText: 'Wheat flour, sugar, milk powder, soy oil, peanut butter, salt'),
             ),
-            const SizedBox(height: 12),
-            OutlinedButton(
+            const SizedBox(height: 14),
+            OutlinedButton.icon(
               onPressed: _busy ? null : () => _analyze(_textCtrl.text),
-              child: const Text('Check ingredients'),
+              icon: const Icon(Icons.fact_check_rounded),
+              label: const Text('Check ingredients'),
             ),
-            const SizedBox(height: 16),
-            const Text(
-              'Text recognition can miss or misread words. Always double-check the printed label if you have a serious allergy.',
-              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary, height: 1.4),
+            const SizedBox(height: 18),
+            const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.info_outline_rounded, size: 16, color: AppTheme.textSecondary),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Text recognition can miss or misread words. Always double-check the printed label if you have a serious allergy.',
+                    style: TextStyle(fontSize: 12.5, color: AppTheme.textSecondary, height: 1.45),
+                  ),
+                ),
+              ],
             ),
           ],
         ),

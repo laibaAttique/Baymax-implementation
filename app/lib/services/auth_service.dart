@@ -10,7 +10,10 @@ class AuthException implements Exception {
   /// True when the user dismissed a sign-in prompt; not an error to show.
   final bool cancelled;
 
-  const AuthException(this.message, {this.cancelled = false});
+  /// True when the email or password was wrong (counted by the login lockout, unlike a network error).
+  final bool badCredentials;
+
+  const AuthException(this.message, {this.cancelled = false, this.badCredentials = false});
 
   @override
   String toString() => message;
@@ -31,7 +34,7 @@ class AuthService {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      throw AuthException(_messageFor(e, 'Login failed'));
+      throw AuthException(_messageFor(e, 'Login failed'), badCredentials: const {'user-not-found', 'wrong-password', 'invalid-credential'}.contains(e.code));
     }
   }
 

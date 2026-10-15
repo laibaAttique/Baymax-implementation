@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../models/health_profile.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/forms.dart';
+import '../../widgets/glass.dart';
 import 'step3_fitness_goals.dart';
 
 class Step2MedicalHistory extends StatefulWidget {
@@ -28,22 +30,18 @@ class _Step2MedicalHistoryState extends State<Step2MedicalHistory> {
     _medsController.text = widget.profile.medications;
   }
 
-  void _toggleCondition(String c) {
+  /// "None" is exclusive: choosing it clears the others, and choosing anything else clears it.
+  void _toggle(List<String> list, String item) {
     setState(() {
-      if (_selectedConditions.contains(c)) {
-        _selectedConditions.remove(c);
+      if (list.contains(item)) {
+        list.remove(item);
       } else {
-        _selectedConditions.add(c);
-      }
-    });
-  }
-
-  void _toggleAllergy(String a) {
-    setState(() {
-      if (_selectedAllergies.contains(a)) {
-        _selectedAllergies.remove(a);
-      } else {
-        _selectedAllergies.add(a);
+        if (item == 'None') {
+          list.clear();
+        } else {
+          list.remove('None');
+        }
+        list.add(item);
       }
     });
   }
@@ -59,85 +57,123 @@ class _Step2MedicalHistoryState extends State<Step2MedicalHistory> {
     );
   }
 
-  Widget _buildChip(String label, bool isSelected, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: AppTheme.card,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: isSelected ? AppTheme.primary : AppTheme.border),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? AppTheme.primary : AppTheme.textPrimary,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    _medsController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Baymax')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Center(child: Text('Step 2 of 3 — Medical History & Allergies')),
-            const SizedBox(height: 24),
-            const Text('Medical Conditions', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-            const Text('Select any conditions that apply', style: TextStyle(color: AppTheme.textSecondary)),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _conditions.map((c) => _buildChip(c, _selectedConditions.contains(c), () => _toggleCondition(c))).toList(),
-            ),
-            const SizedBox(height: 32),
-            const Text('Food Allergies', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-            const Text('Select any food allergies', style: TextStyle(color: AppTheme.textSecondary)),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _allergies.map((a) => _buildChip(a, _selectedAllergies.contains(a), () => _toggleAllergy(a))).toList(),
-            ),
-            const SizedBox(height: 32),
-            const Text('Current Medications (Optional)', style: TextStyle(color: AppTheme.textSecondary)),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _medsController,
-              maxLines: 3,
-              decoration: const InputDecoration(hintText: "List any medications you're currently taking..."),
-            ),
-            const SizedBox(height: 32),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: AppTheme.card),
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('← Back', style: TextStyle(color: AppTheme.textPrimary)),
+      appBar: AppBar(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Reveal(
+                child: StepHeader(
+                  step: 2,
+                  total: 3,
+                  title: 'Health & allergies',
+                  subtitle: 'Conditions you report always take priority when your plan is built, so your workouts and meals stay safe.',
+                ),
+              ),
+              const SizedBox(height: 22),
+              Reveal(
+                index: 1,
+                child: GlassCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(children: [
+                        IconWell(icon: Icons.favorite_rounded, size: 36),
+                        SizedBox(width: 12),
+                        Expanded(child: Text('Medical conditions', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.3))),
+                      ]),
+                      const SizedBox(height: 6),
+                      const Padding(padding: EdgeInsets.only(left: 48), child: Text('Select any that apply', style: TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w500))),
+                      const SizedBox(height: 14),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [for (final c in _conditions) SelectChip(label: c, selected: _selectedConditions.contains(c), onTap: () => _toggle(_selectedConditions, c))],
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  flex: 2,
-                  child: ElevatedButton(
-                    onPressed: _next,
-                    child: const Text('Next: Fitness Goals →'),
+              ),
+              const SizedBox(height: 14),
+              Reveal(
+                index: 2,
+                child: GlassCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Row(children: [
+                        IconWell(icon: Icons.no_food_rounded, color: AppTheme.error, size: 36),
+                        SizedBox(width: 12),
+                        Expanded(child: Text('Food allergies', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.3))),
+                      ]),
+                      const SizedBox(height: 6),
+                      const Padding(padding: EdgeInsets.only(left: 48), child: Text('Used to warn you about foods and labels', style: TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w500))),
+                      const SizedBox(height: 14),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [for (final a in _allergies) SelectChip(label: a, selected: _selectedAllergies.contains(a), onTap: () => _toggle(_selectedAllergies, a))],
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 14),
+              Reveal(
+                index: 3,
+                child: GlassCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Current medications (optional)', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _medsController,
+                        maxLines: 3,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: const InputDecoration(hintText: "List any medications you're currently taking…"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+              // Mockup M5 FR5.4: a permanent privacy notice. It says only what is true: the app adds no encryption layer of its own.
+              const Reveal(
+                index: 4,
+                child: GlassCard(
+                  tint: Color(0xFFEAF6F4),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconWell(icon: Icons.lock_rounded, color: AppTheme.teal, size: 38),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'Your health details are sent over an encrypted connection and stored on Google\'s servers, which encrypt stored data (AES-256 by default). '
+                          'Only your signed-in account can read them, and Baymax does not show them to other users.',
+                          style: TextStyle(color: AppTheme.textPrimary, fontSize: 13, height: 1.45, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 26),
+              StepActions(nextLabel: 'Next: fitness goals', onNext: _next, onBack: () => Navigator.pop(context)),
+            ],
+          ),
         ),
       ),
     );

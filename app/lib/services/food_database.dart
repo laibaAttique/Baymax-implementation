@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 import '../models/food.dart';
 import 'catalog_service.dart';
@@ -20,17 +21,46 @@ class FoodDatabase {
   /// Normalised name/alias → item, for exact lookups.
   final Map<String, FoodItem> _byKey = {};
 
+  /// The normalised name and aliases of every item (and their singular forms), computed once: with ~2,800 foods the search runs on
+  /// every keystroke and must not normalise the same text again each time.
+  final List<List<(String, String)>> _keys = [];
+
   FoodDatabase(this.items, {this.origin = CatalogOrigin.bundled, this.version}) : _byId = {for (final i in items) i.id: i} {
     for (final item in items) {
+      final keys = <(String, String)>[];
       for (final key in [item.name, ...item.aliases]) {
-        _byKey.putIfAbsent(Fuzzy.normalize(key), () => item);
+        final k = Fuzzy.normalize(key);
+        _byKey.putIfAbsent(k, () => item);
+        keys.add((k, _singularPhrase(k)));
       }
+      _keys.add(keys);
     }
   }
 
-  factory FoodDatabase.fromJsonString(String source) {
+  factory FoodDatabase.fromJsonString(String source, {String? bulkJson}) {
     final list = jsonDecode(source) as List;
-    return FoodDatabase(list.map((e) => FoodItem.fromJson(e as Map<String, dynamic>)).toList());
+    final base = list.map((e) => FoodItem.fromJson(e as Map<String, dynamic>)).toList();
+    return FoodDatabase(withBulk(base, bulkJson));
+  }
+
+  /// The curated catalogue followed by the searchable food list (Module 8, mockup M23.1: a search over 1,000+ foods): the team's food
+  /// list, the Indian Nutrient Databank and USDA SR Legacy. A food from the list is left out when the curated catalogue already has a
+  /// food of the same name, so the curated one (with its meal roles and checked values) always wins.
+  static List<FoodItem> withBulk(List<FoodItem> base, String? bulkJson) {
+    if (bulkJson == null || bulkJson.isEmpty) return base;
+    try {
+      final taken = {for (final b in base) ...[b.name, ...b.aliases].map(Fuzzy.normalize)};
+      final ids = {for (final b in base) b.id};
+      final bulk = <FoodItem>[];
+      for (final e in jsonDecode(bulkJson) as List) {
+        final item = FoodItem.fromJson(e as Map<String, dynamic>);
+        if (ids.contains(item.id) || taken.contains(Fuzzy.normalize(item.name))) continue;
+        bulk.add(item);
+      }
+      return [...base, ...bulk];
+    } catch (_) {
+      return base; // a damaged bulk file must never take the curated catalogue down with it
+    }
   }
 
   static FoodDatabase? _instance;
@@ -50,14 +80,35 @@ class FoodDatabase {
       fromDoc: (id, data) => FoodItem.fromJson({...data, 'id': id}),
     );
     if (remote != null && remote.items.isNotEmpty) {
-      return _instance = FoodDatabase(remote.items, origin: remote.origin, version: remote.version);
+      // The food list lives in Firestore (seeded with tools/seed_firestore.js). The bundled copy is only used when Firestore does not
+      // have it yet (an older catalogue holding just the curated foods), so a failed or partial seed never loses the search.
+      final hasList = remote.items.where((i) => i.isBulk).length >= 500;
+      final items = hasList ? remote.items : withBulk(remote.items, await _bulkAsset());
+      return _instance = FoodDatabase(items, origin: remote.origin, version: remote.version);
     }
-    return _instance = FoodDatabase.fromJsonString(await rootBundle.loadString('assets/data/foods.json'));
+    return _instance = FoodDatabase.fromJsonString(await rootBundle.loadString('assets/data/foods.json'), bulkJson: await _bulkAsset());
+  }
+
+  static Future<String?> _bulkAsset() async {
+    try {
+      return await rootBundle.loadString('assets/data/foods_bulk.json');
+    } catch (_) {
+      return null;
+    }
   }
 
   /// One-line description of the data in use, shown under food search.
   String get originLabel {
-    final n = items.length;
+    final bulk = items.where((i) => i.isBulk).length;
+    final n = items.length - bulk;
+    if (bulk > 0) {
+      final where = origin == CatalogOrigin.server
+          ? 'synced from Firestore'
+          : origin == CatalogOrigin.cache
+              ? 'saved on this device'
+              : 'offline copy bundled with the app';
+      return 'Food database: ${items.length} foods, $where. Allergens of the $bulk searchable foods are estimated from the name.';
+    }
     switch (origin) {
       case CatalogOrigin.server:
         return 'Food catalogue: $n foods, synced from Firestore';
@@ -69,6 +120,10 @@ class FoodDatabase {
   }
 
   static FoodDatabase? get loaded => _instance;
+
+  /// Lets a test use a catalogue built from the bundled files instead of Firestore.
+  @visibleForTesting
+  static void useForTest(FoodDatabase? db) => _instance = db;
 
   FoodItem? byId(String id) => _byId[id];
 
@@ -94,11 +149,10 @@ class FoodDatabase {
     final qTokens = qSing.split(' ');
 
     final scored = <MapEntry<FoodItem, double>>[];
-    for (final item in items) {
+    for (var idx = 0; idx < items.length; idx++) {
+      final item = items[idx];
       var best = 0.0;
-      for (final key in [item.name, ...item.aliases]) {
-        final k = Fuzzy.normalize(key);
-        final kSing = _singularPhrase(k);
+      for (final (k, kSing) in _keys[idx]) {
         double s;
         if (k == q || kSing == qSing) {
           s = 1.0;
@@ -122,7 +176,9 @@ class FoodDatabase {
     }
     scored.sort((a, b) {
       final c = b.value.compareTo(a.value);
-      return c != 0 ? c : a.key.name.length.compareTo(b.key.name.length);
+      if (c != 0) return c;
+      if (a.key.isBulk != b.key.isBulk) return a.key.isBulk ? 1 : -1; // curated foods first
+      return a.key.name.length.compareTo(b.key.name.length);
     });
     return scored.take(limit).map((e) => e.key).toList();
   }

@@ -32,6 +32,11 @@ class HealthCalc {
 
   static double toKg(double value, String unit) => unit == 'lbs' ? value * 0.45359237 : value;
 
+  /// The reverse conversions, used when the user switches a unit and the number in the field must follow.
+  static double fromCm(double cm, String unit) => unit == 'ft' ? cm / 30.48 : cm;
+
+  static double fromKg(double kg, String unit) => unit == 'lbs' ? kg / 0.45359237 : kg;
+
   // --- BMI (WHO) ---------------------------------------------------------
 
   static double bmi(double weightKg, double heightCm) {

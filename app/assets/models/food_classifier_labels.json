@@ -1,0 +1,179 @@
+{
+ "name": "food_classifier",
+ "version": "20261012",
+ "trained_at": "2026-10-12T20:10:00+00:00",
+ "architecture": "EfficientNetV2B0 (transfer learning, fine-tuned), float16 TFLite",
+ "input": {
+  "size": 256,
+  "channels": "RGB",
+  "dtype": "float32",
+  "range": "0-255 (preprocessing is inside the model)",
+  "resize": "area/average, squashed to square"
+ },
+ "labels": [
+  "aloo_gobi",
+  "bhindi",
+  "butter_chicken",
+  "cake_slice",
+  "chicken_biryani",
+  "chicken_burger",
+  "chicken_curry",
+  "chicken_sandwich",
+  "chicken_tikka",
+  "french_fries",
+  "green_salad",
+  "grilled_fish",
+  "haleem",
+  "hummus",
+  "ice_cream",
+  "omelette",
+  "paratha",
+  "pasta",
+  "pizza_slice",
+  "roti",
+  "samosa",
+  "tea_milk"
+ ],
+ "recommended_min_confidence": 0.3,
+ "ship_recommended": false,
+ "metrics": {
+  "test_images": 2317,
+  "test_top1": 0.9261976694000863,
+  "test_top3": 0.9857574449719465,
+  "test_top1_flip_avg": 0.92921881743634,
+  "tflite_top1_sample": 0.944,
+  "test_top1_by_source": {
+   "food101": {
+    "images": 2093,
+    "top1": 0.935977066411849
+   },
+   "kaggle_pakistani_dishes_1": {
+    "images": 182,
+    "top1": 0.8516483516483516
+   },
+   "kaggle_pakistani_dishes_2": {
+    "images": 42,
+    "top1": 0.7619047619047619
+   }
+  },
+  "tflite_keras_agreement": 1.0,
+  "per_class": {
+   "aloo_gobi": {
+    "precision": 1.0,
+    "recall": 0.65,
+    "f1-score": 0.7879
+   },
+   "bhindi": {
+    "precision": 1.0,
+    "recall": 0.8636,
+    "f1-score": 0.9268
+   },
+   "butter_chicken": {
+    "precision": 0.85,
+    "recall": 0.8095,
+    "f1-score": 0.8293
+   },
+   "cake_slice": {
+    "precision": 0.9747,
+    "recall": 0.9507,
+    "f1-score": 0.9626
+   },
+   "chicken_biryani": {
+    "precision": 0.75,
+    "recall": 1.0,
+    "f1-score": 0.8571
+   },
+   "chicken_burger": {
+    "precision": 0.9769,
+    "recall": 0.927,
+    "f1-score": 0.9513
+   },
+   "chicken_curry": {
+    "precision": 0.8686,
+    "recall": 0.952,
+    "f1-score": 0.9084
+   },
+   "chicken_sandwich": {
+    "precision": 0.9386,
+    "recall": 0.964,
+    "f1-score": 0.9511
+   },
+   "chicken_tikka": {
+    "precision": 0.8421,
+    "recall": 0.8889,
+    "f1-score": 0.8649
+   },
+   "french_fries": {
+    "precision": 0.963,
+    "recall": 0.9701,
+    "f1-score": 0.9665
+   },
+   "green_salad": {
+    "precision": 0.9365,
+    "recall": 0.9833,
+    "f1-score": 0.9593
+   },
+   "grilled_fish": {
+    "precision": 0.9008,
+    "recall": 0.916,
+    "f1-score": 0.9083
+   },
+   "haleem": {
+    "precision": 0.913,
+    "recall": 0.84,
+    "f1-score": 0.875
+   },
+   "hummus": {
+    "precision": 0.8705,
+    "recall": 0.903,
+    "f1-score": 0.8864
+   },
+   "ice_cream": {
+    "precision": 0.8615,
+    "recall": 0.918,
+    "f1-score": 0.8889
+   },
+   "omelette": {
+    "precision": 0.8162,
+    "recall": 0.925,
+    "f1-score": 0.8672
+   },
+   "paratha": {
+    "precision": 0.8095,
+    "recall": 0.6538,
+    "f1-score": 0.7234
+   },
+   "pasta": {
+    "precision": 0.9759,
+    "recall": 0.9076,
+    "f1-score": 0.9405
+   },
+   "pizza_slice": {
+    "precision": 0.8952,
+    "recall": 0.9407,
+    "f1-score": 0.9174
+   },
+   "roti": {
+    "precision": 0.875,
+    "recall": 0.75,
+    "f1-score": 0.8077
+   },
+   "samosa": {
+    "precision": 0.9735,
+    "recall": 0.9423,
+    "f1-score": 0.9577
+   },
+   "tea_milk": {
+    "precision": 0.9474,
+    "recall": 1.0,
+    "f1-score": 0.973
+   }
+  }
+ },
+ "training": {
+  "train_images": 8472,
+  "label_noise_images_removed": 0,
+  "dataset": "Food-101 subset (cleaned), terms of Food-101 apply; sources in this run: food101, kaggle_pakistani_dishes_1, kaggle_pakistani_dishes_2",
+  "custom_photo_dishes_not_trained": {}
+ }
+}

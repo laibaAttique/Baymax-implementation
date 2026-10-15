@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/glass.dart';
 
 class _Source {
   final String topic;
@@ -81,13 +82,29 @@ class SourcesScreen extends StatelessWidget {
       'Exercise library',
       'The exercises are stored in Cloud Firestore so they can be corrected or extended without an app update, with an offline copy bundled in the app. '
           'Each exercise records its energy value (Compendium code), its muscle groups, and where its technique text comes from. '
-          '15 of the 32 entries are matched to the free-exercise-db open dataset for muscles and technique; the other 17 (for example brisk walking, jumping jacks, burpees, wall sit, bird dog) have no suitable entry and are written by the team.',
+          'The library has 73 bodyweight exercises: 32 written by the team (15 of them matched to the free-exercise-db open dataset for muscles) and 41 curated from that dataset. '
+          'For the curated ones only the exercise, its muscles and its difficulty come from the dataset; the technique cues are written by the team, because several of the dataset\'s own instructions assume gym equipment or maximal effort. '
+          'Of 188 no-equipment entries reviewed, those needing a bar, bench, machine or partner, expert-level moves and athletic drills were left out.',
       [
         'free-exercise-db — open public-domain (Unlicense) exercise dataset, github.com/yuhonas/free-exercise-db.',
         'Herrmann SD, et al. 2024 Adult Compendium of Physical Activities. J Sport Health Sci 2024; 13(1): 6–12 (energy values).',
       ],
-      caveat: 'free-exercise-db is community-maintained, not clinically reviewed, and its wording is written for gym training (for example it says to hold a plank "as long as possible"), so the cues are rewritten here for the prescribed dosage. '
-          'The team-written cues should be reviewed by a qualified trainer or physiotherapist before release.',
+      caveat: 'free-exercise-db is community-maintained and not clinically reviewed. The curated exercises have no exact Compendium entry of their own: each uses the energy value of the closest movement class already used in the library (marked *). '
+          'The body-load fields (which joints a move stresses, whether you need to get down to the floor, how much coordination it needs) are assigned by the team. '
+          'All team-written cues and these fields should be reviewed by a qualified trainer or physiotherapist before release.',
+    ),
+    _Source(
+      'How exercises are chosen for you',
+      'First the safety rules remove every exercise that is not allowed for you (your conditions, BMI and age). Then the remaining exercises for each part of the session are ranked using your answers: '
+          'your fitness capacity (from your activity level, lowered a little for age 50+ and for BMI 30+) against each exercise\'s difficulty; your goal (weight loss favours higher energy use, muscle gain favours strength moves); '
+          'which joints the movement loads against your BMI and age; whether the exercise needs you to get down to the floor (age 65+ or BMI 35+); coordination demand (age 60+); and variety across the week. '
+          'Your height and weight also set your calorie estimates, and your gender only affects the energy calculation, not which exercises you get. After training, the cool-down picks static stretches for the body regions you worked. Each choice shows the reason.',
+      [
+        'WHO. Guidelines on physical activity and sedentary behaviour. Geneva, 2020 (balance training for adults 65+).',
+        'Project team design: the ranking weights, the capacity scale and the joint-load values are not from a published formula.',
+      ],
+      caveat: 'The safety rules always come first; the ranking only orders what is already allowed. The weights are team choices and have not been validated against outcomes or reviewed by a trainer. '
+          'The profile does not ask about injuries or joint pain, so the app cannot adjust for them: stop any exercise that hurts, and see a professional for a problem.',
     ),
     _Source(
       'Calories burned in workouts',
@@ -109,6 +126,79 @@ class SourcesScreen extends StatelessWidget {
       caveat: 'Mixed home-cooked dishes (biryani, karahi, daal, etc.) vary widely with recipe and oil used. The Pakistan table exists only on paper, so values for those dishes are estimates and are labelled as such.',
     ),
     _Source(
+      'Food photo recognition (machine learning)',
+      'An EfficientNetV2-B0 image classifier, fine-tuned from ImageNet weights and running on your phone, suggests up to three catalogue foods for a photo. You always confirm the food and the portion; nothing is logged automatically. '
+          'It knows 22 foods: 13 from Food-101 (samosa also has Kaggle photos) and 9 South-Asian dishes (aloo gobi, bhindi, butter chicken, chicken biryani, chicken tikka, haleem, paratha, roti, chai) from a Kaggle "Pakistani Dishes" dataset.',
+      [
+        'Bossard L, Guillaumin M, Van Gool L. Food-101 — mining discriminative components with random forests. ECCV 2014.',
+        'Kaggle "Pakistani Dishes Dataset" (useractivated/dataset). Web-collected images; licence not verified by the team.',
+        'Tan M, Le QV. EfficientNetV2: smaller models and faster training. ICML 2021.',
+      ],
+      caveat: 'On held-out test photos it picked the right food about 93% of the time overall, but only about 85% and 76% on the test photos from the two Kaggle sets, which come from the same web collections as their training photos; '
+          'phone photos will be harder. Aloo gobi and paratha were right only about 65% of the time, below the team\'s 70% bar, so the model has NOT passed the team\'s release gate: it is available in test builds only, and release builds ask you to pick the food. '
+          'Photos are processed on the device. The model recognises the dish, not the portion size.',
+    ),
+    _Source(
+      'Personalised calorie target',
+      'Your starting estimate is the Mifflin–St Jeor formula times your activity factor. Once you have logged your weight at least 4 times over 14 or more days and fully logged your food on at least 10 of those days, the app also works out what your own data implies: '
+          'average calories eaten minus the daily weight change (from a straight line fitted to your weigh-ins) times about 7,700 kcal per kg. The two estimates are combined in proportion to how reliable each is (a Bayesian update), '
+          'so noisy weights count for less. The result may raise the formula estimate by at most 15% and lower it by at most 10%, never gives the data more than 70% of the say, is ignored if it is more than 30% away from the formula, and is switched off for under-18s and for anyone who reported heart disease or diabetes. '
+          'The usual minimum intake (1,200 kcal women, 1,500 kcal men) and the no-deficit rule for underweight still apply.',
+      [
+        'Mifflin MD, St Jeor ST, et al. A new predictive equation for resting energy expenditure in healthy individuals. Am J Clin Nutr 1990; 51(2): 241–247.',
+        'Wishnofsky M. Caloric equivalents of gained or lost weight. Am J Clin Nutr 1958; 6(5): 542–546 (the 3,500 kcal per pound rule of thumb).',
+        'Hall KD, Sacks G, Chandramohan D, et al. Quantification of the effect of energy imbalance on bodyweight. Lancet 2011; 378: 826–837 (why the rule of thumb is only approximate).',
+      ],
+      caveat: 'The 7,700 kcal per kg figure is an approximation; real energy changes depend on what is gained or lost and shift over time. The assumed 10% uncertainty of the formula and of calorie logging, the 28-day window, the 60%-of-BMR "fully logged day" rule and the safety limits are choices made by the project team, not published values. '
+          'Under-logging food makes your needs look lower than they are; the limits above are there to contain that. This is NOT the Gradient Boosting model named in the project scope: that needs measured daily-energy data (the IAEA doubly-labelled-water database is released on request), which the team does not have yet.',
+    ),
+    _Source(
+      'Fitness score, levels, badges and leaderboard',
+      'Your weekly fitness score (0–100) is 50% workouts you marked completed out of the planned workout days so far this week, 25% days on which you logged food, and 25% of your logged days that landed within 15% of your calorie target. '
+          'Your level is the average of your recent weekly scores: Beginner below 40, Intermediate 40–69, Advanced 70 and above. Badges follow fixed rules over your last four weeks of logs. '
+          'The weekly leaderboard is opt-in. With at least 15 participants the app groups them as beginner, intermediate or advanced with K-Means clustering (3 groups, using score, workouts and logging days); with fewer people it uses the score thresholds above and says so.',
+      [
+        'Project team design: no published standard defines these weights, tolerances or thresholds, and they are not clinically validated.',
+        'Lloyd SP. Least squares quantization in PCM. IEEE Transactions on Information Theory 1982; 28(2): 129–137 (the K-Means algorithm).',
+        'Arthur D, Vassilvitskii S. k-means++: the advantages of careful seeding. Proceedings of SODA 2007: 1027–1035 (cluster seeding).',
+      ],
+      caveat: 'Only workouts you tick off and meals you log are counted; there is no link to a fitness tracker. A day with only some meals logged will usually miss the calorie window. '
+          'Scores are calculated on each phone, so a modified app could submit a false score: the ranking is for motivation, not a verified result.',
+    ),
+    _Source(
+      'Reminders and inactivity alerts',
+      'If you turn them on, the app schedules a reminder on your phone at your chosen time on each planned workout day. You are treated as inactive when at least 3 days have passed since your last workout and at least one planned workout day has gone by without one; '
+          'rest days alone never count. The alert is a single notification, and notifications never show health details on the lock screen.',
+      [
+        'Project team design (3-day threshold and wording).',
+      ],
+      caveat: 'Reminders are scheduled on the phone, so they need no internet, but Android may delay them to save battery. Push notifications sent from a server are not part of this version.',
+    ),
+    _Source(
+      'Accounts and roles',
+      'Every account is a standard member who can see and change only their own data. Doctor, nutritionist, trainer and administrator roles exist in the app, but a role can only be set by an administrator in the Firebase console, never from the app.',
+      [
+        'Project team design (role list from the project scope, Module 14).',
+      ],
+      caveat: 'A specialist never gets a key to your data. The security rules give nobody access to another person\'s data; a specialist sees only what you tick when you book an appointment, and only through the specialist portal\'s server, which logs each time it is opened. '
+          'The app does not add its own AES encryption layer on top of the database; that part of the scope is not implemented in this version.',
+    ),
+    _Source(
+      'Food database (2,700+ searchable foods)',
+      'Food search covers the app\'s curated foods plus a larger list of about 2,700 foods stored in Cloud Firestore (a copy is bundled for offline use): '
+          '(1) the project team\'s own food list, with Pakistani and Indian dish names and serving sizes; its rows say where each figure came from (USDA, the Indian Nutrient Databank, a restaurant\'s published figures, or "curated" by the team with no outside source); '
+          '(2) recipes from the Indian Nutrient Databank, whose values are calculated from recipe ingredients; '
+          '(3) about 1,040 everyday foods from USDA FoodData Central SR Legacy, whose energy, protein, fat and carbohydrate were checked against USDA\'s published tables, scaled to the first household portion USDA lists. '
+          'Every food shows its source when you pick it. These foods never appear in generated meal plans.',
+      [
+        'U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, SR Legacy (April 2018 release). fdc.nal.usda.gov. Published under CC0 1.0.',
+        'Vijayakumar A, Dubasi HB, Awasthi A, Jaacks LM. Development of an Indian Food Composition Database. Current Developments in Nutrition 2024; 8(7): 103790. doi:10.1016/j.cdnut.2024.103790.',
+      ],
+      caveat: 'None of these lists has allergen information. For these foods the allergens are guessed from the food\'s name by rules that deliberately over-warn, and the app says so; '
+          'they can still miss an ingredient, so read the printed label if your allergy is serious. The team list\'s rows marked "curated" cite no outside source, and the usage terms of the team list and of the Indian Nutrient Databank table were not verified. '
+          'Recipe-based and restaurant values are averages and can differ from what you eat. Recipes whose energy contradicted their own protein, carbohydrate and fat (30 soups and sauces in the Indian table) were left out.',
+    ),
+    _Source(
       'Allergen detection',
       'Your allergies are matched against the ingredient text using a synonym list (for example "whey" and "casein" for dairy), tolerance for scanning errors, and a separate warning for "may contain" statements. '
           'The allergen groups follow the major food allergens in the Codex labelling standard.',
@@ -125,46 +215,67 @@ class SourcesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Sources & methodology')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 32),
         children: [
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: AppTheme.warning.withOpacity(0.12), borderRadius: BorderRadius.circular(12)),
-            child: const Text(
-              'Baymax is a decision-support tool, not a medical device. It does not diagnose or treat any condition, and it does not replace advice from a doctor, dietitian or qualified trainer.',
-              style: TextStyle(color: AppTheme.warning, height: 1.4, fontSize: 13),
+          Reveal(
+            child: GlassCard(
+              tint: AppTheme.tint(AppTheme.warning, 0.16),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconWell(icon: Icons.health_and_safety_rounded, color: AppTheme.warning, size: 40),
+                  SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      'Baymax is a decision-support tool, not a medical device. It does not diagnose or treat any condition, and it does not replace advice from a doctor, dietitian or qualified trainer.',
+                      style: TextStyle(color: AppTheme.textPrimary, height: 1.45, fontSize: 13.5, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 16),
-          for (final s in _sources) _card(s),
+          const SizedBox(height: 14),
+          for (var i = 0; i < _sources.length; i++) Reveal(index: i + 1, child: _card(_sources[i])),
         ],
       ),
     );
   }
 
   Widget _card(_Source s) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(s.topic, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.textPrimary)),
-          const SizedBox(height: 8),
-          Text(s.howWeUseIt, style: const TextStyle(color: AppTheme.textPrimary, height: 1.4, fontSize: 13)),
-          const SizedBox(height: 10),
-          const Text('REFERENCES', style: TextStyle(fontSize: 10, letterSpacing: 1, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-          for (final r in s.references)
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Text('• $r', style: const TextStyle(color: AppTheme.textSecondary, height: 1.4, fontSize: 12)),
-            ),
-          if (s.caveat != null) ...[
-            const SizedBox(height: 10),
-            Text('Limits: ${s.caveat}', style: const TextStyle(color: AppTheme.warning, height: 1.4, fontSize: 12)),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(s.topic, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16.5, color: AppTheme.textPrimary, letterSpacing: -0.2)),
+            const SizedBox(height: 8),
+            Text(s.howWeUseIt, style: const TextStyle(color: AppTheme.textPrimary, height: 1.5, fontSize: 13.5, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 14),
+            const Text('REFERENCES', style: AppTheme.overline),
+            for (final r in s.references)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(padding: EdgeInsets.only(top: 6), child: Icon(Icons.circle, size: 4.5, color: AppTheme.textSecondary)),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text(r, style: const TextStyle(color: AppTheme.textSecondary, height: 1.45, fontSize: 12.5))),
+                  ],
+                ),
+              ),
+            if (s.caveat != null) ...[
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: AppTheme.tint(AppTheme.warning, 0.14), borderRadius: BorderRadius.circular(AppTheme.rSmall + 2)),
+                child: Text('Limits: ${s.caveat}', style: const TextStyle(color: AppTheme.warning, height: 1.45, fontSize: 12.5, fontWeight: FontWeight.w600)),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

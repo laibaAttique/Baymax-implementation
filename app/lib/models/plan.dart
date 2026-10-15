@@ -43,6 +43,21 @@ class Exercise {
   final String? referenceId;
   final String? referenceMatch;
 
+  /// Body regions the movement loads: knee, wrist, shoulder, lowerBack, ankle. Team-assigned, pending professional review.
+  final List<String> joints;
+
+  /// standing | seated | floor: how hard the movement is to get into and out of.
+  final String position;
+
+  /// Coordination demand, 1 (simple) to 3 (complex).
+  final int complexity;
+
+  /// compound | isolation | '' (not stated).
+  final String mechanic;
+
+  /// What you need besides your body: none, or e.g. "sturdy table, counter or wall".
+  final String equipment;
+
   const Exercise({
     required this.id,
     required this.name,
@@ -61,6 +76,11 @@ class Exercise {
     this.techniqueSource = 'team',
     this.referenceId,
     this.referenceMatch,
+    this.joints = const [],
+    this.position = 'standing',
+    this.complexity = 1,
+    this.mechanic = '',
+    this.equipment = 'none',
   });
 
   factory Exercise.fromJson(Map<String, dynamic> j) {
@@ -83,6 +103,11 @@ class Exercise {
       techniqueSource: j['techniqueSource'] as String? ?? 'team',
       referenceId: j['referenceId'] as String?,
       referenceMatch: j['referenceMatch'] as String?,
+      joints: list(j['joints']),
+      position: j['position'] as String? ?? 'standing',
+      complexity: (j['complexity'] as num?)?.toInt() ?? 1,
+      mechanic: j['mechanic'] as String? ?? '',
+      equipment: j['equipment'] as String? ?? 'none',
     );
   }
 
@@ -104,6 +129,11 @@ class Exercise {
         'techniqueSource': techniqueSource,
         if (referenceId != null) 'referenceId': referenceId,
         if (referenceMatch != null) 'referenceMatch': referenceMatch,
+        'joints': joints,
+        'position': position,
+        'complexity': complexity,
+        'mechanic': mechanic,
+        'equipment': equipment,
       };
 
   String get levelLabel => level == 1 ? 'Low' : (level == 2 ? 'Medium' : 'High');
@@ -117,13 +147,20 @@ class PlannedExercise {
   final int seconds; // per set when timed, else 0
   final int restSeconds;
 
+  /// Why this exercise was chosen for this person (empty for the fixed warm-up and cool-down).
+  final List<String> reasons;
+
   const PlannedExercise({
     required this.exercise,
     required this.sets,
     required this.reps,
     required this.seconds,
     required this.restSeconds,
+    this.reasons = const [],
   });
+
+  PlannedExercise withReasons(List<String> r) =>
+      PlannedExercise(exercise: exercise, sets: sets, reps: reps, seconds: seconds, restSeconds: restSeconds, reasons: r);
 
   bool get timed => exercise.timed;
 
@@ -193,7 +230,11 @@ class NutritionPlan {
   /// Breakfast / Lunch / Dinner / Snack → items.
   final Map<String, List<MealItem>> meals;
   final List<String> avoid;
+  /// Advice that always applies to this person (their conditions, goal and water target). Shown as "For your health".
   final List<String> tips;
+
+  /// Everyday nutrition tips that rotate (Module 9, mockup M26 FR26.4): see [tipsFor].
+  final List<String> tipPool;
   final String? calorieNote;
 
   const NutritionPlan({
@@ -206,8 +247,18 @@ class NutritionPlan {
     required this.meals,
     required this.avoid,
     required this.tips,
+    this.tipPool = const [],
     this.calorieNote,
   });
+
+  /// [count] tips for [day], taken in order from [tipPool] and moved on every day, so no tip repeats inside any 7 consecutive days
+  /// as long as the pool holds at least 7 x [count] tips.
+  List<String> tipsFor(DateTime day, {int count = 3}) {
+    if (tipPool.isEmpty) return const [];
+    final dayNumber = DateTime.utc(day.year, day.month, day.day).millisecondsSinceEpoch ~/ Duration.millisecondsPerDay;
+    final start = (dayNumber * count) % tipPool.length;
+    return [for (var k = 0; k < count && k < tipPool.length; k++) tipPool[(start + k) % tipPool.length]];
+  }
 
   double mealKcal(String meal) => (meals[meal] ?? const []).fold(0.0, (s, i) => s + i.kcal);
 }

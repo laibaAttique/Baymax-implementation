@@ -3,6 +3,7 @@ import '../models/health_profile.dart';
 import '../models/plan.dart';
 import '../utils/health_calc.dart';
 import 'exercise_library.dart';
+import 'exercise_selector.dart';
 import 'food_database.dart';
 import 'health_classifier.dart';
 import 'ml/gradient_boosting_model.dart';
@@ -133,11 +134,13 @@ class PlanGenerator {
     final days = profile.workoutFrequency.clamp(2, restrictions.maxDays);
     final slots = _schedule[days]!;
     final week = List<WorkoutDay?>.filled(7, null);
+    // FR-2/FR-3: within the exercises the safety rules allow, the selector ranks by this person's body parameters and answers.
+    final selector = ExerciseSelector(BodyProfile.from(profile), variant: variant);
+    final weekUsage = <String, int>{};
     final adjusted = <String>{};
     for (var i = 0; i < slots.length; i++) {
       final template = templates[(i + variant) % templates.length];
-      week[slots[i]] = _withModelEstimate(
-          _buildDay(template, intensity, restrictions, variant * 2 + i, profile.weightKg, tooDifficult, adjusted), profile);
+      week[slots[i]] = _withModelEstimate(_buildDay(template, intensity, restrictions, profile.weightKg, selector, weekUsage, tooDifficult, adjusted), profile);
     }
 
     return PersonalizedPlan(
@@ -246,21 +249,19 @@ class PlanGenerator {
 
   // --- FR-2 / FR-5: templates and weekly schedule --------------------------
 
-  WorkoutDay _buildDay(_Template t, String intensity, PlanRestrictions r, int offset, double weightKg,
+  WorkoutDay _buildDay(_Template t, String intensity, PlanRestrictions r, double weightKg, ExerciseSelector selector, Map<String, int> weekUsage,
       [Set<String> tooDifficult = const {}, Set<String>? adjusted]) {
     final usedIds = <String>{};
     final main = <PlannedExercise>[];
 
     for (final slot in t.slots) {
-      final pool = ExerciseLibrary.all.where((e) => e.group == slot.group && r.allows(e)).toList()
-        ..sort((a, b) => a.level != b.level ? a.level.compareTo(b.level) : a.id.compareTo(b.id));
+      final pool = ExerciseLibrary.all.where((e) => e.group == slot.group && r.allows(e) && !usedIds.contains(e.id)).toList();
       if (pool.isEmpty) continue;
-      var taken = 0;
-      for (var i = 0; taken < slot.count && i < pool.length * 2; i++) {
-        var e = pool[(offset + i) % pool.length];
+      for (final picked in selector.rank(pool, weekUsage: weekUsage).take(slot.count)) {
+        var e = picked.exercise;
         var lighter = false;
         if (tooDifficult.contains(e.id)) {
-          // The pool is sorted easiest first.
+          // FR17.4: swap flagged exercise for an easier/equal one of the same group
           final flagged = e;
           final alternative = pool
               .where((a) => !tooDifficult.contains(a.id) && a.level <= flagged.level && !usedIds.contains(a.id))
@@ -273,11 +274,10 @@ class PlanGenerator {
             adjusted?.add('${flagged.name} (lighter dose)');
           }
         }
-        if (usedIds.add(e.id)) {
-          final planned = _prescribe(e, intensity, maxHold: r.maxHoldSeconds);
-          main.add(lighter ? _lighter(planned) : planned);
-          taken++;
-        }
+        usedIds.add(e.id);
+        weekUsage[e.id] = (weekUsage[e.id] ?? 0) + 1;
+        final planned = _prescribe(e, intensity, maxHold: r.maxHoldSeconds).withReasons(picked.reasons);
+        main.add(lighter ? _lighter(planned) : planned);
       }
     }
 
@@ -288,19 +288,22 @@ class PlanGenerator {
       final eachSec = ((totalMin * 60 / steady.length) / 30).round() * 30;
       for (final s in steady) {
         final i = main.indexOf(s);
-        main[i] = PlannedExercise(exercise: s.exercise, sets: 1, reps: 0, seconds: eachSec, restSeconds: s.restSeconds);
+        main[i] = PlannedExercise(exercise: s.exercise, sets: 1, reps: 0, seconds: eachSec, restSeconds: s.restSeconds, reasons: s.reasons);
       }
     }
 
     if (r.includeBalance) {
       final balance = ExerciseLibrary.all.firstWhere((e) => e.id == 'single_leg_balance');
-      main.add(_prescribe(balance, intensity, maxHold: r.maxHoldSeconds));
+      main.add(_prescribe(balance, intensity, maxHold: r.maxHoldSeconds).withReasons(const ['Balance training is recommended from age 65']));
     }
+
+    // Cool-down: up to two static stretches for the body regions this session actually worked.
+    final stretches = _cooldownStretches(main, r, selector, weekUsage);
 
     final warm = _prescribe(ExerciseLibrary.warmUp, intensity);
     final cool = _prescribe(ExerciseLibrary.coolDown, intensity);
 
-    List<PlannedExercise> all() => [warm, ...main, cool];
+    List<PlannedExercise> all() => [warm, ...main, ...stretches, cool];
     int minutes() => WorkoutDay(name: '', focus: '', exercises: all()).durationMin;
     while (main.length > 3 && minutes() > r.maxSessionMin) {
       main.removeLast();
@@ -308,6 +311,41 @@ class PlanGenerator {
 
     return WorkoutDay(name: t.name, focus: t.focus, exercises: all(), kind: t.kind);
   }
+
+  List<PlannedExercise> _cooldownStretches(List<PlannedExercise> main, PlanRestrictions r, ExerciseSelector selector, Map<String, int> weekUsage) {
+    final worked = bodyRegions(main.where((p) => p.exercise.group != 'mobility').expand((p) => p.exercise.muscles));
+    if (worked.isEmpty) return const [];
+    final pool = ExerciseLibrary.all
+        .where((e) => e.group == 'mobility' && !e.tags.contains('dynamic') && !e.tags.contains('balance') && r.allows(e))
+        .where((e) => !main.any((p) => p.exercise.id == e.id))
+        .toList();
+    final scored = <(ScoredExercise, Set<String>)>[];
+    for (final e in pool) {
+      final overlap = bodyRegions(e.muscles).intersection(worked);
+      if (overlap.isEmpty) continue;
+      scored.add((selector.score(e, weekUsage: weekUsage), overlap));
+    }
+    // most relevant first (more worked regions stretched), then the person-fit score
+    scored.sort((a, b) {
+      final byOverlap = b.$2.length.compareTo(a.$2.length);
+      return byOverlap != 0 ? byOverlap : b.$1.score.compareTo(a.$1.score);
+    });
+    final out = <PlannedExercise>[];
+    final covered = <String>{};
+    for (final (s, overlap) in scored) {
+      if (out.length == 2) break;
+      if (overlap.every(covered.contains)) continue; // would only repeat a region already stretched
+      covered.addAll(overlap);
+      weekUsage[s.exercise.id] = (weekUsage[s.exercise.id] ?? 0) + 1;
+      out.add(_prescribe(s.exercise, 'Low').withReasons(['Stretches what you just worked: ${overlap.map(_regionLabel).join(', ')}']));
+    }
+    return out;
+  }
+
+  static String _regionLabel(String r) => const {
+        'lowerBack': 'lower back',
+        'upperBack': 'upper back',
+      }[r] ?? r;
 
   /// Replaces the MET calorie estimate with the Gradient Boosting prediction when a model is loaded.
   WorkoutDay _withModelEstimate(WorkoutDay day, HealthProfile p) {
@@ -424,6 +462,7 @@ class PlanGenerator {
       meals: meals,
       avoid: _avoidList(p, cls, allergies),
       tips: _tips(p, cls),
+      tipPool: tipPoolFor(p, cls),
       calorieNote: p.primaryGoal == 'Lose Weight' ? targets.safetyNote : null,
     );
   }
@@ -486,16 +525,75 @@ class PlanGenerator {
     return avoid.toSet().toList();
   }
 
+  /// Advice that always applies to this person. It does not rotate.
   List<String> _tips(HealthProfile p, ClassificationResult cls) {
-    final tips = <String>[
-      'Drink about ${HealthCalc.waterLitres(p.weightKg).toStringAsFixed(1)} L of water daily.',
-      'Eat dinner at least 2 hours before sleep.',
-      'Add vegetables to every main meal for fibre.',
-    ];
+    final tips = <String>['Drink about ${HealthCalc.waterLitres(p.weightKg).toStringAsFixed(1)} L of water daily.'];
     if (p.primaryGoal == 'Lose Weight') tips.add('Include protein at every meal to stay full and protect muscle.');
     if (p.primaryGoal == 'Gain Muscle') tips.add('Eat protein within 2 hours after training.');
     if (p.hasCondition('Diabetes')) tips.add('Spread carbohydrates evenly across meals and monitor your blood sugar.');
     if (cls.isCardiac || p.hasCondition('Hypertension')) tips.add('Keep salt under 5 g (about 1 teaspoon) per day.');
     return tips;
+  }
+
+  /// General tips that rotate day by day (Module 9, FR26.4). Written by the project team as common healthy-eating practice;
+  /// they deliberately contain no figures, so nothing in them needs a source. Some are only for a goal or condition.
+  static const _generalTips = <String>[
+    'Add vegetables to every main meal for fibre.',
+    'Eat dinner a couple of hours before you go to bed.',
+    'Sit down and eat slowly. It takes a while for fullness to register.',
+    'Plan tomorrow\'s meals tonight so you are not deciding when hungry.',
+    'Keep a bottle of water with you and sip through the day.',
+    'Choose whole grains such as brown rice, oats or whole-wheat roti more often than refined ones.',
+    'Fill half your plate with vegetables or salad before adding the rest.',
+    'Read the ingredient list, not just the front of the packet.',
+    'Keep fruit where you can see it. Easy snacks get eaten.',
+    'Cook at home when you can: you decide the oil, salt and portion.',
+    'Grilling, baking or steaming instead of deep frying keeps meals lighter.',
+    'Do not skip breakfast if it keeps you from overeating later.',
+    'Spread your protein across the day instead of eating most of it at dinner.',
+    'Swap sugary drinks for water, unsweetened tea or plain lassi.',
+    'Use a smaller plate if you tend to overfill it.',
+    'Pause before a second helping and ask whether you are still hungry.',
+    'Pulses such as daal, chana and lobia are cheap sources of protein and fibre.',
+    'Keep a healthy snack ready, such as nuts, yoghurt or fruit, so a hungry moment does not become a fast-food stop.',
+    'Eat the colours: different coloured vegetables bring different nutrients.',
+    'Limit treats to a planned portion instead of eating from the packet.',
+    'Switch off screens at meals. You will notice when you are full.',
+    'Prepare a few meals in advance on a quiet day for busy ones.',
+    'Notice liquid calories: juices, shakes and sweet tea add up quickly.',
+    'Season with herbs, lemon and spices rather than extra salt.',
+    'Keep your food diary honest. It only helps if it includes the small bites too.',
+    'A short walk after a meal is a simple habit that many people find helpful.',
+    'Shop with a list and not when hungry.',
+    'Include some healthy fat, such as nuts, seeds or olive oil, in moderation.',
+  ];
+
+  /// Extra tips for a goal or condition, added to the rotation for the people they apply to.
+  static const _goalTips = <String, List<String>>{
+    'Lose Weight': [
+      'A modest, steady calorie deficit is easier to keep than a harsh one.',
+      'Protein and fibre together keep you full for longer.',
+    ],
+    'Gain Muscle': [
+      'Eat regularly through the day: three meals plus snacks make it easier to reach your calories.',
+      'Pair your training with enough protein and enough sleep. Muscle is built during recovery.',
+    ],
+    'Diabetes': [
+      'Choose carbohydrates that digest slowly, such as whole grains and pulses, and pair them with protein.',
+      'Check labels for hidden sugar in sauces, drinks and breakfast cereals.',
+    ],
+    'Hypertension': [
+      'Pickles, chips, instant noodles and many sauces are high in salt; check how often you eat them.',
+      'Potassium-rich foods such as bananas, potatoes and leafy greens can help, unless your doctor has told you otherwise.',
+    ],
+  };
+
+  /// The rotating tips for this person: the general ones plus those for their goal and conditions.
+  static List<String> tipPoolFor(HealthProfile p, ClassificationResult cls) {
+    final pool = <String>[..._generalTips];
+    pool.addAll(_goalTips[p.primaryGoal] ?? const []);
+    if (p.hasCondition('Diabetes')) pool.addAll(_goalTips['Diabetes']!);
+    if (cls.isCardiac || p.hasCondition('Hypertension')) pool.addAll(_goalTips['Hypertension']!);
+    return pool;
   }
 }

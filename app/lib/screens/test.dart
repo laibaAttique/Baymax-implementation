@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// TEMPORARY: lets you confirm which copy of the project is running.
+/// Development builds only (opened by long-pressing the logo, and only when `kDebugMode`): lets you confirm which copy of the project is running.
 /// If you can open this screen, you are running the "baymaxxxx 2" copy that
 /// Claude edited. Delete this file (and the long-press in splash_screen.dart)
 /// once you have confirmed.
@@ -20,7 +20,7 @@ class TestScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('✅', style: TextStyle(fontSize: 64)),
+              const Icon(Icons.check_circle_rounded, size: 64, color: AppTheme.success),
               const SizedBox(height: 16),
               const Text(
                 'You are running the edited copy',

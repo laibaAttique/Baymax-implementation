@@ -53,6 +53,8 @@ SYNONYMS = {
     'rajma': 'rajma', 'rajma_chawal': 'rajma',
     'mutton_curry': 'mutton_curry', 'mutton_karahi': 'mutton_curry',
     'paneer': 'paneer', 'samosa': 'samosa',
+    'chai': 'tea_milk', 'masala_chai': 'tea_milk', 'doodh_patti': 'tea_milk',
+    'bhindi_fry': 'bhindi',
 }
 
 # Foods the datasets contain that the catalogue does NOT yet have. Adding them to
