@@ -1,38 +1,36 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:flutter/material.dart';
+import '../../models/plan.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/glass.dart';
+import 'manual_guidance.dart';
 
+/// A PREVIEW of live posture detection. No camera feed or pose model is connected in this version, so the skeleton, rep count,
+/// angles and feedback below are simulated to show the intended layout. This is stated on the screen.
 class CameraDetection extends StatefulWidget {
-  const CameraDetection({Key? key}) : super(key: key);
+  final List<PlannedExercise> queue;
+  final int startIndex;
+  const CameraDetection({Key? key, this.queue = const [], this.startIndex = 0}) : super(key: key);
 
   @override
-  _CameraDetectionState createState() => _CameraDetectionState();
+  State<CameraDetection> createState() => _CameraDetectionState();
 }
 
 class _CameraDetectionState extends State<CameraDetection> {
   int _reps = 5;
-  String _feedbackMessage = '⚡ Keep your back straight';
+  String _feedbackMessage = 'Keep your back straight';
   Timer? _repTimer;
   Timer? _feedbackTimer;
 
-  final List<String> _feedbackMessages = [
-    '⚡ Keep your back straight',
-    '✅ Great form! Keep going',
-    '⚡ Lower your hips more',
-    '✅ Perfect depth!'
-  ];
+  final List<String> _feedbackMessages = ['Keep your back straight', 'Great form, keep going', 'Lower your hips more', 'Perfect depth'];
   int _msgIdx = 0;
 
   @override
   void initState() {
     super.initState();
-    // Simulate reps counting
     _repTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (_reps < 12 && mounted) {
-        setState(() => _reps++);
-      }
+      if (_reps < 12 && mounted) setState(() => _reps++);
     });
-    // Simulate feedback cycling
     _feedbackTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (mounted) {
         setState(() {
@@ -50,182 +48,132 @@ class _CameraDetectionState extends State<CameraDetection> {
     super.dispose();
   }
 
-  Widget _buildDetectionChip(String text) {
+  Widget _corner(bool isTop, bool isLeft) {
+    const side = BorderSide(color: Colors.white, width: 3);
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      width: 30,
+      height: 30,
       decoration: BoxDecoration(
-        color: AppTheme.card,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.08), blurRadius: 4)],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 18, height: 18,
-            decoration: const BoxDecoration(color: AppTheme.success, shape: BoxShape.circle),
-            alignment: Alignment.center,
-            child: const Icon(Icons.check, color: Colors.white, size: 12),
-          ),
-          const SizedBox(width: 8),
-          Text(text, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.white)),
-        ],
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(isTop && isLeft ? 10 : 0),
+          topRight: Radius.circular(isTop && !isLeft ? 10 : 0),
+          bottomLeft: Radius.circular(!isTop && isLeft ? 10 : 0),
+          bottomRight: Radius.circular(!isTop && !isLeft ? 10 : 0),
+        ),
+        border: Border(
+          top: isTop ? side : BorderSide.none,
+          bottom: !isTop ? side : BorderSide.none,
+          left: isLeft ? side : BorderSide.none,
+          right: !isLeft ? side : BorderSide.none,
+        ),
       ),
     );
+  }
+
+  Widget _angleBadge(String text) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(color: Colors.white.withOpacity(0.92), borderRadius: BorderRadius.circular(12)),
+        child: Text(text, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+      );
+
+  void _openManual() {
+    final queue = widget.queue;
+    if (queue.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ManualGuidance(queue: queue, startIndex: widget.startIndex)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Baymax', style: TextStyle(fontSize: 16)),
-        centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.more_vert), onPressed: () {}),
-        ],
-      ),
+      appBar: AppBar(title: const Text('Camera detection')),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
         child: Column(
           children: [
-            // Viewfinder
+            GlassCard(
+              tint: AppTheme.tint(AppTheme.warning, 0.16),
+              padding: const EdgeInsets.all(14),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.science_rounded, color: AppTheme.warning),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Preview only. Live camera analysis is not part of this version, so the skeleton, rep count, angles and feedback are simulated.',
+                      style: TextStyle(color: AppTheme.textPrimary, fontSize: 13.5, height: 1.45, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 14),
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               height: 340,
+              clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                gradient: const LinearGradient(colors: [Color(0xFF1A1A2E), Color(0xFF0F0F1A)], begin: Alignment.topLeft, end: Alignment.bottomRight),
-                borderRadius: BorderRadius.circular(24),
+                gradient: const LinearGradient(colors: [Color(0xFF1B1F3B), Color(0xFF0E1128)], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                borderRadius: BorderRadius.circular(AppTheme.rHero),
+                boxShadow: AppTheme.glowShadow(blur: 30, opacity: 0.28, offset: const Offset(0, 14)),
               ),
               child: Stack(
                 children: [
-                  // Corner brackets (simulated with icons for simplicity, or containers)
-                  Positioned(top: 16, left: 16, child: _buildCorner(true, true)),
-                  Positioned(top: 16, right: 16, child: _buildCorner(true, false)),
-                  Positioned(bottom: 16, left: 16, child: _buildCorner(false, true)),
-                  Positioned(bottom: 16, right: 16, child: _buildCorner(false, false)),
-
-                  // Reps Badge
+                  Positioned(top: 16, left: 16, child: _corner(true, true)),
+                  Positioned(bottom: 16, left: 16, child: _corner(false, true)),
+                  Positioned(bottom: 16, right: 16, child: _corner(false, false)),
                   Positioned(
-                    top: 16, right: 16,
+                    top: 16,
+                    right: 16,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      decoration: BoxDecoration(color: Colors.white.withOpacity(0.95), borderRadius: BorderRadius.circular(12)),
+                      decoration: BoxDecoration(color: Colors.white.withOpacity(0.95), borderRadius: BorderRadius.circular(16)),
                       child: Column(
                         children: [
-                          const Text('REPS', style: TextStyle(fontSize: 10, color: Colors.grey)),
+                          const Text('REPS (SIMULATED)', style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w800, letterSpacing: 0.6, color: AppTheme.textSecondary)),
                           AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),
-                            transitionBuilder: (Widget child, Animation<double> animation) => ScaleTransition(scale: animation, child: child),
-                            child: Text('$_reps', key: ValueKey(_reps), style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: AppTheme.primary, height: 1)),
+                            transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child),
+                            child: Text('$_reps', key: ValueKey(_reps), style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800, color: AppTheme.primary, height: 1.1)),
                           ),
                         ],
                       ),
                     ),
                   ),
-
-                  // Skeleton Placeholder
-                  Center(
-                    child: Opacity(
-                      opacity: 0.6,
-                      child: Image.network(
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Stick_Figure.svg/1024px-Stick_Figure.svg.png',
-                        color: AppTheme.success,
-                        height: 200,
-                      ),
-                    ),
-                  ),
-
-                  // Angle Badges
-                  Positioned(left: 40, bottom: 60, child: _buildAngleBadge('90°')),
-                  Positioned(right: 50, bottom: 60, child: _buildAngleBadge('88°')),
-
-                  // Feedback Banner
+                  const Center(child: Icon(Icons.accessibility_new_rounded, size: 200, color: Color(0xFF8E96FF))),
+                  Positioned(left: 40, bottom: 76, child: _angleBadge('90°')),
+                  Positioned(right: 50, bottom: 76, child: _angleBadge('88°')),
                   Positioned(
-                    bottom: 16, left: 16, right: 16,
+                    bottom: 16,
+                    left: 56,
+                    right: 56,
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 300),
                       child: Container(
                         key: ValueKey(_feedbackMessage),
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                        decoration: BoxDecoration(color: const Color(0xEBE8651A), borderRadius: BorderRadius.circular(12)),
+                        decoration: BoxDecoration(color: AppTheme.primary, borderRadius: BorderRadius.circular(14)),
                         alignment: Alignment.center,
-                        child: Text(_feedbackMessage, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                        child: Text(_feedbackMessage, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13)),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-
-            // Status Section
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 12),
-              child: Column(
-                children: [
-                  Text('Align your body within the frame', style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
-                  SizedBox(height: 8),
-                  Text('Camera Detection', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-                  SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 2, color: AppTheme.primary)),
-                      SizedBox(width: 8),
-                      Text('Detecting posture...', style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.w500, fontSize: 14)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
-            // Detection Chips
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildDetectionChip('Landmarks detected'),
-                  _buildDetectionChip('Angles calculated'),
-                ],
-              ),
-            ),
-
-            // Actions
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Navigate to Posture Feedback
-                },
-                child: const Text('Stop Session'),
-              ),
-            ),
-            const Text('Processing is done locally. No video is stored.', style: TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
-            const SizedBox(height: 32),
+            const SizedBox(height: 22),
+            const Text('Camera detection', style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.4)),
+            const SizedBox(height: 4),
+            const Text('Align your body within the frame', style: TextStyle(color: AppTheme.textSecondary, fontSize: 14, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 22),
+            GlowButton(icon: Icons.self_improvement_rounded, label: 'Use manual guidance', onPressed: _openManual),
+            const SizedBox(height: 10),
+            OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Stop preview')),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildCorner(bool isTop, bool isLeft) {
-    return Container(
-      width: 28, height: 28,
-      decoration: BoxDecoration(
-        border: Border(
-          top: isTop ? const BorderSide(color: AppTheme.primary, width: 3) : BorderSide.none,
-          bottom: !isTop ? const BorderSide(color: AppTheme.primary, width: 3) : BorderSide.none,
-          left: isLeft ? const BorderSide(color: AppTheme.primary, width: 3) : BorderSide.none,
-          right: !isLeft ? const BorderSide(color: AppTheme.primary, width: 3) : BorderSide.none,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAngleBadge(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.9), borderRadius: BorderRadius.circular(12)),
-      child: Text(text, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black)),
     );
   }
 }

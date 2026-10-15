@@ -23,6 +23,20 @@ class CommunityService {
 
   static String weekId(DateTime day) => Gamification.isoWeekId(day);
 
+  /// Week number for display ("Week 42"), from ids like `2026-W42`.
+  static int weekNumber(DateTime day) => int.parse(weekId(day).split('-W').last);
+
+  /// When the weekly leaderboard resets: the next Monday at 00:00 (local time), the start of the next ISO week.
+  static DateTime nextReset(DateTime now) => Gamification.weekStart(now).add(const Duration(days: 7));
+
+  /// "Resets in 3d 5h", "Resets in 5h 20m" or "Resets in 12m".
+  static String resetsIn(DateTime now) {
+    final left = nextReset(now).difference(now);
+    if (left.inDays >= 1) return 'Resets in ${left.inDays}d ${left.inHours % 24}h';
+    if (left.inHours >= 1) return 'Resets in ${left.inHours}h ${left.inMinutes % 60}m';
+    return 'Resets in ${left.inMinutes.clamp(1, 59)}m';
+  }
+
   /// Writes (or updates) the user's entry for the current week.
   Future<void> publish(ProgressSnapshot progress, String displayName) {
     return RealtimeDb.guard(() async {

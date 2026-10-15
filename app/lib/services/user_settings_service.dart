@@ -1,6 +1,7 @@
 import 'realtime_db.dart';
 
-/// The user's own choices for Modules 11 and 14, stored at `users/{uid}/settings`. Everything is off until the user turns it on.
+/// The user's own choices for Modules 12 and 16, stored at `users/{uid}/settings`. Reminders and the leaderboard are off until the user
+/// turns them on; notifications as a whole are on until the user switches them off.
 class UserSettings {
   final bool leaderboardOptIn;
 
@@ -11,6 +12,12 @@ class UserSettings {
   final int reminderMinute;
   final bool inactivityAlerts;
 
+  /// A daily "log your meals" reminder (Module 16), and the master switch for every notification (Profile preferences).
+  final bool mealReminderEnabled;
+  final int mealReminderHour;
+  final int mealReminderMinute;
+  final bool notificationsEnabled;
+
   const UserSettings({
     this.leaderboardOptIn = false,
     this.displayName = '',
@@ -18,6 +25,10 @@ class UserSettings {
     this.reminderHour = 18,
     this.reminderMinute = 0,
     this.inactivityAlerts = false,
+    this.mealReminderEnabled = false,
+    this.mealReminderHour = 20,
+    this.mealReminderMinute = 0,
+    this.notificationsEnabled = true,
   });
 
   UserSettings copyWith({
@@ -27,6 +38,10 @@ class UserSettings {
     int? reminderHour,
     int? reminderMinute,
     bool? inactivityAlerts,
+    bool? mealReminderEnabled,
+    int? mealReminderHour,
+    int? mealReminderMinute,
+    bool? notificationsEnabled,
   }) =>
       UserSettings(
         leaderboardOptIn: leaderboardOptIn ?? this.leaderboardOptIn,
@@ -35,6 +50,10 @@ class UserSettings {
         reminderHour: reminderHour ?? this.reminderHour,
         reminderMinute: reminderMinute ?? this.reminderMinute,
         inactivityAlerts: inactivityAlerts ?? this.inactivityAlerts,
+        mealReminderEnabled: mealReminderEnabled ?? this.mealReminderEnabled,
+        mealReminderHour: mealReminderHour ?? this.mealReminderHour,
+        mealReminderMinute: mealReminderMinute ?? this.mealReminderMinute,
+        notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       );
 
   Map<String, dynamic> toJson() => {
@@ -44,6 +63,10 @@ class UserSettings {
         'reminderHour': reminderHour,
         'reminderMinute': reminderMinute,
         'inactivityAlerts': inactivityAlerts,
+        'mealReminderEnabled': mealReminderEnabled,
+        'mealReminderHour': mealReminderHour,
+        'mealReminderMinute': mealReminderMinute,
+        'notificationsEnabled': notificationsEnabled,
       };
 
   factory UserSettings.fromJson(Map<String, dynamic> j) {
@@ -59,6 +82,10 @@ class UserSettings {
       reminderHour: inRange(j['reminderHour'], 0, 23, 18),
       reminderMinute: inRange(j['reminderMinute'], 0, 59, 0),
       inactivityAlerts: j['inactivityAlerts'] == true,
+      mealReminderEnabled: j['mealReminderEnabled'] == true,
+      mealReminderHour: inRange(j['mealReminderHour'], 0, 23, 20),
+      mealReminderMinute: inRange(j['mealReminderMinute'], 0, 59, 0),
+      notificationsEnabled: j['notificationsEnabled'] != false, // on unless the user switched it off
     );
   }
 }

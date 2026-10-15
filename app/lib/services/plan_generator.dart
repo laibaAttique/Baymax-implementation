@@ -422,6 +422,7 @@ class PlanGenerator {
       meals: meals,
       avoid: _avoidList(p, cls, allergies),
       tips: _tips(p, cls),
+      tipPool: tipPoolFor(p, cls),
       calorieNote: p.primaryGoal == 'Lose Weight' ? targets.safetyNote : null,
     );
   }
@@ -484,16 +485,75 @@ class PlanGenerator {
     return avoid.toSet().toList();
   }
 
+  /// Advice that always applies to this person. It does not rotate.
   List<String> _tips(HealthProfile p, ClassificationResult cls) {
-    final tips = <String>[
-      'Drink about ${HealthCalc.waterLitres(p.weightKg).toStringAsFixed(1)} L of water daily.',
-      'Eat dinner at least 2 hours before sleep.',
-      'Add vegetables to every main meal for fibre.',
-    ];
+    final tips = <String>['Drink about ${HealthCalc.waterLitres(p.weightKg).toStringAsFixed(1)} L of water daily.'];
     if (p.primaryGoal == 'Lose Weight') tips.add('Include protein at every meal to stay full and protect muscle.');
     if (p.primaryGoal == 'Gain Muscle') tips.add('Eat protein within 2 hours after training.');
     if (p.hasCondition('Diabetes')) tips.add('Spread carbohydrates evenly across meals and monitor your blood sugar.');
     if (cls.isCardiac || p.hasCondition('Hypertension')) tips.add('Keep salt under 5 g (about 1 teaspoon) per day.');
     return tips;
+  }
+
+  /// General tips that rotate day by day (Module 9, FR26.4). Written by the project team as common healthy-eating practice;
+  /// they deliberately contain no figures, so nothing in them needs a source. Some are only for a goal or condition.
+  static const _generalTips = <String>[
+    'Add vegetables to every main meal for fibre.',
+    'Eat dinner a couple of hours before you go to bed.',
+    'Sit down and eat slowly. It takes a while for fullness to register.',
+    'Plan tomorrow\'s meals tonight so you are not deciding when hungry.',
+    'Keep a bottle of water with you and sip through the day.',
+    'Choose whole grains such as brown rice, oats or whole-wheat roti more often than refined ones.',
+    'Fill half your plate with vegetables or salad before adding the rest.',
+    'Read the ingredient list, not just the front of the packet.',
+    'Keep fruit where you can see it. Easy snacks get eaten.',
+    'Cook at home when you can: you decide the oil, salt and portion.',
+    'Grilling, baking or steaming instead of deep frying keeps meals lighter.',
+    'Do not skip breakfast if it keeps you from overeating later.',
+    'Spread your protein across the day instead of eating most of it at dinner.',
+    'Swap sugary drinks for water, unsweetened tea or plain lassi.',
+    'Use a smaller plate if you tend to overfill it.',
+    'Pause before a second helping and ask whether you are still hungry.',
+    'Pulses such as daal, chana and lobia are cheap sources of protein and fibre.',
+    'Keep a healthy snack ready, such as nuts, yoghurt or fruit, so a hungry moment does not become a fast-food stop.',
+    'Eat the colours: different coloured vegetables bring different nutrients.',
+    'Limit treats to a planned portion instead of eating from the packet.',
+    'Switch off screens at meals. You will notice when you are full.',
+    'Prepare a few meals in advance on a quiet day for busy ones.',
+    'Notice liquid calories: juices, shakes and sweet tea add up quickly.',
+    'Season with herbs, lemon and spices rather than extra salt.',
+    'Keep your food diary honest. It only helps if it includes the small bites too.',
+    'A short walk after a meal is a simple habit that many people find helpful.',
+    'Shop with a list and not when hungry.',
+    'Include some healthy fat, such as nuts, seeds or olive oil, in moderation.',
+  ];
+
+  /// Extra tips for a goal or condition, added to the rotation for the people they apply to.
+  static const _goalTips = <String, List<String>>{
+    'Lose Weight': [
+      'A modest, steady calorie deficit is easier to keep than a harsh one.',
+      'Protein and fibre together keep you full for longer.',
+    ],
+    'Gain Muscle': [
+      'Eat regularly through the day: three meals plus snacks make it easier to reach your calories.',
+      'Pair your training with enough protein and enough sleep. Muscle is built during recovery.',
+    ],
+    'Diabetes': [
+      'Choose carbohydrates that digest slowly, such as whole grains and pulses, and pair them with protein.',
+      'Check labels for hidden sugar in sauces, drinks and breakfast cereals.',
+    ],
+    'Hypertension': [
+      'Pickles, chips, instant noodles and many sauces are high in salt; check how often you eat them.',
+      'Potassium-rich foods such as bananas, potatoes and leafy greens can help, unless your doctor has told you otherwise.',
+    ],
+  };
+
+  /// The rotating tips for this person: the general ones plus those for their goal and conditions.
+  static List<String> tipPoolFor(HealthProfile p, ClassificationResult cls) {
+    final pool = <String>[..._generalTips];
+    pool.addAll(_goalTips[p.primaryGoal] ?? const []);
+    if (p.hasCondition('Diabetes')) pool.addAll(_goalTips['Diabetes']!);
+    if (cls.isCardiac || p.hasCondition('Hypertension')) pool.addAll(_goalTips['Hypertension']!);
+    return pool;
   }
 }

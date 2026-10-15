@@ -77,13 +77,12 @@ extension FitnessLevelLabel on FitnessLevel {
 
 class AppBadge {
   final String id;
-  final String emoji;
   final String title;
   final String description;
   final bool earned;
-  const AppBadge(this.id, this.emoji, this.title, this.description, {this.earned = false});
+  const AppBadge(this.id, this.title, this.description, {this.earned = false});
 
-  AppBadge copyWith({bool? earned}) => AppBadge(id, emoji, title, description, earned: earned ?? this.earned);
+  AppBadge copyWith({bool? earned}) => AppBadge(id, title, description, earned: earned ?? this.earned);
 }
 
 class Gamification {
@@ -215,6 +214,31 @@ class Gamification {
     return streak;
   }
 
+  /// Consecutive days with at least one workout OR one logged meal, ending today. Today not being active yet does not break the
+  /// streak (the day is not over); yesterday being inactive does. This is the "streak" of the scope document (Module 12 FR-8).
+  static int activeStreak(List<DayRecord> days) {
+    var streak = 0;
+    for (var i = days.length - 1; i >= 0; i--) {
+      final active = days[i].workoutDone || days[i].foodLogged;
+      if (active) {
+        streak++;
+      } else if (i != days.length - 1) {
+        break;
+      }
+    }
+    return streak;
+  }
+
+  /// Longest run of active days anywhere in [days].
+  static int bestActiveStreak(List<DayRecord> days) {
+    var best = 0, run = 0;
+    for (final d in days) {
+      run = (d.workoutDone || d.foodLogged) ? run + 1 : 0;
+      best = max(best, run);
+    }
+    return best;
+  }
+
   static int bestLoggingStreak(List<DayRecord> days) {
     var best = 0, run = 0;
     for (final d in days) {
@@ -225,17 +249,19 @@ class Gamification {
   }
 
   static const catalogue = <AppBadge>[
-    AppBadge('first_workout', '🎯', 'First step', 'Complete your first workout.'),
-    AppBadge('streak_3', '🔥', 'On a roll', 'Complete 3 planned workouts in a row.'),
-    AppBadge('streak_7', '⚡', 'Unstoppable', 'Complete 7 planned workouts in a row.'),
-    AppBadge('full_week', '🏅', 'Full week', 'Finish every planned workout of a week.'),
-    AppBadge('logger_3', '🍽️', 'Food diary habit', 'Log your food 3 days in a row.'),
-    AppBadge('logger_7', '📒', 'Week of logging', 'Log your food 7 days in a row.'),
-    AppBadge('on_target_3', '🥗', 'Right on target', 'Land within 15% of your calorie target on 3 days.'),
-    AppBadge('high_scorer', '⭐', 'High scorer', 'Reach a weekly fitness score of 80 or more.'),
+    AppBadge('first_workout', 'First step', 'Complete your first workout.'),
+    AppBadge('streak_3', 'On a roll', 'Complete 3 planned workouts in a row.'),
+    AppBadge('streak_7', 'Unstoppable', 'Complete 7 planned workouts in a row.'),
+    AppBadge('full_week', 'Full week', 'Finish every planned workout of a week.'),
+    AppBadge('logger_3', 'Food diary habit', 'Log your food 3 days in a row.'),
+    AppBadge('logger_7', 'Week of logging', 'Log your food 7 days in a row.'),
+    AppBadge('on_target_3', 'Right on target', 'Land within 15% of your calorie target on 3 days.'),
+    AppBadge('high_scorer', 'High scorer', 'Reach a weekly fitness score of 80 or more.'),
+    AppBadge('daily_7', '7-Day Streak', 'Log a workout or a meal every day for 7 days in a row.'),
+    AppBadge('daily_30', '30-Day Streak', 'Log a workout or a meal every day for 30 days in a row.'),
   ];
 
-  /// FR-3: ids of the badges earned according to [days] (oldest → newest, normally the last 28 days).
+  /// FR-3: ids of the badges earned according to [days] (oldest → newest, normally the last 42 days).
   static Set<String> earnedBadgeIds(List<DayRecord> days, DateTime today) {
     final earned = <String>{};
     if (days.any((d) => d.workoutDone)) earned.add('first_workout');
@@ -246,6 +272,9 @@ class Gamification {
     if (bestL >= 3) earned.add('logger_3');
     if (bestL >= 7) earned.add('logger_7');
     if (days.where((d) => d.foodLogged && d.withinTarget).length >= 3) earned.add('on_target_3');
+    final bestA = bestActiveStreak(days);
+    if (bestA >= 7) earned.add('daily_7');
+    if (bestA >= 30) earned.add('daily_30');
 
     final t = dateOnly(today);
     final byWeek = <DateTime, List<DayRecord>>{};
@@ -263,6 +292,44 @@ class Gamification {
 
   /// The full badge list with the earned flag set (earned ids may come from history stored earlier).
   static List<AppBadge> badges(Set<String> earnedIds) => [for (final b in catalogue) b.copyWith(earned: earnedIds.contains(b.id))];
+}
+
+// ---------------------------------------------------------------- XP and levels (Module 12, mockup M33)
+
+/// Experience points. All amounts and the level curve are design choices of the project team (no external source).
+///
+/// XP is earned for: each day a workout was completed, each day food was logged, and each badge earned. (The scope also names posture
+/// sessions; those cannot be counted because camera posture analysis is not part of this version.) It is a lifetime total.
+class Xp {
+  Xp._();
+
+  static const perWorkoutDay = 50;
+  static const perMealDay = 10;
+  static const perBadge = 100;
+
+  static int total({required int workoutDays, required int mealDays, required int badges}) =>
+      workoutDays * perWorkoutDay + mealDays * perMealDay + badges * perBadge;
+
+  /// Level L starts at 100·L·(L−1) XP: level 1 at 0, level 2 at 200, level 3 at 600, level 4 at 1,200 …
+  static int levelOf(int xp) {
+    var level = 1;
+    while (xp >= startOf(level + 1)) {
+      level++;
+    }
+    return level;
+  }
+
+  static int startOf(int level) => 100 * level * (level - 1);
+
+  /// XP still needed for the next level.
+  static int toNext(int xp) => startOf(levelOf(xp) + 1) - xp;
+
+  /// 0..1 progress through the current level.
+  static double progress(int xp) {
+    final l = levelOf(xp);
+    final from = startOf(l), to = startOf(l + 1);
+    return ((xp - from) / (to - from)).clamp(0.0, 1.0);
+  }
 }
 
 // ---------------------------------------------------------------- K-Means (FR-4)

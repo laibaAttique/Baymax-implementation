@@ -230,7 +230,11 @@ class NutritionPlan {
   /// Breakfast / Lunch / Dinner / Snack → items.
   final Map<String, List<MealItem>> meals;
   final List<String> avoid;
+  /// Advice that always applies to this person (their conditions, goal and water target). Shown as "For your health".
   final List<String> tips;
+
+  /// Everyday nutrition tips that rotate (Module 9, mockup M26 FR26.4): see [tipsFor].
+  final List<String> tipPool;
   final String? calorieNote;
 
   const NutritionPlan({
@@ -243,8 +247,18 @@ class NutritionPlan {
     required this.meals,
     required this.avoid,
     required this.tips,
+    this.tipPool = const [],
     this.calorieNote,
   });
+
+  /// [count] tips for [day], taken in order from [tipPool] and moved on every day, so no tip repeats inside any 7 consecutive days
+  /// as long as the pool holds at least 7 x [count] tips.
+  List<String> tipsFor(DateTime day, {int count = 3}) {
+    if (tipPool.isEmpty) return const [];
+    final dayNumber = DateTime.utc(day.year, day.month, day.day).millisecondsSinceEpoch ~/ Duration.millisecondsPerDay;
+    final start = (dayNumber * count) % tipPool.length;
+    return [for (var k = 0; k < count && k < tipPool.length; k++) tipPool[(start + k) % tipPool.length]];
+  }
 
   double mealKcal(String meal) => (meals[meal] ?? const []).fold(0.0, (s, i) => s + i.kcal);
 }

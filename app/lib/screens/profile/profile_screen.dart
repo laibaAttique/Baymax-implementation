@@ -4,6 +4,7 @@ import '../../services/api_client.dart';
 import '../../services/auth_service.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/glass.dart';
 import '../auth/splash_screen.dart';
 import '../health_profiling/health_classification.dart';
 import '../health_profiling/step1_personal_info.dart';
@@ -44,33 +45,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String _fmtNum(double v) => v == v.roundToDouble() ? v.toStringAsFixed(0) : v.toStringAsFixed(1);
 
-  Widget _section(String title, List<(String, String)> rows) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppTheme.textPrimary)),
-          const SizedBox(height: 8),
-          for (final r in rows)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(flex: 4, child: Text(r.$1, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13))),
-                  Expanded(
-                    flex: 6,
-                    child: Text(r.$2, textAlign: TextAlign.right, style: const TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w600, fontSize: 13)),
+  Widget _section(String title, IconData icon, List<(String, String)> rows, int index) {
+    return Reveal(
+      index: index,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: GlassCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(children: [
+                IconWell(icon: icon, size: 34),
+                const SizedBox(width: 12),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: AppTheme.textPrimary, letterSpacing: -0.2)),
+              ]),
+              const SizedBox(height: 10),
+              for (var i = 0; i < rows.length; i++) ...[
+                if (i > 0) Divider(color: AppTheme.border.withOpacity(0.6)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 4, child: Text(rows[i].$1, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13.5, fontWeight: FontWeight.w500))),
+                      Expanded(
+                        flex: 6,
+                        child: Text(rows[i].$2, textAlign: TextAlign.right, style: const TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 13.5, height: 1.3)),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-        ],
+                ),
+              ],
+            ],
+          ),
+        ),
       ),
+    );
+  }
+
+  Widget _menuRow(IconData icon, String label, VoidCallback onTap, {Color color = AppTheme.primary, bool last = false}) {
+    return Column(
+      children: [
+        Pressable(
+          radius: 14,
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+            child: Row(children: [
+              IconWell(icon: icon, color: color, size: 38),
+              const SizedBox(width: 14),
+              Expanded(child: Text(label, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5, color: color == AppTheme.error ? AppTheme.error : AppTheme.textPrimary))),
+              const Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
+            ]),
+          ),
+        ),
+        if (!last) Divider(color: AppTheme.border.withOpacity(0.6), indent: 56),
+      ],
     );
   }
 
@@ -87,15 +117,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Profile', style: TextStyle(fontSize: 16)),
+            title: const Text('Profile'),
             actions: [
               IconButton(
                 tooltip: 'Refresh from database',
                 icon: _refreshing
                     ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-                    : const Icon(Icons.refresh),
+                    : const Icon(Icons.refresh_rounded),
                 onPressed: _refreshing ? null : _refresh,
               ),
+              const SizedBox(width: 8),
             ],
           ),
           body: p == null || cls == null || plan == null
@@ -103,110 +134,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
               : RefreshIndicator(
                   onRefresh: _refresh,
                   child: ListView(
-                    padding: const EdgeInsets.all(20),
+                    padding: EdgeInsets.fromLTRB(20, 4, 20, AppTheme.navSpace(context)),
                     children: [
-                      Center(
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 36,
-                              backgroundColor: AppTheme.primaryLight,
-                              child: Text(
-                                p.fullName.isEmpty ? '?' : p.fullName[0].toUpperCase(),
-                                style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: AppTheme.primary),
+                      Reveal(
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.heroGradient,
+                            borderRadius: BorderRadius.circular(AppTheme.rHero),
+                            boxShadow: AppTheme.glowShadow(blur: 30, opacity: 0.32, offset: const Offset(0, 14)),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 68,
+                                height: 68,
+                                decoration: BoxDecoration(color: Colors.white.withOpacity(0.18), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.6), width: 1.5)),
+                                alignment: Alignment.center,
+                                child: Text(p.fullName.isEmpty ? '?' : p.fullName[0].toUpperCase(), style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w800, color: Colors.white)),
                               ),
-                            ),
-                            const SizedBox(height: 10),
-                            Text(p.fullName, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-                            if (email.isNotEmpty) Text(email, style: const TextStyle(color: AppTheme.textSecondary)),
-                            const SizedBox(height: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: HealthClassification.colorFor(cls.riskLevel).withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(20),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(p.fullName, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 21, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.4, height: 1.2)),
+                                    if (email.isNotEmpty) ...[
+                                      const SizedBox(height: 2),
+                                      Text(email, maxLines: 1, overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white.withOpacity(0.86), fontSize: 13, fontWeight: FontWeight.w500)),
+                                    ],
+                                    const SizedBox(height: 10),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                                      child: Text('${cls.category} · ${cls.riskLevel} risk',
+                                          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 12, color: HealthClassification.colorFor(cls.riskLevel))),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              child: Text(
-                                '${cls.category} · ${cls.riskLevel} risk',
-                                style: TextStyle(fontWeight: FontWeight.bold, color: HealthClassification.colorFor(cls.riskLevel)),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       if (session.role != UserRole.user)
                         Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Center(child: Text('Role: ${session.role.label}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12))),
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Center(child: InfoChip('Role: ${session.role.label}', icon: Icons.badge_rounded)),
                         ),
-                      const SizedBox(height: 20),
-                      _section('Body', [
+                      const SizedBox(height: 16),
+                      _section('Body', Icons.accessibility_new_rounded, [
                         ('Age', p.age == null ? 'Not set' : '${p.age} years'),
                         ('Gender', p.gender.isEmpty ? '—' : p.gender),
                         ('Height', '${_fmtNum(p.heightValue)} ${p.heightUnit}'),
                         ('Weight', '${_fmtNum(p.weightValue)} ${p.weightUnit}'),
                         ('BMI', '${p.bmi.toStringAsFixed(1)} (${p.bmiCategory})'),
-                      ]),
-                      _section('Goals', [
+                      ], 1),
+                      _section('Goals', Icons.flag_rounded, [
                         ('Primary goal', p.primaryGoal.isEmpty ? '—' : p.primaryGoal),
                         ('Activity level', p.activityLevel.isEmpty ? '—' : p.activityLevel),
                         ('Workouts per week', '${p.workoutFrequency}'),
                         if (p.targetWeightValue > 0) ('Target weight', '${_fmtNum(p.targetWeightValue)} ${p.targetWeightUnit}'),
-                      ]),
-                      _section('Health', [
+                      ], 2),
+                      _section('Health', Icons.favorite_rounded, [
                         ('Medical conditions', p.medicalConditions.isEmpty ? 'None' : p.medicalConditions.join(', ')),
                         ('Food allergies', p.allergies.isEmpty ? 'None' : p.allergies.join(', ')),
                         if (p.medications.trim().isNotEmpty) ('Medications', p.medications),
-                      ]),
-                      _section('Your targets', [
+                      ], 3),
+                      _section('Your targets', Icons.track_changes_rounded, [
                         ('BMR', '${p.bmr.round()} kcal/day'),
                         ('Daily energy use', '${p.tdee.round()} kcal/day'),
                         ('Calorie target', '${plan.nutrition.targetKcal} kcal/day'),
                         ('Protein / carbs / fat', '${plan.nutrition.proteinG} g / ${plan.nutrition.carbsG} g / ${plan.nutrition.fatG} g'),
                         ('Workout days', '${plan.workoutDays} per week · ${plan.intensity} intensity'),
-                      ]),
+                      ], 4),
                       const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4),
+                        padding: EdgeInsets.fromLTRB(4, 0, 4, 14),
                         child: Text('Data is loaded from your account in the Firebase Realtime Database. Pull down to refresh.',
-                            style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                            style: TextStyle(fontSize: 12, color: AppTheme.textSecondary, height: 1.4)),
                       ),
-                      const SizedBox(height: 12),
-                      ElevatedButton.icon(
+                      GlowButton(
+                        icon: Icons.edit_rounded,
+                        label: 'Update my details',
                         onPressed: () => Navigator.push(
                           context,
                           // A copy, so cancelling halfway leaves the saved profile untouched.
                           MaterialPageRoute(builder: (_) => Step1PersonalInfo(profile: HealthProfile.fromJson(p.toJson()))),
                         ),
-                        icon: const Icon(Icons.edit),
-                        label: const Text('Update my details'),
                       ),
-                      const SizedBox(height: 10),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CalorieTargetScreen())),
-                        icon: const Icon(Icons.monitor_weight_outlined),
-                        label: const Text('Calorie target & weight check-in'),
+                      const SizedBox(height: 16),
+                      GlassCard(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        child: Column(
+                          children: [
+                            _menuRow(Icons.monitor_weight_rounded, 'Calorie target & weight check-in', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CalorieTargetScreen()))),
+                            _menuRow(Icons.emoji_events_rounded, 'Community & progress', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CommunityScreen())), color: AppTheme.warning),
+                            _menuRow(Icons.notifications_active_rounded, 'Reminders & community settings', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen()))),
+                            _menuRow(Icons.menu_book_rounded, 'Sources & methodology', () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SourcesScreen())), color: AppTheme.teal),
+                            _menuRow(Icons.logout_rounded, 'Log out', _logout, color: AppTheme.error, last: true),
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CommunityScreen())),
-                        icon: const Icon(Icons.emoji_events_outlined),
-                        label: const Text('Community & progress'),
-                      ),
-                      const SizedBox(height: 10),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsScreen())),
-                        icon: const Icon(Icons.notifications_active_outlined),
-                        label: const Text('Reminders & community settings'),
-                      ),
-                      const SizedBox(height: 10),
-                      OutlinedButton.icon(
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SourcesScreen())),
-                        icon: const Icon(Icons.menu_book_outlined),
-                        label: const Text('Sources & methodology'),
-                      ),
-                      const SizedBox(height: 10),
-                      OutlinedButton.icon(onPressed: _logout, icon: const Icon(Icons.logout), label: const Text('Log Out')),
-                      const SizedBox(height: 80),
                     ],
                   ),
                 ),

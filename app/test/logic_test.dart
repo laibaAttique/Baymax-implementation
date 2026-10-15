@@ -375,8 +375,8 @@ void main() {
     });
 
     test('checks whether a food is safe for the user\'s allergies', () {
-      expect(bot.respond('can I eat butter chicken?', ctx).text, contains('🚫'));
-      expect(bot.respond('can I eat grilled chicken?', ctx).text, contains('✅'));
+      expect(bot.respond('can I eat butter chicken?', ctx).text, contains('on your allergy list'));
+      expect(bot.respond('can I eat grilled chicken?', ctx).text, contains('doesn\'t contain anything'));
     });
 
     test('explains how to do an exercise', () {

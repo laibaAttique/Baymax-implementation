@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/glass.dart';
 
 class _Source {
   final String topic;
@@ -179,8 +180,23 @@ class SourcesScreen extends StatelessWidget {
       [
         'Project team design (role list from the project scope, Module 14).',
       ],
-      caveat: 'Today the security rules give nobody access to another person\'s data: assigning patients to clinicians belongs to the consultation module, which is not built yet. '
+      caveat: 'A specialist never gets a key to your data. The security rules give nobody access to another person\'s data; a specialist sees only what you tick when you book an appointment, and only through the specialist portal\'s server, which logs each time it is opened. '
           'The app does not add its own AES encryption layer on top of the database; that part of the scope is not implemented in this version.',
+    ),
+    _Source(
+      'Food database (2,700+ searchable foods)',
+      'Food search covers the app\'s curated foods plus a larger list of about 2,700 foods stored in Cloud Firestore (a copy is bundled for offline use): '
+          '(1) the project team\'s own food list, with Pakistani and Indian dish names and serving sizes; its rows say where each figure came from (USDA, the Indian Nutrient Databank, a restaurant\'s published figures, or "curated" by the team with no outside source); '
+          '(2) recipes from the Indian Nutrient Databank, whose values are calculated from recipe ingredients; '
+          '(3) about 1,040 everyday foods from USDA FoodData Central SR Legacy, whose energy, protein, fat and carbohydrate were checked against USDA\'s published tables, scaled to the first household portion USDA lists. '
+          'Every food shows its source when you pick it. These foods never appear in generated meal plans.',
+      [
+        'U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, SR Legacy (April 2018 release). fdc.nal.usda.gov. Published under CC0 1.0.',
+        'Vijayakumar A, Dubasi HB, Awasthi A, Jaacks LM. Development of an Indian Food Composition Database. Current Developments in Nutrition 2024; 8(7): 103790. doi:10.1016/j.cdnut.2024.103790.',
+      ],
+      caveat: 'None of these lists has allergen information. For these foods the allergens are guessed from the food\'s name by rules that deliberately over-warn, and the app says so; '
+          'they can still miss an ingredient, so read the printed label if your allergy is serious. The team list\'s rows marked "curated" cite no outside source, and the usage terms of the team list and of the Indian Nutrient Databank table were not verified. '
+          'Recipe-based and restaurant values are averages and can differ from what you eat. Recipes whose energy contradicted their own protein, carbohydrate and fat (30 soups and sauces in the Indian table) were left out.',
     ),
     _Source(
       'Allergen detection',
@@ -199,46 +215,67 @@ class SourcesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Sources & methodology')),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 32),
         children: [
-          Container(
-            padding: const EdgeInsets.all(14),
-            decoration: BoxDecoration(color: AppTheme.warning.withOpacity(0.12), borderRadius: BorderRadius.circular(12)),
-            child: const Text(
-              'Baymax is a decision-support tool, not a medical device. It does not diagnose or treat any condition, and it does not replace advice from a doctor, dietitian or qualified trainer.',
-              style: TextStyle(color: AppTheme.warning, height: 1.4, fontSize: 13),
+          Reveal(
+            child: GlassCard(
+              tint: AppTheme.tint(AppTheme.warning, 0.16),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconWell(icon: Icons.health_and_safety_rounded, color: AppTheme.warning, size: 40),
+                  SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      'Baymax is a decision-support tool, not a medical device. It does not diagnose or treat any condition, and it does not replace advice from a doctor, dietitian or qualified trainer.',
+                      style: TextStyle(color: AppTheme.textPrimary, height: 1.45, fontSize: 13.5, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 16),
-          for (final s in _sources) _card(s),
+          const SizedBox(height: 14),
+          for (var i = 0; i < _sources.length; i++) Reveal(index: i + 1, child: _card(_sources[i])),
         ],
       ),
     );
   }
 
   Widget _card(_Source s) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(s.topic, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.textPrimary)),
-          const SizedBox(height: 8),
-          Text(s.howWeUseIt, style: const TextStyle(color: AppTheme.textPrimary, height: 1.4, fontSize: 13)),
-          const SizedBox(height: 10),
-          const Text('REFERENCES', style: TextStyle(fontSize: 10, letterSpacing: 1, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-          for (final r in s.references)
-            Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Text('• $r', style: const TextStyle(color: AppTheme.textSecondary, height: 1.4, fontSize: 12)),
-            ),
-          if (s.caveat != null) ...[
-            const SizedBox(height: 10),
-            Text('Limits: ${s.caveat}', style: const TextStyle(color: AppTheme.warning, height: 1.4, fontSize: 12)),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: GlassCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(s.topic, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16.5, color: AppTheme.textPrimary, letterSpacing: -0.2)),
+            const SizedBox(height: 8),
+            Text(s.howWeUseIt, style: const TextStyle(color: AppTheme.textPrimary, height: 1.5, fontSize: 13.5, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 14),
+            const Text('REFERENCES', style: AppTheme.overline),
+            for (final r in s.references)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(padding: EdgeInsets.only(top: 6), child: Icon(Icons.circle, size: 4.5, color: AppTheme.textSecondary)),
+                    const SizedBox(width: 10),
+                    Expanded(child: Text(r, style: const TextStyle(color: AppTheme.textSecondary, height: 1.45, fontSize: 12.5))),
+                  ],
+                ),
+              ),
+            if (s.caveat != null) ...[
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: AppTheme.tint(AppTheme.warning, 0.14), borderRadius: BorderRadius.circular(AppTheme.rSmall + 2)),
+                child: Text('Limits: ${s.caveat}', style: const TextStyle(color: AppTheme.warning, height: 1.45, fontSize: 12.5, fontWeight: FontWeight.w600)),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

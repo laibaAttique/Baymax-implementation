@@ -70,6 +70,7 @@ flutter:
 
   assets:
     - assets/data/foods.json
+    - assets/data/foods_bulk.json
     - assets/data/exercises.json
     - assets/models/
 

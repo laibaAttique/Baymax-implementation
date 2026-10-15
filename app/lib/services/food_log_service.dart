@@ -42,8 +42,14 @@ class FoodLogService {
     });
   }
 
+  /// The most recent [add], kept for 30 seconds so the user can undo it (NFR-U8).
+  LoggedBatch? lastLogged;
+
+  static const undoWindow = Duration(seconds: 30);
+
   Future<void> add(List<FoodEntry> entries) async {
     if (entries.isEmpty) return;
+    final saved = <FoodEntry>[];
     await RealtimeDb.guard(() async {
       final uid = RealtimeDb.uid;
       final updates = <String, Object?>{};
@@ -51,17 +57,68 @@ class FoodLogService {
         final key = RealtimeDb.db.ref().push().key!;
         final data = e.toJson()..remove('date'); // the date is part of the path
         updates['users/$uid/foodLog/${e.date}/$key'] = {...data, 'createdAt': ServerValue.timestamp};
+        updates['users/$uid/foodDays/${e.date}'] = true; // marks a day with food logged (counted for XP)
+        saved.add(e.withId(key));
       }
       await RealtimeDb.db.ref().update(updates); // one atomic multi-path write
     });
+    lastLogged = LoggedBatch(saved, DateTime.now());
     changes.value++;
   }
 
   Future<void> delete(FoodEntry entry) async {
     if (entry.id == null) return;
-    await RealtimeDb.guard(() => RealtimeDb.userRef('foodLog/${entry.date}/${entry.id}').remove());
+    await RealtimeDb.guard(() async {
+      await RealtimeDb.userRef('foodLog/${entry.date}/${entry.id}').remove();
+      await _clearDayMarkerIfEmpty(entry.date);
+    });
     changes.value++;
   }
 
+  /// Puts back an entry that was just removed (the Undo button on the "Removed" message). The same id is reused.
+  Future<void> restore(FoodEntry entry) async {
+    if (entry.id == null) return;
+    await RealtimeDb.guard(() async {
+      final uid = RealtimeDb.uid;
+      final data = entry.toJson()..remove('date');
+      await RealtimeDb.db.ref().update({
+        'users/$uid/foodLog/${entry.date}/${entry.id}': {...data, 'createdAt': ServerValue.timestamp},
+        'users/$uid/foodDays/${entry.date}': true,
+      });
+    });
+    changes.value++;
+  }
+
+  /// Removes what the last [add] logged, if it was less than [undoWindow] ago. Returns how many entries were removed.
+  Future<int> undoLast() async {
+    final batch = lastLogged;
+    if (batch == null || DateTime.now().difference(batch.at) > undoWindow) return 0;
+    lastLogged = null;
+    await RealtimeDb.guard(() async {
+      final uid = RealtimeDb.uid;
+      await RealtimeDb.db.ref().update({for (final e in batch.entries) if (e.id != null) 'users/$uid/foodLog/${e.date}/${e.id}': null});
+      for (final date in {for (final e in batch.entries) e.date}) {
+        await _clearDayMarkerIfEmpty(date);
+      }
+    });
+    changes.value++;
+    return batch.entries.length;
+  }
+
+  Future<void> _clearDayMarkerIfEmpty(String date) async {
+    final left = await RealtimeDb.userRef('foodLog/$date').get();
+    if (!left.exists) await RealtimeDb.userRef('foodDays/$date').remove();
+  }
+
   static double totalKcal(List<FoodEntry> entries) => entries.fold(0.0, (s, e) => s + e.kcal);
+}
+
+/// Entries saved by one [FoodLogService.add], with their database ids.
+class LoggedBatch {
+  final List<FoodEntry> entries;
+  final DateTime at;
+  const LoggedBatch(this.entries, this.at);
+
+  /// Still inside the 30-second undo window?
+  bool isUndoable([DateTime? now]) => (now ?? DateTime.now()).difference(at) <= FoodLogService.undoWindow;
 }

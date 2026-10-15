@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../models/plan.dart';
 import '../../services/activity_service.dart';
 import '../../services/api_client.dart';
@@ -8,7 +9,10 @@ import '../../services/gamification.dart';
 import '../../services/notification_service.dart';
 import '../../services/progress_service.dart';
 import '../../services/user_session.dart';
+import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/notification_bell.dart';
+import '../../widgets/glass.dart';
 import '../health_profiling/health_classification.dart';
 import '../nutrition/nutrition_plan_screen.dart';
 import 'exercise_detail.dart';
@@ -62,7 +66,7 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
       if (!wasDone) {
         final progress = await ProgressService.instance.load(plan);
         if (mounted && progress.newBadges.isNotEmpty) {
-          final names = Gamification.catalogue.where((b) => progress.newBadges.contains(b.id)).map((b) => '${b.emoji} ${b.title}').join(', ');
+          final names = Gamification.catalogue.where((b) => progress.newBadges.contains(b.id)).map((b) => b.title).join(', ');
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('New badge: $names')));
         }
       }
@@ -78,26 +82,35 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
     final date = Gamification.weekStart(today).add(Duration(days: selected));
     final done = _done.contains(FoodLogService.dateKey(date));
     final future = date.isAfter(today);
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 260),
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(color: done ? AppTheme.primaryLight : AppTheme.card, borderRadius: BorderRadius.circular(14)),
+      decoration: AppTheme.glass(radius: AppTheme.rMedium, tint: done ? AppTheme.tint(AppTheme.success, 0.16) : null),
       child: Row(
         children: [
-          Text(done ? '✅' : '🎯', style: const TextStyle(fontSize: 22)),
-          const SizedBox(width: 10),
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 220),
+            child: IconWell(
+              key: ValueKey(done),
+              icon: done ? Icons.check_circle_rounded : Icons.flag_rounded,
+              color: done ? AppTheme.success : AppTheme.primary,
+              size: 38,
+            ),
+          ),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
               done ? 'Workout completed' : (future ? 'You can tick this off on the day' : 'Finished this workout?'),
-              style: const TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textPrimary, fontSize: 13),
+              style: const TextStyle(fontWeight: FontWeight.w700, color: AppTheme.textPrimary, fontSize: 13.5),
             ),
           ),
           if (!future)
             _marking
-                ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)))
                 : TextButton(
                     onPressed: () => _toggleDone(date, day, weightKg, plan, done),
-                    child: Text(done ? 'Undo' : 'Mark as completed'),
+                    child: Text(done ? 'Undo' : 'Mark done'),
                   ),
         ],
       ),
@@ -137,69 +150,128 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
     );
   }
 
-  Widget _buildMetaChip(String val, String lbl) {
+  Widget _stat(IconData icon, String val, String lbl) {
     return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(color: AppTheme.primaryLight, borderRadius: BorderRadius.circular(12)),
-        child: Column(
-          children: [
-            Text(val, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.primary)),
-            const SizedBox(height: 2),
-            Text(lbl, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
-          ],
+      child: Column(
+        children: [
+          Icon(icon, size: 20, color: AppTheme.primary),
+          const SizedBox(height: 6),
+          Text(val, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.3)),
+          const SizedBox(height: 1),
+          Text(lbl, style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExerciseCard(PlannedExercise p, List<String> notes, int index, List<PlannedExercise> queue) {
+    final e = p.exercise;
+    final color = e.level == 1 ? AppTheme.success : (e.level == 2 ? AppTheme.warning : AppTheme.error);
+    return Reveal(
+      index: index,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: GlassCard(
+          radius: AppTheme.rMedium + 2,
+          semanticLabel: '${e.name}, ${p.prescription}. Open details',
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ExerciseDetail(planned: p, safetyNotes: notes, queue: queue))),
+          child: Row(
+            children: [
+              IconWell(icon: AppIcons.exercise(e.group), size: 50),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(e.name, style: const TextStyle(fontSize: 15.5, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.2)),
+                    const SizedBox(height: 6),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text(p.prescription, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
+                        InfoChip(e.levelLabel, color: color),
+                      ],
+                    ),
+                    if (p.reasons.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 6),
+                        child: Text(p.reasons.first, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11.5, color: AppTheme.primary, height: 1.35, fontWeight: FontWeight.w600)),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 6),
+              const Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildExerciseCard(PlannedExercise p, List<String> notes) {
-    final e = p.exercise;
-    final color = e.level == 1 ? AppTheme.success : (e.level == 2 ? AppTheme.warning : AppTheme.error);
-    return GestureDetector(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ExerciseDetail(planned: p, safetyNotes: notes))),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: const BoxDecoration(color: AppTheme.background, shape: BoxShape.circle),
-              alignment: Alignment.center,
-              child: Text(e.icon, style: const TextStyle(fontSize: 24)),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(e.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text('${p.prescription} · ', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(color: color.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
-                        child: Text(e.levelLabel.toUpperCase(), style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: color)),
-                      ),
-                    ],
-                  ),
-                  if (p.reasons.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(p.reasons.first, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, color: AppTheme.primary, height: 1.3)),
+  /// Seven equal columns (letter + date) that stretch to the screen width. Rest days are muted; completed days carry a tick.
+  Widget _dayStrip(PersonalizedPlan plan, int selected) {
+    final today = Gamification.dateOnly(DateTime.now());
+    final monday = Gamification.weekStart(today);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: Row(
+        children: List.generate(7, (index) {
+          final isSelected = selected == index;
+          final isRest = plan.week[index] == null;
+          final date = monday.add(Duration(days: index));
+          final isDone = _done.contains(FoodLogService.dateKey(date));
+          final isToday = date == today;
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              child: Semantics(
+                button: true,
+                selected: isSelected,
+                label: '${_dayNames[index]}${isRest ? ', rest day' : ''}${isDone ? ', completed' : ''}',
+                excludeSemantics: true,
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    HapticFeedback.selectionClick();
+                    setState(() => _selectedDay = index);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 240),
+                    curve: Curves.easeOutCubic,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      gradient: isSelected ? AppTheme.buttonGradient : null,
+                      color: isSelected ? null : (isRest ? AppTheme.background : AppTheme.card),
+                      borderRadius: BorderRadius.circular(18),
+                      border: Border.all(color: isSelected ? Colors.transparent : (isToday ? AppTheme.primary : Colors.white), width: isToday && !isSelected ? 1.6 : 1.2),
+                      boxShadow: isSelected ? AppTheme.glowShadow(blur: 16, opacity: 0.34, offset: const Offset(0, 6)) : const [],
                     ),
-                ],
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(_dayLetters[index], style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w800, color: isSelected ? Colors.white.withOpacity(0.9) : AppTheme.textSecondary)),
+                        const SizedBox(height: 3),
+                        Text('${date.day}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800, color: isSelected ? Colors.white : (isRest ? AppTheme.textSecondary : AppTheme.textPrimary))),
+                        const SizedBox(height: 5),
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: isDone ? (isSelected ? Colors.white : AppTheme.success) : (isRest ? Colors.transparent : (isSelected ? Colors.white.withOpacity(0.5) : AppTheme.primary.withOpacity(0.35))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-            const Icon(Icons.play_circle_fill, color: AppTheme.primary, size: 28),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
@@ -216,7 +288,7 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
 
         if (plan == null || profile == null || cls == null) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Baymax', style: TextStyle(fontSize: 16))),
+            appBar: AppBar(title: const Text('Workout')),
             body: const Center(
               child: Padding(
                 padding: EdgeInsets.all(32),
@@ -230,159 +302,134 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
         final day = plan.week[selected];
         final main = day?.exercises.where((e) => e.exercise.id != 'warmup' && e.exercise.id != 'cooldown').toList() ?? const <PlannedExercise>[];
         final riskColor = HealthClassification.colorFor(cls.riskLevel);
+        final isToday = selected == DateTime.now().weekday - 1;
+        final bottomSpace = AppTheme.navSpace(context);
 
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Baymax', style: TextStyle(fontSize: 16)),
-            centerTitle: true,
+            title: const Text('Workout'),
             actions: [
-              IconButton(icon: const Icon(Icons.notifications_none), onPressed: () {}),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0),
-                child: CircleAvatar(
-                  radius: 16,
-                  backgroundColor: AppTheme.primaryLight,
-                  child: Text(
-                    profile.fullName.isEmpty ? '?' : profile.fullName[0].toUpperCase(),
-                    style: const TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              )
+              const NotificationBell(),
+              const SizedBox(width: 8),
             ],
           ),
           body: Stack(
             children: [
               SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: bottomSpace + (day != null && main.isNotEmpty ? 76 : 0)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Flexible(
-                            child: Text('Your Workout Plan',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(color: riskColor.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
-                            child: Text(cls.category.toUpperCase(), style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: riskColor)),
-                          ),
-                        ],
+                    Reveal(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Expanded(
+                                  child: Text('Your workout plan', style: TextStyle(fontSize: 28, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.8, height: 1.15)),
+                                ),
+                                const SizedBox(width: 8),
+                                Padding(padding: const EdgeInsets.only(top: 6), child: InfoChip(cls.category, color: riskColor)),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text('${plan.intensity} intensity · ${plan.workoutDays} days a week',
+                                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14, fontWeight: FontWeight.w500)),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text('${plan.intensity} intensity · ${plan.workoutDays} days/week',
-                          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
                     ),
 
-                    // Day chips
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      child: Row(
-                        children: List.generate(7, (index) {
-                          final isSelected = selected == index;
-                          final isRest = plan.week[index] == null;
-                          return GestureDetector(
-                            onTap: () => setState(() => _selectedDay = index),
-                            child: Container(
-                              width: 42,
-                              height: 42,
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              decoration: BoxDecoration(
-                                color: isSelected ? AppTheme.primary : (isRest ? AppTheme.background : AppTheme.card),
-                                shape: BoxShape.circle,
-                                border: Border.all(color: isSelected ? AppTheme.primary : (isRest ? AppTheme.border : Colors.transparent), width: 2),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                _dayLetters[index],
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: isSelected ? Colors.white : (isRest ? AppTheme.textSecondary.withOpacity(0.6) : AppTheme.textPrimary),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ),
+                    Reveal(index: 1, child: _dayStrip(plan, selected)),
 
                     if (day == null)
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        padding: const EdgeInsets.all(20),
-                        width: double.infinity,
-                        decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
-                        child: Column(
-                          children: [
-                            const Text('🛌', style: TextStyle(fontSize: 40)),
-                            const SizedBox(height: 8),
-                            Text('${_dayNames[selected]} is a rest day',
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-                            const SizedBox(height: 4),
-                            const Text(
-                              'Recovery is when your body adapts. A relaxed walk, light stretching and good sleep are all you need.',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: AppTheme.textSecondary, height: 1.4),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        child: GlassCard(
+                          padding: const EdgeInsets.all(24),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Column(
+                              children: [
+                                const IconWell(icon: Icons.bedtime_rounded, size: 56),
+                                const SizedBox(height: 14),
+                                Text('${_dayNames[selected]} is a rest day',
+                                    textAlign: TextAlign.center, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+                                const SizedBox(height: 6),
+                                const Text(
+                                  'Recovery is when your body adapts. A relaxed walk, light stretching and good sleep are all you need.',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: AppTheme.textSecondary, height: 1.45, fontWeight: FontWeight.w500),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       )
                     else ...[
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Text('${day.name} · ${day.focus}', style: const TextStyle(fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 10),
+                        child: Text('${day.name} · ${day.focus}', style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: AppTheme.textPrimary, letterSpacing: -0.2)),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                        child: Row(
-                          children: [
-                            _buildMetaChip('${day.durationMin}m', 'Duration'),
-                            _buildMetaChip('${day.kcal(profile.weightKg)}', day.modelKcal != null ? 'Calories (AI)' : 'Calories'),
-                            _buildMetaChip('${main.length}', 'Exercises'),
-                          ],
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: GlassCard(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Row(
+                            children: [
+                              _stat(Icons.timer_rounded, '${day.durationMin} min', 'Duration'),
+                              Container(width: 1, height: 44, color: AppTheme.border),
+                              _stat(Icons.local_fire_department_rounded, '${day.kcal(profile.weightKg)}', day.modelKcal != null ? 'kcal (AI)' : 'kcal'),
+                              Container(width: 1, height: 44, color: AppTheme.border),
+                              _stat(Icons.fitness_center_rounded, '${main.length}', 'Exercises'),
+                            ],
+                          ),
                         ),
                       ),
+                      const SizedBox(height: 10),
                       _completionCard(selected, day, profile.weightKg, plan),
-                      const SizedBox(height: 8),
+                      const SectionHeader('Exercises', padding: EdgeInsets.fromLTRB(20, 18, 20, 10)),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
-                          children: [for (final p in day.exercises) _buildExerciseCard(p, plan.restrictionNotes)],
+                          children: [for (var i = 0; i < day.exercises.length; i++) _buildExerciseCard(day.exercises[i], plan.restrictionNotes, i, day.exercises)],
                         ),
                       ),
                     ],
 
                     // Medical rules applied (FR-1)
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            children: [
-                              Text('🛡️', style: TextStyle(fontSize: 20)),
-                              SizedBox(width: 8),
-                              Expanded(child: Text('How this plan protects you', style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textPrimary))),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          for (final note in plan.restrictionNotes)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 6),
-                              child: Text('• $note', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13, height: 1.4)),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 14, 20, 12),
+                      child: GlassCard(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              children: [
+                                IconWell(icon: Icons.shield_rounded, color: AppTheme.teal, size: 36),
+                                SizedBox(width: 12),
+                                Expanded(child: Text('How this plan protects you', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: AppTheme.textPrimary))),
+                              ],
                             ),
-                        ],
+                            const SizedBox(height: 10),
+                            for (final note in plan.restrictionNotes)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Padding(padding: EdgeInsets.only(top: 6), child: Icon(Icons.circle, size: 5, color: AppTheme.teal)),
+                                    const SizedBox(width: 10),
+                                    Expanded(child: Text(note, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13.5, height: 1.45, fontWeight: FontWeight.w500))),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -392,50 +439,41 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                         onPressed: _regenerating ? null : _regenerate,
                         icon: _regenerating
                             ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
-                            : const Icon(Icons.refresh),
+                            : const Icon(Icons.refresh_rounded),
                         label: const Text('Regenerate plan'),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextButton(
+                      child: TextButton.icon(
                         onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NutritionPlanScreen())),
-                        child: const Text('View Nutrition Plan →'),
+                        icon: const Icon(Icons.set_meal_rounded, size: 18),
+                        label: const Text('View nutrition plan'),
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
                       child: Text(
                         '${ExerciseLibrary.originLabel}. Energy values: 2024 Compendium of Physical Activities. See Profile → Sources & methodology.',
-                        style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary, height: 1.4),
+                        style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, height: 1.45),
                       ),
                     ),
-                    const SizedBox(height: 100),
                   ],
                 ),
               ),
 
               if (day != null && main.isNotEmpty)
                 Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [AppTheme.background, AppTheme.background.withOpacity(0.0)],
-                      ),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => ExerciseDetail(planned: main.first, safetyNotes: plan.restrictionNotes)),
-                      ),
-                      child: Text(selected == DateTime.now().weekday - 1 ? 'Start Today\'s Workout 🔥' : 'Preview Workout →'),
+                  bottom: bottomSpace - 28 + 8, // sits just above the floating navigation bar (or the screen edge when pushed)
+                  left: 20,
+                  right: 20,
+                  child: GlowButton(
+                    icon: isToday ? Icons.play_arrow_rounded : Icons.visibility_rounded,
+                    label: isToday ? "Start today's workout" : 'Preview workout',
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => ExerciseDetail(planned: day.exercises.first, safetyNotes: plan.restrictionNotes, queue: day.exercises)),
                     ),
                   ),
                 ),

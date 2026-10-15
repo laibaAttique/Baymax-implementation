@@ -2,11 +2,12 @@ import '../models/plan.dart';
 import 'activity_service.dart';
 import 'food_log_service.dart';
 import 'gamification.dart';
+import 'inbox_service.dart';
 import 'realtime_db.dart';
 
 /// Everything Module 11 shows about the user's recent activity, computed from the last 28 days.
 class ProgressSnapshot {
-  static const windowDays = 28;
+  static const windowDays = 42; // 6 weeks: long enough to see a 30-day streak
 
   final DateTime today;
   final List<DayRecord> days; // oldest -> newest, the last day is today
@@ -15,6 +16,9 @@ class ProgressSnapshot {
   final FitnessLevel level;
   final int workoutStreak;
   final int loggingStreak;
+
+  /// Consecutive days with a workout or a logged meal (the streak the scope document describes).
+  final int activeStreak;
   final DateTime? lastWorkout;
   final Inactivity? inactivity;
 
@@ -27,6 +31,9 @@ class ProgressSnapshot {
   /// Badges that were not stored before this load.
   final Set<String> newBadges;
 
+  /// When each stored badge was first earned (milliseconds since the epoch), for "week earned" and newest-first ordering.
+  final Map<String, int> earnedAt;
+
   const ProgressSnapshot({
     required this.today,
     required this.days,
@@ -35,11 +42,13 @@ class ProgressSnapshot {
     required this.level,
     required this.workoutStreak,
     required this.loggingStreak,
+    required this.activeStreak,
     required this.lastWorkout,
     required this.inactivity,
     required this.earnedNow,
     required this.earned,
     required this.newBadges,
+    this.earnedAt = const {},
   });
 
   List<AppBadge> get badges => Gamification.badges(earned);
@@ -53,6 +62,7 @@ class ProgressSnapshot {
     required Map<String, double> kcalByDate,
     DateTime? lastWorkout,
     Set<String> storedBadges = const {},
+    Map<String, int> badgeTimes = const {},
   }) {
     final t = Gamification.dateOnly(today);
     final days = <DayRecord>[
@@ -89,11 +99,13 @@ class ProgressSnapshot {
       level: Gamification.levelFromScores(weeks),
       workoutStreak: Gamification.workoutStreak(days),
       loggingStreak: Gamification.loggingStreak(days),
+      activeStreak: Gamification.activeStreak(days),
       lastWorkout: last,
       inactivity: detectInactivity(today: t, lastWorkout: last, plannedWeekdays: plannedWeekdays),
       earnedNow: earnedNow,
       earned: {...storedBadges, ...earnedNow},
       newBadges: earnedNow.difference(storedBadges),
+      earnedAt: badgeTimes,
     );
   }
 }
@@ -116,7 +128,7 @@ class ProgressService {
       ActivityService.instance.range(from, to),
       FoodLogService.instance.kcalByDate(from, to),
       ActivityService.instance.lastWorkoutDate(),
-      _storedBadges(),
+      _storedBadgeTimes(),
     ]);
     final snapshot = ProgressSnapshot.build(
       today: t,
@@ -125,11 +137,16 @@ class ProgressService {
       activity: results[0] as Map<String, ActivityEntry>,
       kcalByDate: results[1] as Map<String, double>,
       lastWorkout: results[2] as DateTime?,
-      storedBadges: results[3] as Set<String>,
+      storedBadges: (results[3] as Map<String, int>).keys.toSet(),
+      badgeTimes: results[3] as Map<String, int>,
     );
     if (snapshot.newBadges.isNotEmpty) {
       try {
         await _award(snapshot.newBadges);
+        // Module 16 FR-7: tell the user about each new badge (once: the notification id is the badge id).
+        for (final id in snapshot.newBadges) {
+          await InboxService.instance.add(InboxService.badge(id, DateTime.now()), alsoOnPhone: true);
+        }
       } catch (_) {
         // Not stored this time; they are earned again on the next load.
       }
@@ -137,11 +154,12 @@ class ProgressService {
     return snapshot;
   }
 
-  Future<Set<String>> _storedBadges() {
+  Future<Map<String, int>> _storedBadgeTimes() {
     return RealtimeDb.guard(() async {
       final snap = await RealtimeDb.userRef('badges').get();
-      if (!snap.exists) return <String>{};
-      return (RealtimeDb.plain(snap.value) as Map<String, dynamic>).keys.toSet();
+      if (!snap.exists) return <String, int>{};
+      final m = RealtimeDb.plain(snap.value) as Map<String, dynamic>;
+      return {for (final e in m.entries) e.key: (e.value as num?)?.toInt() ?? 0};
     });
   }
 

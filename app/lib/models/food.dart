@@ -21,6 +21,9 @@ class FoodItem {
   final String source;
   final String? fdcId;
 
+  /// For foods from the team's food list: the origin the list itself names for this row (USDA, INDB, CURATED, a brand's official figures ...).
+  final String? sourceNote;
+
   const FoodItem({
     required this.id,
     required this.name,
@@ -38,6 +41,7 @@ class FoodItem {
     required this.tags,
     this.source = 'estimate',
     this.fdcId,
+    this.sourceNote,
   });
 
   factory FoodItem.fromJson(Map<String, dynamic> j) {
@@ -59,15 +63,60 @@ class FoodItem {
       tags: list(j['tags']),
       source: j['source'] as String? ?? 'estimate',
       fdcId: j['fdcId']?.toString(),
+      sourceNote: j['sourceNote']?.toString(),
     );
   }
 
   bool get fromUsda => source == 'usda';
 
-  /// Short provenance tag stored with logged entries, e.g. `usda:175254`.
-  String get ref => fromUsda ? 'usda:${fdcId ?? ''}' : 'estimate';
+  /// One of the ~2,700 foods from the searchable food list (team list, Indian Nutrient Databank, USDA SR Legacy): for search and logging
+  /// only, never in a generated meal plan (they have no meal slots).
+  bool get isBulk => role == 'bulk' || role == 'usda';
 
-  String get sourceLabel => fromUsda ? 'USDA FoodData Central' : 'Estimated typical serving';
+  /// None of those sources has allergen information, so for these foods [allergens] is a guess made from the name. The app says so.
+  bool get allergensEstimated => isBulk;
+
+  /// Short provenance tag stored with logged entries, e.g. `usda:175254`, `indb:asc079`, `calorica:cal_ric001`.
+  String get ref {
+    switch (source) {
+      case 'usda':
+        return 'usda:${fdcId ?? ''}';
+      case 'indb':
+      case 'calorica':
+        return '$source:${id.contains('_') ? id.substring(id.indexOf('_') + 1) : id}';
+      default:
+        return 'estimate';
+    }
+  }
+
+  String get sourceLabel {
+    switch (source) {
+      case 'usda':
+        return 'USDA FoodData Central';
+      case 'indb':
+        return 'Indian Nutrient Databank (values calculated from recipes)';
+      case 'calorica':
+        final n = (sourceNote ?? '').trim();
+        if (n.isEmpty || n.toUpperCase().startsWith('CURATED')) return 'Team food list (no outside source cited)';
+        return 'Team food list (original source: $n)';
+      default:
+        return 'Estimated typical serving';
+    }
+  }
+
+  /// One or two words for list rows.
+  String get sourceTag {
+    switch (source) {
+      case 'usda':
+        return 'USDA';
+      case 'indb':
+        return 'INDB';
+      case 'calorica':
+        return 'team list';
+      default:
+        return 'estimate';
+    }
+  }
 
   /// Allergens in this food that match the user's allergy list.
   List<String> conflictsWith(List<String> userAllergies) {
@@ -107,6 +156,21 @@ class FoodEntry {
     this.source = 'text',
     this.ref = 'estimate',
   });
+
+  FoodEntry withId(String newId) => FoodEntry(
+        id: newId,
+        date: date,
+        meal: meal,
+        name: name,
+        quantity: quantity,
+        unit: unit,
+        kcal: kcal,
+        protein: protein,
+        carbs: carbs,
+        fat: fat,
+        source: source,
+        ref: ref,
+      );
 
   factory FoodEntry.fromJson(Map<String, dynamic> j) => FoodEntry(
         id: (j['_id'] ?? j['id']) as String?,

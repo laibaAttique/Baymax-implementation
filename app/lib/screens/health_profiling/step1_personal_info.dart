@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../models/health_profile.dart';
 import '../../utils/health_calc.dart';
+import '../../utils/validators.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/forms.dart';
+import '../../widgets/glass.dart';
 import 'step2_medical_history.dart';
 import '../auth/splash_screen.dart';
 
@@ -40,6 +43,38 @@ class _Step1PersonalInfoState extends State<Step1PersonalInfo> {
     _weightController.addListener(_calculateBMI);
   }
 
+  final Set<String> _touched = {};
+
+  String? get _nameError => _touched.contains('name') ? Validators.fullName(_nameController.text) : null;
+  String? get _heightError => _touched.contains('height') ? Validators.height(_heightController.text, _heightUnit) : null;
+  String? get _weightError => _touched.contains('weight') ? Validators.weight(_weightController.text, _weightUnit) : null;
+  String? get _dobError => _touched.contains('dob') ? Validators.dateOfBirth(_dob) : null;
+
+  /// "Next" is enabled only when every required field is valid (mockup M4, FR4.8).
+  bool get _valid =>
+      Validators.fullName(_nameController.text) == null &&
+      Validators.dateOfBirth(_dob) == null &&
+      Validators.height(_heightController.text, _heightUnit) == null &&
+      Validators.weight(_weightController.text, _weightUnit) == null;
+
+  /// Switching a unit converts the number already typed, so the value stays the same height or weight (mockup M4, FR4.5).
+  void _switchUnit({String? height, String? weight}) {
+    String convert(TextEditingController c, String from, String to, double Function(double, String) toBase, double Function(double, String) fromBase, int decimals) {
+      final n = double.tryParse(c.text.trim());
+      if (n != null && from != to) {
+        final v = fromBase(toBase(n, from), to);
+        c.text = v == v.roundToDouble() ? v.toStringAsFixed(0) : v.toStringAsFixed(decimals);
+      }
+      return to;
+    }
+
+    setState(() {
+      if (height != null) _heightUnit = convert(_heightController, _heightUnit, height, HealthCalc.toCm, HealthCalc.fromCm, 2);
+      if (weight != null) _weightUnit = convert(_weightController, _weightUnit, weight, HealthCalc.toKg, HealthCalc.fromKg, 1);
+    });
+    _calculateBMI();
+  }
+
   void _calculateBMI() {
     final h = HealthCalc.toCm(double.tryParse(_heightController.text) ?? 0, _heightUnit);
     final w = HealthCalc.toKg(double.tryParse(_weightController.text) ?? 0, _weightUnit);
@@ -55,7 +90,10 @@ class _Step1PersonalInfoState extends State<Step1PersonalInfo> {
       lastDate: DateTime(now.year - 13, now.month, now.day),
       helpText: 'Date of birth',
     );
-    if (picked != null) setState(() => _dob = picked);
+    setState(() {
+      _touched.add('dob');
+      if (picked != null) _dob = picked;
+    });
   }
 
   String _dobIso(DateTime d) =>
@@ -67,20 +105,7 @@ class _Step1PersonalInfoState extends State<Step1PersonalInfo> {
     final heightCm = HealthCalc.toCm(height, _heightUnit);
     final weightKg = HealthCalc.toKg(weight, _weightUnit);
 
-    String? error;
-    if (_nameController.text.trim().isEmpty) {
-      error = 'Please enter your full name';
-    } else if (_dob == null) {
-      error = 'Please select your date of birth';
-    } else if (heightCm < 100 || heightCm > 250) {
-      error = _heightUnit == 'ft' ? 'Enter your height in feet, e.g. 5.5' : 'Enter a height between 100 and 250 cm';
-    } else if (weightKg < 25 || weightKg > 300) {
-      error = 'Enter a realistic weight';
-    }
-    if (error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
-      return;
-    }
+    if (!_valid) return;
 
     widget.profile.fullName = _nameController.text.trim();
     widget.profile.dob = _dobIso(_dob!);
@@ -98,159 +123,172 @@ class _Step1PersonalInfoState extends State<Step1PersonalInfo> {
   }
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    _heightController.dispose();
+    _weightController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Baymax'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Log Out',
+            icon: const Icon(Icons.logout_rounded),
+            tooltip: 'Log out',
             onPressed: () async {
               await AuthService.instance.signOut();
               if (mounted) {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const SplashScreen()),
-                  (route) => false,
-                );
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const SplashScreen()), (route) => false);
               }
             },
-          )
+          ),
+          const SizedBox(width: 4),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Center(child: Text('Step 1 of 3 — Personal Information')),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Full Name'),
-            ),
-            const SizedBox(height: 16),
-            const Text('Gender', style: TextStyle(color: AppTheme.textSecondary)),
-            const SizedBox(height: 8),
-            Row(
-              children: ['Male', 'Female', 'Other'].map((g) {
-                final isSelected = _selectedGender == g;
-                return Expanded(
-                  child: GestureDetector(
-                    onTap: () => setState(() => _selectedGender = g),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: isSelected ? AppTheme.primary : AppTheme.card,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: isSelected ? AppTheme.primary : Colors.transparent),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Reveal(child: StepHeader(step: 1, total: 3, title: 'About you', subtitle: 'Your details are used to work out your BMI, calorie needs and a safe plan.')),
+              const SizedBox(height: 22),
+              Reveal(
+                index: 1,
+                child: GlassCard(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        controller: _nameController,
+                        textCapitalization: TextCapitalization.words,
+                        textInputAction: TextInputAction.next,
+                        onChanged: (_) => setState(() => _touched.add('name')),
+                        decoration: InputDecoration(labelText: 'Full name', prefixIcon: const Icon(Icons.person_outline_rounded), errorText: _nameError),
                       ),
-                      alignment: Alignment.center,
-                      child: Text(g, style: TextStyle(color: isSelected ? Colors.white : AppTheme.textPrimary)),
-                    ),
+                      const SizedBox(height: 20),
+                      const Text('Gender', style: TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w700, fontSize: 13)),
+                      const SizedBox(height: 8),
+                      PillChoice(options: const ['Male', 'Female', 'Other'], selected: _selectedGender, onChanged: (g) => setState(() => _selectedGender = g)),
+                      const SizedBox(height: 20),
+                      Semantics(
+                        button: true,
+                        label: 'Date of birth: ${_dob == null ? 'not selected' : _dobIso(_dob!)}',
+                        excludeSemantics: true,
+                        child: InkWell(
+                          onTap: _pickDob,
+                          borderRadius: BorderRadius.circular(AppTheme.rMedium),
+                          child: InputDecorator(
+                            decoration: InputDecoration(labelText: 'Date of birth', suffixIcon: const Icon(Icons.calendar_month_rounded), errorText: _dobError),
+                            child: Text(
+                              _dob == null ? 'Select your date of birth' : _dobIso(_dob!),
+                              style: TextStyle(color: _dob == null ? AppTheme.textSecondary : AppTheme.textPrimary, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              }).toList(),
-            ),
-            const SizedBox(height: 16),
-            GestureDetector(
-              onTap: _pickDob,
-              child: InputDecorator(
-                decoration: const InputDecoration(labelText: 'Date of Birth', suffixIcon: Icon(Icons.calendar_today, size: 18)),
-                child: Text(
-                  _dob == null ? 'Select your date of birth' : _dobIso(_dob!),
-                  style: TextStyle(color: _dob == null ? AppTheme.textSecondary : AppTheme.textPrimary),
                 ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _heightController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(labelText: 'Height', helperText: _heightUnit == 'ft' ? 'Decimal feet, e.g. 5.5' : null),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(20)),
-                  child: Row(
-                    children: ['cm', 'ft'].map((u) {
-                      final isSelected = _heightUnit == u;
-                      return GestureDetector(
-                        onTap: () => setState(() { _heightUnit = u; _calculateBMI(); }),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: isSelected ? AppTheme.primary : Colors.transparent,
-                            borderRadius: BorderRadius.circular(20),
+              const SizedBox(height: 14),
+              Reveal(
+                index: 2,
+                child: GlassCard(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _heightController,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              onChanged: (_) => setState(() => _touched.add('height')),
+                              decoration: InputDecoration(labelText: 'Height', helperText: _heightUnit == 'ft' ? 'Decimal feet, e.g. 5.5' : null, errorText: _heightError, errorMaxLines: 2),
+                            ),
                           ),
-                          child: Text(u, style: TextStyle(color: isSelected ? Colors.white : AppTheme.textSecondary)),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _weightController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: const InputDecoration(labelText: 'Weight'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(20)),
-                  child: Row(
-                    children: ['kg', 'lbs'].map((u) {
-                      final isSelected = _weightUnit == u;
-                      return GestureDetector(
-                        onTap: () => setState(() { _weightUnit = u; _calculateBMI(); }),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: isSelected ? AppTheme.primary : Colors.transparent,
-                            borderRadius: BorderRadius.circular(20),
+                          const SizedBox(width: 12),
+                          SizedBox(
+                            width: 118,
+                            child: PillChoice(
+                              options: const ['cm', 'ft'],
+                              selected: _heightUnit,
+                              height: 56,
+                              onChanged: (u) => _switchUnit(height: u),
+                            ),
                           ),
-                          child: Text(u, style: TextStyle(color: isSelected ? Colors.white : AppTheme.textSecondary)),
-                        ),
-                      );
-                    }).toList(),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _weightController,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              onChanged: (_) => setState(() => _touched.add('weight')),
+                              decoration: InputDecoration(labelText: 'Weight', errorText: _weightError, errorMaxLines: 2),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          SizedBox(
+                            width: 118,
+                            child: PillChoice(
+                              options: const ['kg', 'lbs'],
+                              selected: _weightUnit,
+                              height: 56,
+                              onChanged: (u) => _switchUnit(weight: u),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            if (_bmi > 0)
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryLight,
-                  borderRadius: BorderRadius.circular(20),
-                  border: const Border(left: BorderSide(color: AppTheme.primary, width: 4)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('YOUR BMI', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-                    Text(_bmi.toStringAsFixed(1), style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: AppTheme.primary)),
-                  ],
                 ),
               ),
-            const SizedBox(height: 32),
-            ElevatedButton(
-              onPressed: _next,
-              child: const Text('Next: Medical History →'),
-            ),
-          ],
+              AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutCubic,
+                alignment: Alignment.topCenter,
+                child: _bmi > 0
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 14),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.heroGradient,
+                            borderRadius: BorderRadius.circular(AppTheme.rLarge),
+                            boxShadow: AppTheme.glowShadow(blur: 26, opacity: 0.3, offset: const Offset(0, 12)),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('YOUR BMI', style: AppTheme.overline.copyWith(color: Colors.white.withOpacity(0.82))),
+                                    Text(_bmi.toStringAsFixed(1), style: const TextStyle(fontSize: 46, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -1.5, height: 1.1)),
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.speed_rounded, size: 44, color: Colors.white.withOpacity(0.5)),
+                            ],
+                          ),
+                        ),
+                      )
+                    : const SizedBox(width: double.infinity),
+              ),
+              const SizedBox(height: 26),
+              StepActions(nextLabel: 'Next: medical history', onNext: _valid ? _next : null),
+            ],
+          ),
         ),
       ),
     );

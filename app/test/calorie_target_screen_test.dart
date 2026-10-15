@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app/theme/app_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/models/health_profile.dart';
 import 'package:app/screens/nutrition/calorie_target_screen.dart';
@@ -22,7 +23,7 @@ Future<void> _pump(WidgetTester tester, Widget screen) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(MaterialApp(theme: ThemeData.light(), home: screen));
+  await tester.pumpWidget(MaterialApp(theme: AppTheme.lightTheme, home: screen));
   await tester.pumpAndSettle();
 }
 
@@ -80,7 +81,7 @@ void main() {
       ),
     );
     expect(tester.takeException(), isNull);
-    expect(find.text('1900 kcal'), findsOneWidget);
+    expect(find.text('1900'), findsOneWidget); // the daily target, shown large with its unit beside it
     expect(find.textContaining('not enough of your data yet'), findsOneWidget);
     expect(find.textContaining('2 of 4 needed'), findsOneWidget);
     expect(find.textContaining('3 of 10 needed'), findsOneWidget);

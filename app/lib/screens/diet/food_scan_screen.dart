@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../services/food_database.dart';
 import '../../services/food_image_classifier.dart';
+import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/glass.dart';
 import 'food_text_log.dart';
 
 /// Module 7 image logging (FE-7..FE-11): take or upload a photo, let the on-device model suggest
@@ -11,7 +13,10 @@ import 'food_text_log.dart';
 /// installed, or is unsure, the user picks the food from the list instead.
 class FoodScanScreen extends StatefulWidget {
   final DateTime date;
-  const FoodScanScreen({Key? key, required this.date}) : super(key: key);
+
+  /// The meal slot chosen by a meal section's "+" button, passed on to the logging screen.
+  final String? initialMeal;
+  const FoodScanScreen({Key? key, required this.date, this.initialMeal}) : super(key: key);
 
   @override
   State<FoodScanScreen> createState() => _FoodScanScreenState();
@@ -68,30 +73,34 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
   void _confirm(List<String> ids) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => FoodTextLog(date: widget.date, source: 'image', startInSearch: ids.isEmpty, preselect: ids)),
+      MaterialPageRoute(builder: (_) => FoodTextLog(date: widget.date, source: 'image', startInSearch: ids.isEmpty, preselect: ids, initialMeal: widget.initialMeal)),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Scan Food')),
+      appBar: AppBar(title: const Text('Scan food')),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
         child: Column(
           children: [
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(24)),
+                decoration: AppTheme.glass(radius: AppTheme.rHero),
                 clipBehavior: Clip.antiAlias,
                 child: _image == null
                     ? const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('🍛', style: TextStyle(fontSize: 64)),
-                          SizedBox(height: 12),
-                          Text('Take or upload a photo of your meal', style: TextStyle(color: AppTheme.textSecondary)),
+                          IconWell(icon: Icons.photo_camera_rounded, size: 72),
+                          SizedBox(height: 16),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24),
+                            child: Text('Take or upload a photo of your meal',
+                                textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.w600, fontSize: 15)),
+                          ),
                         ],
                       )
                     : Image.memory(_image!, fit: BoxFit.cover),
@@ -110,7 +119,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: _busy ? null : () => _pick(ImageSource.camera),
-                    icon: const Icon(Icons.photo_camera),
+                    icon: const Icon(Icons.photo_camera_rounded),
                     label: Text(_image == null ? 'Camera' : 'Retake'),
                   ),
                 ),
@@ -118,7 +127,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
                 Expanded(
                   child: OutlinedButton.icon(
                     onPressed: _busy ? null : () => _pick(ImageSource.gallery),
-                    icon: const Icon(Icons.photo_library),
+                    icon: const Icon(Icons.photo_library_rounded),
                     label: const Text('Gallery'),
                   ),
                 ),
@@ -126,7 +135,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
             ),
             if (!_classifier.available) ...[
               const SizedBox(height: 12),
-              ElevatedButton(onPressed: _image == null ? null : () => _confirm(const []), child: const Text('Choose the food →')),
+              GlowButton(icon: Icons.restaurant_menu_rounded, label: 'Choose the food', onPressed: _image == null ? null : () => _confirm(const [])),
             ],
           ],
         ),
@@ -139,25 +148,41 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
       return [
         _notice('I\'m not sure what this is. Pick it from the list.', AppTheme.warning),
         const SizedBox(height: 8),
-        ElevatedButton(onPressed: () => _confirm(const []), child: const Text('Choose the food →')),
+        GlowButton(icon: Icons.restaurant_menu_rounded, label: 'Choose the food', onPressed: () => _confirm(const [])),
       ];
     }
     return [
-      const Align(alignment: Alignment.centerLeft, child: Text('Is this…', style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textPrimary))),
-      const SizedBox(height: 6),
+      const Align(alignment: Alignment.centerLeft, child: Text('Is this…', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16, color: AppTheme.textPrimary))),
+      const SizedBox(height: 8),
       for (final g in _guesses)
         Builder(builder: (_) {
           final item = _db!.byId(g.foodId)!;
-          return ListTile(
-            contentPadding: EdgeInsets.zero,
-            dense: true,
-            isThreeLine: _classifier.weakLabels.contains(g.foodId),
-            leading: Text(item.icon, style: const TextStyle(fontSize: 26)),
-            title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-            subtitle: Text('${(g.confidence * 100).round()}% match · ${item.kcal.round()} kcal per ${item.servingLabel}'
-                '${_classifier.weakLabels.contains(g.foodId) ? '\nLess reliable for this dish — please double-check' : ''}'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => _confirm([g.foodId]),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: GlassCard(
+              radius: AppTheme.rMedium,
+              padding: const EdgeInsets.all(12),
+              onTap: () => _confirm([g.foodId]),
+              child: Row(
+                children: [
+                  IconWell(icon: AppIcons.food(item.icon), size: 42),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.name, style: const TextStyle(fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+                        Text('${(g.confidence * 100).round()}% match · ${item.kcal.round()} kcal per ${item.servingLabel}',
+                            style: const TextStyle(fontSize: 12.5, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
+                        if (_classifier.weakLabels.contains(g.foodId))
+                          const Text('Less reliable for this dish — please double-check', style: TextStyle(fontSize: 12, color: AppTheme.warning, fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
+                ],
+              ),
+            ),
           );
         }),
       TextButton(onPressed: () => _confirm(const []), child: const Text('None of these — search the list')),
@@ -168,8 +193,13 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
 
   Widget _notice(String text, Color color) => Container(
         width: double.infinity,
+        margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(color: color.withOpacity(0.12), borderRadius: BorderRadius.circular(12)),
-        child: Text(text, style: TextStyle(color: color, fontSize: 13, height: 1.4)),
+        decoration: BoxDecoration(color: AppTheme.tint(color, 0.16), borderRadius: BorderRadius.circular(AppTheme.rSmall + 2)),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Icon(Icons.info_rounded, size: 18, color: color),
+          const SizedBox(width: 10),
+          Expanded(child: Text(text, style: TextStyle(color: color, fontSize: 13, height: 1.4, fontWeight: FontWeight.w600))),
+        ]),
       );
 }

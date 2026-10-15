@@ -7,7 +7,8 @@ import 'gamification.dart';
 import 'progress_service.dart';
 import 'user_settings_service.dart';
 
-/// Module 14 (FR-3, FR-5): workout reminders and the inactivity nudge, as notifications scheduled on the phone.
+/// Module 16 (FR-3, FR-5, FR-6, FR-7): workout and meal-log reminders, the inactivity nudge, and immediate notices (a new badge, an
+/// allergen found), as notifications on the phone.
 ///
 /// These are local notifications: they need no server and no internet. Push notifications from a server (FCM, FR-6) are not
 /// part of this version. Notification text never contains health data, because it is shown on the lock screen.
@@ -16,6 +17,7 @@ class NotificationService {
   static final NotificationService instance = NotificationService._();
 
   static const _reminderIdBase = 10; // 11..17 = Monday..Sunday
+  static const _mealReminderIdBase = 30; // 31..37 = Monday..Sunday
   static const _inactivityId = 99;
 
   final _plugin = FlutterLocalNotificationsPlugin();
@@ -48,6 +50,15 @@ class NotificationService {
     }
   }
 
+  /// Shows a notification right away (a new badge, an allergen found). Best effort: silently does nothing without the permission.
+  Future<void> showNow({required int id, required String title, required String body}) async {
+    if (!supported) return;
+    try {
+      await _init();
+      await _plugin.show(id: id, title: title, body: body, notificationDetails: _details);
+    } catch (_) {}
+  }
+
   static const _details = NotificationDetails(
     android: AndroidNotificationDetails('workout_reminders', 'Workout reminders',
         channelDescription: 'Reminders for your planned workouts', importance: Importance.defaultImportance, priority: Priority.defaultPriority),
@@ -73,13 +84,28 @@ class NotificationService {
     try {
       await _init();
       await _plugin.cancelAll();
+      if (!settings.notificationsEnabled) return; // the master switch: nothing is scheduled
       final t = now ?? DateTime.now();
+      if (settings.mealReminderEnabled) {
+        for (var weekday = 1; weekday <= 7; weekday++) {
+          final at = nextWeekdayAt(t, weekday, settings.mealReminderHour, settings.mealReminderMinute);
+          await _plugin.zonedSchedule(
+            id: _mealReminderIdBase + weekday,
+            title: 'Log your meals',
+            body: 'Take a minute to add what you ate today.',
+            scheduledDate: _utc(at),
+            notificationDetails: _details,
+            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+            matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+          );
+        }
+      }
       if (plan != null && settings.reminderEnabled) {
         for (final weekday in ProgressService.plannedWeekdays(plan)) {
           final at = nextWeekdayAt(t, weekday, settings.reminderHour, settings.reminderMinute);
           await _plugin.zonedSchedule(
             id: _reminderIdBase + weekday,
-            title: 'Time to move 💪',
+            title: 'Time to move',
             body: 'Your workout is planned for today. Open Baymax to start.',
             scheduledDate: _utc(at),
             notificationDetails: _details,
@@ -93,7 +119,7 @@ class NotificationService {
         if (at != null) {
           await _plugin.zonedSchedule(
             id: _inactivityId,
-            title: 'We miss you 👋',
+            title: 'We miss you',
             body: 'It has been a few days since your last workout. A short session still counts.',
             scheduledDate: _utc(at),
             notificationDetails: _details,

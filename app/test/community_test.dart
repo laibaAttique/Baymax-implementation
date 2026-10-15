@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app/theme/app_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/models/health_profile.dart';
 import 'package:app/screens/community/community_screen.dart';
@@ -27,7 +28,7 @@ Future<void> _pump(WidgetTester tester, Widget screen) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(MaterialApp(theme: ThemeData.light(), home: screen));
+  await tester.pumpWidget(MaterialApp(theme: AppTheme.lightTheme, home: screen));
   await tester.pumpAndSettle();
 }
 
@@ -88,9 +89,11 @@ void main() {
     expect(find.text('54'), findsOneWidget);
     expect(find.text('Intermediate'), findsOneWidget);
     expect(find.text('1 of 2 done'), findsOneWidget);
-    expect(find.textContaining('Badges · 1 of 8'), findsOneWidget);
+    expect(find.text('Badges and streak'), findsOneWidget);
+    expect(find.text('1 of 10'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Join the leaderboard'), 300, scrollable: find.byType(Scrollable).first);
     expect(find.text('Join the leaderboard'), findsOneWidget);
-    await tester.scrollUntilVisible(find.textContaining('choices made by the project team'), 300);
+    await tester.scrollUntilVisible(find.textContaining('choices made by the project team'), 300, scrollable: find.byType(Scrollable).first);
     expect(find.textContaining('choices made by the project team'), findsOneWidget);
   });
 
@@ -109,6 +112,7 @@ void main() {
       ),
     );
     expect(tester.takeException(), isNull);
+    await tester.scrollUntilVisible(find.text('Sara'), 300, scrollable: find.byType(Scrollable).first);
     expect(find.text('Sara'), findsOneWidget);
     expect(find.text('Aamna (you)'), findsOneWidget);
     expect(find.textContaining('score thresholds'), findsOneWidget); // fewer than 15 users: no K-Means
@@ -130,14 +134,17 @@ void main() {
     );
     expect(tester.takeException(), isNull);
     final switches = tester.widgetList<SwitchListTile>(find.byType(SwitchListTile)).toList();
-    expect(switches.length, 3);
-    expect(switches.every((s) => !s.value), isTrue);
-    expect(find.text('Member', skipOffstage: false), findsOneWidget);
-
-    await tester.tap(find.byType(SwitchListTile).first);
+    // notifications as a whole start on; every reminder, alert and the leaderboard start off
+    expect(switches.length, greaterThanOrEqualTo(4)); // the fifth (leaderboard) is below the fold in a lazy list
+    expect(switches.first.value, isTrue);
+    expect(switches.skip(1).every((s) => !s.value), isTrue);
+    await tester.tap(find.byType(SwitchListTile).at(1)); // workout reminders
     await tester.pumpAndSettle();
     expect(saved?.reminderEnabled, isTrue);
     expect(saved?.reminderHour, 18);
+    expect(saved?.notificationsEnabled, isTrue);
+    await tester.scrollUntilVisible(find.text('Member'), 300, scrollable: find.byType(Scrollable).first);
+    expect(find.text('Member'), findsOneWidget);
   });
 
   group('settings model', () {

@@ -121,14 +121,15 @@ class CalorieOptimizerRules {
   }
 }
 
-/// Least-squares line through (day index, kg).
-class _Fit {
+/// Least-squares line through (day, kg): slope per day, its standard error, and the line's value at the last weigh-in.
+class WeightFit {
   final double slopePerDay;
   final double seSlope;
-  const _Fit(this.slopePerDay, this.seSlope);
+  final double lastFitKg;
+  const WeightFit(this.slopePerDay, this.seSlope, this.lastFitKg);
 }
 
-_Fit? _fit(List<WeightPoint> pts) {
+WeightFit? fitWeights(List<WeightPoint> pts) {
   final n = pts.length;
   if (n < 3) return null;
   final t0 = pts.first.date;
@@ -150,7 +151,7 @@ _Fit? _fit(List<WeightPoint> pts) {
     sse += r * r;
   }
   final sigma2 = sse / (n - 2);
-  return _Fit(slope, sqrt(sigma2 / sxx));
+  return WeightFit(slope, sqrt(sigma2 / sxx), intercept + slope * xs.last);
 }
 
 /// Exponentially smoothed ("trend") weight for display, handling gaps between weigh-ins: a weigh-in after a long gap moves the
@@ -197,7 +198,7 @@ CalorieEstimate estimateMaintenance({
         weighIns: w.length,
         complete: complete.length);
   }
-  final fit = _fit(w);
+  final fit = fitWeights(w);
   if (fit == null) return formula('Not enough variation in the weigh-in dates yet.', weighIns: w.length, complete: complete.length);
 
   final meanIntake = complete.fold(0.0, (s, d) => s + d.kcal) / complete.length;
