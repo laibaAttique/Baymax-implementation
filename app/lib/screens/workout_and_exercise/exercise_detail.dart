@@ -8,8 +8,9 @@ import '../posture_detection/posture_mode.dart';
 class ExerciseDetail extends StatelessWidget {
   final PlannedExercise planned;
   final List<String> safetyNotes;
+  final List<PlannedExercise> queue;
 
-  const ExerciseDetail({Key? key, required this.planned, this.safetyNotes = const []}) : super(key: key);
+  const ExerciseDetail({Key? key, required this.planned, this.safetyNotes = const [], this.queue = const []}) : super(key: key);
 
   Widget _buildMetricMini(String val, String lbl) {
     return Expanded(
@@ -200,13 +201,17 @@ class ExerciseDetail extends StatelessWidget {
                 ),
               ),
               child: ElevatedButton(
-                // Hand-over to Modules 5/6: the selected exercise and its prescription.
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => PostureModeSelection(request: WorkoutSessionRequest.fromPlanned(planned)),
-                  ),
-                ),
+                // Hand-over to Modules 5/6: the selected exercise and its prescription, plus upcoming exercises from the plan.
+                onPressed: () {
+                  final idx = queue.indexOf(planned);
+                  final upNext = idx >= 0 ? queue.sublist(idx + 1) : queue.where((e) => e != planned).toList();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PostureModeSelection(request: WorkoutSessionRequest.fromPlanned(planned, upNext: upNext)),
+                    ),
+                  );
+                },
                 child: const Text('Start Exercise →'),
               ),
             ),

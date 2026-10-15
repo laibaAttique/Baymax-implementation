@@ -29,7 +29,7 @@ import '../screens/posture_detection/camera_detection.dart';
 import '../screens/posture_detection/manual_guidance.dart';
 import '../screens/posture_detection/posture_feedback.dart';
 import '../screens/posture_detection/posture_mode.dart';
-import '../screens/posture_detection/session_queue.dart';
+import '../models/workout_session.dart';
 import '../screens/profile/settings_screen.dart';
 import '../screens/profile/sources_screen.dart';
 import '../models/consultation.dart';
@@ -165,7 +165,11 @@ Widget _screen(String name) {
     case 'allergy':
       return const AllergyScanner();
     case 'posture':
-      return const PostureModeSelection();
+      return PostureModeSelection(
+        request: const WorkoutSessionRequest(
+          exercise: SessionExercise(id: 'squat', name: 'Bodyweight Squat', sets: 3, reps: 10),
+        ),
+      );
     case 'voice':
       return const VoiceAssistantScreen();
     case 'exercise':
@@ -189,11 +193,35 @@ Widget _screen(String name) {
     case 'bmi':
       return BmiResult(profile: UserSession.instance.profile!);
     case 'camera':
-      return CameraDetection(queue: defaultSessionQueue());
+      return CameraDetection(
+        request: const WorkoutSessionRequest(
+          exercise: SessionExercise(id: 'squat', name: 'Bodyweight Squat', sets: 3, reps: 10),
+        ),
+      );
     case 'manual':
-      return ManualGuidance(queue: defaultSessionQueue());
+      return ManualGuidance(
+        request: const WorkoutSessionRequest(
+          exercise: SessionExercise(id: 'squat', name: 'Bodyweight Squat', sets: 3, reps: 10),
+        ),
+      );
     case 'feedback':
-      return const PostureFeedbackScreen(result: SessionResult(total: 7, completed: 6, skipped: 1, setsDone: 14, elapsed: Duration(minutes: 24, seconds: 12)));
+      return PostureFeedbackScreen(
+        summary: SessionSummary(
+          exercise: const SessionExercise(id: 'squat', name: 'Bodyweight Squat', sets: 3, reps: 10),
+          mode: SessionMode.camera,
+          endedAt: DateTime.now(),
+          duration: const Duration(minutes: 5, seconds: 12),
+          reps: 10,
+          partialReps: 1,
+          setsCompleted: 3,
+          postureScore: 85,
+          accuracy: 90,
+          feedback: const [
+            FormFeedbackItem(id: '1', verdict: FeedbackVerdict.passed, text: 'Good squat depth reached'),
+            FormFeedbackItem(id: '2', verdict: FeedbackVerdict.passed, text: 'Back kept straight'),
+          ],
+        ),
+      );
     case 'scan':
       return FoodScanScreen(date: DateTime.now());
     case 'drawer':
