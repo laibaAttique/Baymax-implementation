@@ -1,0 +1,93 @@
+[
+  {
+    "id": "62570e87-5512-af32-957f-d9348e377499",
+    "data": [
+      {
+        "text": "what is my workout today",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "faefc285-04d7-b65b-c70c-2e7e17c25d37",
+    "data": [
+      {
+        "text": "what is on my schedule",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "5ef69139-d192-a89c-328b-faa2cfe64e73",
+    "data": [
+      {
+        "text": "show exercises",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "e0952854-b048-b8db-13de-1a646b788a52",
+    "data": [
+      {
+        "text": "what is my plan today",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "c37ea7aa-54d7-5781-c215-50460855eaff",
+    "data": [
+      {
+        "text": "today routine",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "3e1d6b80-58c4-21f3-d690-dbb54aae1075",
+    "data": [
+      {
+        "text": "what exercises do I have today",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "6bde982b-8916-aab2-bdb6-0b86c45e481b",
+    "data": [
+      {
+        "text": "my workout plan",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "id": "9d80e48a-d850-445e-7870-4529b11e6c1f",
+  "name": "exerciseTechnique",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "exerciseTechnique",
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "0d719218-d864-ca05-1fbc-be1f0b0f5017",
+          "required": false,
+          "dataType": "@exercise",
+          "name": "exercise",
+          "value": "$exercise",
+          "promptMessages": [],
+          "noMatchPromptMessages": [],
+          "noInputPromptMessages": [],
+          "outputDialogContexts": [],
+          "isList": false
+        }
+      ],
+      "messages": [],
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": [],
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": "f75e6b4c-f3c5-791d-1225-f2d25349cafd",
+  "name": "nextExercise",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "nextExercise",
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [],
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": [],
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": []
+}

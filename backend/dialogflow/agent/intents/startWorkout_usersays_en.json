@@ -1,0 +1,67 @@
+[
+  {
+    "id": "082b3f70-6018-26a2-70d7-3508378d9338",
+    "data": [
+      {
+        "text": "start workout",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "f9f64582-a892-3261-ce8c-dce6ec385251",
+    "data": [
+      {
+        "text": "start my workout",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "d7f19e05-ce39-3151-17c3-e3fd41cf7b77",
+    "data": [
+      {
+        "text": "let us go",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "c2fee1fb-94e0-46b1-3525-88c0796c1193",
+    "data": [
+      {
+        "text": "begin the workout",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "8dd356a6-69fa-f9a4-2953-00a6634ec4e9",
+    "data": [
+      {
+        "text": "start exercising",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

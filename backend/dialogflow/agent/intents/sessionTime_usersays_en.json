@@ -1,0 +1,80 @@
+[
+  {
+    "id": "d4509f1c-0ef2-e89e-64b7-0b0f2e3207fd",
+    "data": [
+      {
+        "text": "how long have I been going",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "2e0c5862-5735-c84f-5ed8-1aef494737d5",
+    "data": [
+      {
+        "text": "how long has this session been",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "df1f67c1-007f-0994-08ce-a19a99db1615",
+    "data": [
+      {
+        "text": "elapsed time",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "e285ebc8-0722-9a38-f1ae-c32da7616555",
+    "data": [
+      {
+        "text": "workout time",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "9e3c65e6-1da7-f55a-720d-997f6a26eb12",
+    "data": [
+      {
+        "text": "how much time has passed",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "51472987-047e-5054-9586-3fead4353fd4",
+    "data": [
+      {
+        "text": "session duration",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

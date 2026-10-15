@@ -15,3 +15,6 @@ app/ml/data/
 __pycache__/
 .DS_Store
 .idea/
+
+# Service-account keys (e.g. Dialogflow); never commit
+backend/secrets/

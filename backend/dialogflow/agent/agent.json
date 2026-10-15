@@ -1,0 +1,22 @@
+{
+  "description": "Baymax micro-coaching voice assistant: workout questions and session controls.",
+  "language": "en",
+  "shortDescription": "",
+  "examples": "",
+  "linkToDocs": "",
+  "displayName": "baymax-coach",
+  "disableInteractionLogs": true,
+  "disableStackdriverLogs": true,
+  "defaultTimezone": "Asia/Karachi",
+  "isPrivate": true,
+  "mlMinConfidence": 0.4,
+  "supportedLanguages": [],
+  "enableOnePlatformApi": true,
+  "onePlatformApiVersion": "v2",
+  "analyzeQueryTextSentiment": false,
+  "enabledKnowledgeBaseNames": [],
+  "knowledgeServiceConfidenceAdjustment": 0,
+  "dialogBuilderMode": false,
+  "baseActionPackagesUrl": "",
+  "enableSpellCorrection": true
+}

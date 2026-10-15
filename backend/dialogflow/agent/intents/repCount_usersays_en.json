@@ -1,0 +1,214 @@
+[
+  {
+    "id": "2c8a1afa-e818-ddd0-5221-cb55dd78c355",
+    "data": [
+      {
+        "text": "how many reps have I done",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "82f79444-0623-f1c1-181e-15e0c710464c",
+    "data": [
+      {
+        "text": "how many reps",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "0f304234-8e6a-2810-527a-727aae57f79c",
+    "data": [
+      {
+        "text": "rep count",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "5da0cb67-76c1-291a-4d47-456de31483b7",
+    "data": [
+      {
+        "text": "how many did I do",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "c86c6f97-0498-9152-0ea4-a020cc7a7cd7",
+    "data": [
+      {
+        "text": "how many are left",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "085d91d0-328e-429e-c68c-44078002890a",
+    "data": [
+      {
+        "text": "how many more",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "09e3ccd8-04c4-1b94-48a7-89d8525d97c1",
+    "data": [
+      {
+        "text": "count my reps",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "78456394-21fe-5405-c052-6992d9933f53",
+    "data": [
+      {
+        "text": "how many repetitions so far",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "42f280dc-70b0-93fc-35a8-d279ded46504",
+    "data": [
+      {
+        "text": "how many ",
+        "userDefined": false
+      },
+      {
+        "text": "push-up",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      },
+      {
+        "text": " have I done",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "2c864d21-77d3-4ca8-7c01-49a6c63c5fc0",
+    "data": [
+      {
+        "text": "how many ",
+        "userDefined": false
+      },
+      {
+        "text": "plank",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      },
+      {
+        "text": " did I complete so far",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "65e47c7e-2c58-1e1d-e7bf-54a9469bb2a3",
+    "data": [
+      {
+        "text": "how many ",
+        "userDefined": false
+      },
+      {
+        "text": "lunges",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      },
+      {
+        "text": " are left",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "89ea18d8-a550-1234-1b0e-589242c638ba",
+    "data": [
+      {
+        "text": "what is my rep count",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "0d638718-c9e6-5c82-e326-11b665ff0044",
+    "data": [
+      {
+        "text": "how many have I completed",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "3384c886-d563-d559-a19d-cf0e1395e9a0",
+    "data": [
+      {
+        "text": "number of reps so far",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

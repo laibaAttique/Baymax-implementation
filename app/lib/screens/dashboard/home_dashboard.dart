@@ -7,7 +7,7 @@ import '../../theme/app_theme.dart';
 import '../allergy/allergy_scanner.dart';
 import '../auth/splash_screen.dart';
 import '../chatbot/chatbot_screen.dart';
-import '../posture_detection/posture_mode.dart';
+import '../posture_detection/exercise_picker.dart';
 
 class HomeDashboard extends StatefulWidget {
   final Function(int) onNavigateTab;
@@ -263,7 +263,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                       _buildQuickTile(context, '💪', 'Workout\nPlan', onTap: () => widget.onNavigateTab(2)),
                       _buildQuickTile(context, '🥗', 'Diet\nTracker', onTap: () => widget.onNavigateTab(1)),
                       _buildQuickTile(context, '🧘', 'Posture\nCheck',
-                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PostureModeSelection()))),
+                          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ExercisePickerScreen()))),
                       _buildQuickTile(context, '📊', 'Body\nTransform'),
                       _buildQuickTile(context, '🏆', 'Leader\nboard'),
                       _buildQuickTile(context, '🛡️', 'Allergy\nScanner',

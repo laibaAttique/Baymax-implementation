@@ -10,6 +10,7 @@ import 'ml/gradient_boosting_model.dart';
 import 'ml/health_risk_model.dart';
 import 'plan_generator.dart';
 import 'profile_service.dart';
+import 'workout_session/workout_log_service.dart';
 
 /// Holds the signed-in user's profile and everything derived from it
 /// (classification → plan) so every screen shares one source of truth.
@@ -21,6 +22,10 @@ class UserSession extends ChangeNotifier {
   HealthClassifier classifier = const RuleBasedClassifier();
 
   HealthProfile? profile;
+
+  /// Exercises the user recently marked "Too Difficult" (report FR17.4);
+  /// the plan generator makes them easier.
+  final Set<String> tooDifficult = {};
   ClassificationResult? classification;
   PersonalizedPlan? plan;
 
@@ -58,6 +63,13 @@ class UserSession extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+    try {
+      tooDifficult
+        ..clear()
+        ..addAll(await FirebaseWorkoutLog.instance.tooDifficultExercises());
+    } catch (_) {
+      // Not critical: the plan is generated without difficulty adjustments.
+    }
     await setProfile(HealthProfile.fromJson(data));
     return true;
   }
@@ -70,7 +82,7 @@ class UserSession extends ChangeNotifier {
     profile = p;
     classification = classifier.classify(p);
     p.healthClassification = classification!.category;
-    plan = PlanGenerator(foods, workoutModel: workoutModel).generate(p, classification!, variant: p.planVariant);
+    plan = PlanGenerator(foods, workoutModel: workoutModel).generate(p, classification!, variant: p.planVariant, tooDifficult: tooDifficult);
     notifyListeners();
   }
 
@@ -96,6 +108,7 @@ class UserSession extends ChangeNotifier {
 
   void _reset() {
     profile = null;
+    tooDifficult.clear();
     classification = null;
     plan = null;
   }

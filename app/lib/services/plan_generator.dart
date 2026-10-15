@@ -112,7 +112,16 @@ class PlanGenerator {
     _Template('Strength Mix', 'Strength & stability', [_Slot('push', 2), _Slot('legs', 2), _Slot('core', 1), _Slot('mobility', 1)]),
   ];
 
-  PersonalizedPlan generate(HealthProfile profile, ClassificationResult cls, {int variant = 0}) {
+  /// [tooDifficult]: ids of exercises the user recently marked "Too Difficult"
+  /// in Manual Guidance (report FR17.4). Each is swapped for an easier or
+  /// equally easy exercise of the same group when one is allowed, otherwise it
+  /// stays with a lighter dose.
+  PersonalizedPlan generate(
+    HealthProfile profile,
+    ClassificationResult cls, {
+    int variant = 0,
+    Set<String> tooDifficult = const {},
+  }) {
     final intensity = _intensity(profile, cls);
     final restrictions = _restrictions(profile, cls, intensity);
 
@@ -124,9 +133,11 @@ class PlanGenerator {
     final days = profile.workoutFrequency.clamp(2, restrictions.maxDays);
     final slots = _schedule[days]!;
     final week = List<WorkoutDay?>.filled(7, null);
+    final adjusted = <String>{};
     for (var i = 0; i < slots.length; i++) {
       final template = templates[(i + variant) % templates.length];
-      week[slots[i]] = _withModelEstimate(_buildDay(template, intensity, restrictions, variant * 2 + i, profile.weightKg), profile);
+      week[slots[i]] = _withModelEstimate(
+          _buildDay(template, intensity, restrictions, variant * 2 + i, profile.weightKg, tooDifficult, adjusted), profile);
     }
 
     return PersonalizedPlan(
@@ -134,7 +145,10 @@ class PlanGenerator {
       intensity: intensity,
       variant: variant,
       week: week,
-      restrictionNotes: restrictions.notes,
+      restrictionNotes: [
+        ...restrictions.notes,
+        if (adjusted.isNotEmpty) 'Made easier because you marked them as too difficult: ${adjusted.join('; ')}.',
+      ],
       nutrition: _nutrition(profile, cls, variant),
     );
   }
@@ -232,7 +246,8 @@ class PlanGenerator {
 
   // --- FR-2 / FR-5: templates and weekly schedule --------------------------
 
-  WorkoutDay _buildDay(_Template t, String intensity, PlanRestrictions r, int offset, double weightKg) {
+  WorkoutDay _buildDay(_Template t, String intensity, PlanRestrictions r, int offset, double weightKg,
+      [Set<String> tooDifficult = const {}, Set<String>? adjusted]) {
     final usedIds = <String>{};
     final main = <PlannedExercise>[];
 
@@ -242,9 +257,25 @@ class PlanGenerator {
       if (pool.isEmpty) continue;
       var taken = 0;
       for (var i = 0; taken < slot.count && i < pool.length * 2; i++) {
-        final e = pool[(offset + i) % pool.length];
+        var e = pool[(offset + i) % pool.length];
+        var lighter = false;
+        if (tooDifficult.contains(e.id)) {
+          // The pool is sorted easiest first.
+          final flagged = e;
+          final alternative = pool
+              .where((a) => !tooDifficult.contains(a.id) && a.level <= flagged.level && !usedIds.contains(a.id))
+              .firstOrNull;
+          if (alternative != null) {
+            e = alternative;
+            adjusted?.add('${flagged.name} → ${alternative.name}');
+          } else {
+            lighter = true;
+            adjusted?.add('${flagged.name} (lighter dose)');
+          }
+        }
         if (usedIds.add(e.id)) {
-          main.add(_prescribe(e, intensity, maxHold: r.maxHoldSeconds));
+          final planned = _prescribe(e, intensity, maxHold: r.maxHoldSeconds);
+          main.add(lighter ? _lighter(planned) : planned);
           taken++;
         }
       }
@@ -325,6 +356,15 @@ class PlanGenerator {
     final scale = const [0.8, 1.0, 1.1][idx];
     return PlannedExercise(exercise: e, sets: sets, reps: (e.baseReps * scale).round(), seconds: 0, restSeconds: rest);
   }
+
+  /// One set fewer and about 30% fewer reps or seconds (never below 1 set).
+  PlannedExercise _lighter(PlannedExercise p) => PlannedExercise(
+        exercise: p.exercise,
+        sets: p.sets > 1 ? p.sets - 1 : 1,
+        reps: p.reps == 0 ? 0 : (p.reps * 0.7).round().clamp(1, p.reps),
+        seconds: p.seconds == 0 ? 0 : (((p.seconds * 0.7) / 5).round() * 5).clamp(5, p.seconds),
+        restSeconds: p.restSeconds,
+      );
 
   // --- FR-4 / FR-6: calories, macros and meals ------------------------------
 

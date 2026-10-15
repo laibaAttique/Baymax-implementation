@@ -1,0 +1,24 @@
+{
+  "id": "9c0994f9-0d4f-d1cd-94d6-5dfcc8f3ed0f",
+  "name": "postureScore",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "postureScore",
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [],
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": [],
+  "conditionalResponses": [],
+  "condition": "",
+  "conditionalFollowupEvents": []
+}

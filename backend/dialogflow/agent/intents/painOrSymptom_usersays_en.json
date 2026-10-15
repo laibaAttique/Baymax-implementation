@@ -1,0 +1,158 @@
+[
+  {
+    "id": "d7c77c66-3f48-78f4-e48c-02358cab716e",
+    "data": [
+      {
+        "text": "my knee hurts",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "083743f6-e478-1f7b-3e63-0b4a356a7dc0",
+    "data": [
+      {
+        "text": "I feel pain in my back",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "330abe41-de3a-11bf-8b28-2ec272527b65",
+    "data": [
+      {
+        "text": "my shoulder is hurting",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "f8cec115-da3d-1d46-2250-b6d317d3fc45",
+    "data": [
+      {
+        "text": "I feel dizzy",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "35477e4d-26b1-86d1-40c5-b9b8a206263c",
+    "data": [
+      {
+        "text": "I feel faint",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "91355f62-807c-bf98-44c5-7d903ef2d3da",
+    "data": [
+      {
+        "text": "I have chest pain",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "9b6ed6b0-b441-82fe-4fd4-ae470a6b8d6a",
+    "data": [
+      {
+        "text": "I cannot breathe properly",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "9392dbc3-0082-1b30-695f-0e867bc87cef",
+    "data": [
+      {
+        "text": "I think I pulled a muscle",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "e9496247-9e77-9f50-8d55-7048305ad06a",
+    "data": [
+      {
+        "text": "sharp pain in my knee",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "dc7e6906-6553-021f-efc3-ebc6c383eca0",
+    "data": [
+      {
+        "text": "I feel sick",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "b588d13b-5a5f-ba2a-06a2-286bf5595029",
+    "data": [
+      {
+        "text": "I feel lightheaded",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "3ca0249b-696d-c0c1-6dfc-a942bd51cf5e",
+    "data": [
+      {
+        "text": "my wrist hurts",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

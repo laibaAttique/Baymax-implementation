@@ -31,6 +31,94 @@ Legend: 🔴 not started · 🟡 in progress / partial · 🟢 done & verified
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-15 — Modules 5 and 6 verified on a phone (Redmi Note 11, Android 13)
+
+Checked by the module owner on the device, with logs/Firebase checked from the dev PC:
+- **Camera detection:** live preview, MediaPipe skeleton aligned with the body, reps counted (e.g. 12 counted, 1 shallow attempt rejected as "too shallow"), "Keep your back straight" shown when leaning too far forward, summary with real score/duration.
+- **Frame rate:** ~14 FPS with a person in view indoors in the evening (13.2 FPS measured with nobody in view). Just under the 15 FPS target in dim light; the camera's own frame rate (16–18 FPS in dim light) is the main limit. Re-check in good lighting before reporting NFR-P4 as met.
+- **Voice assistant:** speech-to-text → Dialogflow (`repCount` confirmed in the backend log) → spoken reply with the live rep count. When the backend is not running, it falls back to the on-device rules and the card says so.
+- **Saving:** workout sessions and a "too difficult" mark (Sit-to-Stand) are stored in Firebase under the user's own node.
+- **Running it:** the phone must be on the same Wi-Fi as the PC, and the backend must be running (`cd backend`, then `PORT=3001 node server.js`). The debug app is built with `--dart-define=API_BASE_URL=http://192.168.100.101:3001`; rebuild with the new address if the PC's IP changes.
+
+Remaining (outside these two modules): injury-risk notice waits on the Injury Risk module; iOS code is written but not compiled (needs a Mac).
+
+### 2026-10-14 — Modules 5 and 6: Dialogflow, iOS, saved sessions, "Too Difficult", device tuning aids
+
+Closes most of the open items from the 2026-10-13 entry below (the injury-risk notice stays waiting on that module).
+
+**Dialogflow (report M6 FR-2)**
+- Backend: `POST /api/voice/intent` and `GET /api/voice/status` (`backend/routes/voice.js`, `backend/services/dialogflow.js`). Calls the Dialogflow ES `detectIntent` REST API with a service-account key that stays on the server (`DIALOGFLOW_KEY_FILE` in `.env`; `backend/secrets/` is git-ignored). Only the transcript is sent, with a hashed session id instead of the Firebase uid.
+- Agent: `node tools/build_dialogflow_agent.js` writes `backend/dialogflow/agent/` and `baymax-coach-agent.zip` (18 intents named exactly like `CoachIntent`, plus `@exercise` from the exercise library and `@topic`). A test checks the agent and the app agree on intent names.
+- App: `HybridIntentService` (`lib/services/voice/dialogflow_intent_service.dart`) asks Dialogflow first and falls back to the on-device rules when the server says it is not configured (5-minute back-off), fails or takes over 2.5 s (30-second back-off). Pain/symptom reports are always handled on-device first. The screen shows which engine answered.
+- **Agent created (2026-10-14):** Dialogflow API enabled on `baymax-148da`; ES agent `baymax-coach` (trial/standard tier, English, interaction logging off) created and restored from `baymax-coach-agent.zip` via the API. Checked with the live agent: all 26 phrases from the app's intent tests are classified correctly, with `@exercise`/`@topic` values extracted. The generator now writes the zip itself, because Windows PowerShell's `Compress-Archive` stored backslash paths that Dialogflow rejected. Low-confidence Dialogflow answers (< 0.6) that disagree with a rule match defer to the rules.
+- **Credentials done (2026-10-14):** service account `baymax-dialogflow@baymax-148da.iam.gserviceaccount.com` with role "Dialogflow API Client" (granted by the project owner; Editors cannot grant roles). Its JSON key is at `backend/secrets/dialogflow-key.json` (git-ignored) and `backend/.env` points to it. Verified: the backend's own Dialogflow call returns the right intents (rep count, technique with `exercise=lunge`, pain, fallback). Not yet verified: a signed-in request from the phone app (needs a login).
+
+**iOS camera detection**: `ios/Runner/PoseLandmarkerPlugin.swift` (same channel contract as Android, BGRA frames rotated upright in memory), registered in `AppDelegate.swift` and added to the Xcode project; new `ios/Podfile` adds `MediaPipeTasksVision` and the `permission_handler` macros. The pose model moved to Flutter assets (`assets/models/pose_landmarker_lite.task`) and is passed to native code by Dart on both platforms, so the Gradle download step was removed. **Not compiled** — this needs a Mac with Xcode (`cd ios && pod install`, then `flutter run`).
+
+**Saved sessions**: every finished session is written to `users/{uid}/workoutSessions/{pushId}` (summary numbers and feedback text only — never frames or landmarks) by `lib/services/workout_session/workout_log_service.dart`. The summary screen shows "Saved…" or the error with a retry. `database.rules.json` gained validated `workoutSessions` and `exerciseFeedback` nodes. **The new rules must be deployed** (`firebase deploy --only database`) before saving works on a device.
+
+**"Too Difficult" (FR17.4)**: stored at `users/{uid}/exerciseFeedback/{exerciseId}` and loaded by `UserSession`. `PlanGenerator.generate(…, tooDifficult:)` swaps each flagged exercise for an unflagged one of the same group that is no harder; if none exists it keeps it with one set fewer and ~30% fewer reps/seconds, and adds a note explaining the change. Flags older than 28 days are ignored.
+
+**Threshold tuning aid**: debug builds log angles, phase, inference time, FPS and every counted/partial rep (`adb logcat -s flutter | grep "\[pose\]"`). Only numbers are logged.
+
+**Frame-rate work (NFR-P4, ≥ 15 FPS)** — measured on the Redmi Note 11 with `integration_test/pose_benchmark_test.dart` (`flutter test integration_test/pose_benchmark_test.dart -d <device>`), indoors in the evening, **nobody in view** (so MediaPipe runs its slower person-search step on every frame):
+
+| Change | Camera delivers | Pose analysed |
+|---|---|---|
+| Before (CPU model, full-size frames, 1 frame in flight) | ~11 FPS | 5–7 FPS (user-reported 8) |
+| + model on GPU, frames halved during conversion (3 ms), camera asked for 30 FPS | 16–18 FPS | 7.8 FPS |
+| + two frames in flight (`CameraPoseStream.maxFramesInFlight`) | 16 FPS | **13.2 FPS** |
+
+Model time on the GPU: ~39 ms with synthetic frames, ~52 ms live. **15 FPS is not yet demonstrated**: remaining limits are the camera itself in dim light (16–18 FPS) and the person-search step, which MediaPipe skips while it is tracking a person. Next measurement needed: the same benchmark/app with a person in view in normal light. A 3-frames-in-flight variant could not be tested because the phone blocked the USB install (Xiaomi "Install via USB" confirmation).
+
+**Verification**: 194 automated tests pass (new: Dialogflow mapping/back-off/timeout/safety, agent ↔ app intent names, save/retry, stored fields ⊆ database rules, plan swaps and lighter doses). Android debug APK built and installed on a Redmi Note 11 (Android 13, arm64); the app starts. Camera, pose inference, FPS, voice and threshold tuning on that phone are still pending (see below).
+
+### 2026-10-13 — Real-Time Posture Detection and AI Micro-Coaching Voice Assistant (report Modules 5 and 6)
+
+Module numbers here follow the FYP report (5 = posture, 6 = voice). The five screens existed only as mock-ups (timer-driven reps, hardcoded 85% score, a permanent "Listening…" animation); they now run on real data.
+
+**Navigation (same as the React prototype)**
+Dashboard "Posture Check" tile or Exercise Detail "Start Exercise" → Select Mode → Camera Detection *or* Manual Guidance → Session Summary → "Back to Workout Plan" / "View Analytics". The voice assistant opens from the chatbot's mic icon, and from the camera screen's ⋮ menu and the manual screen's mic icon so it can be used mid-session.
+
+**Posture detection** (`lib/services/posture/`)
+- **MediaPipe Pose Landmarker (33 landmarks)** runs natively on Android: `android/.../PoseLandmarkerChannel.kt` ↔ `pose_estimator.dart` over the `baymax/pose_landmarker` channel. Camera frames (`camera` plugin, NV21) are converted and analysed in memory on a background thread; nothing is saved or uploaded. One frame is in flight at a time, later frames are dropped.
+- `pose_math.dart` — joint angle θ = arccos(BA·BC / |BA||BC|), cosine clamped to [-1, 1], null for zero-length vectors or invalid coordinates. Angles use MediaPipe's 3-D world landmarks.
+- `exercise_form_rules.dart` — per-exercise, editable thresholds. Supported with the camera: **squat, sit-to-stand, push-up, knee push-up**. All other exercises offer Manual Guidance only. *The thresholds are the team's starting values from common coaching cues; they are not validated on test subjects or reviewed by a physiotherapist.*
+- `rep_counter.dart` — state machine top → descending → bottom → ascending → top; a rep counts once, on the return to the top, only if valid depth was reached. Guards: hysteresis, smoothing, single-frame outlier rejection, minimum rep duration, tracking-loss reset.
+- `posture_engine.dart` — form checks per frame, live corrective feedback, scoring:
+  - **Posture score** = 100 × reps with acceptable form ÷ attempted reps (counted + too-shallow attempts) — report FR18.1. Not shown until one attempt has finished.
+  - **Accuracy** = 100 × passed check-frames ÷ assessed check-frames. Frames without confident landmarks are excluded from both.
+- `pose_stream.dart` — camera lifecycle, back-pressure, measured FPS (shown live and on the summary).
+
+**Voice assistant** (`lib/services/voice/`)
+- Pipeline: `speech_to_text` → `IntentService` → `CoachResponder` → `flutter_tts`; states idle / listening / processing / speaking / error / unavailable drive the UI and the waveform (mic level while listening).
+- **Dialogflow is not connected** — there are no credentials and no backend route. Intents come from `RuleBasedIntentService` (on-device keyword rules), and the screen says so. To add Dialogflow, implement `IntentService` against a backend proxy that holds the service-account key, and pass it to `VoiceAssistantController(intents: …)`.
+- Answers use live session state: rep count, latest form correction, score, elapsed time, current exercise and technique steps, today's plan from `UserSession`. With no data it says so. Pause/resume work by voice; ending a session asks for confirmation. Pain or symptoms → "stop and seek help", no diagnosis.
+- `posture_cue_announcer.dart` speaks posture corrections during a camera session, rate-limited (≥5 s apart, same cue not within 15 s, silent while the assistant is open).
+
+**Shared session state** — `lib/services/workout_session/workout_session_controller.dart` (`ChangeNotifier` singleton, like `UserSession`). The posture engine and manual screen write to it; the voice assistant and screens read it. Summaries are kept in memory only.
+
+**Integration points for the Workout Plan module**
+1. Start a session: `Navigator.push(… PostureModeSelection(request: WorkoutSessionRequest.fromPlanned(planned, upNext: restOfTheDay)))`. `exercise_detail.dart` already does this for the tapped exercise (without `upNext`). Passing `upNext` enables "Next Exercise →" and the "what's next?" voice answer.
+2. Read results: `WorkoutSessionController.instance.lastSummary` / `.history` (`SessionSummary`: reps, duration, score, feedback, `skipped`, `tooDifficult`). "Too Difficult" is recorded but nothing consumes it yet (report FR17.4).
+3. `lib/screens/posture_detection/exercise_picker.dart` is a **temporary** test screen behind the dashboard tile; its sets/reps are library defaults, not a prescription. Delete it once the plan passes exercises in.
+
+**Not done / deviations from the mock-up**
+- Sessions are not saved to a backend: no workout-logging endpoint exists and the Realtime Database rules reject unknown fields.
+- The summary's "Injury risk remains Low" banner is replaced by a note that the Injury Risk module is not connected.
+- The camera-consent switch starts **off** (the mock-up had it on) so consent is explicit (FR15.3).
+- **iOS:** no native pose implementation yet (the screen reports "available on Android only"); usage strings were added to `Info.plist`. `permission_handler` also needs its Podfile macros when the iOS project is first built.
+
+**Config changes**: `pubspec.yaml` (+ `camera`, `permission_handler`, `speech_to_text`, `flutter_tts`); Android manifest (+ `CAMERA`, `RECORD_AUDIO`, speech/TTS `<queries>`); `android/app/build.gradle.kts` (+ `com.google.mediapipe:tasks-vision`, and a task that downloads `pose_landmarker_lite.task` into `android/app/src/main/assets/` on first build — git-ignored).
+
+**Verification**
+- `flutter test`: **179 pass** (79 existing + 100 new in `test/posture_test.dart`, `test/voice_test.dart`, `test/posture_screens_test.dart`). The new tests drive the real engine with synthetic landmark sequences and the screens with fake camera/microphone/TTS.
+- `flutter analyze`: no errors or warnings (the new files add no issues).
+- `flutter build apk --debug` succeeds on Windows; the APK contains `libmediapipe_tasks_vision_jni.so`, `assets/pose_landmarker_lite.task` and the `CAMERA` / `RECORD_AUDIO` permissions.
+- **Nothing has been run on a phone.** Live camera preview, real MediaPipe inference, skeleton alignment (incl. front-camera mirroring), FPS, speech recognition and TTS all still need a physical Android device. The 15 FPS target (NFR-P4) is unmeasured; the camera screen shows the live rate and the summary shows the session average, so it can be read off a device.
+- MediaPipe 0.10.26 ships its native library for **arm64-v8a only**: it runs on 64-bit ARM phones, not on x86 emulators or 32-bit devices (those get a "could not start the pose model" message).
+- `permission_handler` is pinned to `^12.0.1`: version 13 requires Android SDK Platform 37, which is not installed on the dev machines.
+
 ### 2026-10-09 — Phase 2 started: model training pipeline (Modules 2, 3, 7)
 
 Everything is in `app/ml/` (see `ml/README.md` for dataset links, steps and licenses). The app uses each model automatically when its file is in `assets/models/`; without the file it keeps the rule-based behaviour.

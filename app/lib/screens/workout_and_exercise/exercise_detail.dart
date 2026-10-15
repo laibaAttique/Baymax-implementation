@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/plan.dart';
+import '../../models/workout_session.dart';
 import '../../theme/app_theme.dart';
 import '../posture_detection/posture_mode.dart';
 
@@ -199,7 +200,13 @@ class ExerciseDetail extends StatelessWidget {
                 ),
               ),
               child: ElevatedButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PostureModeSelection())),
+                // Hand-over to Modules 5/6: the selected exercise and its prescription.
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => PostureModeSelection(request: WorkoutSessionRequest.fromPlanned(planned)),
+                  ),
+                ),
                 child: const Text('Start Exercise →'),
               ),
             ),

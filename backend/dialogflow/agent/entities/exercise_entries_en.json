@@ -1,0 +1,203 @@
+[
+  {
+    "value": "brisk_walk",
+    "synonyms": [
+      "brisk walk"
+    ]
+  },
+  {
+    "value": "march",
+    "synonyms": [
+      "march in place"
+    ]
+  },
+  {
+    "value": "step_ups",
+    "synonyms": [
+      "step-ups",
+      "step ups",
+      "step-up"
+    ]
+  },
+  {
+    "value": "shadow_boxing",
+    "synonyms": [
+      "shadow boxing"
+    ]
+  },
+  {
+    "value": "jumping_jacks",
+    "synonyms": [
+      "jumping jacks",
+      "jumping jack"
+    ]
+  },
+  {
+    "value": "high_knees",
+    "synonyms": [
+      "high knees",
+      "high knee"
+    ]
+  },
+  {
+    "value": "mountain_climbers",
+    "synonyms": [
+      "mountain climbers",
+      "mountain climber"
+    ]
+  },
+  {
+    "value": "burpees",
+    "synonyms": [
+      "burpees",
+      "burpee"
+    ]
+  },
+  {
+    "value": "jump_squats",
+    "synonyms": [
+      "jump squats",
+      "jump squat"
+    ]
+  },
+  {
+    "value": "chair_squat",
+    "synonyms": [
+      "sit-to-stand",
+      "sit to stand",
+      "chair squat"
+    ]
+  },
+  {
+    "value": "squat",
+    "synonyms": [
+      "bodyweight squat",
+      "squat"
+    ]
+  },
+  {
+    "value": "lunge",
+    "synonyms": [
+      "lunges",
+      "lunge"
+    ]
+  },
+  {
+    "value": "glute_bridge",
+    "synonyms": [
+      "glute bridge"
+    ]
+  },
+  {
+    "value": "calf_raise",
+    "synonyms": [
+      "calf raises",
+      "calf raise"
+    ]
+  },
+  {
+    "value": "wall_sit",
+    "synonyms": [
+      "wall sit"
+    ]
+  },
+  {
+    "value": "wall_pushup",
+    "synonyms": [
+      "wall push-up",
+      "wall push up"
+    ]
+  },
+  {
+    "value": "knee_pushup",
+    "synonyms": [
+      "knee push-up",
+      "knee push up"
+    ]
+  },
+  {
+    "value": "pushup",
+    "synonyms": [
+      "push-ups",
+      "push ups",
+      "push-up"
+    ]
+  },
+  {
+    "value": "tricep_dip",
+    "synonyms": [
+      "chair dips",
+      "chair dip"
+    ]
+  },
+  {
+    "value": "shoulder_taps",
+    "synonyms": [
+      "shoulder taps",
+      "shoulder tap"
+    ]
+  },
+  {
+    "value": "superman",
+    "synonyms": [
+      "superman"
+    ]
+  },
+  {
+    "value": "bird_dog",
+    "synonyms": [
+      "bird dog"
+    ]
+  },
+  {
+    "value": "reverse_snow_angel",
+    "synonyms": [
+      "reverse snow angels",
+      "reverse snow angel"
+    ]
+  },
+  {
+    "value": "dead_bug",
+    "synonyms": [
+      "dead bug"
+    ]
+  },
+  {
+    "value": "plank",
+    "synonyms": [
+      "plank hold"
+    ]
+  },
+  {
+    "value": "bicycle_crunch",
+    "synonyms": [
+      "bicycle crunch"
+    ]
+  },
+  {
+    "value": "leg_raise",
+    "synonyms": [
+      "lying leg raise"
+    ]
+  },
+  {
+    "value": "side_plank_knee",
+    "synonyms": [
+      "knee side plank"
+    ]
+  },
+  {
+    "value": "cat_cow",
+    "synonyms": [
+      "cat-cow",
+      "cat cow"
+    ]
+  },
+  {
+    "value": "single_leg_balance",
+    "synonyms": [
+      "single-leg balance",
+      "single leg balance"
+    ]
+  }
+]
