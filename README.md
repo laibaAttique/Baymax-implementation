@@ -1,13 +1,16 @@
 # Baymax — AI-driven adaptive fitness & health monitoring
 
-Final-year project (COMSATS University Islamabad). Flutter app + small Node backend + model-training scripts.
+Final-year project (COMSATS University Islamabad). Flutter app, Express API, two Next.js web applications (specialist portal and administrator panel) and model-training scripts. All use one Firebase project but are separate programs with their own packages.
 
 | Folder | What it is |
 |---|---|
-| `app/` | Flutter app (Android/iOS). Modules 1, 2, 3, 7, 8, 12 plus online consultation and payment (merged Modules 14 and 15, payment in test mode). Progress log: [`app/PROGRESS.md`](app/PROGRESS.md) |
-| `backend/` | Node/Express server (label OCR proxy, legacy profile routes) and Firestore seed/verify tools |
-| `portal/` | Specialist web portal for the consultation module: Next.js `web/` + Express `server/`, same Firebase project, separate packages. Setup: [`portal/README.md`](portal/README.md) |
-| `app/ml/` | Phase 2 model training (Kaggle scripts, dataset links): [`app/ml/README.md`](app/ml/README.md) |
+| `app/` | Flutter app (Android/iOS): auth, health profile and classification, workout and nutrition plans, diet tracker, allergy scanner, gamification, chatbot, alerts, analytics, online consultation and payment (payment in test mode). Progress log: [`app/PROGRESS.md`](app/PROGRESS.md). Test cases with IDs: `app/test/atc/` |
+| `api/` | Express 5 API behind both web apps (token check, roles, appointments, plans, registration approval). Unit/API tests in `api/test/`, end-to-end tests on the Firebase emulators in `api/e2e/`. Setup: [`api/README.md`](api/README.md) |
+| `portal/` | Specialist web portal (Next.js, TypeScript). Setup: [`portal/README.md`](portal/README.md) |
+| `admin/` | Administrator web panel (Next.js, TypeScript). Setup: [`admin/README.md`](admin/README.md) |
+| `backend/` | Node/Express server (label OCR proxy) and Firestore seed/verify tools |
+| `app/ml/` | Model training (Kaggle scripts, dataset links): [`app/ml/README.md`](app/ml/README.md) |
+| `docs/` | Chapter 4 (implementation) and Chapter 5 (test cases, evidence, generator) of the report |
 
 ## Run the app
 

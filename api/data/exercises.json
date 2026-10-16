@@ -1,0 +1,916 @@
+[
+ {
+  "id": "warmup",
+  "name": "Dynamic Warm-Up",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 180,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "cooldown",
+  "name": "Cool-Down Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 300,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "brisk_walk",
+  "name": "Brisk Walk",
+  "group": "cardio",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 600,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "march",
+  "name": "March in Place",
+  "group": "cardio",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 300,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "step_ups",
+  "name": "Step-Ups",
+  "group": "cardio",
+  "level": 2,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 300,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "shadow_boxing",
+  "name": "Shadow Boxing",
+  "group": "cardio",
+  "level": 2,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 300,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "jumping_jacks",
+  "name": "Jumping Jacks",
+  "group": "cardio",
+  "level": 2,
+  "impact": "high",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 60,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "high_knees",
+  "name": "High Knees",
+  "group": "cardio",
+  "level": 3,
+  "impact": "high",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 45,
+  "position": "standing",
+  "tags": [
+   "hiit"
+  ]
+ },
+ {
+  "id": "mountain_climbers",
+  "name": "Mountain Climbers",
+  "group": "cardio",
+  "level": 3,
+  "impact": "high",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 40,
+  "position": "floor",
+  "tags": [
+   "hiit"
+  ]
+ },
+ {
+  "id": "burpees",
+  "name": "Burpees",
+  "group": "cardio",
+  "level": 3,
+  "impact": "high",
+  "timed": false,
+  "baseReps": 8,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": [
+   "hiit",
+   "plyo"
+  ]
+ },
+ {
+  "id": "jump_squats",
+  "name": "Jump Squats",
+  "group": "cardio",
+  "level": 3,
+  "impact": "high",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "hiit",
+   "plyo"
+  ]
+ },
+ {
+  "id": "chair_squat",
+  "name": "Sit-to-Stand (Chair Squat)",
+  "group": "legs",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "squat",
+  "name": "Bodyweight Squat",
+  "group": "legs",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "lunge",
+  "name": "Lunges",
+  "group": "legs",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "glute_bridge",
+  "name": "Glute Bridge",
+  "group": "legs",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "calf_raise",
+  "name": "Calf Raises",
+  "group": "legs",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 15,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "wall_sit",
+  "name": "Wall Sit",
+  "group": "legs",
+  "level": 2,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "isometric"
+  ]
+ },
+ {
+  "id": "wall_pushup",
+  "name": "Wall Push-Up",
+  "group": "push",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "knee_pushup",
+  "name": "Knee Push-Up",
+  "group": "push",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "pushup",
+  "name": "Push-Ups",
+  "group": "push",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "tricep_dip",
+  "name": "Chair Dips",
+  "group": "push",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "seated",
+  "tags": []
+ },
+ {
+  "id": "shoulder_taps",
+  "name": "Shoulder Taps",
+  "group": "push",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 16,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "superman",
+  "name": "Superman",
+  "group": "back",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "bird_dog",
+  "name": "Bird Dog",
+  "group": "back",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "reverse_snow_angel",
+  "name": "Reverse Snow Angels",
+  "group": "back",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "dead_bug",
+  "name": "Dead Bug",
+  "group": "core",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "plank",
+  "name": "Plank Hold",
+  "group": "core",
+  "level": 2,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": [
+   "isometric"
+  ]
+ },
+ {
+  "id": "bicycle_crunch",
+  "name": "Bicycle Crunch",
+  "group": "core",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 16,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "leg_raise",
+  "name": "Lying Leg Raise",
+  "group": "core",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "side_plank_knee",
+  "name": "Knee Side Plank",
+  "group": "core",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 20,
+  "position": "floor",
+  "tags": [
+   "isometric"
+  ]
+ },
+ {
+  "id": "cat_cow",
+  "name": "Cat-Cow",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 60,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "single_leg_balance",
+  "name": "Single-Leg Balance",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "balance"
+  ]
+ },
+ {
+  "id": "incline_pushup",
+  "name": "Incline Push-Up",
+  "group": "push",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "incline_pushup_wide",
+  "name": "Wide Incline Push-Up",
+  "group": "push",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "incline_pushup_close",
+  "name": "Close-Hand Incline Push-Up",
+  "group": "push",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "pushup_wide",
+  "name": "Wide Push-Up",
+  "group": "push",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 8,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "pushup_close",
+  "name": "Close-Hand Push-Up",
+  "group": "push",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 8,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "single_leg_bridge",
+  "name": "Single-Leg Glute Bridge",
+  "group": "legs",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 8,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "glute_kickback",
+  "name": "Kneeling Glute Kickback",
+  "group": "legs",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "crunch",
+  "name": "Crunch",
+  "group": "core",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "reverse_crunch",
+  "name": "Reverse Crunch",
+  "group": "core",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "oblique_crunch_floor",
+  "name": "Side Crunch",
+  "group": "core",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "cross_body_crunch",
+  "name": "Cross-Body Crunch",
+  "group": "core",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "heel_touches",
+  "name": "Heel Touches",
+  "group": "core",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 16,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "russian_twist",
+  "name": "Seated Twist",
+  "group": "core",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 12,
+  "baseSeconds": 30,
+  "position": "seated",
+  "tags": []
+ },
+ {
+  "id": "hip_raise_bent_knee",
+  "name": "Bent-Knee Leg Lift",
+  "group": "core",
+  "level": 1,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "spider_crawl",
+  "name": "Plank Knee Drive",
+  "group": "core",
+  "level": 2,
+  "impact": "low",
+  "timed": false,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "star_jump",
+  "name": "Star Jump",
+  "group": "cardio",
+  "level": 3,
+  "impact": "high",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "hiit",
+   "plyo"
+  ]
+ },
+ {
+  "id": "split_jump",
+  "name": "Jumping Lunge",
+  "group": "cardio",
+  "level": 3,
+  "impact": "high",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "hiit",
+   "plyo"
+  ]
+ },
+ {
+  "id": "hip_circles",
+  "name": "Standing Hip Circles",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "dynamic"
+  ]
+ },
+ {
+  "id": "arm_circles",
+  "name": "Arm Circles",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "dynamic"
+  ]
+ },
+ {
+  "id": "shoulder_rolls",
+  "name": "Shoulder Rolls",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "dynamic"
+  ]
+ },
+ {
+  "id": "ankle_circles",
+  "name": "Ankle Circles",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "dynamic"
+  ]
+ },
+ {
+  "id": "wrist_circles",
+  "name": "Wrist Circles",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "dynamic"
+  ]
+ },
+ {
+  "id": "childs_pose",
+  "name": "Child's Pose",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "hamstring_stretch_lying",
+  "name": "Lying Hamstring Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "calf_stretch_wall",
+  "name": "Calf Stretch at the Wall",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "kneeling_hip_flexor",
+  "name": "Kneeling Hip Flexor Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "standing_hip_flexor",
+  "name": "Standing Hip Flexor Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "side_quad_stretch",
+  "name": "Side-Lying Quad Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "knee_across_body",
+  "name": "Lying Glute Twist",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "knee_to_chest",
+  "name": "Single Knee to Chest",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "hug_knees",
+  "name": "Both Knees to Chest",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "seated_hamstring_stretch",
+  "name": "Seated Hamstring Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": []
+ },
+ {
+  "id": "triceps_stretch",
+  "name": "Triceps Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "shoulder_cross_stretch",
+  "name": "Cross-Body Shoulder Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "chest_opener",
+  "name": "Standing Chest Opener",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "upper_back_stretch",
+  "name": "Upper Back Stretch",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "seated_twist",
+  "name": "Seated Spinal Twist",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "seated",
+  "tags": []
+ },
+ {
+  "id": "side_bend",
+  "name": "Standing Side Bend",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "overhead_reach",
+  "name": "Overhead Reach",
+  "group": "mobility",
+  "level": 1,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": []
+ },
+ {
+  "id": "inchworm",
+  "name": "Inchworm",
+  "group": "mobility",
+  "level": 2,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "standing",
+  "tags": [
+   "dynamic"
+  ]
+ },
+ {
+  "id": "worlds_greatest_stretch",
+  "name": "Lunge with Rotation",
+  "group": "mobility",
+  "level": 2,
+  "impact": "low",
+  "timed": true,
+  "baseReps": 10,
+  "baseSeconds": 30,
+  "position": "floor",
+  "tags": [
+   "dynamic"
+  ]
+ }
+]

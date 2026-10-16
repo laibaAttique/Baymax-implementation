@@ -5,6 +5,7 @@ import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/glass.dart';
+import '../../widgets/specialist_plan_banner.dart';
 
 /// Module 3 (FR-4/FR-6): calorie target, macro breakdown and a meal plan that
 /// respects the user's allergies and medical conditions.
@@ -114,6 +115,7 @@ class NutritionPlanScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SpecialistPlanBanner(diet: true),
                 Reveal(
                   child: Container(
                     width: double.infinity,

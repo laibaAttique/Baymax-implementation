@@ -298,6 +298,11 @@
             }
           }
         },
+        "planChoice": {
+          "$kind": {
+            ".validate": "($kind === 'diet' || $kind === 'workout') && (newData.val() === 'baymax' || newData.val() === 'specialist')"
+          }
+        },
         "$other": {
           ".validate": false
         }
@@ -359,7 +364,7 @@
           "$other": {
             ".validate": false
           },
-          ".write": "auth != null && (((!data.exists() || (data.child('holdUntil').exists() && data.child('holdUntil').val() < now)) && newData.exists() && newData.child('holdUntil').exists() && newData.child('holdUntil').val() > now && newData.child('holdUntil').val() <= now + 660000 && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('patientId').val() === auth.uid && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('specialistId').val() === $spec && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('slotKey').val() === $slot) || (data.exists() && !newData.exists() && root.child('appointments').child(data.child('appt').val()).child('patientId').val() === auth.uid) || (data.exists() && newData.exists() && data.child('appt').val() === newData.child('appt').val() && !newData.child('holdUntil').exists() && root.child('appointments').child(data.child('appt').val()).child('patientId').val() === auth.uid && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('status').val() === 'confirmed'))"
+          ".write": "auth != null && (((!data.exists() || (data.child('holdUntil').exists() && data.child('holdUntil').val() < now)) && newData.exists() && newData.child('holdUntil').exists() && newData.child('holdUntil').val() > now && newData.child('holdUntil').val() <= now + 660000 && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('patientId').val() === auth.uid && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('specialistId').val() === $spec && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('slotKey').val() === $slot) || (data.exists() && !newData.exists() && root.child('appointments').child(data.child('appt').val()).child('patientId').val() === auth.uid) || (data.exists() && newData.exists() && data.child('appt').val() === newData.child('appt').val() && !newData.child('holdUntil').exists() && root.child('appointments').child(data.child('appt').val()).child('patientId').val() === auth.uid && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('status').val() === 'requested'))"
         }
       }
     },
@@ -371,7 +376,7 @@
       "$id": {
         ".read": "auth != null && (data.child('patientId').val() === auth.uid || data.child('specialistId').val() === auth.uid)",
         ".write": "auth != null && !data.exists() && newData.child('patientId').val() === auth.uid && newData.child('status').val() === 'pending_payment'",
-        ".validate": "newData.hasChildren(['patientId','patientName','specialistId','specialistName','role','startAt','slotKey','durationMinutes','type','status','fee','meetingLink','createdAt']) && root.child('specialists').child(newData.child('specialistId').val()).exists() && newData.child('role').val() === root.child('specialists').child(newData.child('specialistId').val()).child('type').val() && newData.child('fee').val() === root.child('specialists').child(newData.child('specialistId').val()).child('fees').child(newData.child('type').val()).val() && newData.child('durationMinutes').val() === root.child('specialists').child(newData.child('specialistId').val()).child('availability').child('slotMinutes').val() && newData.child('startAt').val() > now && newData.child('holdUntil').exists() && newData.child('holdUntil').val() > now && newData.child('holdUntil').val() <= now + 660000",
+        ".validate": "data.exists() || (newData.hasChildren(['patientId','patientName','specialistId','specialistName','role','startAt','slotKey','durationMinutes','type','status','fee','createdAt']) && root.child('specialists').child(newData.child('specialistId').val()).exists() && newData.child('role').val() === root.child('specialists').child(newData.child('specialistId').val()).child('type').val() && newData.child('fee').val() === root.child('specialists').child(newData.child('specialistId').val()).child('fees').child(newData.child('type').val()).val() && newData.child('durationMinutes').val() === root.child('specialists').child(newData.child('specialistId').val()).child('availability').child('slotMinutes').val() && newData.child('startAt').val() > now && newData.child('holdUntil').exists() && newData.child('holdUntil').val() > now && newData.child('holdUntil').val() <= now + 660000)",
         "patientId": {
           ".validate": "newData.val() === auth.uid"
         },
@@ -403,14 +408,14 @@
           ".validate": "newData.val() === 'video' || newData.val() === 'chat'"
         },
         "status": {
-          ".validate": "newData.val() === 'confirmed' || newData.val() === 'completed' || newData.val() === 'cancelled' || newData.val() === 'no_show' || newData.val() === 'pending_payment'",
-          ".write": "auth != null && data.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && (((data.val() === 'confirmed' || data.val() === 'pending_payment') && newData.val() === 'cancelled' && root.child('appointments').child($id).child('startAt').val() > now) || (data.val() === 'pending_payment' && newData.val() === 'confirmed' && root.child('appointments').child($id).child('holdUntil').val() > now && (newData.parent().child('payment').child('status').val() === 'paid' || newData.parent().child('payment').child('status').val() === 'pay_at_clinic') && newData.parent().child('payment').child('consultationFee').val() === root.child('appointments').child($id).child('fee').val() && newData.parent().child('payment').child('platformFee').val() === (root.child('config').child('payments').child('platformFee').exists() ? root.child('config').child('payments').child('platformFee').val() : 0) && newData.parent().child('payment').child('total').val() === newData.parent().child('payment').child('consultationFee').val() + newData.parent().child('payment').child('platformFee').val()))"
+          ".validate": "newData.val() === 'confirmed' || newData.val() === 'completed' || newData.val() === 'cancelled' || newData.val() === 'no_show' || newData.val() === 'pending_payment' || newData.val() === 'requested' || newData.val() === 'declined'",
+          ".write": "auth != null && data.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && (((data.val() === 'confirmed' || data.val() === 'pending_payment' || data.val() === 'requested') && newData.val() === 'cancelled' && root.child('appointments').child($id).child('startAt').val() > now) || (data.val() === 'pending_payment' && newData.val() === 'requested' && root.child('appointments').child($id).child('holdUntil').val() > now && (newData.parent().child('payment').child('status').val() === 'paid' || newData.parent().child('payment').child('status').val() === 'pay_at_clinic') && newData.parent().child('payment').child('consultationFee').val() === root.child('appointments').child($id).child('fee').val() && newData.parent().child('payment').child('platformFee').val() === (root.child('config').child('payments').child('platformFee').exists() ? root.child('config').child('payments').child('platformFee').val() : 0) && newData.parent().child('payment').child('total').val() === newData.parent().child('payment').child('consultationFee').val() + newData.parent().child('payment').child('platformFee').val()))"
         },
         "fee": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000"
         },
         "meetingLink": {
-          ".validate": "newData.isString() && newData.val().beginsWith('https://') && newData.val().length <= 300"
+          ".validate": false
         },
         "notesForSpecialist": {
           ".validate": "newData.isString() && newData.val().length <= 500"
@@ -440,7 +445,7 @@
         },
         "holdUntil": {
           ".validate": "newData.isNumber()",
-          ".write": "auth != null && data.exists() && !newData.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && newData.parent().child('status').val() === 'confirmed'"
+          ".write": "auth != null && data.exists() && !newData.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && newData.parent().child('status').val() === 'requested'"
         },
         "payment": {
           ".write": "auth != null && !data.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && root.child('appointments').child($id).child('status').val() === 'pending_payment' && root.child('appointments').child($id).child('holdUntil').val() > now",
@@ -495,6 +500,18 @@
       },
       ".read": "auth != null",
       ".write": false
+    },
+    "specialistPlans": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "dietReviews": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
     }
   }
 }

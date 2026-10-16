@@ -234,17 +234,6 @@ void main() {
       expect(a.length, 13);
       expect(a.compareTo(b), lessThan(0));
     });
-
-    test('meeting rooms are unguessable and chat-only opens with camera and microphone off', () {
-      final r1 = ConsultationRules.newRoomName(), r2 = ConsultationRules.newRoomName();
-      expect(r1, matches(RegExp(r'^baymax-[a-z0-9]{20}$')));
-      expect(r1, isNot(r2));
-      expect(ConsultationRules.meetingLink('https://meet.example/', 'room', ConsultType.video), 'https://meet.example/room');
-      final chat = ConsultationRules.meetingLink('https://meet.example', 'room', ConsultType.chat);
-      expect(chat, startsWith('https://meet.example/room#'));
-      expect(chat, contains('startWithVideoMuted=true'));
-      expect(chat, contains('startWithAudioMuted=true'));
-    });
   });
 
   group('an existing appointment', () {
@@ -276,6 +265,42 @@ void main() {
       expect([for (final x in ConsultationRules.sortForList(list, _now)) x.id], ['soon', 'later', 'cancelled', 'past2', 'past1']);
     });
 
+    test('there is nothing to join before the specialist accepts: the room is made on acceptance', () {
+      final requested = _appt('r', start: start, status: AppointmentStatus.requested);
+      final at = start.subtract(const Duration(minutes: 1));
+      expect(ConsultationRules.canJoin(requested, at), isFalse);
+      final noLink = Appointment.fromJson('c', {..._appt('c', start: start).toJson(), 'meetingLink': null})!;
+      expect(noLink.meetingLink, isEmpty);
+      expect(ConsultationRules.canJoin(noLink, at), isFalse); // accepted but no link yet: nothing to open
+      expect(ConsultationRules.canJoin(_appt('c2', start: start), at), isTrue);
+    });
+
+    test('a request can be cancelled until it starts, is upcoming until then, and expires if nobody answered', () {
+      final requested = _appt('r', start: start, status: AppointmentStatus.requested);
+      final before = start.subtract(const Duration(minutes: 30));
+      expect(ConsultationRules.canCancel(requested, before), isTrue);
+      expect(ConsultationRules.isUpcoming(requested, before), isTrue);
+      expect(ConsultationRules.isExpiredRequest(requested, before), isFalse);
+      expect(ConsultationRules.isUpcoming(requested, start), isFalse);
+      expect(ConsultationRules.isExpiredRequest(requested, start), isTrue);
+      expect(ConsultationRules.canCancel(requested, start), isFalse);
+      final declined = _appt('d', start: start, status: AppointmentStatus.declined);
+      expect(ConsultationRules.canCancel(declined, before), isFalse);
+      expect(ConsultationRules.isUpcoming(declined, before), isFalse);
+    });
+
+    test('the list puts requests among the upcoming ones and declined or expired ones in the past', () {
+      final list = [
+        _appt('req', start: _now.add(const Duration(days: 2)), status: AppointmentStatus.requested),
+        _appt('ok', start: _now.add(const Duration(days: 1))),
+        _appt('declined', start: _now.add(const Duration(days: 3)), status: AppointmentStatus.declined),
+        _appt('expired', start: _now.subtract(const Duration(hours: 2)), status: AppointmentStatus.requested),
+      ];
+      final sorted = [for (final x in ConsultationRules.sortForList(list, _now)) x.id];
+      expect(sorted.sublist(0, 2), ['ok', 'req']);
+      expect(sorted.toSet(), {'ok', 'req', 'declined', 'expired'});
+    });
+
     test('an appointment survives a round trip through the database format', () {
       final json = {
         ..._appt('a1', start: start).toJson(),
@@ -286,6 +311,8 @@ void main() {
       expect(back.status, AppointmentStatus.confirmed);
       expect(back.consultation!.prescription, contains('Vitamin D'));
       expect(Appointment.fromJson('x', {...json, 'status': 'weird'}), isNull);
+      expect(Appointment.fromJson('x', {...json, 'status': 'requested'})!.status, AppointmentStatus.requested);
+      expect(Appointment.fromJson('x', {...json, 'status': 'declined', 'declineReason': 'On leave'})!.declineReason, 'On leave');
     });
 
     test('shares default to nothing', () {
@@ -331,6 +358,12 @@ void main() {
       expect(find.text('1 Trainer Found').evaluate().isEmpty, isTrue); // type is "All" so the noun is generic
       expect(find.text('1 Specialist Found'), findsOneWidget);
       expect(find.text('Omar Closed'), findsOneWidget);
+    });
+
+    testWidgets('a specialist an administrator verified shows a Verified badge', (tester) async {
+      const verified = Specialist(id: 'v', name: 'Checked Doc', type: SpecialistType.doctor, specialty: 'General', videoFee: 1, chatFee: 1, rating: 4.5, reviewCount: 3, verified: true);
+      await _pump(tester, SpecialistsScreen(loader: () async => SpecialistsData([verified, _spec('u', 'Unchecked')], {'v': DateTime.utc(2026, 10, 19, 5), 'u': DateTime.utc(2026, 10, 19, 5)}), clock: _clock));
+      expect(find.text('Verified'), findsOneWidget);
     });
 
     testWidgets('a specialist with no reviews is shown as new rather than hidden', (tester) async {
@@ -493,6 +526,32 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Notes from specialist'), findsOneWidget);
       expect(find.text('Completed'), findsOneWidget);
+    });
+
+    testWidgets('a request shows as awaiting acceptance with no video link, can be cancelled as a request, and a declined one shows the reason', (tester) async {
+      final req = _appt('req', start: _now.add(const Duration(days: 1)), status: AppointmentStatus.requested).copyWith(meetingLink: '');
+      await _pump(tester, MyAppointmentsScreen(loader: () async => [req], clock: _clock));
+      expect(find.text('Awaiting acceptance'), findsOneWidget);
+      await _pump(tester, AppointmentDetailScreen(appointment: req, clock: _clock));
+      expect(find.text('Waiting for your specialist'), findsOneWidget);
+      expect(find.text('Meeting room'), findsNothing);
+      expect(find.text('Copy meeting link'), findsNothing);
+      await tester.scrollUntilVisible(find.text('Cancel request'), 300, scrollable: find.byType(Scrollable).first);
+      expect(find.text('Cancel request'), findsOneWidget);
+
+      final declined = Appointment.fromJson('d', {..._appt('d', start: _now.add(const Duration(days: 1)), status: AppointmentStatus.declined).toJson(), 'declineReason': 'On leave that day'})!;
+      await _pump(tester, AppointmentDetailScreen(appointment: declined, clock: _clock));
+      expect(find.text('Not accepted'), findsOneWidget);
+      expect(find.textContaining('On leave that day'), findsOneWidget);
+      expect(find.text('Cancel appointment'), findsNothing);
+    });
+
+    testWidgets('a request nobody answered before its start is shown as expired', (tester) async {
+      final old = _appt('old', start: _now.subtract(const Duration(hours: 3)), status: AppointmentStatus.requested);
+      await _pump(tester, MyAppointmentsScreen(loader: () async => [old], clock: _clock));
+      await tester.tap(find.text('Past'));
+      await tester.pumpAndSettle();
+      expect(find.text('Expired'), findsOneWidget);
     });
 
     testWidgets('an empty list and an error are explained', (tester) async {

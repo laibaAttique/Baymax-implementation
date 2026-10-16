@@ -11,6 +11,7 @@ import '../../services/progress_service.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/specialist_plan_banner.dart';
 import '../../widgets/notification_bell.dart';
 import '../../widgets/glass.dart';
 import '../health_profiling/health_classification.dart';
@@ -320,6 +321,7 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const Padding(padding: EdgeInsets.fromLTRB(20, 4, 20, 0), child: SpecialistPlanBanner(diet: false)),
                     Reveal(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),

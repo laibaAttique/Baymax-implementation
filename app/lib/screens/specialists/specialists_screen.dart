@@ -134,6 +134,7 @@ class _SpecialistsScreenState extends State<SpecialistsScreen> {
                 Wrap(spacing: 8, runSpacing: 6, crossAxisAlignment: WrapCrossAlignment.center, children: [
                   _stars(s),
                   if (s.yearsOfExperience > 0) InfoChip('${s.yearsOfExperience} yrs experience', icon: Icons.workspace_premium_rounded),
+                  if (s.verified) const InfoChip('Verified', icon: Icons.verified_rounded, color: AppTheme.teal),
                   if (s.emergency && s.available) const InfoChip('Emergency', icon: Icons.emergency_rounded, color: AppTheme.error),
                 ]),
               ]),

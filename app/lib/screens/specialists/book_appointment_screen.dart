@@ -19,8 +19,8 @@ typedef BookingCallback = Future<Appointment> Function({
 
 /// Module 14 (FR-2, mockup M36): choose a date, a time and a consultation type, decide what to share, and confirm.
 ///
-/// Confirming holds the chosen time for ten minutes (FR36.8) and opens the payment screen (Module 15). The booking becomes an
-/// appointment, and the confirmation is sent, only when payment (or "pay at clinic") is completed there.
+/// Confirming holds the chosen time for ten minutes (FR36.8) and opens the payment screen (Module 15). Only when payment (or "pay at
+/// clinic") is completed there does it become a request to the specialist, who accepts it in the portal; accepting creates the video room.
 class BookAppointmentScreen extends StatefulWidget {
   final Specialist specialist;
   final Future<Set<int>> Function(Specialist)? loadBooked;
@@ -289,7 +289,7 @@ class _BookAppointmentScreenState extends State<BookAppointmentScreen> {
                     const Padding(
                       padding: EdgeInsets.fromLTRB(4, 10, 4, 14),
                       child: Text(
-                        'You pay on the next screen. Your time is held for 10 minutes while you do, and given back if you leave without paying.',
+                        'You pay on the next screen. Your time is held for 10 minutes while you do, and given back if you leave without paying. After that your specialist has to accept the request; the video link is created when they do.',
                         style: TextStyle(fontSize: 12.5, color: AppTheme.textSecondary, height: 1.4),
                       ),
                     ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import '../../models/specialist_plan.dart';
+import '../../services/specialist_plan_service.dart';
+import '../../widgets/specialist_plan_banner.dart';
 import '../../models/food.dart';
 import '../../services/activity_service.dart';
 import '../../services/api_client.dart';
@@ -24,6 +27,9 @@ class DailySummaryData {
   final int fatTarget;
   final String goal;
   final double bmr;
+
+  /// A nutritionist's verdict on this day's food log, if there is one (Module 14, FR-9).
+  final DietReview? review;
   const DailySummaryData({
     required this.date,
     required this.entries,
@@ -35,6 +41,7 @@ class DailySummaryData {
     required this.fatTarget,
     required this.goal,
     required this.bmr,
+    this.review,
   });
 }
 
@@ -57,6 +64,10 @@ class DailySummaryScreen extends StatefulWidget {
       ActivityService.instance.range(key, key),
       FoodLogService.instance.kcalByDate(FoodLogService.dateKey(from), key),
     ]);
+    DietReview? review;
+    try {
+      review = (await SpecialistPlanService.instance.loadReviews(key, key))[key];
+    } catch (_) {} // a missing verdict is not a reason to lose the summary
     final activity = results[1] as Map<String, ActivityEntry>;
     final byDay = results[2] as Map<String, double>;
     return DailySummaryData(
@@ -70,6 +81,7 @@ class DailySummaryScreen extends StatefulWidget {
       fatTarget: plan.nutrition.fatG,
       goal: profile.primaryGoal,
       bmr: profile.bmr,
+      review: review,
     );
   }
 
@@ -164,6 +176,7 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
     final netColor = net < 0 ? AppTheme.success : AppTheme.warning;
 
     return [
+      if (d.review != null) Padding(padding: const EdgeInsets.only(bottom: 12), child: DietReviewCard(review: d.review!)),
       Reveal(child: Padding(padding: const EdgeInsets.only(bottom: 12), child: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppTheme.textSecondary)))),
       Reveal(
         child: Padding(

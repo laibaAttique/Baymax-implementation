@@ -7,7 +7,7 @@ import 'payment_gateway.dart';
 import 'payment_rules.dart';
 import 'realtime_db.dart';
 
-/// Module 15: takes a held booking through payment and confirms it, and keeps the member's saved cards (tokens only).
+/// Module 15: takes a held booking through payment and sends it to the specialist as a request, and keeps the member's saved cards (tokens only).
 class PaymentService {
   PaymentService._({PaymentGateway? gateway}) : gateway = gateway ?? SandboxGateway();
   static final PaymentService instance = PaymentService._();
@@ -20,7 +20,7 @@ class PaymentService {
   /// A charge is not started with less than this left on the hold, so a payment cannot succeed after the time was given away.
   static const minHoldForCharge = Duration(seconds: 45);
 
-  /// Pays for [appointment] and confirms it (FR-5, FR-6). Throws [ApiException] with a message the member can act on when the hold has
+  /// Pays for [appointment] and sends it to the specialist as a request (FR-5, FR-6). Throws [ApiException] with a message the member can act on when the hold has
   /// run out, the gateway declines, or the booking could not be confirmed. A decline leaves the hold in place so another method can be
   /// tried. A second call for the same booking while one is running is refused (FR37.8: no duplicate submissions).
   Future<Appointment> pay({
@@ -84,7 +84,7 @@ class PaymentService {
         }
       }
       try {
-        return await (confirm ?? ConsultationService.instance.confirmPayment)(appointment, record);
+        return await (confirm ?? ConsultationService.instance.submitRequest)(appointment, record);
       } catch (e) {
         // The charge succeeded but the booking could not be written. Say so, with the reference, so it can be put right.
         final detail = e is ApiException ? e.message : 'The booking could not be confirmed.';

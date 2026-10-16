@@ -31,6 +31,17 @@ Legend: 🔴 not started · 🟡 in progress / partial · 🟢 done & verified
 
 ## 2. Change log
 
+### 2026-10-16 — Chapter 5 test cases for the 60% milestone (`~/Downloads/Baymax_Test_Cases/`)
+289 automated test cases with unique IDs (`ATC-M<module>-U|F|B<nn>`, `ATC-INT-<nn>`), all passing, for the modules the user chose (merged numbering 1, 2, 3, 4, 8, 9, 12, 13, 14, 16, 17; Module 10 removed at the user's request): 105 unit, 73 functional, 84 business-rule, 27 integration. The document now holds the test cases and their traceability only, no explanatory text. Module 3 (Home) cases added 2026-10-16 (13). Cases for Modules 10, 11 and 15 stay in the code as regression tests but are filtered out of the report by `INCLUDED` in `generate_report.py`.
+Code: `app/test/atc/` (helper + 4 Dart suites, 241 cases), `baymax-api/test/atc/` (66 API cases), IDs added to the titles of the existing emulator tests in `baymax-api/e2e/` (24 cases).
+`Baymax_Test_Cases/tools/run_all.sh` runs everything (starts the emulators itself; e2e files must run one at a time) and `generate_report.py` builds the Chapter 5 `.docx` (template styles, 5.1-5.5, RTM),
+the CSVs and Figure 5.1 from the real run output (`ATC_LOG` JSON lines + the e2e JUnit XML). A case with an ID in the code but no result shows as "Not run".
+Full suites after the change: `flutter test` 605 pass (364 + 241), `npm test` 142 pass.
+Requirement IDs follow the merged report. Module 14 FR-11..15 and Module 12 FR-10 are requirements added during the build and are not in Chapter 2 (marked "added" in the RTM); the report's second "FR-6" in Module 2 is treated as FR-7.
+Not covered and not claimed: anything on a physical phone, OCR with the Vision key, the food photo model, screens' appearance, a browser walkthrough of the portals, real payments (test gateway). 67 of 105 listed requirements have an automated case.
+Found while writing the cases: nothing in the app failed; the only defects were in the new test code itself (a wrong expectation for the moving average, ID collisions caught by the generator).
+
+
 Newest first. Format: date · what changed · files · why.
 
 ### 2026-10-15 — Food search is now a suggestion dropdown
@@ -157,6 +168,36 @@ encryption-at-rest documentation; a Realtime-Database-specific page was not foun
 - **Bug found by looking at the screen, not by tests:** the weight "Save" button sat in a Row but the theme gives buttons infinite width, so the whole Calorie target screen failed to lay out. My earlier widget tests used the default Flutter theme and missed it; screen tests now use `AppTheme.lightTheme`.
 - **Verified how:** a development-only entry point (`lib/dev/preview_main.dart`, a launcher grid with demo data; not part of the app) was run on a temporary headless Android emulator (created and deleted again) and ~30 screens were checked by screenshot. **Not verified:** real signed-in flows, a physical phone, iOS, TalkBack/screen-reader use, large-font settings, dark mode (the theme is light only).
 - **Tests:** 180 pass (new: 17 in `test/ui_test.dart`).
+
+### 2026-10-16 — Folder layout: app, specialist portal, admin panel and API each in their own folder
+
+- Before: the API lived inside `baymax-portal/server`, so the admin panel depended on a sibling's subfolder, and the GitHub snapshot repo held a `portal/` copy. Now: `~/Downloads/baymax-portal` = specialist portal only (:3000), `~/Downloads/baymax-admin` = admin panel only (:3001), `~/Downloads/baymax-api` = the Express API both call (:4000) with its `e2e/` and `emulator/`. The app stays in `untitled folder/app`. No folder contains another; paths in scripts, tests and READMEs were updated (`create-admin.js` writes to `../baymax-admin/.env.admin`).
+- Re-verified after the move: API 76 unit tests, emulator e2e 11 + 10 + 3, both web apps typecheck and build, all three servers restarted and answering.
+- NOT changed: the GitHub repo (`Baymax-implementation`, branch `Amna's-work`) still contains an older `portal/` copy from commit b8d7768. Remove it (and optionally give the web projects their own repos) on the next push, with the user's OK.
+
+### 2026-10-16 — Phase 1: administrator login saved to a private env file
+
+- `portal/server/scripts/create-admin.js --email <you>`: creates the admin account with a generated 20-character password (random, mixed classes, no look-alike characters) and sets the `admin` role. The login is written to `baymax-admin/.env.admin` (mode 600, git-ignored); the password is never printed or logged. An existing account keeps its password unless `--reset-password`; a doctor/nutritionist/trainer is never converted. It must be run by the user (it creates a real account in the real project), so no credentials exist yet and none were seen by Claude.
+- Tests: 5 unit (`adminAccount.test.js`, server total 76) and 3 on the emulator (`e2e/admin-account.e2e.mjs`): the saved login signs in and the admin API accepts it, the file is private, a re-run changes nothing, a reset replaces the password. Found on the way: Node itself swallows a script flag called `--env-file`, so the option is `--out`.
+- Phase 2 (specialists view and edit the member's plan) was largely built earlier the same day (see the entry below): not started again until asked.
+
+### 2026-10-16 — Remaining Module 14: patient records, plan editing, food-log review, account deletion, separate admin panel, end-to-end verification
+
+- **Specialists (portal):** My patients + patient record; diet plan (doctor, nutritionist) and workout plan (doctor, trainer) approve-or-change with validation (macros must match the calorie target within 15%, exercises only from the library, 30-day edit window after an accepted appointment); nutritionist approve/flag per day of the food log (reason required to flag); Prescriptions list; close own account (re-enter password + DELETE, cancels future bookings, deletes the sign-in unless the account is also an app member); menu badge + desktop alert for new requests.
+- **App:** `models/specialist_plan.dart`, `services/specialist_plan_{apply,service}.dart`, `UserSession` keeps Baymax's plan (`basePlan`) and the one shown (`plan`); a specialist's calorie target/macros/avoid/tips and weekly schedule are layered over it; "Adjusted/Reviewed by ..." banner on the Nutrition and Workout screens with "Use Baymax's plan instead" (member's choice at `users/{uid}/planChoice`); the nutritionist's verdict shows on the Daily summary. Tests: 18 new (364 total pass).
+- **Admin panel (separate project `~/Downloads/baymax-admin`, port 3001):** overview, registrations (approve/reject), specialists (add, delete). Admin pages were removed from the specialist portal. API: `/api/admin/*`.
+- **Verification on the Firebase emulators** (`portal/e2e`, downloaded the Database emulator with the user's OK): real rules + real token checks + the portal API + a browser walkthrough of registration, rejection and resubmission, approval, accept, patient dashboard, plan editing, notes/prescription, account closing, admin add/delete. Server 71 tests, rules e2e 11, flow e2e 10, app 364.
+- **Bugs this found (all fixed):** (1) the deployed rules refused a valid *payment* (a parent `.validate` was applied on every child write, so booking failed at the pay step, and a fee change would have locked members out); fixed in `database.rules.json` and deployed 2026-10-16 with the user's approval (anonymous read/write of the new nodes return 401; the same rules pass the 11 emulator tests); (2) helmet's `Cross-Origin-Resource-Policy: same-origin` made browsers discard every API response; (3) `make-admin.js` / `create-specialist.js` never exited; (4) registration wrote `undefined` to the database; (5) the test database now rejects `undefined` like the real one.
+- **Incident:** a first browser test ran against the REAL Firebase project and created an empty real account `doctor1@example.com` (no data). It was verified empty and deleted; the project is back to its 10 original accounts. Cause: the test settings were not exported (zsh does not split `$VAR`); `e2e/start-web.sh` exports them properly.
+- **Still not built:** push notifications to specialists (FCM), patient reviews/ratings, client messages, risk-alert/posture/emotion panels (need AI-engine data), refunds, JazzCash (payment is a test gateway). Nothing has been run on a phone.
+
+### 2026-10-16 — Specialist accepts the request, then the video room is made; specialist registration; patient dashboard in the portal
+
+- **Request flow:** after payment (or pay at clinic) a booking is now a **request** (`requested`), not a confirmed appointment. The specialist accepts or declines in the portal. **Accepting makes the video room on the server** (unguessable Jitsi link, `MEETING_BASE_URL` in `portal/server/.env`), sets `confirmed`, keeps the slot and notifies the member. Declining frees the slot, stores an optional reason and notifies the member. A request unanswered at its start time shows as Expired. The phone no longer creates a link (removed `ConsultationRules.meetingLink/newRoomName` and the `MEETING_BASE_URL` dart-define) and the rules forbid a client from writing `meetingLink`, `declineReason` or `respondedAt`.
+- **App:** statuses `requested` ("Awaiting acceptance") and `declined`; My appointments lists requests with the upcoming ones and says what happens next, with Cancel request; no video link or Join until accepted; success screen says "Request sent"; Find a specialist shows a Verified badge for approved specialists (`specialists/{uid}/verified`).
+- **Portal (`portal/`):** New requests panel with Accept/Decline (dashboard and appointment page), registration at `/register` + applicant screen (pending / rejected-with-reason / resubmit), administrator approval of registrations (licence number visible to admins only, approval creates the role and a `verified` public profile), and the appointment page is now a patient dashboard (tiles, calorie and workout bar charts) from the data the patient consented to, opened only after accepting. Server tests 53, app tests 346.
+- **Rules:** updated in `database.rules.json` (new statuses; submitting payment moves `pending_payment` to `requested`; a client can cancel a request; `meetingLink` write refused). Deployed to `baymax-148da-default-rtdb` on 2026-10-16 with the user's approval (syntax accepted; anonymous read/write of the nodes returns 401); semantics still never run in the emulator or with a signed-in user.
+- **Not verified:** nothing run on a device or with a real sign-in; accept/decline/registration were exercised only against an in-memory database; registration needs Email/Password sign-in enabled (it is) and creates real Firebase accounts when a person submits the form.
 
 ### 2026-10-15 — Merged Module 15 (Payment Integration): payment screen, hold, receipt (TEST MODE gateway)
 
