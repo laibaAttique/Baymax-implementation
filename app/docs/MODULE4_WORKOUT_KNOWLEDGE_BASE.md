@@ -45,7 +45,8 @@ exercise the rules excluded, because ranking only sees exercises the rules marke
 - **Derived** fields are separate (`derived`, each with a `provenance` note, `reviewStatus: pending`): group, impact
   (plyometrics → high; running/jumping cardio → high; machine/walking cardio → low; strength/stretching → low; other cardio →
   unknown), tags (plyo, isometric = dataset `force: static`, maximal = lifting-sport categories, externalLoad), joints
-  (from primary muscles + mechanic + force + impact), levelNumber, complexity, equipmentKey, timed.
+  (from primary muscles + mechanic + force + impact; wrist from forearm muscles or a hand-supported name such as push-up,
+  dip, plank), levelNumber, complexity, equipmentKey, timed.
 - Photos are loaded on demand from the repository at the pinned commit (not bundled, not re-downloaded by the app).
 - The 73-exercise curated library stays the primary body-weight set. 55 catalogue entries are linked to curated
   exercises (`curatedAs`) and are not offered twice; curated exercises that are an **exact** dataset match show its photos.
@@ -144,7 +145,9 @@ flutter test
 - Photos need a network connection (GitHub raw content); offline the icon is shown.
 - The catalogue is a bundled asset, not in Firestore (no extra reads). Seeding it to Firestore would need a new
   collection and rules.
-- `workoutReadiness`, `workoutPlan` (and the Module 5 `workoutSessions`, `exerciseFeedback`) need the merged
-  `database.rules.json` deployed; until then those writes are refused by the live rules.
+- `workoutReadiness`, `workoutPlan` (and the Module 5 `workoutSessions`, `exerciseFeedback`) are in the merged
+  `database.rules.json`, deployed and verified on 2026-10-17. Teammates deploying rules must start from this file.
+- Next steps (classification profiles, intensity bands): [plan](MODULE4_KB_IMPLEMENTATION_PLAN.md),
+  [ledger](MODULE4_PHASE_LEDGER.md).
 - Future: the Gradient Boosting session-calorie model (`WorkoutCalorieModel`) already replaces the MET estimate per day
   when its file is bundled; it is not trained yet.

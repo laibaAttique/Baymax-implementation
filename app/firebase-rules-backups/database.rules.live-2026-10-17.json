@@ -1,0 +1,518 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "profile": {
+          ".validate": "newData.hasChildren(['fullName', 'height', 'weight'])",
+          "fullName": {
+            ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100"
+          },
+          "dob": {
+            ".validate": "newData.isString() && (newData.val() === '' || newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/))"
+          },
+          "gender": {
+            ".validate": "newData.isString() && newData.val().length <= 20"
+          },
+          "height": {
+            ".validate": "newData.hasChildren(['value', 'unit'])",
+            "value": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            },
+            "unit": {
+              ".validate": "newData.val() === 'cm' || newData.val() === 'ft'"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "weight": {
+            ".validate": "newData.hasChildren(['value', 'unit'])",
+            "value": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            },
+            "unit": {
+              ".validate": "newData.val() === 'kg' || newData.val() === 'lbs'"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "targetWeight": {
+            "value": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            },
+            "unit": {
+              ".validate": "newData.val() === 'kg' || newData.val() === 'lbs'"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "medicalConditions": {
+            "$i": {
+              ".validate": "newData.isString() && newData.val().length <= 50"
+            }
+          },
+          "foodAllergies": {
+            "$i": {
+              ".validate": "newData.isString() && newData.val().length <= 50"
+            }
+          },
+          "medications": {
+            ".validate": "newData.isString() && newData.val().length <= 1000"
+          },
+          "primaryGoal": {
+            ".validate": "newData.isString() && newData.val().length <= 50"
+          },
+          "activityLevel": {
+            ".validate": "newData.isString() && newData.val().length <= 50"
+          },
+          "workoutFrequency": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 7"
+          },
+          "calculatedBMI": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 200"
+          },
+          "healthClassification": {
+            ".validate": "newData.isString() && newData.val().length <= 30"
+          },
+          "planVariant": {
+            ".validate": "newData.isNumber() && newData.val() >= 0"
+          },
+          "updatedAt": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "foodLog": {
+          "$date": {
+            ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)",
+            "$entry": {
+              ".validate": "newData.hasChildren(['meal', 'name', 'kcal'])",
+              "meal": {
+                ".validate": "newData.val() === 'Breakfast' || newData.val() === 'Lunch' || newData.val() === 'Dinner' || newData.val() === 'Snack'"
+              },
+              "name": {
+                ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120"
+              },
+              "quantity": {
+                ".validate": "newData.isNumber() && newData.val() >= 0"
+              },
+              "unit": {
+                ".validate": "newData.isString() && newData.val().length <= 30"
+              },
+              "kcal": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 20000"
+              },
+              "protein": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000"
+              },
+              "carbs": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000"
+              },
+              "fat": {
+                ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000"
+              },
+              "source": {
+                ".validate": "newData.val() === 'text' || newData.val() === 'image' || newData.val() === 'manual'"
+              },
+              "ref": {
+                ".validate": "newData.isString() && newData.val().length <= 40"
+              },
+              "createdAt": {
+                ".validate": "newData.isNumber()"
+              },
+              "$other": {
+                ".validate": false
+              }
+            }
+          }
+        },
+        "activity": {
+          "$date": {
+            ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.hasChildren(['workoutDone'])",
+            "workoutDone": {
+              ".validate": "newData.val() === true"
+            },
+            "minutes": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 600"
+            },
+            "kcal": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000"
+            },
+            "completedAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "badges": {
+          "$id": {
+            ".validate": "$id.matches(/^[a-z0-9_]{1,30}$/) && newData.isNumber()"
+          }
+        },
+        "settings": {
+          "leaderboardOptIn": {
+            ".validate": "newData.isBoolean()"
+          },
+          "displayName": {
+            ".validate": "newData.isString() && newData.val().length <= 30"
+          },
+          "reminderEnabled": {
+            ".validate": "newData.isBoolean()"
+          },
+          "reminderHour": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 23"
+          },
+          "reminderMinute": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 59"
+          },
+          "inactivityAlerts": {
+            ".validate": "newData.isBoolean()"
+          },
+          "mealReminderEnabled": {
+            ".validate": "newData.isBoolean()"
+          },
+          "mealReminderHour": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 23"
+          },
+          "mealReminderMinute": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 59"
+          },
+          "notificationsEnabled": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "weights": {
+          "$date": {
+            ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.hasChildren(['kg'])",
+            "kg": {
+              ".validate": "newData.isNumber() && newData.val() >= 20 && newData.val() <= 400"
+            },
+            "loggedAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "water": {
+          "$date": {
+            ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.hasChildren(['ml'])",
+            "ml": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 20000"
+            },
+            "updatedAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "moods": {
+          "$date": {
+            ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.hasChildren(['mood'])",
+            "mood": {
+              ".validate": "newData.val() === 'happy' || newData.val() === 'neutral' || newData.val() === 'sad' || newData.val() === 'angry' || newData.val() === 'stressed'"
+            },
+            "at": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "foodDays": {
+          "$date": {
+            ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.val() === true"
+          }
+        },
+        "inbox": {
+          ".indexOn": [
+            "createdAt"
+          ],
+          "$id": {
+            ".validate": "$id.matches(/^[A-Za-z0-9_-]{1,40}$/) && newData.hasChildren(['type', 'title', 'createdAt'])",
+            "type": {
+              ".validate": "newData.val() === 'workout_reminder' || newData.val() === 'meal_reminder' || newData.val() === 'badge_earned' || newData.val() === 'allergen_alert' || newData.val() === 'inactivity' || newData.val() === 'appointment'"
+            },
+            "title": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80"
+            },
+            "body": {
+              ".validate": "newData.isString() && newData.val().length <= 240"
+            },
+            "createdAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "read": {
+              ".validate": "newData.isBoolean()"
+            },
+            "route": {
+              ".validate": "newData.isString() && newData.val().length <= 30"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "appointmentIds": {
+          "$id": {
+            ".validate": "$id.matches(/^[A-Za-z0-9_-]{1,40}$/) && newData.isNumber()"
+          }
+        },
+        "savedCards": {
+          "$id": {
+            ".validate": "$id.matches(/^[A-Za-z0-9_-]{1,40}$/) && newData.hasChildren(['token','brand','last4','expMonth','expYear'])",
+            "token": {
+              ".validate": "newData.isString() && newData.val().length >= 8 && newData.val().length <= 80"
+            },
+            "brand": {
+              ".validate": "newData.val() === 'Visa' || newData.val() === 'Mastercard'"
+            },
+            "last4": {
+              ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}$/)"
+            },
+            "expMonth": {
+              ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 12"
+            },
+            "expYear": {
+              ".validate": "newData.isNumber() && newData.val() >= 2024 && newData.val() <= 2100"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "planChoice": {
+          "$kind": {
+            ".validate": "($kind === 'diet' || $kind === 'workout') && (newData.val() === 'baymax' || newData.val() === 'specialist')"
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "roles": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false,
+        ".validate": "newData.isString() && newData.val().matches(/^(user|doctor|nutritionist|trainer|admin)$/)"
+      }
+    },
+    "leaderboard": {
+      "$week": {
+        ".validate": "$week.matches(/^[0-9]{4}-W[0-9]{2}$/)",
+        ".read": "auth != null",
+        ".indexOn": [
+          "score"
+        ],
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['name', 'score'])",
+          "name": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30"
+          },
+          "score": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "workouts": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 7"
+          },
+          "logDays": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 7"
+          },
+          "updatedAt": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "specialists": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "slots": {
+      "$spec": {
+        ".read": "auth != null",
+        "$slot": {
+          ".validate": "$slot.matches(/^[0-9]{13}$/) && newData.hasChild('appt')",
+          "appt": {
+            ".validate": "newData.isString() && newData.val().length <= 40"
+          },
+          "holdUntil": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          },
+          ".write": "auth != null && (((!data.exists() || (data.child('holdUntil').exists() && data.child('holdUntil').val() < now)) && newData.exists() && newData.child('holdUntil').exists() && newData.child('holdUntil').val() > now && newData.child('holdUntil').val() <= now + 660000 && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('patientId').val() === auth.uid && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('specialistId').val() === $spec && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('slotKey').val() === $slot) || (data.exists() && !newData.exists() && root.child('appointments').child(data.child('appt').val()).child('patientId').val() === auth.uid) || (data.exists() && newData.exists() && data.child('appt').val() === newData.child('appt').val() && !newData.child('holdUntil').exists() && root.child('appointments').child(data.child('appt').val()).child('patientId').val() === auth.uid && newData.parent().parent().parent().child('appointments').child(newData.child('appt').val()).child('status').val() === 'requested'))"
+        }
+      }
+    },
+    "appointments": {
+      ".indexOn": [
+        "specialistId",
+        "patientId"
+      ],
+      "$id": {
+        ".read": "auth != null && (data.child('patientId').val() === auth.uid || data.child('specialistId').val() === auth.uid)",
+        ".write": "auth != null && !data.exists() && newData.child('patientId').val() === auth.uid && newData.child('status').val() === 'pending_payment'",
+        ".validate": "data.exists() || (newData.hasChildren(['patientId','patientName','specialistId','specialistName','role','startAt','slotKey','durationMinutes','type','status','fee','createdAt']) && root.child('specialists').child(newData.child('specialistId').val()).exists() && newData.child('role').val() === root.child('specialists').child(newData.child('specialistId').val()).child('type').val() && newData.child('fee').val() === root.child('specialists').child(newData.child('specialistId').val()).child('fees').child(newData.child('type').val()).val() && newData.child('durationMinutes').val() === root.child('specialists').child(newData.child('specialistId').val()).child('availability').child('slotMinutes').val() && newData.child('startAt').val() > now && newData.child('holdUntil').exists() && newData.child('holdUntil').val() > now && newData.child('holdUntil').val() <= now + 660000)",
+        "patientId": {
+          ".validate": "newData.val() === auth.uid"
+        },
+        "patientName": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 60"
+        },
+        "specialistId": {
+          ".validate": "newData.isString() && newData.val().length <= 40"
+        },
+        "specialistName": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80"
+        },
+        "role": {
+          ".validate": "newData.val() === 'doctor' || newData.val() === 'nutritionist' || newData.val() === 'trainer'"
+        },
+        "specialty": {
+          ".validate": "newData.isString() && newData.val().length <= 80"
+        },
+        "startAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "slotKey": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9]{13}$/)"
+        },
+        "durationMinutes": {
+          ".validate": "newData.isNumber() && newData.val() >= 10 && newData.val() <= 120"
+        },
+        "type": {
+          ".validate": "newData.val() === 'video' || newData.val() === 'chat'"
+        },
+        "status": {
+          ".validate": "newData.val() === 'confirmed' || newData.val() === 'completed' || newData.val() === 'cancelled' || newData.val() === 'no_show' || newData.val() === 'pending_payment' || newData.val() === 'requested' || newData.val() === 'declined'",
+          ".write": "auth != null && data.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && (((data.val() === 'confirmed' || data.val() === 'pending_payment' || data.val() === 'requested') && newData.val() === 'cancelled' && root.child('appointments').child($id).child('startAt').val() > now) || (data.val() === 'pending_payment' && newData.val() === 'requested' && root.child('appointments').child($id).child('holdUntil').val() > now && (newData.parent().child('payment').child('status').val() === 'paid' || newData.parent().child('payment').child('status').val() === 'pay_at_clinic') && newData.parent().child('payment').child('consultationFee').val() === root.child('appointments').child($id).child('fee').val() && newData.parent().child('payment').child('platformFee').val() === (root.child('config').child('payments').child('platformFee').exists() ? root.child('config').child('payments').child('platformFee').val() : 0) && newData.parent().child('payment').child('total').val() === newData.parent().child('payment').child('consultationFee').val() + newData.parent().child('payment').child('platformFee').val()))"
+        },
+        "fee": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000"
+        },
+        "meetingLink": {
+          ".validate": false
+        },
+        "notesForSpecialist": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "shares": {
+          "healthSummary": {
+            ".validate": "newData.isBoolean()"
+          },
+          "foodLog7d": {
+            ".validate": "newData.isBoolean()"
+          },
+          "activity30d": {
+            ".validate": "newData.isBoolean()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "consultation": {
+          ".validate": false
+        },
+        "$other": {
+          ".validate": false
+        },
+        "holdUntil": {
+          ".validate": "newData.isNumber()",
+          ".write": "auth != null && data.exists() && !newData.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && newData.parent().child('status').val() === 'requested'"
+        },
+        "payment": {
+          ".write": "auth != null && !data.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && root.child('appointments').child($id).child('status').val() === 'pending_payment' && root.child('appointments').child($id).child('holdUntil').val() > now",
+          ".validate": "newData.hasChildren(['transactionId','method','status','consultationFee','platformFee','total','reference','mode','paidAt']) && ((newData.child('method').val() === 'clinic' && newData.child('status').val() === 'pay_at_clinic') || ((newData.child('method').val() === 'card' || newData.child('method').val() === 'wallet') && newData.child('status').val() === 'paid')) && newData.child('mode').val() === 'sandbox'",
+          "transactionId": {
+            ".validate": "newData.isString() && newData.val().length >= 6 && newData.val().length <= 40"
+          },
+          "method": {
+            ".validate": "newData.val() === 'card' || newData.val() === 'wallet' || newData.val() === 'clinic'"
+          },
+          "status": {
+            ".validate": "newData.val() === 'paid' || newData.val() === 'pay_at_clinic'"
+          },
+          "consultationFee": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000"
+          },
+          "platformFee": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+          },
+          "total": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1100000"
+          },
+          "brand": {
+            ".validate": "newData.val() === 'Visa' || newData.val() === 'Mastercard'"
+          },
+          "last4": {
+            ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}$/)"
+          },
+          "wallet": {
+            ".validate": "newData.val() === 'jazzcash' || newData.val() === 'easypaisa'"
+          },
+          "reference": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80"
+          },
+          "mode": {
+            ".validate": "newData.val() === 'sandbox'"
+          },
+          "paidAt": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "config": {
+      "payments": {
+        "platformFee": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+        }
+      },
+      ".read": "auth != null",
+      ".write": false
+    },
+    "specialistPlans": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "dietReviews": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    }
+  }
+}
+

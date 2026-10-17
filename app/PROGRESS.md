@@ -44,6 +44,15 @@ Found while writing the cases: nothing in the app failed; the only defects were 
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-17 — Rules incident resolved, Aamna merged, dataset analysis + Module 4 phase ledger
+
+- **Database:** no data was lost (sessions and feedback still there); the live rules a teammate deployed had dropped the Module 5/4 sections, so writes were refused. The friend's `database.rules.json` was taken as the base, the 4 Baymax sections (`workoutSessions`, `exerciseFeedback`, `workoutReadiness`, `workoutPlan`) were added before `$other`, all 166 of the friend's rule paths are unchanged; deployed after confirmation and verified identical live. Backups: `firebase-rules-backups/`.
+- **Merge:** Aamna's `bd8a2a1` (consultation split, specialist plans) merged as `d787933`; a specialist workout plan now respects the Module 4 screening gate. Fixed the `community_test` ListTile assertion in `settings_screen.dart` (transparent `Material`).
+- **Dataset analysis** (`docs/MODULE4_KB_IMPLEMENTATION_PLAN.md`): field completeness, distributions, MET intensity bands. Found that `wrist` was never derived for dataset exercises, so the wrist-injury rule could not reach them; importer fixed (58 entries), catalogue rebuilt (MET counts unchanged), test added.
+- **Phase ledger:** `docs/MODULE4_PHASE_LEDGER.md` lists done phases with evidence and the next phases K2–K10 (classification profiles keyed by the Module 2 category, MET intensity bands, explanations, review export).
+- **Tests:** full suite 767 pass, 13 skipped, 0 fail (run with `TEMP=D:\tmp\flutter`, `--concurrency=2`).
+- **Android build still blocked:** the Gradle JVM runs out of memory (crash log: mmap failed; commit charge 24.9 of 27 GB, C: 0.04 GB free so the page file cannot grow). Needs free space on C: or the editors' Java language servers closed during the build.
+
 ### 2026-10-17 — Module 4: knowledge-based personalised workout generation (extends the existing plan generator)
 
 Full write-up: `docs/MODULE4_WORKOUT_KNOWLEDGE_BASE.md`. Built on Aamna's Module 3 engine (`PlanGenerator` + `ExerciseSelector`, curated 73-exercise library), which stays in place.
@@ -57,7 +66,7 @@ Full write-up: `docs/MODULE4_WORKOUT_KNOWLEDGE_BASE.md`. Built on Aamna's Module
 - **Tests:** 487 pass, 13 skipped, 1 failing (`community_test` settings — fails identically on commit fb98995, not touched here). New: `test/workout_rules_test.dart` (16), `test/module4_test.dart` (26).
 - **Not done / blocked:**
   - **Database rules:** the live rules changed since 2026-10-15 — someone deployed a version **without** `workoutSessions`/`exerciseFeedback` and with new `dietReviews`, `specialistPlans`, `planChoice` and changed `appointments`/`slots` rules that this branch does not have. Nothing was deployed; the files must be merged with the newest teammate rules first. Until then Module 5 session saving and Module 4 readiness/plan storage are refused by the live database.
-  - **Android build** could not run: drive C: is full (0.04–0.13 GB free) and Gradle keeps its caches there. Tests were run with `TEMP=D:	mplutter`.
+  - **Android build** could not run: drive C: is full (0.04–0.13 GB free) and Gradle keeps its caches there. Tests were run with `TEMP=D:\tmp\flutter`.
   - No professional review of rules, MET mappings or derived fields; readiness clearance is self-reported.
 
 ### 2026-10-15 — Modules 5 and 6 verified on a phone (Redmi Note 11, Android 13)

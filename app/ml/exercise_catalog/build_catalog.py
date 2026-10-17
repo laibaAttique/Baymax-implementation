@@ -15,7 +15,7 @@ secondaryMuscles, instructions, category, images.
 What is DERIVED here (under `derived`, never mixed with dataset fields, each with its rule in `provenance`):
   group, impact, tags, joints, levelNumber, complexity, equipmentKey, timed  - team rules below, pending professional review
   met                                                                      - 2024 Adult Compendium mapping (met_mapping_rules.json)
-Nothing here is a medical judgement; the app's safety rules (assets/data/workout_safety_rules.json) decide eligibility.
+Nothing here is a medical judgement; the app's safety rules (lib/services/workout_rules/safety_rule_repository.dart) decide eligibility.
 
 Output: assets/data/exercise_catalog.json
 """
@@ -34,6 +34,7 @@ REPO = 'yuhonas/free-exercise-db'
 DATASET_FIELDS = ['id', 'name', 'force', 'level', 'mechanic', 'equipment', 'primaryMuscles', 'secondaryMuscles',
                   'instructions', 'category', 'images']
 LEVELS = {'beginner': 1, 'intermediate': 2, 'expert': 3}
+HAND_SUPPORT = re.compile(r'push-?ups?\b|\bdips?\b|plank|handstand|body-up|crawl|mountain climber|burpee', re.I)
 EQUIPMENT_KEYS = {
     None: 'none', 'body only': 'none', 'barbell': 'barbell', 'dumbbell': 'dumbbell', 'cable': 'cable', 'machine': 'machine',
     'kettlebells': 'kettlebell', 'bands': 'bands', 'medicine ball': 'medicine_ball', 'exercise ball': 'exercise_ball',
@@ -171,7 +172,11 @@ def derive(rec):
         joints.add('shoulder')
     if 'lower back' in primary or (rec.get('mechanic') == 'compound' and 'hamstrings' in primary and rec.get('force') == 'pull'):
         joints.add('lowerBack')
-    prov['joints'] = 'from primary muscles, mechanic, force and impact'
+    # Wrist: forearm work, or body weight carried on the hands (push-ups, dips, planks, crawls). The dataset has no field for
+    # hand support, so the name is used here, together with the category, as the curated library does for the same movements.
+    if 'forearms' in primary or (HAND_SUPPORT.search(rec['name']) and not re.search(r'squat', rec['name'], re.I)):
+        joints.add('wrist')
+    prov['joints'] = 'from primary muscles, mechanic, force and impact; wrist from forearm muscles or a hand-supported movement name'
 
     level = LEVELS[rec['level']]
     complexity = 3 if level == 3 else (2 if rec.get('mechanic') == 'compound' else 1)

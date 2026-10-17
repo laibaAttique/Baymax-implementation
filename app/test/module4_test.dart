@@ -133,6 +133,15 @@ void main() {
       expect(ExerciseCatalog.imagesFor(lunge), isEmpty, reason: 'a related match does not borrow photos');
     });
 
+    test('hand-supported and forearm exercises are marked as loading the wrist, so the wrist injury rule reaches them', () {
+      for (final id in ['Pushups', 'Bench_Dips', 'Plank', 'Mountain_Climbers', 'Palms-Up_Dumbbell_Wrist_Curl_Over_A_Bench']) {
+        expect(ExerciseCatalog.byId(id)!.joints, contains('wrist'), reason: id);
+      }
+      for (final id in ['Jerk_Dip_Squat', 'Bodyweight_Squat', 'Dumbbell_Bicep_Curl']) {
+        expect(ExerciseCatalog.byId(id)!.joints, isNot(contains('wrist')), reason: id);
+      }
+    });
+
     test('queries filter by equipment, group, muscle and level', () {
       final db = ExerciseCatalog.query(equipment: {'dumbbell'}, group: 'push', maxLevel: 1);
       expect(db, isNotEmpty);
