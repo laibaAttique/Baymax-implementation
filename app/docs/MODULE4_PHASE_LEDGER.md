@@ -70,3 +70,5 @@ Status values: **done** (implemented + tests green) · **verified** (also checke
 - 2026-10-17 — Modules 4+5 integration: experimental posture evaluation (250 exercises), personalised Posture
   Detection home, plan completion sync (`PlanProgress` → `activity/{date}`). 866 tests pass. **Open: deploy of the 5 new
   `workoutSessions` rule fields (needs confirmation); device validation of experimental checks.**
+- 2026-10-17 — `workoutSessions` plan fields deployed after confirmation (live checked unchanged right before; after:
+  live == local, anonymous read 401). Remaining: device validation of experimental checks.

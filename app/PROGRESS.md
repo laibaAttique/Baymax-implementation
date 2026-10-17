@@ -52,7 +52,7 @@ Report: `docs/MODULE4_5_INTEGRATION_REPORT.md`; validation procedure: `docs/MODU
 - **Unified catalogue:** `ExerciseRepository` (889 exercises, canonical ids, no duplicates, normalised `CatalogEntry`).
 - **Posture Detection home** (Home tile + drawer): Today's workout / My plan / Exercise library; loading, no-plan and screening states; entries start with a plan link.
 - **Completion sync:** sessions that reach their target complete the planned exercise (`PlanProgress`); a fully completed day is marked through the existing `ActivityService.markDone` (feeds fitness score, streaks, badges, analytics); "Done today" in the workout tab and Posture Detection; no duplicates; regenerated plans start fresh; library sessions stay independent.
-- **Database rules:** 5 optional plan fields added to `workoutSessions` in `database.rules.json` (dry run valid, only additions vs live). **Not deployed yet — awaiting confirmation.** Until deployed, sessions are saved without the plan link (fallback).
+- **Database rules:** 5 optional plan fields added to `workoutSessions` in `database.rules.json` (dry run valid, only additions vs live). Deployed 2026-10-17 after confirmation; live rules verified identical to the local file, anonymous read still 401.
 - **Safety:** unchanged order; a test checks camera capability never makes an exercise eligible.
 - **Tests:** 866 pass, 13 skipped, 0 fail. New `posture_evaluation_test.dart` (18), `plan_integration_test.dart` (15).
 - **Device testing:** none for the new checks (phone disconnected); only the squat has a recorded device test (2026-10-15).
