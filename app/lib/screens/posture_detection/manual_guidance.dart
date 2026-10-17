@@ -7,6 +7,7 @@ import '../../services/workout_session/workout_session_controller.dart';
 import '../../theme/app_theme.dart';
 import '../voice_assistant/voice_assistant_screen.dart';
 import 'posture_feedback.dart';
+import 'widgets/safety_notes_card.dart';
 
 /// S-14: guided exercise without the camera (Module 5, FR-10 / FR-11).
 ///
@@ -306,6 +307,7 @@ class _ManualGuidanceState extends State<ManualGuidance> with SingleTickerProvid
                       style: TextStyle(color: AppTheme.textSecondary, fontSize: 14))
                   : Column(children: [for (var i = 0; i < e.steps.length; i++) _buildFormCue(i, e.steps[i])]),
             ),
+            SafetyNotesCard(e.safetyNotes, margin: const EdgeInsets.fromLTRB(20, 8, 20, 0)),
             Container(
               margin: const EdgeInsets.fromLTRB(20, 8, 20, 0),
               padding: const EdgeInsets.all(14),

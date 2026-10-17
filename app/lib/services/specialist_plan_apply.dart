@@ -1,5 +1,6 @@
 import '../models/plan.dart';
 import '../models/specialist_plan.dart';
+import 'workout_rules/classification_profiles.dart';
 
 /// Puts a specialist's plan over the Baymax plan (Module 14, FR-5 / FR-10). Pure: no database, no screens.
 ///
@@ -40,6 +41,11 @@ PersonalizedPlan applySpecialistPlans(
     nutrition: nutrition,
     gate: base.gate,
     rulesVersion: base.rulesVersion,
+    // The specialist's week is measured against the same Module 4 profile, so the weekly targets stay visible.
+    profile: identical(week, base.week)
+        ? base.profile
+        : ClassificationProfiles.summarize(ClassificationProfiles.forCategory(base.category), week, null,
+            extraNotes: const ['This week was set by your specialist; the targets below are shown for reference.']),
   );
 }
 

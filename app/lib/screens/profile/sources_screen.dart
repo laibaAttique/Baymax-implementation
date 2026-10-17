@@ -66,16 +66,19 @@ class SourcesScreen extends StatelessWidget {
       'Workout plans and safety rules',
       'Weekly volume follows general adult activity guidance (150–300 minutes of moderate activity plus muscle-strengthening on at least 2 days). '
           'Exercises are chosen by your health category: high-impact moves are removed for BMI 30+, heart disease, hypertension and age 55+; high-intensity intervals are removed for heart disease, hypertension, diabetes and asthma; '
-          'static holds (planks, wall sits) are removed for heart disease and capped at 20 seconds for hypertension; balance training is added from age 65.',
+          'static holds (planks, wall sits) are removed for heart disease and capped at 20 seconds for hypertension; balance training is added from age 65. '
+          'Each health category also has a training profile: exercises are graded light, moderate or vigorous by their energy value (MET), plans for the Obese, At-Risk and Cardiac categories stay at moderate or lighter, '
+          'and with diabetes no more than two days in a row pass without exercise.',
       [
         'WHO. Guidelines on physical activity and sedentary behaviour. Geneva, 2020 (weekly volume; balance and strength training for adults 65+).',
         'American College of Sports Medicine. ACSM\'s Guidelines for Exercise Testing and Prescription, 11th ed. Wolters Kluwer, 2021.',
         'Paluch AE, et al. Resistance exercise training in individuals with and without cardiovascular disease: 2023 update — a scientific statement from the American Heart Association. Circulation 2024; 149: e217–e231.',
         'Colberg SR, et al. Physical activity/exercise and diabetes: a position statement of the American Diabetes Association. Diabetes Care 2016; 39(11): 2065–2079.',
         'Pescatello LS, et al. Exercise and hypertension (ACSM position stand). Med Sci Sports Exerc 2004; 36(3): 533–553.',
+        'Teede HJ, et al. Recommendations from the 2023 International Evidence-based Guideline for the Assessment and Management of Polycystic Ovary Syndrome. J Clin Endocrinol Metab 2023; 108(10): 2447–2469.',
       ],
       caveat: 'These guidelines say resistance and aerobic exercise are generally beneficial and advise medical clearance for people with heart disease, diabetes or high blood pressure. '
-          'The specific exclusions and caps above (for example no static holds with heart disease, the 20-second hold cap, no HIIT with asthma, the age-55 impact limit) are conservative precautions chosen by the project team; '
+          'The specific exclusions and caps above (for example no static holds with heart disease, the 20-second hold cap, no HIIT with asthma, the age-55 impact limit, the moderate-intensity cap for the Obese, At-Risk and Cardiac profiles) are conservative precautions chosen by the project team; '
           'they are not quoted from those documents and have not been reviewed by a clinician.',
     ),
     _Source(

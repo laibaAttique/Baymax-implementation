@@ -29,6 +29,8 @@ class SafetyRuleRepository {
         'Colberg SR, et al. Physical activity/exercise and diabetes: a position statement of the American Diabetes Association. Diabetes Care 2016; 39(11): 2065–2079.'),
     'acsmHtn2004': EvidenceSource('Pescatello LS, et al. Exercise and hypertension (ACSM position stand). Med Sci Sports Exerc 2004; 36(3): 533–553.'),
     'who2020': EvidenceSource('WHO. Guidelines on physical activity and sedentary behaviour. Geneva, 2020.'),
+    'pcos2023': EvidenceSource(
+        'Teede HJ, et al. Recommendations from the 2023 International Evidence-based Guideline for the Assessment and Management of Polycystic Ovary Syndrome. J Clin Endocrinol Metab 2023; 108(10): 2447–2469.'),
   };
 
   static const _cardiac = Pred(Fact.classification, Op.eq, 'Cardiac');

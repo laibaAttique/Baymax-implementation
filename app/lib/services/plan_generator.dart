@@ -6,6 +6,7 @@ import '../models/workout_readiness.dart';
 import 'exercise_catalog.dart';
 import 'exercise_library.dart';
 import 'exercise_selector.dart';
+import 'workout_rules/classification_profiles.dart';
 import 'workout_rules/safety_rule_engine.dart';
 import 'workout_rules/safety_rule_repository.dart';
 import 'food_database.dart';
@@ -155,7 +156,10 @@ class PlanGenerator {
     WorkoutReadiness? readiness,
   }) {
     final intensity = _intensity(profile, cls);
-    final assessment = SafetyRuleRepository.engine.assess(HealthFacts.from(profile, cls, intensity, readiness: readiness));
+    // Module 4: the training profile of the Module 2 classification caps the intensity band and sets the weekly targets.
+    final trainingProfile = ClassificationProfiles.forCategory(cls.category);
+    final facts = HealthFacts.from(profile, cls, intensity, readiness: readiness);
+    final assessment = SafetyRuleRepository.engine.assess(facts, profile: trainingProfile);
     final restrictions = PlanRestrictions.from(assessment);
 
     if (readiness != null && assessment.gate.status != WorkoutGateStatus.eligible) {
@@ -177,7 +181,8 @@ class PlanGenerator {
         ? _loseTemplates
         : (templateGoal == 'Gain Muscle' ? _gainTemplates : _maintainTemplates);
 
-    final days = profile.workoutFrequency.clamp(2, restrictions.maxDays);
+    final chosenDays = profile.workoutFrequency.clamp(2, restrictions.maxDays);
+    final days = _daysForRestLimit(chosenDays, trainingProfile.maxRestDaysInRow, restrictions.maxDays);
     final slots = _schedule[days]!;
     final week = List<WorkoutDay?>.filled(7, null);
     // FR-2/FR-3: within the exercises the safety rules allow, the selector ranks by this person's body parameters and answers.
@@ -190,11 +195,18 @@ class PlanGenerator {
           _withModelEstimate(_buildDay(template, intensity, restrictions, profile.weightKg, selector, weekUsage, tooDifficult, adjusted, extraPool), profile);
     }
 
+    final summary = ClassificationProfiles.summarize(trainingProfile, week, facts, extraNotes: [
+      if (days > chosenDays)
+        '$days workout days instead of $chosenDays: no more than ${trainingProfile.maxRestDaysInRow} days in a row without '
+            'exercise is recommended for you. (${trainingProfile.id})',
+    ]);
+
     return PersonalizedPlan(
       category: cls.category,
       intensity: intensity,
       variant: variant,
       week: week,
+      profile: summary,
       restrictionNotes: [
         ...restrictions.notes,
         if (adjusted.isNotEmpty) 'Made easier because you marked them as too difficult: ${adjusted.join('; ')}.',
@@ -203,6 +215,18 @@ class PlanGenerator {
       gate: readiness == null ? null : assessment.gate,
       rulesVersion: assessment.rulesVersion,
     );
+  }
+
+  /// The fewest weekly days (at least [chosen], at most [maxDays]) whose schedule never leaves more than [maxRest] rest
+  /// days in a row. Without a limit, or when no allowed schedule meets it, [chosen] is kept.
+  static int _daysForRestLimit(int chosen, int? maxRest, int maxDays) {
+    if (maxRest == null) return chosen;
+    for (var d = chosen; d <= maxDays; d++) {
+      final slots = _schedule[d];
+      if (slots == null) continue;
+      if (ClassificationProfiles.longestRest([for (var i = 0; i < 7; i++) slots.contains(i)]) <= maxRest) return d;
+    }
+    return chosen;
   }
 
   // --- FR-3: intensity by health category ---------------------------------

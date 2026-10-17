@@ -11,6 +11,9 @@ flowchart LR
   M2[Module 2<br/>Health classification<br/>health_classifier.dart] --> HP[User health profile<br/>+ readiness answers<br/>UserSession]
   HP --> RE[Safety rule engine<br/>safety_rule_engine.dart]
   RR[(Rule repository<br/>safety_rule_repository.dart<br/>versioned, cited, pending review)] --> RE
+  CP[(Classification profiles<br/>classification_profiles.dart<br/>one per Module 2 category)] -->|intensity cap| RE
+  M2 --> CP
+  CP -->|weekly targets + notes| GEN
   FEDB[(free-exercise-db<br/>pinned commit)] --> BUILD[build_catalog.py<br/>validate · normalise · derive]
   COMP[(2024 Compendium<br/>activity subset)] --> BUILD
   MAP[(met_mapping_rules.json)] --> BUILD
@@ -23,11 +26,11 @@ flowchart LR
   RANK --> GEN[Weekly plan generator<br/>PlanGenerator]
   GEN --> UI[Flutter Module 4<br/>WorkoutPlan · ExerciseDetail]
   GEN --> SNAP[(users/uid/workoutPlan<br/>snapshot)]
-  UI --> M5[Module 5<br/>Camera detection / Manual guidance]
+  UI -->|exercise + dose + safety notes| M5[Module 5<br/>Camera detection / Manual guidance]
   UI --> ACT[(activity/date<br/>completion)]
 ```
 
-Order of decisions: **screening gate → safety filter → ranking → scheduling.** A ranking score can never bring back an
+Order of decisions: **screening gate → safety filter (rules + profile intensity cap) → ranking → scheduling.** A ranking score can never bring back an
 exercise the rules excluded, because ranking only sees exercises the rules marked schedulable.
 
 ## 1. Dataset (free-exercise-db)
@@ -99,6 +102,27 @@ approved one can only lift program-scope exclusions, never a medical or screenin
 `test/workout_rules_test.dart` checks the repository reproduces the original Module 3 restrictions exactly for 3,000
 random people (oracle copied from commit fb98995).
 
+## 4a. Classification profiles (version `profiles-2026.10.1`)
+
+`lib/services/workout_rules/classification_profiles.dart`. One profile per Module 2 category; all `pending` review.
+
+| Profile | Highest band | Weekly targets | Extra | Basis of the cap |
+|---|---|---|---|---|
+| PRF-HEALTHY | vigorous | 150–300 aerobic min, 2+ strength, 2+ stretching days | — | WHO 2020 |
+| PRF-OVERWEIGHT | vigorous | same | — | WHO 2020 |
+| PRF-OBESE | moderate | same | — | team precaution |
+| PRF-AT-RISK | moderate | same | — | team precaution |
+| PRF-DIABETIC | vigorous | same | ≤ 2 rest days in a row (2 chosen days → 3) | ADA 2016 |
+| PRF-CARDIAC | moderate | same | — | team precaution (with the cardiac rules and clearance gate) |
+
+- **Intensity band** = WHO 2020 bands applied to the exercise's Compendium MET (light < 3, moderate 3–5.9, vigorous ≥ 6).
+  No MET → no band → not scheduled under a capped profile.
+- **Aerobic minutes** count cardio-group exercises only, a vigorous minute as two. Below the target the summary suggests
+  brisk walking on days without a workout; nothing is added to the week automatically.
+- **Profile notes** (explanations only): PN-STAT-RISK (Module 2 model-flagged At-Risk), PN-PCOS, PN-RISK-HIGH.
+- The profile can only restrict. A 3,000-person test checks every scheduled exercise passes the rules alone and the cap.
+- Shown in the app as **"Your training profile"** on the workout tab; the exercise detail shows the band.
+
 ## 5. Generation and ranking
 
 1. Gate: if screening says needsInfo / needsClearance, the week is empty and `PersonalizedPlan.gate` carries the reasons.
@@ -126,19 +150,43 @@ difficulty/impact, "Why this exercise", "Adapted for you by the safety rules", t
 that does not claim safety, and **Start exercise** → Module 5 (camera where `ExerciseFormRules` supports the id,
 manual guidance otherwise).
 
+## 6a. Module 5 integration
+
+`WorkoutSessionRequest.fromPlanned` carries id, dose (sets / reps / seconds / rest), steps and now the safety adaptations
+(`SessionExercise.safetyNotes` = `PlannedExercise.ruleNotes`). Mode selection and manual guidance show them as
+"Adapted for you". Camera detection supports `squat`, `chair_squat`, `pushup`, `knee_pushup`; all are moderate band, and a
+test checks no profile removes them. Dataset (catalogue) exercises always use manual guidance.
+
+## 6b. Capability → code → test
+
+| Capability | Code | Tests |
+|---|---|---|
+| Exercise knowledge base from the dataset | `ml/exercise_catalog/build_catalog.py`, `services/exercise_catalog.dart` | module4_test "Dataset import" |
+| Energy (MET) per exercise | `met_mapping_rules.json`, `met_calculator.dart` | module4_test "MET mapping" |
+| Health classification → restrictions | `safety_rule_repository.dart`, `safety_rule_engine.dart` | workout_rules_test (Module 3 oracle) |
+| Health classification → training profile | `classification_profiles.dart` | module4_profiles_test K3–K5 |
+| Pre-exercise screening | `workout_readiness.dart`, readiness screen | module4_test, screens_test, ATC-M4-F02 |
+| Personalised weekly plan + explanations | `plan_generator.dart`, `exercise_selector.dart` | module4_test, module4_profiles_test |
+| UI | `workout_plan.dart`, `exercise_detail.dart`, `training_profile_card.dart` | screens_test, ATC-M4-F01, module4_profiles_test K6 |
+| Hand-off to Module 5 | `models/workout_session.dart`, `posture_mode.dart`, `manual_guidance.dart` | module4_profiles_test "Module 4 → Module 5" |
+| Storage | `workout_readiness_service.dart` (snapshot) | module4_test "storage" |
+| Professional review | `docs/review/module4_review_sheet.csv` | review_sheet_test |
+
 ## 7. Commands
 
 ```bash
 cd app
 python ml/exercise_catalog/build_catalog.py          # re-import (idempotent)
 python ml/exercise_catalog/build_catalog.py --check  # verify the committed catalogue
-flutter test test/module4_test.dart test/workout_rules_test.dart
-flutter test
+flutter test test/module4_test.dart test/module4_profiles_test.dart test/workout_rules_test.dart
+BAYMAX_WRITE_REVIEW=1 flutter test test/review_sheet_test.dart   # regenerate the review sheet after a rule/profile change
+flutter test --concurrency=2                                      # on this PC: TEMP/TMP set to D:\tmp\flutter
 ```
 
 ## 8. Known limitations / needs review
 
-- **No rule, MET mapping or derived field has been reviewed by a qualified professional.** Approximate METs are
+- **No rule, profile, MET mapping or derived field has been reviewed by a qualified professional.** The review sheet
+  (`docs/review/module4_review_sheet.csv`) is ready for one. Approximate METs are
   estimates; team precautions are not guideline quotations.
 - Readiness questions are a reworded screening aid, not the official PAR-Q+; clearance is self-reported.
 - Catalogue instructions are shown as published (unreviewed); position (standing/floor) is unknown for them.

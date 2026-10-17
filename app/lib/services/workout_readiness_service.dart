@@ -53,7 +53,7 @@ class FirebaseWorkoutReadinessStore implements WorkoutReadinessStore {
 class WorkoutPlanSnapshot {
   WorkoutPlanSnapshot._();
 
-  static const engineVersion = 'workout-engine-2026.10.1';
+  static const engineVersion = 'workout-engine-2026.10.2';
 
   static Map<String, Object?> build({
     required PersonalizedPlan plan,

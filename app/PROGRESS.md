@@ -44,6 +44,20 @@ Found while writing the cases: nothing in the app failed; the only defects were 
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-17 — Module 4: training profiles from the Module 2 classification (ledger K2–K8, K10)
+
+Ledger: `docs/MODULE4_PHASE_LEDGER.md`; design: `docs/MODULE4_KB_IMPLEMENTATION_PLAN.md`; write-up: `docs/MODULE4_WORKOUT_KNOWLEDGE_BASE.md` §4a, §6a, §6b.
+
+- **Intensity bands:** every exercise gets a WHO 2020 band (light < 3 / moderate 3–5.9 / vigorous ≥ 6 MET) from its Compendium MET only. Catalogue: 134 light, 528 moderate, 125 vigorous, 84 without a value.
+- **Classification profiles** (`lib/services/workout_rules/classification_profiles.dart`, `profiles-2026.10.1`, pending review): one per Module 2 category. Moderate cap for Obese, At-Risk and Cardiac (team precaution); WHO weekly targets (150–300 aerobic min, 2+ strength, 2+ stretching days); Diabetic: no more than 2 rest days in a row (ADA 2016), so 2 chosen days become 3. Notes for model-flagged At-Risk, PCOS (2023 guideline, citation added) and high risk.
+- **Safety:** the cap is merged by the rule engine and can only restrict; unknown intensity is not scheduled under a cap. The rule repository and its Module 3 oracle are unchanged. A 3,000-person test checks every scheduled exercise passes the rules and the cap.
+- **App:** "Your training profile" card on the workout tab (targets vs. the planned week, walking suggestion when short); band on the exercise detail. Specialist weeks (Module 14) are measured against the same profile.
+- **Module 5:** the safety adaptations now travel with the exercise (`SessionExercise.safetyNotes`) and are shown on mode selection and manual guidance. A test checks no profile removes a camera-supported exercise (squat, chair squat, push-up, knee push-up).
+- **Versions:** plans record `rules-2026.10.1+profiles-2026.10.1`, engine `workout-engine-2026.10.2`. No database rule change, nothing to deploy.
+- **Review sheet:** `docs/review/module4_review_sheet.csv` (65 rules, profiles, notes and MET mappings, with empty reviewer columns), generated from the code; `test/review_sheet_test.dart` fails when it is stale.
+- **Tests:** full suite 787 pass, 13 skipped, 0 fail. New: `test/module4_profiles_test.dart` (19), `test/review_sheet_test.dart` (1).
+- **Still open:** phone verification (Android build blocked by memory, see ledger B1); professional review.
+
 ### 2026-10-17 — Rules incident resolved, Aamna merged, dataset analysis + Module 4 phase ledger
 
 - **Database:** no data was lost (sessions and feedback still there); the live rules a teammate deployed had dropped the Module 5/4 sections, so writes were refused. The friend's `database.rules.json` was taken as the base, the 4 Baymax sections (`workoutSessions`, `exerciseFeedback`, `workoutReadiness`, `workoutPlan`) were added before `$other`, all 166 of the friend's rule paths are unchanged; deployed after confirmation and verified identical live. Backups: `firebase-rules-backups/`.

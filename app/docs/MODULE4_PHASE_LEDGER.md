@@ -20,15 +20,23 @@ Status values: **done** (implemented + tests green) · **verified** (also checke
 | F8 | RTDB rules: friend's file + 4 Baymax sections (workoutSessions, exerciseFeedback, workoutReadiness, workoutPlan) | verified | deployed 2026-10-17 after confirmation; live = local; 166 friend paths unchanged; anonymous read 401; backups in `firebase-rules-backups/` |
 | F9 | Data intact after the rules incident | verified | user EF4Sgw… still has 9 sessions + 1 feedback; only writes had been refused |
 | K1 | Dataset analysis; fix D1 (wrist joints) and D5 (stale docstring) | done | plan §1; 58 wrist-tagged entries; test "hand-supported and forearm exercises…" |
-| K2 | MET intensity band on every exercise | planned | — |
-| K3 | Classification profiles repository (6 Module 2 categories) + riskLevel / statistical-risk facts | planned | — |
-| K4 | Profile filter + MOD-STAT-RISK + MED-PCOS | planned | — |
-| K5 | Profile-driven weekly structure | planned | — |
-| K6 | Profile explanations in UI | planned | — |
-| K7 | Snapshot `profilesVersion` + RTDB field (local rules merge; deploy only on confirmation) | planned | — |
-| K8 | Professional review export (CSV) | planned | — |
-| K9 | Device verification of Module 4 screens | **blocked** (B1) | — |
-| K10 | Docs, PROGRESS.md, report traceability | planned | — |
+| K2 | Intensity band on every exercise (WHO bands on the Compendium MET) | done | `Exercise.intensityBand`; module4_profiles_test "K2" (counts 134/528/125/84 equal plan §1.4) |
+| K3 | Classification profiles (6 categories) + 3 profile notes; `riskLevel` / `statisticalRisk` facts | done | `classification_profiles.dart`; module4_profiles_test "K3" |
+| K4 | Band cap in the engine; unknown intensity not scheduled under a cap | done | module4_profiles_test "K4" incl. 3,000-person property test; workout_rules_test oracle unchanged |
+| K5 | Weekly structure: Diabetic rest-day limit, aerobic/strength/stretching tallies, walking suggestion | done | module4_profiles_test "K5" |
+| K6 | "Your training profile" card, band on exercise detail, adaptations in Module 5 screens | done | module4_profiles_test "K6" + "Module 4 → Module 5" widget tests |
+| K7 | Versions: `rules-2026.10.1+profiles-2026.10.1`, engine `workout-engine-2026.10.2`; no DB rule change, nothing to deploy | done | module4_test snapshot test |
+| K8 | Review sheet for a qualified professional | done | `docs/review/module4_review_sheet.csv` (65 entries); review_sheet_test fails when it is stale |
+| K9 | Device verification of Module 4 screens and the Module 5 hand-off | **blocked** (B1) | — |
+| K10 | Docs, PROGRESS.md, capability → code → test table | done | `MODULE4_WORKOUT_KNOWLEDGE_BASE.md` §4a, §6a, §6b |
+
+## Needs you (external / your decision)
+
+| Id | What | Why it cannot be done here |
+|---|---|---|
+| X1 | Free space on C: (or close VS Code + Antigravity) so the Android build can run, then test on the phone (K9) | B1; your files and editors |
+| X2 | A qualified reviewer (physiotherapist / exercise physiologist / doctor) fills in the review sheet | the project team cannot approve its own medical rules |
+| X3 | Push branch `Laiba-Attique` | pushing is yours |
 
 ## Blockers
 
@@ -42,7 +50,8 @@ Status values: **done** (implemented + tests green) · **verified** (also checke
 |---|---|---|---|
 | `lib/services/plan_generator.dart`, `exercise_selector.dart` | Aamna | readiness + rule engine + catalogue pool; old `_restrictions` replaced by the repository (oracle-tested identical) | Module 4 requirement, chosen "extend her engine" |
 | `lib/services/user_session.dart` | shared | merged both versions; basePlan → specialist overlay | merge d787933 |
-| `lib/services/specialist_plan_apply.dart` | Aamna | specialist workout applied only when `workoutAvailable`; gate + rulesVersion kept | a specialist plan must not bypass the screening gate |
+| `lib/services/specialist_plan_apply.dart` | Aamna | specialist workout applied only when `workoutAvailable`; gate + rulesVersion kept; the specialist week gets a profile summary | a specialist plan must not bypass the screening gate |
+| `lib/models/workout_session.dart`, `posture_mode.dart`, `manual_guidance.dart` | Laiba (Module 5) | `SessionExercise.safetyNotes`, "Adapted for you" card | Module 4 adaptations must reach the session |
 | `lib/screens/profile/settings_screen.dart` | Aamna | section content wrapped in a transparent `Material` | fixed a ListTile assertion that failed community_test |
 | `database.rules.json` | shared | 4 sections added before `$other`; nothing of the friend's removed | F8 |
 
@@ -53,3 +62,6 @@ Status values: **done** (implemented + tests green) · **verified** (also checke
 - 2026-10-17 — B1 diagnosed (out of memory, not disk or code).
 - 2026-10-17 — K1: dataset profiled; wrist derivation added to the importer, catalogue rebuilt (MET counts unchanged:
   181/606/84, 871 imported), regression test added. Module 4 tests: 43 pass; full suite 767 pass, 13 skipped, 0 fail.
+- 2026-10-17 — K2–K8, K10 implemented: intensity bands, classification profiles + notes, band cap, Diabetic rest-day
+  limit, weekly tallies, profile card, Module 5 safety notes, review sheet. Module 4 profile tests: 19 pass. Full suite:
+  787 pass, 13 skipped, 0 fail (TEMP on D:, `--concurrency=2`). K9 still blocked by B1.

@@ -14,6 +14,7 @@ import 'package:app/services/met_calculator.dart';
 import 'package:app/services/plan_generator.dart';
 import 'package:app/services/posture/exercise_form_rules.dart';
 import 'package:app/services/workout_readiness_service.dart';
+import 'package:app/services/workout_rules/classification_profiles.dart';
 import 'package:app/services/workout_rules/safety_rule_engine.dart';
 import 'package:app/services/workout_rules/safety_rule_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -360,7 +361,7 @@ void main() {
       Map<String, Object?> snap(PersonalizedPlan p) =>
           WorkoutPlanSnapshot.build(plan: p, goal: 'Gain Muscle', catalogCommit: ExerciseCatalog.datasetCommit, profileUpdatedAt: 0, weightKg: 70);
       final a = snap(p);
-      expect(a['rulesVersion'], SafetyRuleRepository.version);
+      expect(a['rulesVersion'], '${SafetyRuleRepository.version}+${ClassificationProfiles.version}');
       expect(a['engineVersion'], WorkoutPlanSnapshot.engineVersion);
       expect(a['fingerprint'], snap(plan(_person(), readiness: const WorkoutReadiness()))['fingerprint']);
       expect(a['fingerprint'], isNot(snap(plan(_person(), readiness: const WorkoutReadiness(), variant: 1))['fingerprint']));

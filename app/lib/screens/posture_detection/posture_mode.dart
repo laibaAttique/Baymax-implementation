@@ -7,6 +7,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/notification_bell.dart';
 import 'camera_detection.dart';
 import 'manual_guidance.dart';
+import 'widgets/safety_notes_card.dart';
 
 /// S-12: choose Camera Detection or Manual Guidance for one exercise.
 ///
@@ -181,6 +182,7 @@ class _PostureModeSelectionState extends State<PostureModeSelection> {
                 ],
               ),
             ),
+            SafetyNotesCard(exercise.safetyNotes),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 6),
               child: Column(

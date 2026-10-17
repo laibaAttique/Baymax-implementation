@@ -12,6 +12,7 @@ import '../../services/progress_service.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/training_profile_card.dart';
 import '../../widgets/exercise_photo.dart';
 import '../../widgets/specialist_plan_banner.dart';
 import '../../widgets/notification_bell.dart';
@@ -487,6 +488,10 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                         ),
                       ),
                     ],
+
+                    // Module 4: the week against the classification's training profile
+                    if (plan.profile != null)
+                      Padding(padding: const EdgeInsets.fromLTRB(20, 14, 20, 0), child: TrainingProfileCard(plan.profile!)),
 
                     // Medical rules applied (FR-1)
                     Padding(

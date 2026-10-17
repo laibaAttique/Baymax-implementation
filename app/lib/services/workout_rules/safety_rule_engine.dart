@@ -2,6 +2,7 @@ import '../../models/health_profile.dart';
 import '../../models/plan.dart';
 import '../../models/workout_readiness.dart';
 import '../health_classifier.dart';
+import 'classification_profiles.dart';
 
 /// Module 4 knowledge base, part 2: the health → exercise safety rules.
 ///
@@ -41,7 +42,25 @@ enum RuleBasis {
 /// A fact about the person the rules can test.
 /// [Fact.age] is the age the rules use: the recorded age, or 30 when no date of birth is stored (the Module 3
 /// convention). [Fact.ageRecorded] says whether a date of birth exists.
-enum Fact { classification, conditions, bmi, age, ageRecorded, weightKg, heightCm, activityLevel, intensity, answered, symptoms, injuries, clearance }
+/// [Fact.riskLevel] is Module 2's Low / Moderate / High; [Fact.statisticalRisk] is true when Module 2 placed the person in
+/// At-Risk only because of its screening model (no condition reported).
+enum Fact {
+  classification,
+  conditions,
+  bmi,
+  age,
+  ageRecorded,
+  weightKg,
+  heightCm,
+  activityLevel,
+  intensity,
+  answered,
+  symptoms,
+  injuries,
+  clearance,
+  riskLevel,
+  statisticalRisk,
+}
 
 enum Op { eq, ne, gte, lt, contains, notContains, notEmpty, missing }
 
@@ -157,6 +176,10 @@ class HealthFacts {
   /// Null when screening is not run (plan generated without the readiness answers).
   final WorkoutReadiness? readiness;
 
+  /// Module 2 risk level (Low / Moderate / High) and whether the At-Risk class came from the screening model alone.
+  final String riskLevel;
+  final bool statisticalRisk;
+
   /// From the stored health profile and the Module 2 classification. [intensity] is the plan generator's intensity.
   factory HealthFacts.from(HealthProfile p, ClassificationResult cls, String intensity, {WorkoutReadiness? readiness}) => HealthFacts(
         classification: cls.category,
@@ -168,6 +191,8 @@ class HealthFacts {
         activityLevel: p.activityLevel,
         intensity: intensity,
         readiness: readiness,
+        riskLevel: cls.riskLevel,
+        statisticalRisk: cls.riskFactors.any((f) => f.startsWith('Statistical risk')),
       );
 
   const HealthFacts({
@@ -180,6 +205,8 @@ class HealthFacts {
     required this.activityLevel,
     required this.intensity,
     this.readiness,
+    this.riskLevel = '',
+    this.statisticalRisk = false,
   });
 
   Object? _value(Fact f) {
@@ -210,6 +237,10 @@ class HealthFacts {
         return readiness?.injuries;
       case Fact.clearance:
         return readiness?.clearance;
+      case Fact.riskLevel:
+        return riskLevel;
+      case Fact.statisticalRisk:
+        return statisticalRisk;
     }
   }
 
@@ -276,6 +307,12 @@ class SafetyAssessment {
   final bool includeBalance;
   final bool strengthFocus;
   final List<String> notes;
+
+  /// Highest intensity band allowed by the classification profile, or null when no profile was applied.
+  final IntensityBand? maxBand;
+
+  /// Id of the classification profile applied (e.g. PRF-CARDIAC), or null.
+  final String? profileId;
   final Map<String, Set<String>> _ruleIdsByEffect;
   final List<(Set<String>, String, String)> _tagModifications; // tags, text, rule id
 
@@ -294,6 +331,8 @@ class SafetyAssessment {
     required this.includeBalance,
     required this.strengthFocus,
     required this.notes,
+    this.maxBand,
+    this.profileId,
     required Map<String, Set<String>> ruleIdsByEffect,
     required List<(Set<String>, String, String)> tagModifications,
   })  : _ruleIdsByEffect = ruleIdsByEffect,
@@ -321,6 +360,20 @@ class SafetyAssessment {
       return ExerciseDecision(ExerciseOutcome.excluded,
           ruleIds: {for (final t in blockedTags) ..._ids('tag:$t')}.toList()..sort(),
           notes: ['Excluded for you: ${blockedTags.join(', ')}']);
+    }
+    final cap = maxBand;
+    if (cap != null && cap != IntensityBand.vigorous) {
+      final band = e.intensityBand;
+      if (band == null) {
+        // No MET value means the intensity cannot be checked against the profile, so it is not scheduled.
+        return ExerciseDecision(ExerciseOutcome.requiresInformation,
+            ruleIds: [?profileId], notes: const ['Intensity (MET) of this exercise is not recorded, so it cannot be checked against your profile']);
+      }
+      if (band.index > cap.index) {
+        return ExerciseDecision(ExerciseOutcome.excluded,
+            ruleIds: [?profileId],
+            notes: ['${band.label} intensity (${e.met} MET); your plan stays at ${cap.label.toLowerCase()} or lighter']);
+      }
     }
     if (e.impact == 'unknown' && (excludedImpact.isNotEmpty || injuredJoints.isNotEmpty)) {
       // Unknown is not "safe": with an impact restriction or an injury the movement cannot be cleared automatically.
@@ -371,7 +424,9 @@ class SafetyRuleEngine {
   static const _defaultMaxDays = 6;
   static const _defaultSessionMin = 55;
 
-  SafetyAssessment assess(HealthFacts facts) {
+  /// [profile]: the classification profile whose intensity cap is merged in (Module 4). Without it the assessment is
+  /// exactly the rule repository's, which is what the Module 3 oracle test checks.
+  SafetyAssessment assess(HealthFacts facts, {ClassificationProfile? profile}) {
     final hits = <RuleHit>[];
     var gate = WorkoutGateStatus.eligible;
     final gateReasons = <String>[];
@@ -454,7 +509,7 @@ class SafetyRuleEngine {
     }
 
     return SafetyAssessment._(
-      rulesVersion: version,
+      rulesVersion: profile == null ? version : '$version+${ClassificationProfiles.version}',
       hits: hits,
       gate: WorkoutGate(gate, reasons: gate == WorkoutGateStatus.eligible ? const [] : gateReasons, ruleIds: gateIds),
       excludedImpact: excludedImpact,
@@ -468,6 +523,8 @@ class SafetyRuleEngine {
       includeBalance: balance,
       strengthFocus: strength,
       notes: notes,
+      maxBand: profile?.maxBand,
+      profileId: profile?.id,
       ruleIdsByEffect: byEffect,
       tagModifications: mods,
     );

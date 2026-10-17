@@ -28,6 +28,10 @@ class SessionExercise {
   final int seconds; // per set when timed, else 0
   final int restSeconds;
 
+  /// How the Module 4 safety rules adapted this exercise for the person (e.g. a pain-free range or a capped hold), each
+  /// ending with its rule id. Empty when nothing was adapted or the exercise is not from a plan.
+  final List<String> safetyNotes;
+
   const SessionExercise({
     required this.id,
     required this.name,
@@ -40,6 +44,7 @@ class SessionExercise {
     this.reps = 0,
     this.seconds = 0,
     this.restSeconds = 0,
+    this.safetyNotes = const [],
   });
 
   factory SessionExercise.fromPlanned(PlannedExercise p) => SessionExercise(
@@ -54,6 +59,7 @@ class SessionExercise {
         reps: p.reps,
         seconds: p.seconds,
         restSeconds: p.restSeconds,
+        safetyNotes: p.ruleNotes,
       );
 
   /// For an exercise that is not part of a plan. The dose is a neutral default

@@ -199,6 +199,10 @@ class Exercise {
   /// True when an energy estimate can be made for this exercise.
   bool get hasMet => met > 0 && metMatch != 'unmatched';
 
+  /// Intensity band of the mapped Compendium activity (WHO 2020: light < 3 MET, moderate 3–5.9, vigorous ≥ 6), or null
+  /// when no MET value is known. Comes from [met] only, never from the name.
+  IntensityBand? get intensityBand => !hasMet ? null : IntensityBand.ofMet(met);
+
   factory Exercise.fromJson(Map<String, dynamic> j) {
     List<String> list(dynamic v) => (v as List? ?? const []).map((e) => e.toString()).toList();
     return Exercise(
@@ -402,8 +406,11 @@ class PersonalizedPlan {
   /// say what is needed (more answers, or a doctor's clearance). Null when the plan was generated without screening.
   final WorkoutGate? gate;
 
-  /// Version of the safety rule repository the plan was generated with.
+  /// Version of the safety rule repository the plan was generated with (and of the classification profiles, after a `+`).
   final String rulesVersion;
+
+  /// The week measured against the classification's training profile (Module 4). Null when no week was generated.
+  final PlanProfileSummary? profile;
 
   const PersonalizedPlan({
     required this.category,
@@ -414,6 +421,7 @@ class PersonalizedPlan {
     required this.nutrition,
     this.gate,
     this.rulesVersion = '',
+    this.profile,
   });
 
   /// False when screening stopped the plan from being generated.
@@ -445,4 +453,65 @@ class WorkoutGate {
   /// Ids of the rules that decided it.
   final List<String> ruleIds;
   const WorkoutGate(this.status, {this.reasons = const [], this.ruleIds = const []});
+}
+
+/// Physical-activity intensity by MET (WHO 2020 guidelines on physical activity and sedentary behaviour).
+enum IntensityBand {
+  light('Light', '< 3 MET'),
+  moderate('Moderate', '3–5.9 MET'),
+  vigorous('Vigorous', '≥ 6 MET');
+
+  final String label;
+  final String range;
+  const IntensityBand(this.label, this.range);
+
+  static IntensityBand ofMet(double met) => met < 3 ? light : (met < 6 ? moderate : vigorous);
+}
+
+/// How the generated week compares with the training profile of the person's Module 2 classification (Module 4).
+class PlanProfileSummary {
+  /// e.g. PRF-CARDIAC.
+  final String profileId;
+  final String category;
+
+  /// What the profile emphasises, in plain words.
+  final String emphasis;
+
+  /// Highest intensity scheduled for this profile.
+  final IntensityBand maxBand;
+
+  /// Planned aerobic minutes this week, moderate-equivalent (a vigorous minute counts as two, as in WHO 2020).
+  final int aerobicMinutes;
+  final int aerobicTargetMin;
+  final int aerobicTargetMax;
+
+  /// Days with muscle-strengthening work / with stretching.
+  final int strengthDays;
+  final int strengthTarget;
+  final int flexibilityDays;
+  final int flexibilityTarget;
+
+  /// Explanations and suggestions, each ending with the id of the profile entry it came from.
+  final List<String> notes;
+  final List<String> evidence;
+
+  const PlanProfileSummary({
+    required this.profileId,
+    required this.category,
+    required this.emphasis,
+    required this.maxBand,
+    required this.aerobicMinutes,
+    required this.aerobicTargetMin,
+    required this.aerobicTargetMax,
+    required this.strengthDays,
+    required this.strengthTarget,
+    required this.flexibilityDays,
+    required this.flexibilityTarget,
+    this.notes = const [],
+    this.evidence = const [],
+  });
+
+  bool get aerobicMet => aerobicMinutes >= aerobicTargetMin;
+  bool get strengthMet => strengthDays >= strengthTarget;
+  bool get flexibilityMet => flexibilityDays >= flexibilityTarget;
 }

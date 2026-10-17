@@ -108,12 +108,25 @@ Rules for using it (all enforced in code and tested):
 5. Every scheduled exercise carries the profile id in its explanation ("Chosen for your Cardiac profile: moderate intensity").
 6. Same profile + rule + catalogue versions → identical plan.
 
-Additions to the rule repository:
+Explanations (implemented as **profile notes**, not as safety rules, so the rule repository and its Module 3 oracle
+stay exactly as they were):
 
-- `MOD-STAT-RISK` — model-flagged At-Risk: no extra restriction, a note saying the plan is gentler because of a statistical
-  screening estimate, not a diagnosis (wording reuses Module 2's rationale).
-- `MED-PCOS` — note only (regular aerobic + resistance training is recommended), no restriction; pending review.
-- `Fact.riskLevel` — available to rules; initially used **only** for `riskLevel == High` → maxDays 4 (team precaution, pending).
+- `PN-STAT-RISK` — model-flagged At-Risk: no extra restriction; says the plan starts at moderate effort because of a
+  screening estimate, not a diagnosis.
+- `PN-PCOS` — note only (2023 international PCOS guideline: regular aerobic + strength training).
+- `PN-RISK-HIGH` — Module 2 risk level High: build up slowly, talk to the doctor before increasing effort.
+- `Fact.riskLevel` and `Fact.statisticalRisk` are available to rules and notes. The draft idea "riskLevel High → max 4
+  days" was **dropped**: no cited source supports it, and it would conflict with the ADA spread-across-the-week advice.
+
+Implementation decisions taken while building (2026-10-17):
+
+- The band cap is applied by the engine (`assess(facts, profile:)`), merged like every other restriction; without a
+  profile the assessment is the rule repository alone.
+- Profile version is recorded as `rulesVersion = rules-2026.10.1+profiles-2026.10.1` and the engine version was bumped to
+  `workout-engine-2026.10.2`. **No database rule change was needed**, so nothing has to be deployed for Module 4.
+- A specialist's week (Aamna's Module 14) is measured against the same profile; the gate still applies.
+- The Module 4 adaptations (`ruleNotes`) now travel into Module 5 (`SessionExercise.safetyNotes`) and are shown on the
+  mode-selection and manual-guidance screens.
 
 ## 4. Implementation phases (remaining work)
 
@@ -122,15 +135,15 @@ Each phase ends with tests green (`flutter test --concurrency=2`, TEMP on D:) an
 | Phase | Work | Done when |
 |---|---|---|
 | **K1** | Dataset analysis + D1/D5 fixes (this document) | done — see ledger |
-| **K2** | `MetBand` on `Exercise` (from `met.value`), catalogue + curated; band counts test against this document | counts equal §1.4 |
-| **K3** | `ClassificationProfile` model + repository (6 profiles, cited, pending); `HealthFacts` gets `riskLevel`, `statisticalRisk` | repository test: every Module 2 category has exactly one profile; evidence keys resolve |
-| **K4** | Profile filter in `SafetyAssessment` (band restriction, unknown-band rule); `MOD-STAT-RISK`, `MED-PCOS` | property test over 3,000 random people: no scheduled exercise outside its profile's bands; Module 3 oracle still exact for the restriction set |
-| **K5** | Profile-driven weekly structure (aerobic minutes, resistance days, flexibility) in `PlanGenerator`, capped by rule maxDays | per-category golden tests; weekly MET-minutes reported, not enforced as a medical target |
-| **K6** | Explanations: profile id + classification + risk factor in `reasons`; workout screen shows "Your profile" card | widget test |
-| **K7** | Snapshot gets `profilesVersion`; fingerprint unchanged for unchanged inputs; RTDB rules accept the new field (local file only, merged with the friend's rules, deploy only after your confirmation) | snapshot + rules-field test |
-| **K8** | Review export: `ml/exercise_catalog/export_review_sheet.py` → CSV of rules, profiles, MET mappings, derived fields for a qualified reviewer | CSV generated; nothing marked approved by us |
-| **K9** | Device verification on the Redmi Note 11 (needs a working Android build — see blocker B1 in the ledger) | user-confirmed on device |
-| **K10** | Docs, PROGRESS.md, report traceability (FR-1…FR-6 → code → tests) | docs merged |
+| **K2** | `Exercise.intensityBand` (from the Compendium MET only), catalogue + curated | done — band counts equal §1.4 |
+| **K3** | `ClassificationProfile` repository (6 profiles + 3 notes, cited, pending); `HealthFacts.riskLevel`, `statisticalRisk` | done — one profile per category, evidence resolves |
+| **K4** | Band cap in `SafetyAssessment` (unknown intensity not scheduled under a cap) | done — 3,000-person property test; Module 3 oracle unchanged |
+| **K5** | Weekly structure: rest-day limit (Diabetic), aerobic / strength / stretching tallies, walking suggestion | done — reported, not enforced as a medical target |
+| **K6** | "Your training profile" card on the workout tab; intensity band on exercise detail; adaptations shown in Module 5 | done — widget tests |
+| **K7** | Versions: `rulesVersion` carries the profile version, engine 2026.10.2; no DB rule change | done |
+| **K8** | Review sheet `docs/review/module4_review_sheet.csv` generated from the code by `test/review_sheet_test.dart` | done — test fails if the sheet is stale |
+| **K9** | Device verification on the Redmi Note 11 (needs a working Android build — see blocker B1 in the ledger) | blocked |
+| **K10** | Docs, PROGRESS.md, requirement traceability | done |
 
 Out of scope (owned by teammates or not asked for): Injury Risk module, diet module, specialist plans (Aamna's — only
 read, never changed, except the shared merge points already listed in the ledger).

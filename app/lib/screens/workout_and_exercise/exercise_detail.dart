@@ -103,7 +103,9 @@ class ExerciseDetail extends StatelessWidget {
     final code = e.compendium.replaceAll('*', '');
     final what = e.metDescription.isEmpty ? '' : ' “${e.metDescription}”';
     final match = e.metMatch == 'exact' ? 'exact match' : 'approximate match (closest listed activity, pending review)';
-    return 'Energy estimate: ${e.met} METs — 2024 Adult Compendium of Physical Activities, code $code$what; $match.';
+    final band = e.intensityBand!;
+    return 'Energy estimate: ${e.met} METs (${band.label.toLowerCase()} intensity, ${band.range}) — 2024 Adult Compendium of '
+        'Physical Activities, code $code$what; $match.';
   }
 
   String _techniqueSource(Exercise e) {
