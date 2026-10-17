@@ -1,4 +1,3 @@
-import 'dart:math';
 import '../models/consultation.dart';
 
 /// Module 14: the booking rules, as pure functions (no database, no clock of their own) so they can be tested and the web portal
@@ -144,31 +143,25 @@ class ConsultationRules {
   /// The database key of a slot: the start instant in milliseconds, which sorts correctly as text.
   static String slotKey(DateTime start) => start.toUtc().millisecondsSinceEpoch.toString();
 
-  /// An unguessable room name, so only people given the link can enter (the link is shared only with the two people booked).
-  static String newRoomName([Random? random]) {
-    final r = random ?? Random.secure();
-    const chars = 'abcdefghjkmnpqrstuvwxyz23456789';
-    return 'baymax-${List.generate(20, (_) => chars[r.nextInt(chars.length)]).join()}';
-  }
-
-  /// The meeting link for a booking. [base] is the meeting service (a self-hosted Jitsi Meet in production). A chat-only booking
-  /// opens the room with camera and microphone off.
-  static String meetingLink(String base, String room, ConsultType type) {
-    final trimmed = base.endsWith('/') ? base.substring(0, base.length - 1) : base;
-    final hash = type == ConsultType.chat ? '#config.startWithVideoMuted=true&config.startWithAudioMuted=true' : '';
-    return '$trimmed/$room$hash';
-  }
-
   // ---- an existing appointment -------------------------------------------------------------------------------------------------
 
-  /// The meeting room can be opened from [joinEarly] before the start until the slot ends.
+  /// The meeting room can be opened from [joinEarly] before the start until the slot ends, once the specialist has accepted (which is
+  /// when the room is made: before that there is no link).
   static bool canJoin(Appointment a, DateTime now) =>
-      a.status == AppointmentStatus.confirmed && !now.isBefore(a.startAt.subtract(joinEarly)) && now.isBefore(a.endAt);
+      a.status == AppointmentStatus.confirmed && a.meetingLink.isNotEmpty && !now.isBefore(a.startAt.subtract(joinEarly)) && now.isBefore(a.endAt);
 
-  /// Cancelling is allowed while the appointment is confirmed and has not started.
-  static bool canCancel(Appointment a, DateTime now) => a.status == AppointmentStatus.confirmed && now.isBefore(a.startAt);
+  /// A request or an accepted appointment can be cancelled until it starts.
+  static bool canCancel(Appointment a, DateTime now) =>
+      (a.status == AppointmentStatus.confirmed || a.status == AppointmentStatus.requested) && now.isBefore(a.startAt);
 
-  static bool isUpcoming(Appointment a, DateTime now) => a.status == AppointmentStatus.confirmed && now.isBefore(a.endAt);
+  /// A request the specialist did not answer before its start time: it will never happen.
+  static bool isExpiredRequest(Appointment a, DateTime now) => a.status == AppointmentStatus.requested && !now.isBefore(a.startAt);
+
+  /// Coming up: accepted and not over, or still waiting for an answer and not yet due.
+  static bool isUpcoming(Appointment a, DateTime now) {
+    if (a.status == AppointmentStatus.requested) return now.isBefore(a.startAt);
+    return a.status == AppointmentStatus.confirmed && now.isBefore(a.endAt);
+  }
 
   /// Upcoming first (soonest first), then the past (latest first). Bookings still waiting for payment are not appointments yet and
   /// are left out.

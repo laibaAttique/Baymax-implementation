@@ -43,14 +43,15 @@ extension ConsultTypeInfo on ConsultType {
   }
 }
 
-/// `pendingPayment` is a booking whose time is being held for up to ten minutes while the member pays (FR36.8).
-enum AppointmentStatus { confirmed, completed, cancelled, noShow, pendingPayment }
+/// `pendingPayment`: the time is held for up to ten minutes while the member pays (FR36.8). `requested`: paid (or pay at clinic) and
+/// waiting for the specialist to accept. `confirmed`: accepted, and the video room exists. `declined`: the specialist turned it down.
+enum AppointmentStatus { confirmed, completed, cancelled, noShow, pendingPayment, requested, declined }
 
 extension AppointmentStatusInfo on AppointmentStatus {
   /// Stored in the database.
-  String get id => const ['confirmed', 'completed', 'cancelled', 'no_show', 'pending_payment'][index];
+  String get id => const ['confirmed', 'completed', 'cancelled', 'no_show', 'pending_payment', 'requested', 'declined'][index];
 
-  String get label => const ['Confirmed', 'Completed', 'Cancelled', 'Missed', 'Awaiting payment'][index];
+  String get label => const ['Confirmed', 'Completed', 'Cancelled', 'Missed', 'Awaiting payment', 'Awaiting acceptance', 'Declined'][index];
 
   static AppointmentStatus? fromId(Object? id) {
     for (final s in AppointmentStatus.values) {
@@ -125,6 +126,9 @@ class Specialist {
   final int tzOffsetMinutes;
   final Availability availability;
 
+  /// An administrator checked this person's professional licence.
+  final bool verified;
+
   const Specialist({
     required this.id,
     required this.name,
@@ -140,6 +144,7 @@ class Specialist {
     this.emergency = false,
     this.tzOffsetMinutes = 300,
     this.availability = const Availability(),
+    this.verified = false,
   });
 
   int feeFor(ConsultType t) => t == ConsultType.video ? videoFee : chatFee;
@@ -172,6 +177,7 @@ class Specialist {
       emergency: raw['emergency'] == true,
       tzOffsetMinutes: ((raw['tzOffsetMinutes'] as num?) ?? 300).toInt(),
       availability: availability,
+      verified: raw['verified'] == true,
     );
   }
 }
@@ -240,8 +246,11 @@ class Appointment {
   /// While [status] is `pendingPayment`: when the hold on the time runs out.
   final DateTime? holdUntil;
 
-  /// Set when the booking was confirmed by payment (or by choosing to pay at the clinic).
+  /// Set when the booking was paid (or pay at the clinic was chosen).
   final PaymentRecord? payment;
+
+  /// Why the specialist declined, if they said.
+  final String declineReason;
 
   const Appointment({
     required this.id,
@@ -256,13 +265,14 @@ class Appointment {
     required this.type,
     this.status = AppointmentStatus.confirmed,
     required this.fee,
-    required this.meetingLink,
+    this.meetingLink = '',
     this.notesForSpecialist = '',
     this.shares = const SharePrefs(),
     required this.createdAt,
     this.consultation,
     this.holdUntil,
     this.payment,
+    this.declineReason = '',
   });
 
   /// A booking that was never paid for and whose hold ran out: it never became an appointment and is not shown.
@@ -283,7 +293,8 @@ class Appointment {
         'type': type.id,
         'status': status.id,
         'fee': fee,
-        'meetingLink': meetingLink,
+        // The video room is created by the portal's server when the specialist accepts; the phone never writes it.
+        if (meetingLink.isNotEmpty) 'meetingLink': meetingLink,
         'notesForSpecialist': notesForSpecialist,
         'shares': shares.toJson(),
         'createdAt': createdAt.millisecondsSinceEpoch,
@@ -320,10 +331,11 @@ class Appointment {
       consultation: ConsultationNote.fromJson(raw['consultation']),
       holdUntil: raw['holdUntil'] is num ? DateTime.fromMillisecondsSinceEpoch((raw['holdUntil'] as num).toInt()) : null,
       payment: PaymentRecord.fromJson(raw['payment']),
+      declineReason: (raw['declineReason'] as String?) ?? '',
     );
   }
 
-  Appointment copyWith({AppointmentStatus? status, PaymentRecord? payment, bool clearHold = false}) => Appointment(
+  Appointment copyWith({AppointmentStatus? status, PaymentRecord? payment, bool clearHold = false, String? meetingLink}) => Appointment(
         id: id,
         patientId: patientId,
         patientName: patientName,
@@ -336,12 +348,13 @@ class Appointment {
         type: type,
         status: status ?? this.status,
         fee: fee,
-        meetingLink: meetingLink,
+        meetingLink: meetingLink ?? this.meetingLink,
         notesForSpecialist: notesForSpecialist,
         shares: shares,
         createdAt: createdAt,
         consultation: consultation,
         holdUntil: clearHold ? null : holdUntil,
         payment: payment ?? this.payment,
+        declineReason: declineReason,
       );
 }

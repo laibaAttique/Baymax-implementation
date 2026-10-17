@@ -1,0 +1,14 @@
+{
+  "name": "baymax-portal-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end checks against the Firebase emulators: the real database rules, the portal API and the app's booking writes.",
+  "scripts": {
+    "rules": "node rules.e2e.mjs"
+  },
+  "dependencies": {
+    "firebase": "^13.0.0",
+    "firebase-admin": "^14.5.0"
+  }
+}

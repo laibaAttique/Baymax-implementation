@@ -1,0 +1,22 @@
+<html><body style="margin:0;background:#1e1e1e"><pre style="margin:0;padding:22px 26px;color:#d4d4d4;font:15px/1.5 Menlo,Courier,monospace;width:1250px;white-space:pre-wrap">$ tools/run_all.sh
+
+$ flutter test test/atc/atc_unit_test.dart
+  +128: All tests passed!
+$ flutter test test/atc/atc_functional_test.dart
+  +60: All tests passed!
+$ flutter test test/atc/atc_rules_test.dart
+  +59: All tests passed!
+$ flutter test test/atc/atc_integration_test.dart
+  +7: All tests passed!
+$ node --test test/atc/
+  tests 66   pass 66   fail 0
+$ node --test --test-force-exit rules.e2e.mjs   (Firebase emulators)
+  tests 11   pass 11   fail 0
+$ node --test --test-force-exit flow.e2e.mjs   (Firebase emulators)
+  tests 10   pass 10   fail 0
+$ node --test --test-force-exit admin-account.e2e.mjs   (Firebase emulators)
+  tests 3   pass 3   fail 0
+
+(suite counts above also include 55 cases for Modules 10, 11 and 15, which are outside this chapter)
+
+TOTAL IN THIS CHAPTER  289 automated test cases   passed 289   failed 0   not run 0</pre></body></html>

@@ -1,0 +1,85 @@
+﻿Decision table,Rule,Test Case ID,Conditions,Action,Status
+DT-M2-1 Health category (reported conditions always override BMI),Rule 1,ATC-M2-B01,"{""Reported condition"": ""None"", ""BMI band"": ""Normal""}",Healthy,Pass
+DT-M2-1 Health category (reported conditions always override BMI),Rule 2,ATC-M2-B02,"{""Reported condition"": ""None"", ""BMI band"": ""Overweight""}",Overweight,Pass
+DT-M2-1 Health category (reported conditions always override BMI),Rule 3,ATC-M2-B03,"{""Reported condition"": ""None"", ""BMI band"": ""Obese""}",Obese,Pass
+DT-M2-1 Health category (reported conditions always override BMI),Rule 4,ATC-M2-B04,"{""Reported condition"": ""None"", ""BMI band"": ""Underweight""}",At-Risk,Pass
+DT-M2-1 Health category (reported conditions always override BMI),Rule 5,ATC-M2-B05,"{""Reported condition"": ""Hypertension"", ""BMI band"": ""Normal""}",At-Risk,Pass
+DT-M2-1 Health category (reported conditions always override BMI),Rule 6,ATC-M2-B06,"{""Reported condition"": ""Diabetes"", ""BMI band"": ""Normal""}",Diabetic,Pass
+DT-M2-1 Health category (reported conditions always override BMI),Rule 7,ATC-M2-B07,"{""Reported condition"": ""Diabetes"", ""BMI band"": ""Obese""}",Diabetic,Pass
+DT-M2-1 Health category (reported conditions always override BMI),Rule 8,ATC-M2-B08,"{""Reported condition"": ""Heart disease"", ""BMI band"": ""Normal""}",Cardiac,Pass
+DT-M2-1 Health category (reported conditions always override BMI),Rule 9,ATC-M2-B09,"{""Reported condition"": ""Heart disease and diabetes"", ""BMI band"": ""Obese""}",Cardiac,Pass
+DT-M13-1 Which answer comes first,Rule 1,ATC-M13-B01,"{""Message is about"": ""a possible emergency""}",Intent emergency,Pass
+DT-M13-1 Which answer comes first,Rule 2,ATC-M13-B02,"{""Message is about"": ""an emergency and an exercise""}",Intent emergency,Pass
+DT-M13-1 Which answer comes first,Rule 3,ATC-M13-B03,"{""Message is about"": ""a symptom""}",Intent health_concern,Pass
+DT-M13-1 Which answer comes first,Rule 4,ATC-M13-B04,"{""Message is about"": ""BMI""}",Intent bmi,Pass
+DT-M13-1 Which answer comes first,Rule 5,ATC-M13-B05,"{""Message is about"": ""no known topic""}",Intent fallback,Pass
+DT-M14-1 Can this booking go ahead?,Rule 1,ATC-M14-B01,"{""Taking bookings"": ""Yes"", ""Time chosen"": ""Yes"", ""Time free"": ""Yes"", ""15+ min ahead"": ""Yes"", ""Within working hours"": ""Yes"", ""Note 500 or less"": ""Yes""}",Booking allowed,Pass
+DT-M14-1 Can this booking go ahead?,Rule 2,ATC-M14-B02,"{""Taking bookings"": ""No"", ""Time chosen"": ""Yes"", ""Time free"": ""Yes"", ""15+ min ahead"": ""Yes"", ""Within working hours"": ""Yes"", ""Note 500 or less"": ""Yes""}",Refused: This specialist is not taking bookings right now.,Pass
+DT-M14-1 Can this booking go ahead?,Rule 3,ATC-M14-B03,"{""Taking bookings"": ""Yes"", ""Time chosen"": ""No"", ""Time free"": ""-"", ""15+ min ahead"": ""-"", ""Within working hours"": ""-"", ""Note 500 or less"": ""Yes""}",Refused: Choose a date and a time.,Pass
+DT-M14-1 Can this booking go ahead?,Rule 4,ATC-M14-B04,"{""Taking bookings"": ""Yes"", ""Time chosen"": ""Yes"", ""Time free"": ""No"", ""15+ min ahead"": ""Yes"", ""Within working hours"": ""Yes"", ""Note 500 or less"": ""Yes""}",Refused: That time was just taken. Please choose another.,Pass
+DT-M14-1 Can this booking go ahead?,Rule 5,ATC-M14-B05,"{""Taking bookings"": ""Yes"", ""Time chosen"": ""Yes"", ""Time free"": ""Yes"", ""15+ min ahead"": ""No"", ""Within working hours"": ""Yes"", ""Note 500 or less"": ""Yes""}",Refused: That time is too soon. Please choose a later one.,Pass
+DT-M14-1 Can this booking go ahead?,Rule 6,ATC-M14-B06,"{""Taking bookings"": ""Yes"", ""Time chosen"": ""Yes"", ""Time free"": ""Yes"", ""15+ min ahead"": ""Yes"", ""Within working hours"": ""No"", ""Note 500 or less"": ""Yes""}",Refused: That time is outside the specialist's working hours.,Pass
+DT-M14-1 Can this booking go ahead?,Rule 7,ATC-M14-B07,"{""Taking bookings"": ""Yes"", ""Time chosen"": ""Yes"", ""Time free"": ""Yes"", ""15+ min ahead"": ""Yes"", ""Within working hours"": ""Yes"", ""Note 500 or less"": ""No""}",Refused: Notes can be at most 500 characters.,Pass
+DT-M14-2 Join and cancel by status and time,Rule 1,ATC-M14-B08,"{""Status"": ""Confirmed"", ""Video link"": ""Yes"", ""Time"": ""6 minutes before start""}",Join no; cancel yes,Pass
+DT-M14-2 Join and cancel by status and time,Rule 2,ATC-M14-B09,"{""Status"": ""Confirmed"", ""Video link"": ""Yes"", ""Time"": ""5 minutes before start""}",Join yes; cancel yes,Pass
+DT-M14-2 Join and cancel by status and time,Rule 3,ATC-M14-B10,"{""Status"": ""Confirmed"", ""Video link"": ""Yes"", ""Time"": ""10 minutes after start""}",Join yes; cancel no,Pass
+DT-M14-2 Join and cancel by status and time,Rule 4,ATC-M14-B11,"{""Status"": ""Confirmed"", ""Video link"": ""Yes"", ""Time"": ""after the slot ended""}",Join no; cancel no,Pass
+DT-M14-2 Join and cancel by status and time,Rule 5,ATC-M14-B12,"{""Status"": ""Requested"", ""Video link"": ""No"", ""Time"": ""30 minutes before start""}",Join no; cancel yes,Pass
+DT-M14-2 Join and cancel by status and time,Rule 6,ATC-M14-B13,"{""Status"": ""Requested"", ""Video link"": ""No"", ""Time"": ""at the start time""}",Join no; cancel no,Pass
+DT-M14-2 Join and cancel by status and time,Rule 7,ATC-M14-B14,"{""Status"": ""Declined"", ""Video link"": ""No"", ""Time"": ""30 minutes before start""}",Join no; cancel no,Pass
+DT-M14-2 Join and cancel by status and time,Rule 8,ATC-M14-B15,"{""Status"": ""Completed"", ""Video link"": ""Yes"", ""Time"": ""1 hour after start""}",Join no; cancel no,Pass
+DT-M14-3 Whose diet plan applies,Rule 1,ATC-M14-B16,"{""Specialist plan"": ""None"", ""Member's choice"": ""Specialist""}",Target 2000 kcal,Pass
+DT-M14-3 Whose diet plan applies,Rule 2,ATC-M14-B17,"{""Specialist plan"": ""None"", ""Member's choice"": ""Baymax""}",Target 2000 kcal,Pass
+DT-M14-3 Whose diet plan applies,Rule 3,ATC-M14-B18,"{""Specialist plan"": ""Approved as is"", ""Member's choice"": ""Specialist""}",Target 2000 kcal,Pass
+DT-M14-3 Whose diet plan applies,Rule 4,ATC-M14-B19,"{""Specialist plan"": ""Changed (1800 kcal)"", ""Member's choice"": ""Specialist""}",Target 1800 kcal,Pass
+DT-M14-3 Whose diet plan applies,Rule 5,ATC-M14-B20,"{""Specialist plan"": ""Changed (1800 kcal)"", ""Member's choice"": ""Baymax""}",Target 2000 kcal,Pass
+DT-M14-4 May this account set a plan?,Rule 1,ATC-M14-B21,"{""Account"": ""Nutritionist"", ""Plan type"": ""diet"", ""Patient"": ""own patient, recent appointment""}",Status 200,Pass
+DT-M14-4 May this account set a plan?,Rule 2,ATC-M14-B22,"{""Account"": ""Doctor"", ""Plan type"": ""diet"", ""Patient"": ""own patient, recent appointment""}",Status 200,Pass
+DT-M14-4 May this account set a plan?,Rule 3,ATC-M14-B23,"{""Account"": ""Trainer"", ""Plan type"": ""diet"", ""Patient"": ""own patient, recent appointment""}",Status 403,Pass
+DT-M14-4 May this account set a plan?,Rule 4,ATC-M14-B24,"{""Account"": ""Trainer"", ""Plan type"": ""workout"", ""Patient"": ""own patient, recent appointment""}",Status 200,Pass
+DT-M14-4 May this account set a plan?,Rule 5,ATC-M14-B25,"{""Account"": ""Doctor"", ""Plan type"": ""workout"", ""Patient"": ""own patient, recent appointment""}",Status 200,Pass
+DT-M14-4 May this account set a plan?,Rule 6,ATC-M14-B26,"{""Account"": ""Nutritionist"", ""Plan type"": ""workout"", ""Patient"": ""own patient, recent appointment""}",Status 403,Pass
+DT-M14-4 May this account set a plan?,Rule 7,ATC-M14-B27,"{""Account"": ""Doctor"", ""Plan type"": ""diet"", ""Patient"": ""own patient, appointment 40 days ago""}",Status 400,Pass
+DT-M14-4 May this account set a plan?,Rule 8,ATC-M14-B28,"{""Account"": ""Doctor"", ""Plan type"": ""diet"", ""Patient"": ""only a pending request""}",Status 404,Pass
+DT-M14-4 May this account set a plan?,Rule 9,ATC-M14-B29,"{""Account"": ""Nutritionist"", ""Plan type"": ""diet"", ""Patient"": ""another specialist's patient""}",Status 404,Pass
+DT-M14-4 May this account set a plan?,Rule 10,ATC-M14-B30,"{""Account"": ""Member"", ""Plan type"": ""diet"", ""Patient"": ""own patient, recent appointment""}",Status 403,Pass
+DT-M14-6 Status change by time,Rule 1,ATC-M14-B31,"{""Change to"": ""completed"", ""Time"": ""1 minute before the start""}",Status 400,Pass
+DT-M14-6 Status change by time,Rule 2,ATC-M14-B32,"{""Change to"": ""completed"", ""Time"": ""at the start""}",Status 200,Pass
+DT-M14-6 Status change by time,Rule 3,ATC-M14-B33,"{""Change to"": ""missed"", ""Time"": ""9 minutes after the start""}",Status 400,Pass
+DT-M14-6 Status change by time,Rule 4,ATC-M14-B34,"{""Change to"": ""missed"", ""Time"": ""10 minutes after the start""}",Status 200,Pass
+DT-M14-6 Status change by time,Rule 5,ATC-M14-B35,"{""Change to"": ""cancelled"", ""Time"": ""10 minutes after the start""}",Status 200,Pass
+DT-M14-6 Status change by time,Rule 6,ATC-M14-B36,"{""Change to"": ""cancelled"", ""Time"": ""30 minutes after the start (slot ended)""}",Status 400,Pass
+DT-M14-7 Answering a request,Rule 1,ATC-M14-B37,"{""Action"": ""accept"", ""Request is"": ""waiting and in the future""}",Status 200,Pass
+DT-M14-7 Answering a request,Rule 2,ATC-M14-B38,"{""Action"": ""decline"", ""Request is"": ""waiting and in the future""}",Status 200,Pass
+DT-M14-7 Answering a request,Rule 3,ATC-M14-B39,"{""Action"": ""accept"", ""Request is"": ""past its start time""}",Status 400,Pass
+DT-M14-7 Answering a request,Rule 4,ATC-M14-B40,"{""Action"": ""decline"", ""Request is"": ""past its start time""}",Status 400,Pass
+DT-M14-7 Answering a request,Rule 5,ATC-M14-B41,"{""Action"": ""accept"", ""Request is"": ""already declined""}",Status 400,Pass
+DT-M14-7 Answering a request,Rule 6,ATC-M14-B42,"{""Action"": ""accept"", ""Request is"": ""already confirmed""}",Status 400,Pass
+DT-M14-7 Answering a request,Rule 7,ATC-M14-B43,"{""Action"": ""accept"", ""Request is"": ""sent to another specialist""}",Status 404,Pass
+DT-M14-8 Registration decisions,Rule 1,ATC-M14-B44,"{""Application"": ""pending"", ""Who acts"": ""an administrator"", ""Action"": ""approve""}",Status 200,Pass
+DT-M14-8 Registration decisions,Rule 2,ATC-M14-B45,"{""Application"": ""pending"", ""Who acts"": ""an administrator"", ""Action"": ""reject""}",Status 200,Pass
+DT-M14-8 Registration decisions,Rule 3,ATC-M14-B46,"{""Application"": ""approved"", ""Who acts"": ""an administrator"", ""Action"": ""approve""}",Status 409,Pass
+DT-M14-8 Registration decisions,Rule 4,ATC-M14-B47,"{""Application"": ""approved"", ""Who acts"": ""an administrator"", ""Action"": ""reject""}",Status 409,Pass
+DT-M14-8 Registration decisions,Rule 5,ATC-M14-B48,"{""Application"": ""holds another role"", ""Who acts"": ""an administrator"", ""Action"": ""approve""}",Status 409,Pass
+DT-M14-8 Registration decisions,Rule 6,ATC-M14-B49,"{""Application"": ""pending"", ""Who acts"": ""a doctor"", ""Action"": ""approve""}",Status 403,Pass
+DT-M14-8 Registration decisions,Rule 7,ATC-M14-B50,"{""Application"": ""pending"", ""Who acts"": ""the applicant"", ""Action"": ""approve""}",Status 403,Pass
+DT-M14-9 Closing an account,Rule 1,ATC-M14-B51,"{""Typed DELETE"": ""Yes"", ""Signed in"": ""recently""}",Status 200,Pass
+DT-M14-9 Closing an account,Rule 2,ATC-M14-B52,"{""Typed DELETE"": ""No"", ""Signed in"": ""recently""}",Status 400,Pass
+DT-M14-9 Closing an account,Rule 3,ATC-M14-B53,"{""Typed DELETE"": ""Wrong word"", ""Signed in"": ""recently""}",Status 400,Pass
+DT-M14-9 Closing an account,Rule 4,ATC-M14-B54,"{""Typed DELETE"": ""Yes"", ""Signed in"": ""an hour ago""}",Status 401,Pass
+DT-M16-1 Workout reminder due,Rule 1,ATC-M16-B01,"{""Reminder switched on"": ""Yes"", ""Planned today"": ""Yes"", ""Workout done"": ""No"", ""Reminder time passed"": ""Yes""}",Raise reminder,Pass
+DT-M16-1 Workout reminder due,Rule 2,ATC-M16-B02,"{""Reminder switched on"": ""No"", ""Planned today"": ""Yes"", ""Workout done"": ""No"", ""Reminder time passed"": ""Yes""}",Nothing,Pass
+DT-M16-1 Workout reminder due,Rule 3,ATC-M16-B03,"{""Reminder switched on"": ""Yes"", ""Planned today"": ""No"", ""Workout done"": ""No"", ""Reminder time passed"": ""Yes""}",Nothing,Pass
+DT-M16-1 Workout reminder due,Rule 4,ATC-M16-B04,"{""Reminder switched on"": ""Yes"", ""Planned today"": ""Yes"", ""Workout done"": ""Yes"", ""Reminder time passed"": ""Yes""}",Nothing,Pass
+DT-M16-1 Workout reminder due,Rule 5,ATC-M16-B05,"{""Reminder switched on"": ""Yes"", ""Planned today"": ""Yes"", ""Workout done"": ""No"", ""Reminder time passed"": ""No""}",Nothing,Pass
+DT-M16-2 Meal log reminder due,Rule 1,ATC-M16-B06,"{""Reminder switched on"": ""Yes"", ""Food logged today"": ""No"", ""Reminder time passed"": ""Yes""}",Raise reminder,Pass
+DT-M16-2 Meal log reminder due,Rule 2,ATC-M16-B07,"{""Reminder switched on"": ""No"", ""Food logged today"": ""No"", ""Reminder time passed"": ""Yes""}",Nothing,Pass
+DT-M16-2 Meal log reminder due,Rule 3,ATC-M16-B08,"{""Reminder switched on"": ""Yes"", ""Food logged today"": ""Yes"", ""Reminder time passed"": ""Yes""}",Nothing,Pass
+DT-M16-2 Meal log reminder due,Rule 4,ATC-M16-B09,"{""Reminder switched on"": ""Yes"", ""Food logged today"": ""No"", ""Reminder time passed"": ""No""}",Nothing,Pass
+DT-M14-5 Is the patient's shared data shown?,Rule 1,ATC-M16-B10,"{""Patient ticked sharing"": ""Yes"", ""Appointment status"": ""confirmed"", ""Doctor opens it"": ""20 minutes before the start""}",Show and log,Pass
+DT-M14-5 Is the patient's shared data shown?,Rule 2,ATC-M16-B11,"{""Patient ticked sharing"": ""No"", ""Appointment status"": ""confirmed"", ""Doctor opens it"": ""20 minutes before the start""}",Hide,Pass
+DT-M14-5 Is the patient's shared data shown?,Rule 3,ATC-M16-B12,"{""Patient ticked sharing"": ""Yes"", ""Appointment status"": ""confirmed"", ""Doctor opens it"": ""40 minutes before the start""}",Hide,Pass
+DT-M14-5 Is the patient's shared data shown?,Rule 4,ATC-M16-B13,"{""Patient ticked sharing"": ""Yes"", ""Appointment status"": ""confirmed"", ""Doctor opens it"": ""10 minutes after the start""}",Show and log,Pass
+DT-M14-5 Is the patient's shared data shown?,Rule 5,ATC-M16-B14,"{""Patient ticked sharing"": ""Yes"", ""Appointment status"": ""confirmed"", ""Doctor opens it"": ""95 minutes after the start (slot ended + 65 min)""}",Hide,Pass
+DT-M14-5 Is the patient's shared data shown?,Rule 6,ATC-M16-B15,"{""Patient ticked sharing"": ""Yes"", ""Appointment status"": ""requested"", ""Doctor opens it"": ""20 minutes before the start""}",Hide,Pass
+DT-M14-5 Is the patient's shared data shown?,Rule 7,ATC-M16-B16,"{""Patient ticked sharing"": ""Yes"", ""Appointment status"": ""cancelled"", ""Doctor opens it"": ""20 minutes before the start""}",Hide,Pass

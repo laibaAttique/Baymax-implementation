@@ -552,7 +552,7 @@ void main() {
       PaymentRequest? sent;
       await _pump(tester, PaymentScreen(appointment: _held(), clock: _clock, hooks: hooks(pay: (a, r, f) async {
         sent = r;
-        return _held().copyWith(status: AppointmentStatus.confirmed, payment: _record(method: PaymentMethod.clinic, status: PaymentStatus.payAtClinic), clearHold: true);
+        return _held().copyWith(status: AppointmentStatus.requested, payment: _record(method: PaymentMethod.clinic, status: PaymentStatus.payAtClinic), clearHold: true);
       })));
       await tester.tap(find.text('Pay at Clinic'));
       await tester.pumpAndSettle();
@@ -562,7 +562,7 @@ void main() {
       await tester.tap(find.text('Confirm, pay PKR 2,000 at clinic'));
       await tester.pumpAndSettle();
       expect(sent!.method, PaymentMethod.clinic);
-      expect(find.text('Appointment confirmed'), findsOneWidget);
+      expect(find.text('Request sent'), findsWidgets);
       expect(find.text('To be paid at the clinic'), findsOneWidget);
     });
 
@@ -656,6 +656,8 @@ void main() {
       expect(find.text('Payment successful'), findsOneWidget);
       expect(find.text('Dr. Hina Malik'), findsOneWidget);
       expect(find.text('TXN-TEST-0001'), findsOneWidget);
+      expect(find.text('What happens next'), findsOneWidget); // nothing is final until the specialist accepts
+      expect(find.text('Copy meeting link'), findsNothing); // there is no video link yet
       expect(find.text('Visa ending 4242'), findsOneWidget);
       expect(find.text('PKR 2,100'), findsOneWidget);
       expect(find.text('Total paid'), findsOneWidget);

@@ -1,4 +1,3 @@
-import 'dart:math';
 import '../models/app_notification.dart';
 import '../models/consultation.dart';
 import 'consultation_rules.dart';
@@ -21,9 +20,6 @@ import 'api_client.dart' show ApiException;
 class ConsultationService {
   ConsultationService._();
   static final ConsultationService instance = ConsultationService._();
-
-  /// The meeting service. Production should point this at a self-hosted Jitsi Meet (the public server may ask the host to sign in).
-  static const meetingBase = String.fromEnvironment('MEETING_BASE_URL', defaultValue: 'https://meet.jit.si');
 
   Future<List<Specialist>> loadSpecialists() {
     return RealtimeDb.guard(() async {
@@ -108,7 +104,6 @@ class ConsultationService {
       type: type,
       status: AppointmentStatus.pendingPayment,
       fee: specialist.feeFor(type),
-      meetingLink: ConsultationRules.meetingLink(meetingBase, ConsultationRules.newRoomName(Random.secure()), type),
       notesForSpecialist: notes.trim(),
       shares: shares,
       createdAt: t,
@@ -138,19 +133,19 @@ class ConsultationService {
     } catch (_) {}
   }
 
-  /// Turns a held booking into a confirmed appointment once payment succeeded (or pay-at-clinic was chosen), drops the hold, and sends
-  /// the confirmation notification (FR36.8). One atomic update.
-  Future<Appointment> confirmPayment(Appointment a, PaymentRecord payment) async {
+  /// Turns a held booking into a request to the specialist once payment succeeded (or pay-at-clinic was chosen), drops the hold, and
+  /// sends the notification (FR36.8). One atomic update. The specialist accepts it in the portal, which creates the video room.
+  Future<Appointment> submitRequest(Appointment a, PaymentRecord payment) async {
     final key = ConsultationRules.slotKey(a.startAt);
     await RealtimeDb.guard(() => RealtimeDb.db.ref().update({
           'appointments/${a.id}/payment': payment.toJson(),
-          'appointments/${a.id}/status': AppointmentStatus.confirmed.id,
+          'appointments/${a.id}/status': AppointmentStatus.requested.id,
           'appointments/${a.id}/holdUntil': null,
           'slots/${a.specialistId}/$key/holdUntil': null,
         }));
-    final confirmed = a.copyWith(status: AppointmentStatus.confirmed, payment: payment, clearHold: true);
-    await _notifyBooked(confirmed);
-    return confirmed;
+    final sent = a.copyWith(status: AppointmentStatus.requested, payment: payment, clearHold: true);
+    await _notifyRequested(sent);
+    return sent;
   }
 
   /// The platform fee in PKR, from `config/payments/platformFee`; zero when it is not set (FR37.7).
@@ -166,14 +161,14 @@ class ConsultationService {
     }
   }
 
-  Future<void> _notifyBooked(Appointment a) async {
+  Future<void> _notifyRequested(Appointment a) async {
     try {
       await InboxService.instance.add(
         AppNotification(
           id: 'appt-${a.id}',
           type: NotificationType.appointment,
-          title: 'Appointment confirmed',
-          body: '${a.specialistName}, ${formatDateTime(a.startAt)}. ${a.payment?.status == PaymentStatus.payAtClinic ? 'Pay at your visit. ' : ''}The meeting link is in My appointments.',
+          title: 'Request sent',
+          body: '${a.specialistName} will confirm ${formatDateTime(a.startAt)}. You will get a notification with the video link when they accept.',
           createdAt: DateTime.now(),
           route: 'appointments',
         ),
@@ -202,7 +197,7 @@ class ConsultationService {
     });
   }
 
-  /// Cancels a confirmed appointment that has not started and frees its slot. Atomic, like [book].
+  /// Cancels a request or an accepted appointment that has not started and frees its slot. Atomic, like [book].
   Future<void> cancel(Appointment a, {DateTime? now}) {
     if (!ConsultationRules.canCancel(a, now ?? DateTime.now())) {
       throw const ApiException('This appointment can no longer be cancelled.');

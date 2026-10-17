@@ -133,7 +133,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: SizedBox(
             width: double.infinity,
             child: GlassCard(
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              // The switch rows paint their ripples on the nearest Material; without this one the card's
+              // background would hide them (Flutter asserts on that).
+              child: Material(
+                type: MaterialType.transparency,
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(children: [
                   IconWell(icon: icon, size: 36),
                   const SizedBox(width: 12),
@@ -141,7 +145,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
                 const SizedBox(height: 10),
                 ...children,
-              ]),
+                ]),
+              ),
             ),
           ),
         ),

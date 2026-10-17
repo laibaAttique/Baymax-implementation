@@ -1,6 +1,6 @@
-.DS_Store
 node_modules
-.env
-.env.local
 .next
-serviceAccount*.json
+.env*.local
+.env
+next-env.d.ts
+*.tsbuildinfo

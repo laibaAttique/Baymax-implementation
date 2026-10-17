@@ -1,0 +1,7 @@
+flutter: Flutter 3.41.9 • channel stable • https://github.com/flutter/flutter.git | Framework • revision 00b0c91f06 (6 months ago) • 2026-04-29 10:03:19 -0700
+node: v26.11.0
+firebase: 15.33.0
+os: macOS 15.7.4 (arm64)
+java: openjdk version "26" 2026-03-17
+firebase_js: 13.0.0
+firebase_admin: 14.5.0

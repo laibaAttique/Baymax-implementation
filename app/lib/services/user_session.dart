@@ -10,7 +10,10 @@ import 'weight_service.dart';
 import 'exercise_catalog.dart';
 import 'exercise_library.dart';
 import 'gamification.dart' show UserRole;
+import 'specialist_plan_apply.dart';
+import 'specialist_plan_service.dart';
 import 'food_database.dart';
+import '../models/specialist_plan.dart';
 import 'health_classifier.dart';
 import 'ml/gradient_boosting_model.dart';
 import 'ml/health_risk_model.dart';
@@ -36,6 +39,8 @@ class UserSession extends ChangeNotifier {
   /// the plan generator makes them easier.
   final Set<String> tooDifficult = {};
   ClassificationResult? classification;
+
+  /// The plan the screens show: Baymax's own plan with a specialist's changes on top, if the member has any and follows them.
   PersonalizedPlan? plan;
 
   /// Module 4: the pre-exercise readiness answers (equipment, injuries, warning symptoms, doctor's clearance). Until they
@@ -45,6 +50,13 @@ class UserSession extends ChangeNotifier {
 
   /// True once the profile came from the signed-in account (not a local preview or test), so the plan may be stored.
   bool _fromAccount = false;
+
+  /// Baymax's own plan, before any specialist's changes (so switching back needs no recomputation).
+  PersonalizedPlan? basePlan;
+
+  /// Module 14 (FR-5, FR-9, FR-10): plans set by a doctor, nutritionist or trainer, and whether the member follows them.
+  SpecialistPlans specialistPlans = SpecialistPlans.none;
+  PlanChoices planChoices = PlanChoices.defaults;
 
   /// Module 3 (FR-4): what the user's own weight and food logs say about their maintenance calories (null until first computed).
   CalorieEstimate? calorieEstimate;
@@ -103,6 +115,7 @@ class UserSession extends ChangeNotifier {
     role = await RoleService.instance.fetchMine();
     notifyListeners();
     refreshCalorieEstimate(); // personalises the target in the background
+    refreshSpecialistPlans(); // and puts a specialist's plan over it, if the member has one
     return true;
   }
 
@@ -117,7 +130,8 @@ class UserSession extends ChangeNotifier {
     // An estimate built on a different weight/activity level no longer applies.
     final est = calorieEstimate;
     if (est != null && (est.priorTdee - p.tdee).abs() > 1) calorieEstimate = null;
-    plan = _generate(foods, p, classification!);
+    basePlan = _generate(foods, p, classification!);
+    plan = _withSpecialist(basePlan!);
     notifyListeners();
   }
 
@@ -162,7 +176,44 @@ class UserSession extends ChangeNotifier {
     final p = profile, c = classification;
     if (p == null || c == null) return;
     final foods = await FoodDatabase.load();
-    plan = _generate(foods, p, c);
+    basePlan = _generate(foods, p, c);
+    plan = _withSpecialist(basePlan!);
+  }
+
+  PersonalizedPlan _withSpecialist(PersonalizedPlan base) {
+    if (specialistPlans.isEmpty || !ExerciseLibrary.isLoaded) return base;
+    return applySpecialistPlans(
+      base,
+      specialistPlans,
+      planChoices,
+      exercise: ExerciseLibrary.byId,
+      warmUp: ExerciseLibrary.warmUp,
+      coolDown: ExerciseLibrary.coolDown,
+    );
+  }
+
+  /// Reads what specialists set for this member and puts it over the Baymax plan. Best effort: offline or signed out, the plan the
+  /// member already has stays.
+  Future<void> refreshSpecialistPlans() async {
+    try {
+      final plans = await SpecialistPlanService.instance.load();
+      final choices = await SpecialistPlanService.instance.loadChoices();
+      specialistPlans = plans;
+      planChoices = choices;
+      final base = basePlan;
+      if (base != null) plan = _withSpecialist(base);
+      notifyListeners();
+    } catch (_) {}
+  }
+
+  /// The member's own choice between a specialist's plan and Baymax's. Saved first; the plan changes only if saving worked.
+  Future<void> setPlanChoice({bool? diet, bool? workout}) async {
+    if (diet != null) await SpecialistPlanService.instance.saveChoice(diet: true, useSpecialist: diet);
+    if (workout != null) await SpecialistPlanService.instance.saveChoice(diet: false, useSpecialist: workout);
+    planChoices = planChoices.copyWith(diet: diet, workout: workout);
+    final base = basePlan;
+    if (base != null) plan = _withSpecialist(base);
+    notifyListeners();
   }
 
   /// Module 3, FR-4: reads the last 28 days of weigh-ins and food logs, updates [calorieEstimate] and rebuilds the plan so the
@@ -240,6 +291,9 @@ class UserSession extends ChangeNotifier {
     tooDifficult.clear();
     classification = null;
     plan = null;
+    basePlan = null;
+    specialistPlans = SpecialistPlans.none;
+    planChoices = PlanChoices.defaults;
     calorieEstimate = null;
     role = UserRole.user;
     readiness = WorkoutReadiness.unanswered;

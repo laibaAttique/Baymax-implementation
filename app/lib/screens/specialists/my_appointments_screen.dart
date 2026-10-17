@@ -14,7 +14,12 @@ Color _statusColor(AppointmentStatus s) => switch (s) {
       AppointmentStatus.cancelled => AppTheme.error,
       AppointmentStatus.noShow => AppTheme.warning,
       AppointmentStatus.pendingPayment => AppTheme.warning,
+      AppointmentStatus.requested => AppTheme.warning,
+      AppointmentStatus.declined => AppTheme.error,
     };
+
+/// The status as the member reads it: a request nobody answered before its time is "Expired".
+String _statusLabel(Appointment a, DateTime now) => ConsultationRules.isExpiredRequest(a, now) ? 'Expired' : a.status.label;
 
 /// Module 14: the member's own appointments, upcoming first, with the meeting link and whatever the specialist wrote afterwards.
 class MyAppointmentsScreen extends StatefulWidget {
@@ -86,7 +91,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
     return GlassCard(
       margin: const EdgeInsets.only(bottom: 12),
       onTap: () => _open(a),
-      semanticLabel: '${a.specialistName}, ${ConsultationService.formatDateTime(a.startAt)}, ${a.status.label}',
+      semanticLabel: '${a.specialistName}, ${ConsultationService.formatDateTime(a.startAt)}, ${_statusLabel(a, now)}',
       child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
         IconWell(icon: a.role.icon, size: 48),
         const SizedBox(width: 12),
@@ -97,7 +102,7 @@ class _MyAppointmentsScreenState extends State<MyAppointmentsScreen> {
             Text(ConsultationService.formatDateTime(a.startAt), style: const TextStyle(fontSize: 13.5, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
             const SizedBox(height: 8),
             Wrap(spacing: 8, runSpacing: 6, children: [
-              InfoChip(live ? 'Open now' : a.status.label, icon: live ? Icons.sensors_rounded : null, color: live ? AppTheme.teal : _statusColor(a.status)),
+              InfoChip(live ? 'Open now' : _statusLabel(a, now), icon: live ? Icons.sensors_rounded : null, color: live ? AppTheme.teal : _statusColor(a.status)),
               InfoChip(a.type.label, icon: a.type.icon),
               if (a.consultation != null) const InfoChip('Notes from specialist', icon: Icons.description_rounded),
             ]),
@@ -169,11 +174,11 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     final ok = await showDialog<bool>(
       context: context,
       builder: (c) => AlertDialog(
-        title: const Text('Cancel this appointment?'),
+        title: Text(_a.status == AppointmentStatus.requested ? 'Cancel this request?' : 'Cancel this appointment?'),
         content: Text('${_a.specialistName}, ${ConsultationService.formatDateTime(_a.startAt)}. The time will be offered to other people.${_a.payment?.status == PaymentStatus.paid && _a.payment?.isTest == false ? ' Refunds are not automatic: contact support with your transaction number.' : ''}'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Keep it')),
-          FilledButton(onPressed: () => Navigator.pop(c, true), child: const Text('Cancel appointment')),
+          FilledButton(onPressed: () => Navigator.pop(c, true), child: Text(_a.status == AppointmentStatus.requested ? 'Cancel request' : 'Cancel appointment')),
         ],
       ),
     );
@@ -234,7 +239,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                     Text('${a.role.label}${a.specialty.isEmpty ? '' : ' · ${a.specialty}'}', style: const TextStyle(fontSize: 13.5, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
                   ]),
                 ),
-                InfoChip(a.status.label, color: _statusColor(a.status)),
+                InfoChip(_statusLabel(a, now), color: _statusColor(a.status)),
               ]),
               const SizedBox(height: 14),
               _row('When', ConsultationService.formatDateTime(a.startAt)),
@@ -243,6 +248,26 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               _row('Fee', ConsultationService.pkr(a.fee)),
             ]),
           ),
+          if (a.status == AppointmentStatus.requested) ...[
+            const SectionHeader('Waiting for your specialist', padding: EdgeInsets.fromLTRB(2, 22, 0, 10)),
+            GlassCard(
+              child: Text(
+                ConsultationRules.isExpiredRequest(a, now)
+                    ? '${a.specialistName} did not answer before the start time, so this request has expired. You can book another time.'
+                    : '${a.specialistName} has your request. When they accept it you will get a notification and the video link appears here. If they cannot take it, the time is released and you are told.',
+                style: const TextStyle(height: 1.45, color: AppTheme.textPrimary, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+          if (a.status == AppointmentStatus.declined) ...[
+            const SectionHeader('Not accepted', padding: EdgeInsets.fromLTRB(2, 22, 0, 10)),
+            GlassCard(
+              child: Text(
+                '${a.specialistName} could not take this appointment.${a.declineReason.isEmpty ? '' : ' They said: ${a.declineReason}'} You can book another time.',
+                style: const TextStyle(height: 1.45, color: AppTheme.textPrimary, fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
           if (a.status == AppointmentStatus.confirmed) ...[
             const SectionHeader('Meeting room', padding: EdgeInsets.fromLTRB(2, 22, 0, 10)),
             GlassCard(
@@ -313,7 +338,7 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
             OutlinedButton.icon(
               onPressed: _cancelling ? null : _cancel,
               icon: _cancelling ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2)) : const Icon(Icons.event_busy_rounded),
-              label: const Text('Cancel appointment'),
+              label: Text(a.status == AppointmentStatus.requested ? 'Cancel request' : 'Cancel appointment'),
             ),
           ],
           const SizedBox(height: 16),
