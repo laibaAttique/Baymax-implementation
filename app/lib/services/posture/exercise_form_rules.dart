@@ -140,6 +140,19 @@ class BodyLineCheck implements FormCheck {
   }
 }
 
+/// Repetitions (a movement cycle) or a static hold (time in position).
+enum TrackingKind { reps, hold }
+
+/// How the two sides are combined into the rep-driving angle.
+enum AngleAggregate {
+  /// Both limbs move together (squat, push-up).
+  mean,
+
+  /// The limb that moves furthest drives the count: the more bent one for a bending movement, the more open one for an
+  /// opening movement (lunge front knee, alternating knee lifts, one-arm curls and raises).
+  furthest,
+}
+
 /// Form rules for one exercise. Every threshold is per-exercise and can be
 /// changed here without touching the engine.
 ///
@@ -156,14 +169,34 @@ class ExerciseFormConfig {
   final JointTriple rightPrimary;
 
   /// At or above this angle the joint counts as extended (start/end position).
+  /// For an [opening] movement: at or BELOW this angle the joint is at rest.
   final double extendedAngle;
 
   /// Below this angle a repetition attempt has started. The gap to
-  /// [extendedAngle] is hysteresis against jitter.
+  /// [extendedAngle] is hysteresis against jitter. For an [opening] movement: above it.
   final double attemptAngle;
 
-  /// At or below this angle the movement has reached valid depth.
+  /// At or below this angle the movement has reached valid depth. For an [opening] movement: at or above it.
   final double flexedAngle;
+
+  /// True when a repetition starts bent and opens up (overhead press, glute bridge, arm raise, leg extension); the three
+  /// angles above then mean rest, attempt and peak. False (default) for movements that start extended and bend.
+  final bool opening;
+
+  final AngleAggregate aggregate;
+  final TrackingKind kind;
+
+  /// Posture checks and the posture score are reported only for configurations that were tried on real movements
+  /// (the four original exercises). Basic tracking counts movement cycles or hold time and says that form is not scored.
+  final bool scored;
+
+  /// Hold: the person is "in position" while the rep-driving angle is within [holdMinAngle]–[holdMaxAngle] and the torso
+  /// lean from vertical within [holdMinLean]–[holdMaxLean] (null bounds are not checked).
+  final double? holdMinAngle;
+  final double? holdMaxAngle;
+  final double? holdMinLean;
+  final double? holdMaxLean;
+  final String holdCue;
 
   /// Landmarks below this visibility are treated as missing.
   final double minVisibility;
@@ -204,6 +237,15 @@ class ExerciseFormConfig {
     this.maxAngleJump = 50,
     this.bodyLineLeft,
     this.bodyLineRight,
+    this.opening = false,
+    this.aggregate = AngleAggregate.mean,
+    this.kind = TrackingKind.reps,
+    this.scored = true,
+    this.holdMinAngle,
+    this.holdMaxAngle,
+    this.holdMinLean,
+    this.holdMaxLean,
+    this.holdCue = '',
     required this.checks,
     required this.depthCue,
     required this.depthPassedText,
@@ -334,7 +376,9 @@ class PoseAnalyzer {
 
     final left = angle(config.leftPrimary);
     final right = angle(config.rightPrimary);
-    final primary = _mean(left, right);
+    final primary = config.aggregate == AngleAggregate.furthest
+        ? (config.opening ? _max(left, right) : _min(left, right))
+        : _mean(left, right);
     if (primary == null) return null;
 
     const ls = PoseIndex.leftShoulder, rs = PoseIndex.rightShoulder;
@@ -380,6 +424,32 @@ class PoseAnalyzer {
       facingCamera: facing,
       kneeToAnkleRatio: kneeRatio,
     );
+  }
+
+  static double? _max(double? a, double? b) {
+    if (a == null) return b;
+    if (b == null) return a;
+    return a > b ? a : b;
+  }
+
+  static double? _min(double? a, double? b) {
+    if (a == null) return b;
+    if (b == null) return a;
+    return a < b ? a : b;
+  }
+
+  /// Landmarks the configuration needs that are missing or below the visibility threshold in [frame].
+  static List<int> missingLandmarks(PoseFrame frame, ExerciseFormConfig config) {
+    if (!frame.hasPose) return const [];
+    bool visible(int i) => frame.landmarks[i].isFinite && frame.landmarks[i].visibility >= config.minVisibility;
+    bool sideOk(JointTriple t) => visible(t.a) && visible(t.vertex) && visible(t.c);
+    if (sideOk(config.leftPrimary) || sideOk(config.rightPrimary)) return const [];
+    return {
+      for (final t in [config.leftPrimary, config.rightPrimary])
+        for (final i in [t.a, t.vertex, t.c])
+          if (!visible(i)) i,
+    }.toList()
+      ..sort();
   }
 
   static double? _mean(double? a, double? b) {

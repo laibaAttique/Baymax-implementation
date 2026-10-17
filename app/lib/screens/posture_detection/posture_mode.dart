@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/workout_session.dart';
 import '../../services/app_permissions.dart';
-import '../../services/posture/exercise_form_rules.dart';
+import '../../services/posture/movement_patterns.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/notification_bell.dart';
 import 'camera_detection.dart';
@@ -22,7 +22,9 @@ class PostureModeSelection extends StatefulWidget {
 }
 
 class _PostureModeSelectionState extends State<PostureModeSelection> {
-  late final bool _cameraSupported = ExerciseFormRules.supports(widget.request.exercise.id);
+  // Camera tracking follows the exercise's movement pattern; full form scoring only where the rules were tested.
+  late final ExercisePostureConfig _support = MovementPatterns.forSession(widget.request.exercise);
+  late final bool _cameraSupported = _support.supportsCameraTracking;
   late SessionMode _selectedMode = _cameraSupported ? SessionMode.camera : SessionMode.manual;
 
   // Consent is off until the user gives it (report FR15.3).
@@ -155,6 +157,16 @@ class _PostureModeSelectionState extends State<PostureModeSelection> {
     );
   }
 
+  String _cameraDescription(String name) => switch (_support.level) {
+        CameraSupportLevel.fullForm => 'Track posture using live camera for real-time adjustments and analysis.',
+        CameraSupportLevel.basicTracking =>
+          'Basic tracking: counts your repetitions from your ${_support.movementPattern.measures} with the live camera. '
+              'Form is not scored for this exercise.',
+        CameraSupportLevel.holdTracking =>
+          'Basic tracking: times your hold while the camera sees you in position. Form is not scored for this exercise.',
+        CameraSupportLevel.notSupported => 'Camera tracking is not available for $name: ${_support.unsupportedReason} Use Manual Guidance.',
+      };
+
   @override
   Widget build(BuildContext context) {
     final exercise = widget.request.exercise;
@@ -191,9 +203,7 @@ class _PostureModeSelectionState extends State<PostureModeSelection> {
                     SessionMode.camera,
                     '📷',
                     'Camera Detection',
-                    _cameraSupported
-                        ? 'Track posture using live camera for real-time adjustments and analysis.'
-                        : 'Camera tracking is not available for ${exercise.name} yet. Use Manual Guidance.',
+                    _cameraDescription(exercise.name),
                     enabled: _cameraSupported,
                   ),
                   _buildModeCard(

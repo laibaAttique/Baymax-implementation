@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/workout_session.dart';
 import '../../services/posture/exercise_form_rules.dart';
+import '../../services/posture/movement_patterns.dart';
 import '../../services/posture/pose_landmark.dart';
 import '../../services/posture/pose_stream.dart';
 import '../../services/posture/posture_engine.dart';
@@ -47,6 +48,7 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
   final WorkoutSessionController _session = WorkoutSessionController.instance;
   final ValueNotifier<_FrameView?> _view = ValueNotifier<_FrameView?>(null);
 
+  late final ExercisePostureConfig _support;
   late final ExerciseFormConfig _config;
   late final PostureEngine _engine;
   late final PoseStream _stream;
@@ -62,9 +64,11 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
   @override
   void initState() {
     super.initState();
-    final config = ExerciseFormRules.forExercise(widget.request.exercise.id);
+    // The tracker comes from the exercise's movement pattern (Module 4 hands over id + pattern).
+    _support = MovementPatterns.forSession(widget.request.exercise);
+    final config = _support.form;
     if (config == null) {
-      throw ArgumentError('Camera detection has no form rules for "${widget.request.exercise.id}".');
+      throw ArgumentError('Camera detection cannot track "${widget.request.exercise.id}": ${_support.unsupportedReason}');
     }
     _config = config;
     _engine = PostureEngine(config);
@@ -73,7 +77,7 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
       ..attach();
 
     WidgetsBinding.instance.addObserver(this);
-    _session.start(widget.request, SessionMode.camera);
+    _session.start(widget.request, SessionMode.camera, formScored: _support.supportsFormEvaluation);
     _session.addListener(_onSessionChanged);
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && _session.status == SessionStatus.active) setState(() {});
@@ -204,7 +208,15 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
     _stopping = true;
     final fps = _stream.averageFps;
     await _releaseCamera();
-    final summary = _session.finish(report: _engine.buildReport(), averageFps: fps);
+    final e = widget.request.exercise;
+    final summary = _session.finish(
+      report: _engine.buildReport(
+        targetSeconds: e.timed ? e.sets * e.seconds : null,
+        movement: _support.movementPattern.measures.isEmpty ? 'movement' : _support.movementPattern.measures,
+      ),
+      averageFps: fps,
+      formScored: _support.supportsFormEvaluation,
+    );
     if (!mounted) return;
     final navigator = Navigator.of(context);
     final route = ModalRoute.of(context);
@@ -216,6 +228,8 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
   void _openAssistant() {
     Navigator.push(context, MaterialPageRoute(builder: (_) => const VoiceAssistantScreen()));
   }
+
+  static String _clock(int seconds) => '${seconds ~/ 60}:${(seconds % 60).toString().padLeft(2, '0')}';
 
   String get _elapsed {
     final d = _session.elapsed;
@@ -264,6 +278,18 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
                   const SizedBox(height: 6),
                   const Text('Camera Detection',
                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+                  if (!_support.supportsFormEvaluation)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        key: const ValueKey('basic-tracking-label'),
+                        _support.supportsHoldTiming
+                            ? 'Basic tracking: times your hold while you stay in position. Form is not scored.'
+                            : 'Basic tracking: counts repetitions from your ${_support.movementPattern.measures}. Form is not scored.',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                      ),
+                    ),
                   const SizedBox(height: 6),
                   _buildStatusLine(tracking),
                 ],
@@ -286,8 +312,16 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
               child: Row(
                 children: [
                   _buildStat(_elapsed, 'Time'),
-                  _buildStat(score == null ? '—' : '$score%', 'Posture score'),
-                  _buildStat('${_session.partialReps}', 'Too shallow'),
+                  if (_support.supportsFormEvaluation) ...[
+                    _buildStat(score == null ? '—' : '$score%', 'Posture score'),
+                    _buildStat('${_session.partialReps}', 'Too shallow'),
+                  ] else if (_support.supportsHoldTiming) ...[
+                    _buildStat(_clock(_session.holdSeconds ?? 0), 'In position'),
+                    _buildStat(_clock(widget.request.exercise.sets * widget.request.exercise.seconds), 'Planned'),
+                  ] else ...[
+                    _buildStat('${_session.reps} / ${widget.request.exercise.timed ? '—' : widget.request.exercise.targetReps}', 'Reps / target'),
+                    _buildStat('Not scored', 'Form'),
+                  ],
                 ],
               ),
             ),
@@ -477,13 +511,13 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
       decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.95), borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
-          const Text('REPS', style: TextStyle(fontSize: 10, color: Colors.grey)),
+          Text(_support.supportsHoldTiming ? 'HOLD' : 'REPS', style: const TextStyle(fontSize: 10, color: Colors.grey)),
           AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child),
             child: Text(
-              '${_session.reps}',
-              key: ValueKey(_session.reps),
+              _support.supportsHoldTiming ? _clock(_session.holdSeconds ?? 0) : '${_session.reps}',
+              key: ValueKey(_support.supportsHoldTiming ? _session.holdSeconds : _session.reps),
               style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: AppTheme.primary, height: 1),
             ),
           ),

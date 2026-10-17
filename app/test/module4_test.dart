@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:app/models/health_profile.dart';
+import 'package:app/models/movement_pattern.dart';
 import 'package:app/models/plan.dart';
 import 'package:app/models/workout_readiness.dart';
 import 'package:app/models/workout_session.dart';
@@ -13,6 +14,7 @@ import 'package:app/services/health_classifier.dart';
 import 'package:app/services/met_calculator.dart';
 import 'package:app/services/plan_generator.dart';
 import 'package:app/services/posture/exercise_form_rules.dart';
+import 'package:app/services/posture/movement_patterns.dart';
 import 'package:app/services/workout_readiness_service.dart';
 import 'package:app/services/workout_rules/classification_profiles.dart';
 import 'package:app/services/workout_rules/safety_rule_engine.dart';
@@ -349,11 +351,15 @@ void main() {
   });
 
   group('Module 4 → Module 5 and storage', () {
-    test('a curated exercise launches camera detection where supported; dataset exercises use manual guidance', () {
+    test('the hand-off carries the movement pattern: full form for tested exercises, basic tracking for dataset ones', () {
       final squat = PlannedExercise(exercise: ExerciseLibrary.byId('squat')!, sets: 3, reps: 10, seconds: 0, restSeconds: 60);
       expect(ExerciseFormRules.supports(SessionExercise.fromPlanned(squat).id), isTrue);
+      expect(MovementPatterns.forSession(SessionExercise.fromPlanned(squat)).level, CameraSupportLevel.fullForm);
       final db = PlannedExercise(exercise: ExerciseCatalog.byId('Dumbbell_Bench_Press')!, sets: 3, reps: 10, seconds: 0, restSeconds: 60);
-      expect(ExerciseFormRules.supports(SessionExercise.fromPlanned(db).id), isFalse);
+      final session = SessionExercise.fromPlanned(db);
+      expect(ExerciseFormRules.supports(session.id), isFalse, reason: 'no tested form rules for this one');
+      expect(session.movement, MovementPattern.benchPress);
+      expect(MovementPatterns.forSession(session).level, CameraSupportLevel.basicTracking);
     });
 
     test('plan snapshot is versioned and its fingerprint is stable', () {

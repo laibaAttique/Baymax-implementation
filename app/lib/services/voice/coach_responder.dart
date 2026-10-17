@@ -215,6 +215,14 @@ class CoachResponder {
         chips: const ['How do I do it?', 'Pause workout'],
       );
     }
+    final held = session.holdSeconds;
+    if (held != null) {
+      final planned = exercise.sets * exercise.seconds;
+      return CoachResponse(
+        "You've held the position for $held seconds${planned > 0 ? ' of the planned $planned' : ''}.",
+        chips: const ['How do I do it?', 'Pause workout'],
+      );
+    }
     final reps = session.reps;
     final target = exercise.targetReps;
     final buffer = StringBuffer("You've completed ${_reps(reps)}");
@@ -222,7 +230,7 @@ class CoachResponder {
       buffer.write(reps >= target ? ' — you have reached your target of $target' : ' of $target, ${target - reps} to go');
     }
     buffer.write('.');
-    if (session.partialReps > 0) {
+    if (session.partialReps > 0 && session.formScored) {
       buffer.write(' ${session.partialReps} more ${session.partialReps == 1 ? 'was' : 'were'} too shallow to count.');
     }
     return CoachResponse(buffer.toString(), chips: const ['Check my form', 'Pause workout']);
@@ -242,6 +250,14 @@ class CoachResponder {
     if (session.status == SessionStatus.paused) {
       return CoachResponse('Your session is paused, so I am not checking your form right now.',
           chips: const ['Resume workout']);
+    }
+    if (!session.formScored) {
+      return CoachResponse(
+        'For ${exercise.name} the camera only ${session.holdSeconds != null ? 'times your hold' : 'counts your repetitions'}; '
+        "it doesn't judge your form, so I can't tell you whether your technique is right."
+        '${exercise.steps.isEmpty ? '' : ' A key cue: ${exercise.steps.first}'}',
+        chips: const ['How do I do it?', 'How many reps?'],
+      );
     }
     final message = session.feedbackMessage;
     if (!session.landmarksDetected || !session.anglesCalculated || message == null) {
@@ -276,6 +292,12 @@ class CoachResponder {
       return CoachResponse(
         'There is no posture score in Manual Guidance mode because the camera is not analysing your form.',
         chips: const ['How do I do it?'],
+      );
+    }
+    if (!session.formScored) {
+      return CoachResponse(
+        'There is no posture score for this exercise: the camera only tracks the movement, it does not score form.',
+        chips: const ['How do I do it?', 'How many reps?'],
       );
     }
     final score = session.postureScore;

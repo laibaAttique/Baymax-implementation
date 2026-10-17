@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/plan.dart';
 import '../../models/workout_session.dart';
 import '../../services/exercise_library.dart';
-import '../../services/posture/exercise_form_rules.dart';
+import '../../services/posture/movement_patterns.dart';
 import '../../theme/app_theme.dart';
 import 'posture_mode.dart';
 
@@ -78,8 +78,9 @@ class _ExercisePickerScreenState extends State<ExercisePickerScreen> {
             );
           }
           final all = ExerciseLibrary.all;
-          final camera = [for (final e in all) if (ExerciseFormRules.supports(e.id)) e];
-          final manual = [for (final e in all) if (!ExerciseFormRules.supports(e.id)) e];
+          bool tracked(Exercise e) => MovementPatterns.resolve(e.id, e.movement, e.noTrackingReason).supportsCameraTracking;
+          final camera = [for (final e in all) if (tracked(e)) e];
+          final manual = [for (final e in all) if (!tracked(e)) e];
           return ListView(
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
             children: [

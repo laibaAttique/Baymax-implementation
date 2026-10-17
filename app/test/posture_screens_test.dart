@@ -158,13 +158,23 @@ void main() {
       expect(session.exercise!.id, 'squat', reason: 'selected exercise is carried across');
     });
 
-    testWidgets('an exercise without form rules can only use manual guidance', (tester) async {
-      await _pump(tester, const PostureModeSelection(request: _plank));
-      expect(find.textContaining('Camera tracking is not available for Plank Hold'), findsOneWidget);
+    testWidgets('an exercise the camera cannot follow can only use manual guidance, and says why', (tester) async {
+      const calfRaise = WorkoutSessionRequest(
+          exercise: SessionExercise(id: 'calf_raise', name: 'Calf Raises', group: 'legs', steps: ['Rise onto your toes'], sets: 2, reps: 12));
+      await _pump(tester, const PostureModeSelection(request: calfRaise));
+      expect(find.textContaining('Camera tracking is not available for Calf Raises'), findsOneWidget);
+      expect(find.textContaining('too small for the camera'), findsOneWidget);
       await _tapVisible(tester, find.text('Continue'));
       await _settle(tester);
       expect(find.byType(ManualGuidance), findsOneWidget);
       expect(permissions.cameraRequests, 0);
+    });
+
+    testWidgets('a plank offers camera hold timing, labelled as basic tracking', (tester) async {
+      await _pump(tester, const PostureModeSelection(request: _plank));
+      expect(find.textContaining('times your hold'), findsOneWidget);
+      expect(find.textContaining('Form is not scored'), findsOneWidget);
+      expect(find.textContaining('Camera tracking is not available'), findsNothing);
     });
 
     testWidgets('skip returns to the previous screen', (tester) async {

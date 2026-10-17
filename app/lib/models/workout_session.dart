@@ -1,3 +1,4 @@
+import 'movement_pattern.dart';
 import 'plan.dart';
 
 /// How an exercise session is being tracked (Module 5).
@@ -32,6 +33,15 @@ class SessionExercise {
   /// ending with its rule id. Empty when nothing was adapted or the exercise is not from a plan.
   final List<String> safetyNotes;
 
+  /// How the camera can follow this exercise (Module 5). Null when unknown; the curated mapping is used then.
+  final MovementPattern? movementValue;
+  final NoTrackingReason? noTrackingValue;
+
+  MovementPattern get movement => movementValue ?? curatedMovements[id] ?? MovementPattern.none;
+  NoTrackingReason? get noTrackingReason => movement != MovementPattern.none
+      ? null
+      : (noTrackingValue ?? curatedNoTracking[id] ?? (group == 'mobility' ? NoTrackingReason.stretch : NoTrackingReason.noTracker));
+
   const SessionExercise({
     required this.id,
     required this.name,
@@ -45,6 +55,8 @@ class SessionExercise {
     this.seconds = 0,
     this.restSeconds = 0,
     this.safetyNotes = const [],
+    this.movementValue,
+    this.noTrackingValue,
   });
 
   factory SessionExercise.fromPlanned(PlannedExercise p) => SessionExercise(
@@ -60,6 +72,8 @@ class SessionExercise {
         seconds: p.seconds,
         restSeconds: p.restSeconds,
         safetyNotes: p.ruleNotes,
+        movementValue: p.exercise.movement,
+        noTrackingValue: p.exercise.noTrackingReason,
       );
 
   /// For an exercise that is not part of a plan. The dose is a neutral default
@@ -76,6 +90,8 @@ class SessionExercise {
         reps: e.timed ? 0 : e.baseReps,
         seconds: e.timed ? e.baseSeconds : 0,
         restSeconds: restSeconds,
+        movementValue: e.movement,
+        noTrackingValue: e.noTrackingReason,
       );
 
   int get targetReps => timed ? 0 : sets * reps;
@@ -146,6 +162,12 @@ class SessionSummary {
   final bool skipped;
   final bool tooDifficult;
 
+  /// Camera mode: false when the exercise only had basic tracking (repetitions or hold time, no form score).
+  final bool formScored;
+
+  /// Camera mode, static holds: seconds the camera saw the person in position. Null otherwise.
+  final int? holdSeconds;
+
   const SessionSummary({
     required this.exercise,
     required this.mode,
@@ -160,6 +182,8 @@ class SessionSummary {
     this.averageFps,
     this.skipped = false,
     this.tooDifficult = false,
+    this.formScored = true,
+    this.holdSeconds,
   });
 
   bool get postureAnalysed => mode == SessionMode.camera;

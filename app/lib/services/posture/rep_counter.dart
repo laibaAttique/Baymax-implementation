@@ -12,6 +12,7 @@ class RepEvent {
   /// True for a full repetition; false for an attempt that turned back before
   /// reaching valid depth (not counted).
   final bool counted;
+  /// Furthest angle reached in the cycle: the smallest for a bending movement, the largest for an opening one.
   final double minAngle;
   final int durationMs;
   const RepEvent({required this.counted, required this.minAngle, required this.durationMs});
@@ -33,11 +34,21 @@ class RepEvent {
 ///    happens on the return to the top;
 ///  * if tracking is lost for longer than [trackingTimeoutMs] the cycle in
 ///    progress is dropped and the user must return to the top first.
+///
+/// An [ExerciseFormConfig.opening] movement (rest bent, peak open) is counted by the same state machine on the mirrored
+/// angle 360° − θ, so rest maps to "top" and the peak to "bottom"; nothing else changes.
 class RepCounter {
   final ExerciseFormConfig config;
   final int trackingTimeoutMs;
 
-  RepCounter(this.config, {this.trackingTimeoutMs = 1500});
+  RepCounter(this.config, {this.trackingTimeoutMs = 1500})
+      : _extended = config.opening ? 360 - config.extendedAngle : config.extendedAngle,
+        _attempt = config.opening ? 360 - config.attemptAngle : config.attemptAngle,
+        _flexed = config.opening ? 360 - config.flexedAngle : config.flexedAngle;
+
+  final double _extended;
+  final double _attempt;
+  final double _flexed;
 
   static const _smoothing = 0.5;
   static const _framesToConfirmTop = 2;
@@ -52,14 +63,15 @@ class RepCounter {
   int _outliers = 0;
   int _topFrames = 0;
   int _repStartMs = 0;
-  double _minAngle = 180;
+  double _minAngle = 360;
 
-  /// The smoothed angle the state machine is working from.
-  double? get smoothedAngle => _smoothed;
+  /// The smoothed joint angle the state machine is working from, in degrees.
+  double? get smoothedAngle => _smoothed == null ? null : (config.opening ? 360 - _smoothed! : _smoothed);
 
   /// Feed one valid angle sample. Returns an event when a cycle ends.
-  RepEvent? update(double angle, int timestampMs) {
-    if (!angle.isFinite) return null;
+  RepEvent? update(double jointAngle, int timestampMs) {
+    if (!jointAngle.isFinite) return null;
+    final angle = config.opening ? 360 - jointAngle : jointAngle;
     final last = _lastSampleMs;
     if (last != null && timestampMs - last > trackingTimeoutMs) _resetTracking();
 
@@ -78,11 +90,11 @@ class RepCounter {
 
     switch (phase) {
       case RepPhase.unknown:
-        _topFrames = s >= config.extendedAngle ? _topFrames + 1 : 0;
+        _topFrames = s >= _extended ? _topFrames + 1 : 0;
         if (_topFrames >= _framesToConfirmTop) phase = RepPhase.top;
         return null;
       case RepPhase.top:
-        if (s < config.attemptAngle) {
+        if (s < _attempt) {
           phase = RepPhase.descending;
           _repStartMs = timestampMs;
           _minAngle = s;
@@ -90,21 +102,21 @@ class RepCounter {
         return null;
       case RepPhase.descending:
         _minAngle = math.min(_minAngle, s);
-        if (s <= config.flexedAngle) {
+        if (s <= _flexed) {
           phase = RepPhase.bottom;
-        } else if (s >= config.extendedAngle) {
+        } else if (s >= _extended) {
           return _finish(timestampMs, reachedDepth: false);
         }
         return null;
       case RepPhase.bottom:
         _minAngle = math.min(_minAngle, s);
-        if (s > config.flexedAngle + 15) phase = RepPhase.ascending;
+        if (s > _flexed + 15) phase = RepPhase.ascending;
         return null;
       case RepPhase.ascending:
-        if (s <= config.flexedAngle) {
+        if (s <= _flexed) {
           _minAngle = math.min(_minAngle, s);
           phase = RepPhase.bottom;
-        } else if (s >= config.extendedAngle) {
+        } else if (s >= _extended) {
           return _finish(timestampMs, reachedDepth: true);
         }
         return null;
@@ -120,7 +132,7 @@ class RepCounter {
     } else {
       partialAttempts++;
     }
-    return RepEvent(counted: reachedDepth, minAngle: _minAngle, durationMs: duration);
+    return RepEvent(counted: reachedDepth, minAngle: config.opening ? 360 - _minAngle : _minAngle, durationMs: duration);
   }
 
   void _resetTracking() {

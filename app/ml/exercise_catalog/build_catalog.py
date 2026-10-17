@@ -14,6 +14,7 @@ secondaryMuscles, instructions, category, images.
 
 What is DERIVED here (under `derived`, never mixed with dataset fields, each with its rule in `provenance`):
   group, impact, tags, joints, levelNumber, complexity, equipmentKey, timed  - team rules below, pending professional review
+  movement (pattern for camera tracking)                                  - movement_patterns.py, pending review
   met                                                                      - 2024 Adult Compendium mapping (met_mapping_rules.json)
 Nothing here is a medical judgement; the app's safety rules (lib/services/workout_rules/safety_rule_repository.dart) decide eligibility.
 
@@ -29,6 +30,9 @@ from datetime import date
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 APP = os.path.normpath(os.path.join(HERE, '..', '..'))
+sys.path.insert(0, HERE)
+import movement_patterns  # noqa: E402  (camera tracking patterns, Module 5)
+
 DEFAULT_COMMIT = 'f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5'  # 2026-09-27, latest at import time
 REPO = 'yuhonas/free-exercise-db'
 DATASET_FIELDS = ['id', 'name', 'force', 'level', 'mechanic', 'equipment', 'primaryMuscles', 'secondaryMuscles',
@@ -181,6 +185,9 @@ def derive(rec):
     level = LEVELS[rec['level']]
     complexity = 3 if level == 3 else (2 if rec.get('mechanic') == 'compound' else 1)
     timed = cat in ('cardio', 'stretching') or 'isometric' in tags
+    pattern, reason, rule = movement_patterns.classify(rec)
+    movement = {'pattern': pattern, 'reason': reason, 'rule': rule}
+    prov['movement'] = 'movement_patterns.py rule ' + rule
     return {
         'group': group,
         'impact': impact,
@@ -191,6 +198,7 @@ def derive(rec):
         'equipmentKey': EQUIPMENT_KEYS[rec.get('equipment')],
         'timed': timed,
         'icon': ICON[group],
+        'movement': movement,
         'provenance': prov,
         'reviewStatus': 'pending',
     }

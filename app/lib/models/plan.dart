@@ -1,4 +1,5 @@
 import 'food.dart';
+import 'movement_pattern.dart';
 
 /// An exercise in the library (Module 3, FR-2 templates draw from this).
 class Exercise {
@@ -87,6 +88,19 @@ class Exercise {
   /// Review state of the MET mapping and team-derived fields: pending until a qualified reviewer approves them.
   final String reviewStatus;
 
+  /// Movement pattern for camera tracking (Module 5), when stated explicitly (catalogue entries). Curated exercises use
+  /// [curatedMovements].
+  final MovementPattern? movementValue;
+  final NoTrackingReason? noTrackingValue;
+
+  /// How the camera can follow this exercise; [MovementPattern.none] when it cannot.
+  MovementPattern get movement => movementValue ?? curatedMovements[id] ?? MovementPattern.none;
+
+  /// Why there is no camera tracking, or null when there is.
+  NoTrackingReason? get noTrackingReason => movement != MovementPattern.none
+      ? null
+      : (noTrackingValue ?? curatedNoTracking[id] ?? (group == 'mobility' ? NoTrackingReason.stretch : NoTrackingReason.noTracker));
+
   const Exercise({
     required this.id,
     required this.name,
@@ -117,6 +131,8 @@ class Exercise {
     this.metMatchValue,
     this.metDescription = '',
     this.reviewStatus = 'pending',
+    this.movementValue,
+    this.noTrackingValue,
   });
 
   /// A free-exercise-db catalogue entry (`assets/data/exercise_catalog.json`, built by ml/exercise_catalog/build_catalog.py).
@@ -126,6 +142,7 @@ class Exercise {
     final data = j['dataset'] as Map<String, dynamic>;
     final derived = j['derived'] as Map<String, dynamic>;
     final met = j['met'] as Map<String, dynamic>;
+    final movement = derived['movement'] as Map<String, dynamic>?;
     final timed = derived['timed'] as bool? ?? false;
     final category = data['category'] as String? ?? '';
     String title(String m) => m.isEmpty ? m : '${m[0].toUpperCase()}${m.substring(1)}';
@@ -159,6 +176,8 @@ class Exercise {
       metMatchValue: met['match'] as String? ?? 'unmatched',
       metDescription: met['description'] as String? ?? '',
       reviewStatus: met['reviewStatus'] as String? ?? 'pending',
+      movementValue: MovementPattern.byName(movement?['pattern'] as String?) ?? MovementPattern.none,
+      noTrackingValue: NoTrackingReason.byName(movement?['reason'] as String?),
     );
   }
 
@@ -194,6 +213,8 @@ class Exercise {
         metMatchValue: metMatchValue,
         metDescription: metDescription ?? this.metDescription,
         reviewStatus: reviewStatus,
+        movementValue: movementValue,
+        noTrackingValue: noTrackingValue,
       );
 
   /// True when an energy estimate can be made for this exercise.

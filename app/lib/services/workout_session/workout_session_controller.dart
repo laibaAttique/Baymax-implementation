@@ -41,6 +41,12 @@ abstract class WorkoutSessionContext implements Listenable {
 
   /// Null when posture is not being analysed or there is not enough data yet.
   int? get postureScore;
+
+  /// Camera mode: false when the exercise only has basic tracking (reps or hold time counted, form not judged).
+  bool get formScored;
+
+  /// Camera mode, static holds: seconds held in position so far. Null otherwise.
+  int? get holdSeconds;
   SessionSummary? get lastSummary;
 
   bool get hasActiveSession;
@@ -87,6 +93,8 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
   String? _feedbackMessage;
   bool _feedbackIsWarning = false;
   int? _postureScore;
+  int? _holdSeconds;
+  bool _formScored = true;
   bool _finishRequested = false;
   SessionSummary? _lastSummary;
   final List<SessionSummary> _history = [];
@@ -119,6 +127,11 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
   bool get feedbackIsWarning => _feedbackIsWarning;
   @override
   int? get postureScore => _postureScore;
+
+  @override
+  int? get holdSeconds => _holdSeconds;
+  @override
+  bool get formScored => _formScored;
   @override
   SessionSummary? get lastSummary => _lastSummary;
   @override
@@ -132,7 +145,9 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
   /// performs the actual stop.
   bool get finishRequested => _finishRequested;
 
-  void start(WorkoutSessionRequest request, SessionMode mode) {
+  /// [formScored]: false for camera sessions with basic tracking only, so nothing (screen or voice) claims a form verdict.
+  void start(WorkoutSessionRequest request, SessionMode mode, {bool formScored = true}) {
+    _formScored = formScored;
     _exercise = request.exercise;
     _upNext = request.upNext;
     _mode = mode;
@@ -146,6 +161,7 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
     _feedbackMessage = null;
     _feedbackIsWarning = false;
     _postureScore = null;
+    _holdSeconds = null;
     _finishRequested = false;
     _clock
       ..reset()
@@ -195,7 +211,9 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
         _landmarksDetected != analysis.landmarksDetected ||
         _anglesCalculated != analysis.anglesCalculated ||
         _feedbackMessage != analysis.feedback.message ||
-        _postureScore != analysis.postureScore;
+        _postureScore != analysis.postureScore ||
+        _holdSeconds != analysis.holdSeconds;
+    _holdSeconds = analysis.holdSeconds;
     _reps = analysis.reps;
     _partialReps = analysis.partialReps;
     _landmarksDetected = analysis.landmarksDetected;
@@ -221,6 +239,7 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
     double? averageFps,
     bool skipped = false,
     bool tooDifficult = false,
+    bool formScored = true,
   }) {
     final exercise = _exercise;
     if (exercise == null) throw StateError('finish() called without a session');
@@ -239,6 +258,8 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
       averageFps: averageFps,
       skipped: skipped,
       tooDifficult: tooDifficult,
+      formScored: formScored,
+      holdSeconds: report?.holdSeconds,
     );
     _lastSummary = summary;
     _history.add(summary);

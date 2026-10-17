@@ -135,6 +135,11 @@ class _PostureFeedbackScreenState extends State<PostureFeedbackScreen> with Sing
       return _buildNoScore(Icons.accessibility_new, 'Posture not analysed',
           'This was a Manual Guidance session, so there is no posture score.');
     }
+    if (!_summary.formScored) {
+      return _buildNoScore(Icons.track_changes, 'Form not scored',
+          'This exercise has basic camera tracking: the camera ${_summary.holdSeconds != null ? 'timed your hold' : 'counted your repetitions'}, '
+          'but posture is only scored for exercises with tested form rules.');
+    }
     if (score == null) {
       return _buildNoScore(Icons.hourglass_empty, 'Not enough data',
           'No complete repetition was detected, so a posture score could not be calculated.');
@@ -251,7 +256,9 @@ class _PostureFeedbackScreenState extends State<PostureFeedbackScreen> with Sing
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  _buildStatCard('${s.reps}', s.postureAnalysed ? 'Total Reps' : 'Reps (confirmed)'),
+                  s.holdSeconds != null
+                      ? _buildStatCard('${s.holdSeconds} s', 'Held')
+                      : _buildStatCard('${s.reps}', s.postureAnalysed ? 'Total Reps' : 'Reps (confirmed)'),
                   _buildStatCard(_duration, 'Duration'),
                   _buildStatCard(accuracy == null ? '—' : '$accuracy%', 'Accuracy'),
                 ],
@@ -274,7 +281,7 @@ class _PostureFeedbackScreenState extends State<PostureFeedbackScreen> with Sing
                       verdict: FeedbackVerdict.notAssessed,
                       text: 'Form was not assessed. Use Camera Detection for form feedback.',
                     )),
-                  if (s.partialReps > 0)
+                  if (s.partialReps > 0 && s.formScored)
                     _buildFeedbackItem(FormFeedbackItem(
                       id: 'partial',
                       verdict: FeedbackVerdict.notAssessed,

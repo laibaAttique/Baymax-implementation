@@ -1,5 +1,7 @@
 import '../../models/workout_session.dart';
 import 'exercise_form_rules.dart';
+import 'hold_tracker.dart';
+import 'movement_patterns.dart';
 import 'pose_landmark.dart';
 import 'rep_counter.dart';
 
@@ -27,6 +29,10 @@ class PostureAnalysis {
   final LiveFeedback feedback;
   final int? postureScore;
 
+  /// Static holds: seconds held in position so far, and whether the person is in position now. Null for repetitions.
+  final int? holdSeconds;
+  final bool inPosition;
+
   const PostureAnalysis({
     required this.landmarksDetected,
     required this.anglesCalculated,
@@ -37,6 +43,8 @@ class PostureAnalysis {
     required this.repEvent,
     required this.feedback,
     required this.postureScore,
+    this.holdSeconds,
+    this.inPosition = false,
   });
 }
 
@@ -50,6 +58,9 @@ class SessionFormReport {
   final int validFrames;
   final int totalFrames;
 
+  /// Static holds: total seconds in position. Null for repetitions.
+  final int? holdSeconds;
+
   const SessionFormReport({
     required this.reps,
     required this.partialReps,
@@ -58,6 +69,7 @@ class SessionFormReport {
     required this.feedback,
     required this.validFrames,
     required this.totalFrames,
+    this.holdSeconds,
   });
 }
 
@@ -83,11 +95,21 @@ class _Tally {
 ///
 /// Frames with missing or low-visibility landmarks never enter either value,
 /// and checks are only assessed while the user is moving (not standing idle).
+///
+/// BASIC TRACKING ([ExerciseFormConfig.scored] false): repetitions are counted the same way, but there are no posture
+/// checks, no posture score and no accuracy, and the report says so. HOLDS ([TrackingKind.hold]): no repetitions; the
+/// [HoldTracker] measures the time in position.
 class PostureEngine {
   final ExerciseFormConfig config;
   final RepCounter _counter;
+  final HoldTracker? _hold;
 
-  PostureEngine(this.config) : _counter = RepCounter(config);
+  PostureEngine(this.config)
+      : _counter = RepCounter(config),
+        _hold = config.kind == TrackingKind.hold ? HoldTracker(config) : null;
+
+  bool get isHold => _hold != null;
+  int? get holdSeconds => _hold?.heldSeconds;
 
   static const repPassRate = 0.8;
   static const minFramesForAccuracy = 15;
@@ -110,11 +132,12 @@ class PostureEngine {
   int get partialReps => _counter.partialAttempts;
 
   int? get postureScore {
+    if (!config.scored) return null;
     final attempts = reps + partialReps;
     return attempts == 0 ? null : (100 * _acceptableReps / attempts).round().clamp(0, 100);
   }
 
-  int? get accuracy => _frames.evaluated < minFramesForAccuracy
+  int? get accuracy => !config.scored || _frames.evaluated < minFramesForAccuracy
       ? null
       : (100 * _frames.passed / _frames.evaluated).round().clamp(0, 100);
 
@@ -122,14 +145,25 @@ class PostureEngine {
     _totalFrames++;
     if (!frame.hasPose) {
       _failStreak.clear();
+      _hold?.update(null, frame.timestampMs);
       return _result(false, null, null, const LiveFeedback('Step into the frame so the camera can see you'));
     }
     final m = PoseAnalyzer.measure(frame, config);
     if (m == null) {
       _failStreak.clear();
-      return _result(true, null, null, LiveFeedback(config.setupHint));
+      _hold?.update(null, frame.timestampMs);
+      return _result(true, null, null, LiveFeedback(_missingHint(frame)));
     }
     _validFrames++;
+
+    final hold = _hold;
+    if (hold != null) {
+      hold.update(m, frame.timestampMs);
+      final s = hold.heldSeconds;
+      final clock = '${s ~/ 60}:${(s % 60).toString().padLeft(2, '0')}';
+      return _result(true, m, null,
+          hold.inPosition ? LiveFeedback('Holding — $clock. Keep breathing') : LiveFeedback(config.holdCue, isWarning: true));
+    }
 
     final event = _counter.update(m.primaryAngle, frame.timestampMs);
     final phase = _counter.phase;
@@ -197,7 +231,9 @@ class PostureEngine {
     }
     if (acceptable) _acceptableReps++;
 
-    if (!event.counted) {
+    if (!config.scored) {
+      if (event.counted) _setTransient(LiveFeedback('Rep $reps counted'), nowMs, 1500);
+    } else if (!event.counted) {
       _setTransient(LiveFeedback(config.depthCue, isWarning: true, highlight: _primaryJoints), nowMs, 2500);
     } else if (firstFailed != null) {
       _setTransient(LiveFeedback(firstFailed.cue, isWarning: true, highlight: firstFailed.highlight), nowMs, 2500);
@@ -207,6 +243,14 @@ class PostureEngine {
   }
 
   List<int> get _primaryJoints => [config.leftPrimary.vertex, config.rightPrimary.vertex];
+
+  /// "Can't see your knees and ankles — <setup hint>" when the needed landmarks are missing.
+  String _missingHint(PoseFrame frame) {
+    final missing = PoseAnalyzer.missingLandmarks(frame, config).map(MovementPatterns.landmarkName).toSet().toList();
+    if (missing.isEmpty) return config.setupHint;
+    final parts = missing.length == 1 ? missing.first : '${missing.sublist(0, missing.length - 1).join(', ')} and ${missing.last}';
+    return "Can't see your $parts — ${config.setupHint[0].toLowerCase()}${config.setupHint.substring(1)}";
+  }
 
   void _setTransient(LiveFeedback feedback, int nowMs, int forMs) {
     _transient = feedback;
@@ -238,11 +282,17 @@ class PostureEngine {
       repEvent: event,
       feedback: feedback,
       postureScore: postureScore,
+      holdSeconds: _hold?.heldSeconds,
+      inPosition: _hold?.inPosition ?? false,
     );
   }
 
-  /// The end-of-session report. Safe to call at any time.
-  SessionFormReport buildReport() {
+  /// The end-of-session report. Safe to call at any time. [targetSeconds] is the planned hold time (sets × seconds);
+  /// [movement] names what basic tracking measured (e.g. "elbow bend").
+  SessionFormReport buildReport({int? targetSeconds, String movement = 'movement'}) {
+    final hold = _hold;
+    if (hold != null) return _holdReport(hold, targetSeconds);
+    if (!config.scored) return _basicReport(movement);
     final attempts = reps + partialReps;
     final items = <FormFeedbackItem>[];
 
@@ -303,6 +353,51 @@ class PostureEngine {
       postureScore: postureScore,
       accuracy: accuracy,
       feedback: items,
+      validFrames: _validFrames,
+      totalFrames: _totalFrames,
+    );
+  }
+
+  SessionFormReport _basicReport(String movement) => SessionFormReport(
+        reps: reps,
+        partialReps: partialReps,
+        postureScore: null,
+        accuracy: null,
+        feedback: [
+          FormFeedbackItem(
+            id: 'tracking',
+            verdict: FeedbackVerdict.notAssessed,
+            text: reps == 0
+                ? 'Basic tracking: no repetitions were detected'
+                : 'Basic tracking: $reps reps counted from your $movement. Form was not scored for this exercise',
+          ),
+        ],
+        validFrames: _validFrames,
+        totalFrames: _totalFrames,
+      );
+
+  SessionFormReport _holdReport(HoldTracker hold, int? targetSeconds) {
+    final held = hold.heldSeconds;
+    final target = targetSeconds ?? 0;
+    return SessionFormReport(
+      reps: 0,
+      partialReps: 0,
+      postureScore: null,
+      accuracy: null,
+      holdSeconds: held,
+      feedback: [
+        FormFeedbackItem(
+          id: 'hold',
+          verdict: held == 0
+              ? FeedbackVerdict.notAssessed
+              : (target > 0 && held >= target ? FeedbackVerdict.passed : FeedbackVerdict.failed),
+          text: held == 0
+              ? 'The camera did not see you in the hold position'
+              : 'Held in position for $held s${target > 0 ? ' of the planned $target s' : ''} (longest ${hold.longestMs ~/ 1000} s)',
+        ),
+        const FormFeedbackItem(
+            id: 'tracking', verdict: FeedbackVerdict.notAssessed, text: 'Basic tracking: time in position was measured; form was not scored'),
+      ],
       validFrames: _validFrames,
       totalFrames: _totalFrames,
     );

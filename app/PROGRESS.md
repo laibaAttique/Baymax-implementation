@@ -44,6 +44,19 @@ Found while writing the cases: nothing in the app failed; the only defects were 
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-17 — Module 5: camera tracking for generated exercises (movement patterns)
+
+Write-up: `docs/MODULE5_CAMERA_PATTERNS.md`; audit: `docs/review/camera_support_audit.md` / `.csv`.
+
+- **Root cause:** Camera Detection was a fixed list of 4 curated ids (`ExerciseFormRules.supports`); every dataset exercise and 69 curated ones were greyed out. 4 of the 532 schedulable exercises had camera tracking.
+- **Movement patterns:** every exercise now has one (stable-id based): dataset ones from `ml/exercise_catalog/movement_patterns.py` at import (`derived.movement`, rule id recorded), curated ones by hand in `lib/models/movement_pattern.dart`. The pattern travels with the exercise from Module 4 to Module 5.
+- **Trackers:** `MovementPatterns` maps 20 rep patterns and 2 hold patterns to tracker configs; `RepCounter` now also counts opening movements (presses, raises, bridges); new `HoldTracker` times planks and wall sits only while in position. The 4 tuned configurations keep full form scoring, unchanged.
+- **Levels:** 4 full posture evaluation, 281 basic repetition tracking, 3 basic hold tracking, 244 not reliably supported (each shows its reason; Manual Guidance always available). Basic tracking shows and saves no posture score, accuracy or "too shallow" verdict; the voice coach says form is not judged.
+- **Guidance:** missing landmarks are named ("Can't see your knees and ankles — …").
+- **Storage:** unchanged `workoutSessions` schema; no database rule change.
+- **Tests:** full suite 829 pass, 13 skipped, 0 fail. New `test/camera_patterns_test.dart` (39 + voice) and `test/camera_support_report_test.dart`; one old test that asserted a plank could not use the camera now uses calf raises.
+- **Not verified:** basic-tracking thresholds on real people (only synthetic poses); needs device testing per pattern.
+
 ### 2026-10-17 — Module 4: training profiles from the Module 2 classification (ledger K2–K8, K10)
 
 Ledger: `docs/MODULE4_PHASE_LEDGER.md`; design: `docs/MODULE4_KB_IMPLEMENTATION_PLAN.md`; write-up: `docs/MODULE4_WORKOUT_KNOWLEDGE_BASE.md` §4a, §6a, §6b.

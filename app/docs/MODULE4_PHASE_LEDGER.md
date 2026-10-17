@@ -65,3 +65,5 @@ Status values: **done** (implemented + tests green) · **verified** (also checke
 - 2026-10-17 — K2–K8, K10 implemented: intensity bands, classification profiles + notes, band cap, Diabetic rest-day
   limit, weekly tallies, profile card, Module 5 safety notes, review sheet. Module 4 profile tests: 19 pass. Full suite:
   787 pass, 13 skipped, 0 fail (TEMP on D:, `--concurrency=2`). K9 still blocked by B1.
+- 2026-10-17 — Module 5 integration: camera tracking by movement pattern for every schedulable exercise (4 full, 281
+  basic reps, 3 basic hold, 244 not supported with reasons). See `docs/MODULE5_CAMERA_PATTERNS.md`. Full suite 829 pass.
