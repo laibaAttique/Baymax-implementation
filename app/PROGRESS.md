@@ -33,6 +33,22 @@ Legend: 🔴 not started · 🟡 in progress / partial · 🟢 done & verified
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-17 — Module 4: knowledge-based personalised workout generation (extends the existing plan generator)
+
+Full write-up: `docs/MODULE4_WORKOUT_KNOWLEDGE_BASE.md`. Built on Aamna's Module 3 engine (`PlanGenerator` + `ExerciseSelector`, curated 73-exercise library), which stays in place.
+
+- **Exercise knowledge base:** free-exercise-db (Unlicense) imported at pinned commit `f00c92c` by `ml/exercise_catalog/build_catalog.py` (idempotent, `--check` mode) into `assets/data/exercise_catalog.json`: 876 records → **871 imported** (5 without instructions dropped), 0 invalid image paths, dataset fields unchanged, derived planning fields separate with provenance.
+- **MET:** 27 activities copied verbatim from the public 2024 Adult Compendium pages (`compendium_2024_subset.json`); category/equipment/force/mechanic-based mapping rules → **181 exact, 606 approximate (flagged), 84 unmatched (no MET, never scheduled)**. All curated-library METs were also checked against the Compendium: no disagreements. One calorie formula everywhere (MET × kg × active h).
+- **Safety rule repository** (`lib/services/workout_rules/`, version `rules-2026.10.1`, all rules pending review): the Module 3 restrictions moved unchanged (a test shows identical results for 3,000 random people against a copy of the old code), plus screening (warning symptoms / heart condition without clearance → no plan; missing age/height/weight → needs info), injury rules and a program-scope rule (no maximal lifting, no expert dataset exercises). Conservative merging; unapproved rules cannot relax anything.
+- **Readiness questions** (new screen; `users/{uid}/workoutReadiness`), **plan snapshots** (`users/{uid}/workoutPlan`, versioned, FNV-1a fingerprint), equipment exercises from the catalogue when the user owns that equipment (labelled as dataset instructions, unreviewed).
+- **UI:** gate screen when blocked, readiness prompt, photo thumbnails, "Adapted for you" chips, exercise detail with looping photos, kcal, MET match line, rule notes, technique source. Dashboard, chatbot and voice coach no longer present a blocked plan as rest days.
+- **Fixed while doing this:** the post-merge commit had restored an older exercise detail screen (lost Aamna's reasons/equipment/"Start exercise" version) — rebuilt from hers; the posture mode screen's notification bell did nothing (now the shared bell); `UserSession._rebuildPlan` dropped "Too Difficult" adjustments.
+- **Tests:** 487 pass, 13 skipped, 1 failing (`community_test` settings — fails identically on commit fb98995, not touched here). New: `test/workout_rules_test.dart` (16), `test/module4_test.dart` (26).
+- **Not done / blocked:**
+  - **Database rules:** the live rules changed since 2026-10-15 — someone deployed a version **without** `workoutSessions`/`exerciseFeedback` and with new `dietReviews`, `specialistPlans`, `planChoice` and changed `appointments`/`slots` rules that this branch does not have. Nothing was deployed; the files must be merged with the newest teammate rules first. Until then Module 5 session saving and Module 4 readiness/plan storage are refused by the live database.
+  - **Android build** could not run: drive C: is full (0.04–0.13 GB free) and Gradle keeps its caches there. Tests were run with `TEMP=D:	mplutter`.
+  - No professional review of rules, MET mappings or derived fields; readiness clearance is self-reported.
+
 ### 2026-10-15 — Modules 5 and 6 verified on a phone (Redmi Note 11, Android 13)
 
 Checked by the module owner on the device, with logs/Firebase checked from the dev PC:

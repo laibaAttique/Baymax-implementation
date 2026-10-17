@@ -1,0 +1,44 @@
+{
+  "version": "met-map-2026.10.1",
+  "description": "Maps free-exercise-db records to 2024 Adult Compendium activities. Rules are checked in order and the first match wins. A rule matches on the dataset's own fields (category, equipment, force, mechanic) and, where the Compendium names the movement, on the exercise name as well. Name patterns are never used alone.",
+  "confidenceLevels": {
+    "exact": "The exercise is the Compendium activity (or is named in its description) and the prescribed intensity fits the entry. MET value assigned.",
+    "approximate": "The exercise belongs to a broader Compendium class. MET value assigned, flagged for review, never treated as validated.",
+    "unmatched": "No reliable Compendium activity. No MET value is assigned and the exercise is not scheduled."
+  },
+  "rules": [
+    {"id": "cardio-stationary-bike", "category": ["cardio"], "nameAny": ["^bicycling, stationary$"], "code": "01200", "match": "exact", "why": "Same activity; 'general' effort."},
+    {"id": "cardio-recumbent-bike", "category": ["cardio"], "nameAny": ["^recumbent bike$"], "code": "01200", "match": "approximate", "why": "Recumbent cycling is listed only as stationary cycling, general."},
+    {"id": "cardio-elliptical", "category": ["cardio"], "nameAny": ["^elliptical trainer$"], "code": "02048", "match": "exact", "why": "Same activity at the moderate effort Baymax prescribes."},
+    {"id": "cardio-rowing", "category": ["cardio"], "nameAny": ["^rowing, stationary$"], "code": "02071", "match": "exact", "why": "Same activity at the moderate effort Baymax prescribes."},
+    {"id": "cardio-stair-machine", "category": ["cardio"], "nameAny": ["^stairmaster$"], "code": "02065", "match": "exact", "why": "Stair treadmill ergometer, general."},
+    {"id": "cardio-step-mill", "category": ["cardio"], "nameAny": ["^step mill$"], "code": "02065", "match": "approximate", "why": "A step mill is a stair machine; listed only as stair treadmill ergometer, general."},
+    {"id": "cardio-rope", "category": ["cardio"], "nameAny": ["^rope jumping$"], "code": "02068", "match": "exact", "why": "Rope skipping exercise, general."},
+    {"id": "cardio-jog-treadmill", "category": ["cardio"], "nameAny": ["^jogging, treadmill$"], "code": "12020", "match": "exact", "why": "Jogging, general, self-selected pace."},
+    {"id": "cardio-run-treadmill", "category": ["cardio"], "nameAny": ["^running, treadmill$"], "code": "12020", "match": "approximate", "why": "Speed not given; jogging, general is the closest listed entry."},
+    {"id": "cardio-walk-treadmill", "category": ["cardio"], "nameAny": ["^walking, treadmill$"], "code": "17200", "match": "approximate", "why": "Speed not given; brisk walking for exercise is assumed."},
+    {"id": "cardio-trail", "category": ["cardio"], "nameAny": ["^trail running/walking$"], "code": "12010", "match": "approximate", "why": "Mixed walking and running; jog/walk combination."},
+    {"id": "cardio-other", "category": ["cardio"], "code": null, "match": "unmatched", "why": "Outdoor cycling, sled sprints and skating have no entry in the activities used here."},
+
+    {"id": "stretch-foam-roll", "category": ["stretching"], "equipment": ["foam roll"], "code": null, "match": "unmatched", "why": "Self-massage with a foam roller is not a Compendium activity."},
+    {"id": "stretch-static", "category": ["stretching"], "force": ["static"], "code": "02101", "match": "exact", "why": "Static stretching, mild."},
+    {"id": "stretch-other", "category": ["stretching"], "code": "02101", "match": "approximate", "why": "Dynamic or partner stretches are listed only as stretching, mild."},
+
+    {"id": "plyo-hiit-moves", "category": ["plyometrics"], "nameAny": ["burpee", "mountain climber", "squat jump", "jump squat"], "code": "02214", "match": "approximate", "why": "The Compendium names these moves for vigorous HIIT sessions; single sets with rest are less intense."},
+    {"id": "plyo-general", "category": ["plyometrics"], "code": "02057", "match": "approximate", "why": "Body weight resistance exercises, high intensity."},
+
+    {"id": "strength-squat-deadlift", "category": ["strength", "powerlifting"], "equipment": ["barbell", "dumbbell", "kettlebells"], "mechanic": ["compound"], "nameAny": ["squat", "deadlift"], "code": "02052", "match": "exact", "why": "Resistance (weight) training, squats, deadlift."},
+    {"id": "strength-kb-swing", "category": ["strength", "plyometrics"], "equipment": ["kettlebells"], "nameAny": ["swing"], "code": "02058", "match": "exact", "why": "Kettlebell swings."},
+    {"id": "strength-ball", "category": ["strength"], "equipment": ["exercise ball"], "code": "02112", "match": "approximate", "why": "Therapeutic exercise ball, Fitball exercise."},
+    {"id": "strength-foam-roll", "category": ["strength"], "equipment": ["foam roll"], "code": null, "match": "unmatched", "why": "Foam-roller work is not a Compendium activity."},
+    {"id": "strength-external-load", "category": ["strength"], "equipment": ["barbell", "dumbbell", "cable", "machine", "kettlebells", "bands", "e-z curl bar", "medicine ball"], "code": "02054", "match": "approximate", "why": "Resistance (weight) training, multiple exercises, 8-15 reps at varied resistance: matches the 8-15 rep prescription, but is a session-level class."},
+    {"id": "strength-calisthenics", "category": ["strength"], "equipment": ["body only", null], "nameAny": ["push-?up", "pushup", "sit-?up", "pull-?up", "chin-?up", "lunge", "\\bdips?\\b"], "code": "02022", "match": "exact", "why": "Calisthenics (pushups, sit ups, pull-ups, lunges), moderate effort."},
+    {"id": "strength-mat-core", "category": ["strength"], "equipment": ["body only", null], "nameAny": ["crunch", "plank", "curl-?up"], "code": "02024", "match": "exact", "why": "Calisthenics (curl ups, abdominal crunches, plank), light effort."},
+    {"id": "strength-bodyweight", "category": ["strength"], "equipment": ["body only", null], "code": "02056", "match": "approximate", "why": "Body weight resistance exercises, general."},
+    {"id": "strength-other-equipment", "category": ["strength"], "equipment": ["other"], "code": null, "match": "unmatched", "why": "Equipment not stated ('other'), so the load cannot be judged."},
+
+    {"id": "powerlifting", "category": ["powerlifting"], "code": "02050", "match": "approximate", "why": "Resistance training, power lifting or body building, vigorous effort."},
+    {"id": "olympic", "category": ["olympic weightlifting"], "code": "02050", "match": "approximate", "why": "Weightlifting is listed only as power lifting or body building, vigorous effort."},
+    {"id": "strongman", "category": ["strongman"], "code": null, "match": "unmatched", "why": "Strongman events have no Compendium entry."}
+  ]
+}

@@ -3,6 +3,7 @@ import 'package:app/theme/app_theme.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app/models/health_profile.dart';
 import 'package:app/models/plan.dart';
+import 'package:app/models/workout_readiness.dart';
 import 'package:app/screens/allergy/allergen_result_screen.dart';
 import 'package:app/screens/health_profiling/bmi_result.dart';
 import 'package:app/screens/health_profiling/health_classification.dart';
@@ -63,7 +64,22 @@ void main() {
     expect(find.text('View workout plan'), findsOneWidget);
   });
 
+  testWidgets('Workout plan with a heart condition is held back until readiness is answered (Module 4 screening)', (tester) async {
+    await setUpSession(tester, _profile(conditions: ['Heart Disease']));
+    await _pump(tester, const WorkoutPlan());
+    expect(tester.takeException(), isNull);
+    expect(find.text('A few answers are needed first'), findsOneWidget);
+    expect(find.textContaining('SCR-CARDIAC-UNANSWERED'), findsOneWidget);
+    expect(find.text('Dynamic Warm-Up'), findsNothing);
+
+    UserSession.instance.readiness = const WorkoutReadiness(clearance: false);
+    await setUpSession(tester, _profile(conditions: ['Heart Disease']));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('clearance comes first'), findsOneWidget);
+  });
+
   testWidgets('Workout plan lists exercises, shows medical notes and can switch days', (tester) async {
+    UserSession.instance.readiness = const WorkoutReadiness(clearance: true);
     await setUpSession(tester, _profile(conditions: ['Heart Disease']));
     await _pump(tester, const WorkoutPlan());
 

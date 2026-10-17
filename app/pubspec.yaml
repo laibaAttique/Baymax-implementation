@@ -79,6 +79,7 @@ flutter:
     - assets/data/foods.json
     - assets/data/foods_bulk.json
     - assets/data/exercises.json
+    - assets/data/exercise_catalog.json
     - assets/models/
 
   # To add assets to your application, add an assets section, like this:

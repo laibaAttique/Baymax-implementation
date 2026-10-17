@@ -94,6 +94,34 @@ class SourcesScreen extends StatelessWidget {
           'All team-written cues and these fields should be reviewed by a qualified trainer or physiotherapist before release.',
     ),
     _Source(
+      'Exercise knowledge base and equipment exercises (Module 4)',
+      'The full free-exercise-db dataset (871 of its 876 exercises; 5 have no instructions) is bundled at a fixed version, with its own names, muscles, '
+          'difficulty, instructions and photos kept exactly as published. Each exercise is matched to a 2024 Compendium activity by its category, equipment, '
+          'force and mechanic (and by name only where the Compendium names the movement): 181 exact matches, 606 approximate matches and 84 with no reliable match, '
+          'which get no energy value and are never scheduled. Equipment exercises from the dataset are offered only when you say you own that equipment; '
+          'body-weight plans still use the curated library above.',
+      [
+        'free-exercise-db (Unlicense), github.com/yuhonas/free-exercise-db, commit f00c92c (27 Sep 2026).',
+        'Herrmann SD, et al. 2024 Adult Compendium of Physical Activities. J Sport Health Sci 2024; 13(1): 6–12. Activity codes copied from pacompendium.com (retrieved 17 Oct 2026).',
+      ],
+      caveat: 'Approximate MET matches use a broader activity class (for example "resistance training, multiple exercises, 8–15 reps") and are flagged for review. '
+          'The dataset\'s instructions are shown as published and are labelled as not reviewed; its impact, joint and difficulty fields used for planning are derived by '
+          'documented team rules (ml/exercise_catalog/build_catalog.py). Calories are an approximate gross estimate for active time only (rest excluded).',
+    ),
+    _Source(
+      'Exercise readiness questions and the safety rule repository (Module 4)',
+      'Before a plan is made, you can answer four questions: warning symptoms, whether a doctor has cleared you, current injuries and your equipment. '
+          'Warning symptoms, or a heart condition without a doctor\'s clearance, stop the plan from being generated and you are asked to see a doctor first. '
+          'Injuries remove high-impact moves that load that area and add a pain-free-range reminder to the others. '
+          'All rules are kept in one versioned repository with their sources; when several apply, the most restrictive value is used.',
+      [
+        'Riebe D, et al. Updating ACSM\'s recommendations for exercise preparticipation health screening. Med Sci Sports Exerc 2015; 47(11): 2473–2479.',
+        'Warburton DER, et al. The Physical Activity Readiness Questionnaire for Everyone (PAR-Q+). Health Fit J Can 2011; 4(2): 3–23.',
+      ],
+      caveat: 'The questions follow the topics of these screening tools in our own words; they are a screening aid, not the official questionnaires and not a diagnosis. '
+          'Every rule is pending review by a qualified clinician, and no plan from Baymax is medical clearance.',
+    ),
+    _Source(
       'How exercises are chosen for you',
       'First the safety rules remove every exercise that is not allowed for you (your conditions, BMI and age). Then the remaining exercises for each part of the session are ranked using your answers: '
           'your fitness capacity (from your activity level, lowered a little for age 50+ and for BMI 30+) against each exercise\'s difficulty; your goal (weight loss favours higher energy use, muscle gain favours strength moves); '

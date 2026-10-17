@@ -4,6 +4,7 @@ import '../../models/workout_session.dart';
 import '../../services/app_permissions.dart';
 import '../../services/posture/exercise_form_rules.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/notification_bell.dart';
 import 'camera_detection.dart';
 import 'manual_guidance.dart';
 
@@ -160,9 +161,7 @@ class _PostureModeSelectionState extends State<PostureModeSelection> {
       appBar: AppBar(
         title: const Text('Select Mode', style: TextStyle(fontSize: 16)),
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.notifications_none), onPressed: () {}),
-        ],
+        actions: const [NotificationBell(), SizedBox(width: 8)],
       ),
       body: SingleChildScrollView(
         child: Column(

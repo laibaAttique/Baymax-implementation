@@ -238,6 +238,11 @@ class _HomeDashboardState extends State<HomeDashboard> {
       title = 'No plan yet';
       subtitle = 'Complete your health profile';
       subIcon = null;
+    } else if (!plan.workoutAvailable) {
+      // Module 4 screening stopped the plan: never show this as a rest day.
+      title = plan.gate!.status == WorkoutGateStatus.needsClearance ? 'Clearance needed' : 'Safety check needed';
+      subtitle = 'Open Workout to see what is needed';
+      subIcon = Icons.fact_check_rounded;
     } else if (today == null) {
       title = 'Rest day';
       subtitle = 'Recover, stretch and hydrate';

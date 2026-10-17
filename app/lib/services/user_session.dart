@@ -2,10 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import '../models/health_profile.dart';
 import '../models/plan.dart';
+import '../models/workout_readiness.dart';
 import 'api_client.dart';
 import 'calorie_optimizer.dart';
 import 'food_log_service.dart';
 import 'weight_service.dart';
+import 'exercise_catalog.dart';
 import 'exercise_library.dart';
 import 'gamification.dart' show UserRole;
 import 'food_database.dart';
@@ -15,6 +17,7 @@ import 'ml/health_risk_model.dart';
 import 'notification_service.dart';
 import 'plan_generator.dart';
 import 'profile_service.dart';
+import 'workout_readiness_service.dart';
 import 'workout_session/workout_log_service.dart';
 import 'role_service.dart';
 
@@ -34,6 +37,14 @@ class UserSession extends ChangeNotifier {
   final Set<String> tooDifficult = {};
   ClassificationResult? classification;
   PersonalizedPlan? plan;
+
+  /// Module 4: the pre-exercise readiness answers (equipment, injuries, warning symptoms, doctor's clearance). Until they
+  /// are answered, people with a heart condition get no plan and everyone else gets the curated body-weight plan.
+  WorkoutReadiness readiness = WorkoutReadiness.unanswered;
+  WorkoutReadinessStore readinessStore = FirebaseWorkoutReadinessStore.instance;
+
+  /// True once the profile came from the signed-in account (not a local preview or test), so the plan may be stored.
+  bool _fromAccount = false;
 
   /// Module 3 (FR-4): what the user's own weight and food logs say about their maintenance calories (null until first computed).
   CalorieEstimate? calorieEstimate;
@@ -82,6 +93,12 @@ class UserSession extends ChangeNotifier {
     } catch (_) {
       // Not critical: the plan is generated without difficulty adjustments.
     }
+    try {
+      readiness = await readinessStore.load() ?? WorkoutReadiness.unanswered;
+    } catch (_) {
+      // Offline: keep the last answers this session had (unanswered on a cold start — the conservative choice).
+    }
+    _fromAccount = true;
     await setProfile(HealthProfile.fromJson(data));
     role = await RoleService.instance.fetchMine();
     notifyListeners();
@@ -92,7 +109,7 @@ class UserSession extends ChangeNotifier {
   /// Use after profiling completes (or after any profile change).
   Future<void> setProfile(HealthProfile p) async {
     await _loadModels();
-    final results = await Future.wait([FoodDatabase.load(), ExerciseLibrary.load()]);
+    final results = await Future.wait([FoodDatabase.load(), ExerciseLibrary.load(), _loadCatalog()]);
     final foods = results.first as FoodDatabase;
     profile = p;
     classification = classifier.classify(p);
@@ -100,15 +117,52 @@ class UserSession extends ChangeNotifier {
     // An estimate built on a different weight/activity level no longer applies.
     final est = calorieEstimate;
     if (est != null && (est.priorTdee - p.tdee).abs() > 1) calorieEstimate = null;
-    plan = PlanGenerator(foods, workoutModel: workoutModel, optimizer: AdaptiveCalorieOptimizer(calorieEstimate)).generate(p, classification!, variant: p.planVariant, tooDifficult: tooDifficult);
+    plan = _generate(foods, p, classification!);
     notifyListeners();
+  }
+
+  PersonalizedPlan _generate(FoodDatabase foods, HealthProfile p, ClassificationResult c) {
+    final generated = PlanGenerator(foods, workoutModel: workoutModel, optimizer: AdaptiveCalorieOptimizer(calorieEstimate))
+        .generate(p, c, variant: p.planVariant, tooDifficult: tooDifficult, readiness: readiness);
+    if (_fromAccount) _storeSnapshot(generated, p);
+    return generated;
+  }
+
+  /// Module 4: keeps a versioned copy of the current plan in the account. Best effort, never blocks the UI.
+  void _storeSnapshot(PersonalizedPlan generated, HealthProfile p) {
+    final snapshot = WorkoutPlanSnapshot.build(
+      plan: generated,
+      goal: p.primaryGoal,
+      catalogCommit: ExerciseCatalog.datasetCommit,
+      profileUpdatedAt: 0,
+      weightKg: p.weightKg,
+    );
+    readinessStore.savePlanSnapshot(snapshot).catchError((_) => false);
+  }
+
+  /// The catalogue is optional for planning: without it only the curated library is used.
+  static Future<void> _loadCatalog() async {
+    try {
+      await ExerciseCatalog.load();
+    } catch (_) {
+      // Asset missing or unreadable.
+    }
+  }
+
+  /// Module 4: saves new readiness answers and regenerates the plan with them. Throws [ApiException] if saving fails
+  /// (the answers still apply for this session).
+  Future<void> saveReadiness(WorkoutReadiness r) async {
+    readiness = r;
+    final p = profile;
+    if (p != null) await setProfile(p);
+    await readinessStore.save(r);
   }
 
   Future<void> _rebuildPlan() async {
     final p = profile, c = classification;
     if (p == null || c == null) return;
     final foods = await FoodDatabase.load();
-    plan = PlanGenerator(foods, workoutModel: workoutModel, optimizer: AdaptiveCalorieOptimizer(calorieEstimate)).generate(p, c, variant: p.planVariant);
+    plan = _generate(foods, p, c);
   }
 
   /// Module 3, FR-4: reads the last 28 days of weigh-ins and food logs, updates [calorieEstimate] and rebuilds the plan so the
@@ -188,5 +242,7 @@ class UserSession extends ChangeNotifier {
     plan = null;
     calorieEstimate = null;
     role = UserRole.user;
+    readiness = WorkoutReadiness.unanswered;
+    _fromAccount = false;
   }
 }

@@ -28,7 +28,7 @@ class UserPlanScheduleProvider implements WorkoutScheduleProvider {
   const UserPlanScheduleProvider();
 
   @override
-  bool get hasPlan => UserSession.instance.plan != null;
+  bool get hasPlan => UserSession.instance.plan?.workoutAvailable ?? false;
 
   @override
   TodaySchedule? today() {
