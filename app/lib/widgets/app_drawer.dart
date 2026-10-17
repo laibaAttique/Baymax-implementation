@@ -6,7 +6,7 @@ import '../screens/chatbot/chatbot_screen.dart';
 import '../screens/community/community_screen.dart';
 import '../screens/nutrition/calorie_target_screen.dart';
 import '../screens/nutrition/nutrition_plan_screen.dart';
-import '../screens/posture_detection/exercise_picker.dart';
+import '../screens/posture_detection/posture_home.dart';
 import '../screens/profile/settings_screen.dart';
 import '../screens/profile/sources_screen.dart';
 import '../screens/specialists/my_appointments_screen.dart';
@@ -108,7 +108,7 @@ class AppDrawer extends StatelessWidget {
             _tile(context, Icons.local_fire_department_rounded, 'Calorie target & weight', page: const CalorieTargetScreen()),
             _tile(context, Icons.set_meal_rounded, 'Nutrition plan', page: const NutritionPlanScreen()),
             _tile(context, Icons.shield_rounded, 'Allergy scanner', page: const AllergyScanner()),
-            _tile(context, Icons.self_improvement_rounded, 'Posture check', page: const ExercisePickerScreen()),
+            _tile(context, Icons.self_improvement_rounded, 'Posture check', page: const PostureDetectionHome()),
             _tile(context, Icons.trending_up_rounded, 'Body transformation', page: const BodyTransformScreen()),
             _heading('Community & help'),
             _tile(context, Icons.emoji_events_rounded, 'Progress & leaderboard', page: const CommunityScreen()),

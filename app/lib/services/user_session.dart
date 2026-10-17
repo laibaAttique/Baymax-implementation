@@ -66,6 +66,30 @@ class UserSession extends ChangeNotifier {
 
   bool get hasProfile => profile != null;
 
+  /// True while [load] is fetching the account's profile and building the plan (screens show a spinner, not "no plan").
+  bool loading = false;
+
+  PersonalizedPlan? _idFor;
+  String? _planId;
+
+  /// Identity of the plan on screen: its versioned fingerprint (`WorkoutPlanSnapshot`). Changes when the plan is
+  /// regenerated or rebuilt with different exercises, so progress of an old plan is never carried over.
+  String? get planId {
+    final p = plan;
+    if (p == null || !p.workoutAvailable) return null;
+    if (!identical(p, _idFor)) {
+      _idFor = p;
+      _planId = WorkoutPlanSnapshot.build(
+        plan: p,
+        goal: profile?.primaryGoal ?? '',
+        catalogCommit: ExerciseCatalog.datasetCommit,
+        profileUpdatedAt: 0,
+        weightKg: profile?.weightKg ?? 0,
+      )['fingerprint'] as String?;
+    }
+    return _planId;
+  }
+
   static bool _modelsTried = false;
 
   /// Phase 2: Gradient Boosting workout-calorie model (only present if it beat the MET baseline).
@@ -92,6 +116,17 @@ class UserSession extends ChangeNotifier {
 
   /// Loads the profile from the server. Returns false if the user has none yet.
   Future<bool> load() async {
+    loading = true;
+    notifyListeners();
+    try {
+      return await _load();
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> _load() async {
     final data = await ProfileService.instance.fetchMine();
     if (data == null) {
       _reset();

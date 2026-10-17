@@ -29,6 +29,32 @@ class PoseMeasurements {
   /// Knee separation ÷ ankle separation. Only measured when [facingCamera].
   final double? kneeToAnkleRatio;
 
+  // --- secondary measurements (Module 5 form evaluation for all movement patterns) ---
+
+  /// Mean of the visible sides, degrees: hip–knee–ankle, shoulder–elbow–wrist, shoulder–hip–knee.
+  final double? kneeAngle;
+  final double? elbowAngle;
+  final double? hipAngle;
+
+  /// Upper arm away from the torso (hip–shoulder–elbow), degrees; small = arm by the side.
+  final double? upperArmAngle;
+
+  /// Hip position against the shoulder→ankle (or knee) line, as a fraction of that line's length, measured only when the
+  /// body is roughly horizontal (plank, push-up). Positive = hips above the line (piking), negative = below (sagging).
+  final double? hipOffset;
+
+  /// |left − right| of the rep-driving angle, only when both sides are visible and the person faces the camera.
+  final double? armAsymmetry;
+
+  /// Ankle separation ÷ hip width, only when facing the camera.
+  final double? ankleSpread;
+
+  /// Set by the engine: change of [torsoLean] from the person's own starting posture in this set.
+  final double? torsoSway;
+
+  /// Set by the engine: true while the movement is at its turning point (bottom of a squat, top of a press).
+  final bool atPeak;
+
   const PoseMeasurements({
     required this.primaryAngle,
     this.leftPrimary,
@@ -37,7 +63,36 @@ class PoseMeasurements {
     this.bodyLine,
     this.facingCamera = false,
     this.kneeToAnkleRatio,
+    this.kneeAngle,
+    this.elbowAngle,
+    this.hipAngle,
+    this.upperArmAngle,
+    this.hipOffset,
+    this.armAsymmetry,
+    this.ankleSpread,
+    this.torsoSway,
+    this.atPeak = false,
   });
+
+  /// The same frame with the engine's context added.
+  PoseMeasurements withContext({double? torsoSway, bool atPeak = false}) => PoseMeasurements(
+        primaryAngle: primaryAngle,
+        leftPrimary: leftPrimary,
+        rightPrimary: rightPrimary,
+        torsoLean: torsoLean,
+        bodyLine: bodyLine,
+        facingCamera: facingCamera,
+        kneeToAnkleRatio: kneeToAnkleRatio,
+        kneeAngle: kneeAngle,
+        elbowAngle: elbowAngle,
+        hipAngle: hipAngle,
+        upperArmAngle: upperArmAngle,
+        hipOffset: hipOffset,
+        armAsymmetry: armAsymmetry,
+        ankleSpread: ankleSpread,
+        torsoSway: torsoSway,
+        atPeak: atPeak,
+      );
 }
 
 enum CheckOutcome { pass, fail, notApplicable }
@@ -58,23 +113,32 @@ abstract class FormCheck {
   List<int> get highlight;
 
   CheckOutcome evaluate(PoseMeasurements m);
+
+  /// The correction for this particular failure (e.g. "raise" vs "lower" your hips). Usually [cue].
+  String cueFor(PoseMeasurements m);
 }
 
 /// Torso must not fold forward past [maxLeanDegrees] from vertical.
 class TorsoLeanCheck implements FormCheck {
   final double maxLeanDegrees;
-  const TorsoLeanCheck(this.maxLeanDegrees);
+  final String? _cue;
+  final String? _failed;
+  const TorsoLeanCheck(this.maxLeanDegrees, {String? cue, String? failedText})
+      : _cue = cue,
+        _failed = failedText;
 
   @override
   String get id => 'torso';
   @override
   String get label => 'Back alignment';
   @override
-  String get cue => 'Keep your back straight — lift your chest';
+  String get cue => _cue ?? 'Keep your back straight — lift your chest';
+  @override
+  String cueFor(PoseMeasurements m) => cue;
   @override
   String get passedText => 'Back alignment was maintained';
   @override
-  String get failedText => 'Torso leaned too far forward';
+  String get failedText => _failed ?? 'Torso leaned too far forward';
   @override
   List<int> get highlight =>
       const [PoseIndex.leftShoulder, PoseIndex.rightShoulder, PoseIndex.leftHip, PoseIndex.rightHip];
@@ -99,6 +163,8 @@ class KneeTrackingCheck implements FormCheck {
   String get label => 'Knee tracking';
   @override
   String get cue => 'Push your knees out over your toes';
+  @override
+  String cueFor(PoseMeasurements m) => cue;
   @override
   String get passedText => 'Knees tracked properly over toes';
   @override
@@ -126,6 +192,8 @@ class BodyLineCheck implements FormCheck {
   @override
   String get cue => 'Keep your body in a straight line — brace your core';
   @override
+  String cueFor(PoseMeasurements m) => cue;
+  @override
   String get passedText => 'Body stayed in a straight line';
   @override
   String get failedText => 'Hips sagged or lifted out of line';
@@ -142,6 +210,18 @@ class BodyLineCheck implements FormCheck {
 
 /// Repetitions (a movement cycle) or a static hold (time in position).
 enum TrackingKind { reps, hold }
+
+/// How much the form checks of a configuration can be trusted.
+enum FormEvaluation {
+  /// Checks and posture score; thresholds tuned on real movements (the original four exercises).
+  validated,
+
+  /// Real, measurable checks with live corrections, awaiting real-device validation: no numeric score is shown.
+  experimental,
+
+  /// No form checks: repetitions or hold time only.
+  none,
+}
 
 /// How the two sides are combined into the rep-driving angle.
 enum AngleAggregate {
@@ -187,8 +267,10 @@ class ExerciseFormConfig {
   final TrackingKind kind;
 
   /// Posture checks and the posture score are reported only for configurations that were tried on real movements
-  /// (the four original exercises). Basic tracking counts movement cycles or hold time and says that form is not scored.
-  final bool scored;
+  /// (the four original exercises, [FormEvaluation.validated]). Experimental configurations run real checks and give live
+  /// corrections but show no score; [FormEvaluation.none] counts movement cycles or hold time only.
+  final FormEvaluation evaluation;
+  bool get scored => evaluation == FormEvaluation.validated;
 
   /// Hold: the person is "in position" while the rep-driving angle is within [holdMinAngle]–[holdMaxAngle] and the torso
   /// lean from vertical within [holdMinLean]–[holdMaxLean] (null bounds are not checked).
@@ -240,7 +322,7 @@ class ExerciseFormConfig {
     this.opening = false,
     this.aggregate = AngleAggregate.mean,
     this.kind = TrackingKind.reps,
-    this.scored = true,
+    this.evaluation = FormEvaluation.validated,
     this.holdMinAngle,
     this.holdMaxAngle,
     this.holdMinLean,
@@ -400,19 +482,47 @@ class PoseAnalyzer {
       );
     }
 
+    double? meanAngle(JointTriple l, JointTriple r) => _mean(angle(l), angle(r));
+    const le = PoseIndex.leftElbow, re = PoseIndex.rightElbow, lw = PoseIndex.leftWrist, rw = PoseIndex.rightWrist;
+    const lk = PoseIndex.leftKnee, rk = PoseIndex.rightKnee, la = PoseIndex.leftAnkle, ra = PoseIndex.rightAnkle;
+    final kneeAngle = meanAngle(const JointTriple(lh, lk, la), const JointTriple(rh, rk, ra));
+    final elbowAngle = meanAngle(const JointTriple(ls, le, lw), const JointTriple(rs, re, rw));
+    final hipAngle = meanAngle(const JointTriple(ls, lh, lk), const JointTriple(rs, rh, rk));
+    final upperArm = meanAngle(const JointTriple(lh, ls, le), const JointTriple(rh, rs, re));
+
+    // Hips against the shoulder→ankle (or knee) line, image coordinates, only when the body is roughly horizontal.
+    double? hipOffset;
+    final lineL = config.bodyLineLeft ?? la, lineR = config.bodyLineRight ?? ra;
+    double? offsetFor(int s, int h, int e) {
+      if (!visible(s) || !visible(h) || !visible(e)) return null;
+      final sp = img(s), hp = img(h), ep = img(e);
+      final dx = ep.x - sp.x, dy = ep.y - sp.y;
+      final length = (ep - sp).length;
+      if (length < 1e-6 || dx.abs() < dy.abs()) return null; // more vertical than horizontal: not a plank-like position
+      final t = (hp.x - sp.x) / dx;
+      if (t < 0.05 || t > 0.95) return null;
+      final lineY = sp.y + t * dy;
+      return (lineY - hp.y) / length; // image y grows downwards
+    }
+
+    hipOffset = _mean(offsetFor(ls, lh, lineL), offsetFor(rs, rh, lineR));
+
     var facing = false;
     double? kneeRatio;
+    double? armAsymmetry;
+    double? ankleSpread;
     if (leftTorso && rightTorso) {
       final shoulderWidth = (img(ls) - img(rs)).length;
       final torso = (Vec3.midpoint(img(ls), img(rs)) - Vec3.midpoint(img(lh), img(rh))).length;
       facing = torso > 1e-6 && shoulderWidth / torso >= _facingRatio;
-      const lk = PoseIndex.leftKnee, rk = PoseIndex.rightKnee;
-      const la = PoseIndex.leftAnkle, ra = PoseIndex.rightAnkle;
       if (facing && visible(lk) && visible(rk) && visible(la) && visible(ra)) {
         final ankles = (img(la).x - img(ra).x).abs();
         // Feet together give a meaningless ratio, so require a real stance.
         if (ankles > shoulderWidth * 0.3) kneeRatio = (img(lk).x - img(rk).x).abs() / ankles;
+        final hipWidth = (img(lh).x - img(rh).x).abs();
+        if (hipWidth > 1e-6) ankleSpread = ankles / hipWidth;
       }
+      if (facing && left != null && right != null) armAsymmetry = (left - right).abs();
     }
 
     return PoseMeasurements(
@@ -423,6 +533,13 @@ class PoseAnalyzer {
       bodyLine: bodyLine,
       facingCamera: facing,
       kneeToAnkleRatio: kneeRatio,
+      kneeAngle: kneeAngle,
+      elbowAngle: elbowAngle,
+      hipAngle: hipAngle,
+      upperArmAngle: upperArm,
+      hipOffset: hipOffset,
+      armAsymmetry: armAsymmetry,
+      ankleSpread: ankleSpread,
     );
   }
 

@@ -9,6 +9,7 @@ import '../../services/food_log_service.dart';
 import '../../services/gamification.dart';
 import '../../services/notification_service.dart';
 import '../../services/progress_service.dart';
+import '../../services/workout_session/plan_progress.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
@@ -45,6 +46,21 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
   @override
   void initState() {
     super.initState();
+    _loadDone();
+    PlanProgress.instance.addListener(_onProgress);
+    PlanProgress.instance.loadToday();
+  }
+
+  @override
+  void dispose() {
+    PlanProgress.instance.removeListener(_onProgress);
+    super.dispose();
+  }
+
+  /// A session finished: show its tick, and the day's tick if that completed the day.
+  void _onProgress() {
+    if (!mounted) return;
+    setState(() {});
     _loadDone();
   }
 
@@ -221,8 +237,10 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
     );
   }
 
-  Widget _buildExerciseCard(PlannedExercise p, List<String> notes, int index, List<PlannedExercise> queue) {
+  Widget _buildExerciseCard(PlannedExercise p, List<String> notes, int index, List<PlannedExercise> queue, int weekday) {
     final e = p.exercise;
+    // Module 5 → 4: done today through a camera or guided session that reached its target.
+    final doneToday = weekday == PlanProgress.instance.todayIndex && PlanProgress.instance.isDoneToday(weekday, index);
     final color = e.level == 1 ? AppTheme.success : (e.level == 2 ? AppTheme.warning : AppTheme.error);
     return Reveal(
       index: index,
@@ -231,7 +249,8 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
         child: GlassCard(
           radius: AppTheme.rMedium + 2,
           semanticLabel: '${e.name}, ${p.prescription}. Open details',
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ExerciseDetail(planned: p, safetyNotes: notes, queue: queue))),
+          onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (_) => ExerciseDetail(planned: p, safetyNotes: notes, queue: queue, weekday: weekday))),
           child: Row(
             children: [
               ExerciseCatalog.imagesFor(e).isEmpty
@@ -255,6 +274,7 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                         Text(p.prescription, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
                         InfoChip(e.levelLabel, color: color),
                         if (p.ruleNotes.isNotEmpty) const InfoChip('Adapted for you', color: AppTheme.teal),
+                        if (doneToday) const InfoChip('Done today', icon: Icons.check_rounded, color: AppTheme.success),
                       ],
                     ),
                     if (p.reasons.isNotEmpty)
@@ -484,7 +504,7 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
-                          children: [for (var i = 0; i < day.exercises.length; i++) _buildExerciseCard(day.exercises[i], plan.restrictionNotes, i, day.exercises)],
+                          children: [for (var i = 0; i < day.exercises.length; i++) _buildExerciseCard(day.exercises[i], plan.restrictionNotes, i, day.exercises, selected)],
                         ),
                       ),
                     ],
@@ -576,7 +596,8 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                     label: isToday ? "Start today's workout" : 'Preview workout',
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => ExerciseDetail(planned: day.exercises.first, safetyNotes: plan.restrictionNotes, queue: day.exercises)),
+                      MaterialPageRoute(
+                          builder: (_) => ExerciseDetail(planned: day.exercises.first, safetyNotes: plan.restrictionNotes, queue: day.exercises, weekday: selected)),
                     ),
                   ),
                 ),

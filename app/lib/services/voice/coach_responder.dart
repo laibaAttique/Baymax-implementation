@@ -230,7 +230,7 @@ class CoachResponder {
       buffer.write(reps >= target ? ' — you have reached your target of $target' : ' of $target, ${target - reps} to go');
     }
     buffer.write('.');
-    if (session.partialReps > 0 && session.formScored) {
+    if (session.partialReps > 0 && session.formChecked) {
       buffer.write(' ${session.partialReps} more ${session.partialReps == 1 ? 'was' : 'were'} too shallow to count.');
     }
     return CoachResponse(buffer.toString(), chips: const ['Check my form', 'Pause workout']);
@@ -251,7 +251,7 @@ class CoachResponder {
       return CoachResponse('Your session is paused, so I am not checking your form right now.',
           chips: const ['Resume workout']);
     }
-    if (!session.formScored) {
+    if (!session.formChecked) {
       return CoachResponse(
         'For ${exercise.name} the camera only ${session.holdSeconds != null ? 'times your hold' : 'counts your repetitions'}; '
         "it doesn't judge your form, so I can't tell you whether your technique is right."
@@ -268,11 +268,13 @@ class CoachResponder {
     }
     final score = session.postureScore;
     final scoreText = score == null ? '' : ' Your posture score so far is $score percent.';
+    // Experimental checks are real measurements, but say so.
+    final prefix = session.formScored ? '' : 'Experimental check: ';
     if (session.feedbackIsWarning) {
-      return CoachResponse('Here is what to fix: $message.$scoreText', chips: const ['How do I do it?', 'How many reps?']);
+      return CoachResponse('${prefix}Here is what to fix: $message.$scoreText', chips: const ['How do I do it?', 'How many reps?']);
     }
     return CoachResponse(
-      "I don't see a form problem right now. $message.$scoreText",
+      "${prefix}I don't see a form problem right now. $message.$scoreText",
       chips: const ['How many reps?', 'Pause workout'],
     );
   }
@@ -296,7 +298,9 @@ class CoachResponder {
     }
     if (!session.formScored) {
       return CoachResponse(
-        'There is no posture score for this exercise: the camera only tracks the movement, it does not score form.',
+        session.formChecked
+            ? "This exercise has experimental form checks, so there's no posture score yet. I'll still tell you what to correct."
+            : 'There is no posture score for this exercise: the camera only tracks the movement, it does not score form.',
         chips: const ['How do I do it?', 'How many reps?'],
       );
     }

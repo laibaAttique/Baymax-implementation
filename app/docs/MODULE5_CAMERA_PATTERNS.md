@@ -1,5 +1,9 @@
 # Module 5 — camera tracking for generated workout exercises
 
+> **Updated 2026-10-17 (later):** form checks now run for most patterns. Levels are now validated / experimental /
+> basic / unsupported (4 / 250 / 50 / 228 of 532), and four patterns were added. See
+> [MODULE4_5_INTEGRATION_REPORT.md](MODULE4_5_INTEGRATION_REPORT.md). The counts below describe the first version.
+
 ## Root cause (before 2026-10-17)
 
 Camera Detection was enabled by `ExerciseFormRules.supports(exerciseId)`, a fixed map of **four curated ids**

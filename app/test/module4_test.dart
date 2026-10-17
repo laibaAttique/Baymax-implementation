@@ -354,12 +354,12 @@ void main() {
     test('the hand-off carries the movement pattern: full form for tested exercises, basic tracking for dataset ones', () {
       final squat = PlannedExercise(exercise: ExerciseLibrary.byId('squat')!, sets: 3, reps: 10, seconds: 0, restSeconds: 60);
       expect(ExerciseFormRules.supports(SessionExercise.fromPlanned(squat).id), isTrue);
-      expect(MovementPatterns.forSession(SessionExercise.fromPlanned(squat)).level, CameraSupportLevel.fullForm);
+      expect(MovementPatterns.forSession(SessionExercise.fromPlanned(squat)).level, CameraSupportLevel.validatedForm);
       final db = PlannedExercise(exercise: ExerciseCatalog.byId('Dumbbell_Bench_Press')!, sets: 3, reps: 10, seconds: 0, restSeconds: 60);
       final session = SessionExercise.fromPlanned(db);
       expect(ExerciseFormRules.supports(session.id), isFalse, reason: 'no tested form rules for this one');
       expect(session.movement, MovementPattern.benchPress);
-      expect(MovementPatterns.forSession(session).level, CameraSupportLevel.basicTracking);
+      expect(MovementPatterns.forSession(session).level, CameraSupportLevel.basicTracking, reason: 'bench press: no measurable form check');
     });
 
     test('plan snapshot is versioned and its fingerprint is stable', () {

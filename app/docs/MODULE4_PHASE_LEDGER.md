@@ -67,3 +67,6 @@ Status values: **done** (implemented + tests green) · **verified** (also checke
   787 pass, 13 skipped, 0 fail (TEMP on D:, `--concurrency=2`). K9 still blocked by B1.
 - 2026-10-17 — Module 5 integration: camera tracking by movement pattern for every schedulable exercise (4 full, 281
   basic reps, 3 basic hold, 244 not supported with reasons). See `docs/MODULE5_CAMERA_PATTERNS.md`. Full suite 829 pass.
+- 2026-10-17 — Modules 4+5 integration: experimental posture evaluation (250 exercises), personalised Posture
+  Detection home, plan completion sync (`PlanProgress` → `activity/{date}`). 866 tests pass. **Open: deploy of the 5 new
+  `workoutSessions` rule fields (needs confirmation); device validation of experimental checks.**

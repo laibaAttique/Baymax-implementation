@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/models/movement_pattern.dart';
@@ -5,13 +6,15 @@ import 'package:app/models/plan.dart';
 import 'package:app/models/workout_readiness.dart';
 import 'package:app/services/exercise_catalog.dart';
 import 'package:app/services/exercise_library.dart';
+import 'package:app/services/exercise_repository.dart';
 import 'package:app/services/posture/movement_patterns.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// Module 5 audit: camera support for every exercise the Module 4 generator can schedule. Generated from the code, and
-/// the committed copy must match it. To regenerate after a change:
+/// Module 5 audit: camera capability for every exercise the Module 4 generator can schedule. Generated from the code;
+/// the committed copies must match it. To regenerate after a change:
 ///   BAYMAX_WRITE_REVIEW=1 flutter test test/camera_support_report_test.dart      (PowerShell: $env:BAYMAX_WRITE_REVIEW='1')
 const _csv = 'docs/review/camera_support_audit.csv';
+const _json = 'docs/review/camera_support_audit.json';
 const _md = 'docs/review/camera_support_audit.md';
 
 String _cell(Object? v) {
@@ -19,10 +22,10 @@ String _cell(Object? v) {
   return s.contains(RegExp(r'[",]')) ? '"${s.replaceAll('"', '""')}"' : s;
 }
 
-String _level(CameraSupportLevel l) => switch (l) {
-      CameraSupportLevel.fullForm => 'Full posture evaluation',
-      CameraSupportLevel.basicTracking => 'Basic camera tracking (repetitions)',
-      CameraSupportLevel.holdTracking => 'Basic camera tracking (hold time)',
+String levelLabel(ExercisePostureConfig c) => switch (c.level) {
+      CameraSupportLevel.validatedForm => 'Validated posture evaluation',
+      CameraSupportLevel.experimentalForm => 'Experimental posture evaluation',
+      CameraSupportLevel.basicTracking => c.supportsHoldTiming ? 'Basic camera tracking (hold time)' : 'Basic camera tracking (repetitions)',
       CameraSupportLevel.notSupported => 'Not reliably supported',
     };
 
@@ -34,21 +37,27 @@ List<Exercise> eligible() => [
           .where((e) => e.level <= 2 && !e.tags.contains('maximal')),
     ];
 
-({String csv, String md}) buildAudit() {
+({String csv, String json, String md}) buildAudit() {
   final rows = <List<Object?>>[
-    ['Exercise', 'Id', 'Source', 'Movement Pattern', 'Camera Support', 'Manual Support', 'Missing Capability'],
+    ['Exercise', 'Id', 'Source', 'Movement Pattern', 'Camera Support', 'Form Checks', 'Manual Support', 'Missing Capability'],
   ];
-  final counts = <CameraSupportLevel, int>{};
+  final records = <Map<String, Object?>>[];
+  final counts = <String, int>{};
   final reasons = <String, int>{};
-  final patterns = <MovementPattern, int>{};
+  final patterns = <MovementPattern, Map<String, int>>{};
   final list = eligible()..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
   for (final e in list) {
-    final c = MovementPatterns.resolve(e.id, e.movement, e.noTrackingReason);
-    counts[c.level] = (counts[c.level] ?? 0) + 1;
-    if (c.supportsCameraTracking) patterns[c.movementPattern] = (patterns[c.movementPattern] ?? 0) + 1;
+    final c = ExerciseRepository.postureFor(e);
+    final label = levelLabel(c);
+    counts[label] = (counts[label] ?? 0) + 1;
+    if (c.supportsCameraTracking) {
+      final m = patterns.putIfAbsent(c.movementPattern, () => {});
+      m[c.level.name] = (m[c.level.name] ?? 0) + 1;
+    }
     final missing = switch (c.level) {
-      CameraSupportLevel.fullForm => '',
-      CameraSupportLevel.basicTracking || CameraSupportLevel.holdTracking => 'Form scoring (thresholds not validated for this movement)',
+      CameraSupportLevel.validatedForm => '',
+      CameraSupportLevel.experimentalForm => 'Real-device validation of the form checks',
+      CameraSupportLevel.basicTracking => 'Form checks (no reliable camera measurement for this movement/variant)',
       CameraSupportLevel.notSupported => 'Camera tracking: ${e.noTrackingReason?.name ?? 'noTracker'}',
     };
     if (c.level == CameraSupportLevel.notSupported) {
@@ -60,24 +69,42 @@ List<Exercise> eligible() => [
       e.id,
       e.source == 'free-exercise-db' ? 'free-exercise-db' : 'curated',
       c.movementPattern == MovementPattern.none ? '—' : c.movementPattern.label,
-      _level(c.level),
+      label,
+      c.checkLabels.join('; '),
       e.steps.isNotEmpty ? 'Yes' : 'No (no instructions)',
       missing,
     ]);
+    records.add({
+      ...ExerciseRepository.entry(e).toJson(),
+      'cameraSupport': label,
+      'formChecks': c.checkLabels,
+      'trackingKind': c.supportsCameraTracking ? (c.isHold ? 'hold' : 'reps') : null,
+      'requiredLandmarks': c.requiredLandmarks,
+      'manualGuidance': e.steps.isNotEmpty,
+      'unsupportedReason': c.level == CameraSupportLevel.notSupported ? (e.noTrackingReason?.name ?? 'noTracker') : null,
+    });
   }
   final csv = '${rows.map((r) => r.map(_cell).join(',')).join('\n')}\n';
+  final json = '${const JsonEncoder.withIndent('  ').convert({'generatedBy': 'test/camera_support_report_test.dart', 'exercises': records})}\n';
 
+  const order = [
+    'Validated posture evaluation',
+    'Experimental posture evaluation',
+    'Basic camera tracking (repetitions)',
+    'Basic camera tracking (hold time)',
+    'Not reliably supported',
+  ];
   final b = StringBuffer()
-    ..writeln('# Camera support audit (generated)')
+    ..writeln('# Camera capability audit (generated)')
     ..writeln()
     ..writeln('Every exercise the Module 4 generator can schedule (curated library + free-exercise-db exercises for any '
-        'owned equipment, within the program rule). Generated by `test/camera_support_report_test.dart`; full table in '
-        '`camera_support_audit.csv`.')
+        'owned equipment, within the program rule). Generated by `test/camera_support_report_test.dart`; per-exercise '
+        'detail in `camera_support_audit.csv` and `camera_support_audit.json`.')
     ..writeln()
-    ..writeln('| Camera support | Exercises |')
+    ..writeln('| Camera capability | Exercises |')
     ..writeln('|---|---|');
-  for (final l in CameraSupportLevel.values) {
-    b.writeln('| ${_level(l)} | ${counts[l] ?? 0} |');
+  for (final l in order) {
+    b.writeln('| $l | ${counts[l] ?? 0} |');
   }
   b
     ..writeln('| **Total** | **${list.length}** |')
@@ -87,10 +114,11 @@ List<Exercise> eligible() => [
     ..writeln()
     ..writeln('## Tracked exercises by movement pattern')
     ..writeln()
-    ..writeln('| Pattern | Measures | Exercises |')
-    ..writeln('|---|---|---|');
+    ..writeln('| Pattern | Measures | Validated | Experimental | Basic |')
+    ..writeln('|---|---|---|---|---|');
   for (final p in MovementPattern.values.where(patterns.containsKey)) {
-    b.writeln('| ${p.label} | ${p.measures} | ${patterns[p]} |');
+    final m = patterns[p]!;
+    b.writeln('| ${p.label} | ${p.measures} | ${m['validatedForm'] ?? 0} | ${m['experimentalForm'] ?? 0} | ${m['basicTracking'] ?? 0} |');
   }
   b
     ..writeln()
@@ -103,14 +131,15 @@ List<Exercise> eligible() => [
   }
   b
     ..writeln()
-    ..writeln('"Full posture evaluation" = repetitions + posture checks + posture score, with thresholds tried on real '
-        'movements. "Basic camera tracking" = repetitions or hold time measured from the camera with team-chosen phase '
-        'thresholds; no posture score is shown. None of these values is a medical assessment.');
-  return (csv: csv, md: b.toString());
+    ..writeln('**Validated** = form checks + posture score, thresholds tuned on real movements (the original four '
+        'exercises). **Experimental** = real, measurable form checks with live corrections, not yet validated on a device, '
+        'so no score is shown. **Basic** = repetitions or hold time only. None of these values is a medical assessment, '
+        'and camera capability never makes an exercise eligible: only the Module 4 safety rules do.');
+  return (csv: csv, json: json, md: b.toString());
 }
 
 void main() {
-  test('the camera support audit covers every eligible exercise and is up to date', () {
+  test('the camera capability audit covers every eligible exercise and is up to date', () {
     ExerciseLibrary.loadFromJsonString(File('assets/data/exercises.json').readAsStringSync());
     ExerciseCatalog.loadFromJsonString(File('assets/data/exercise_catalog.json').readAsStringSync());
     final audit = buildAudit();
@@ -118,9 +147,10 @@ void main() {
       File(_csv)
         ..parent.createSync(recursive: true)
         ..writeAsStringSync(audit.csv);
+      File(_json).writeAsStringSync(audit.json);
       File(_md).writeAsStringSync(audit.md);
     }
-    for (final (path, text) in [(_csv, audit.csv), (_md, audit.md)]) {
+    for (final (path, text) in [(_csv, audit.csv), (_json, audit.json), (_md, audit.md)]) {
       expect(File(path).existsSync(), isTrue, reason: 'run with BAYMAX_WRITE_REVIEW=1 to create $path');
       expect(File(path).readAsStringSync().replaceAll('\r\n', '\n'), text, reason: '$path is out of date');
     }

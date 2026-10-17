@@ -96,8 +96,9 @@ class _Tally {
 /// Frames with missing or low-visibility landmarks never enter either value,
 /// and checks are only assessed while the user is moving (not standing idle).
 ///
-/// BASIC TRACKING ([ExerciseFormConfig.scored] false): repetitions are counted the same way, but there are no posture
-/// checks, no posture score and no accuracy, and the report says so. HOLDS ([TrackingKind.hold]): no repetitions; the
+/// EXPERIMENTAL ([FormEvaluation.experimental]): the same checks, live corrections and per-check feedback, but no posture
+/// score or accuracy, and the report says the checks are not yet validated. BASIC TRACKING ([FormEvaluation.none]):
+/// repetitions are counted the same way, but there are no posture checks, no posture score and no accuracy. HOLDS ([TrackingKind.hold]): no repetitions; the
 /// [HoldTracker] measures the time in position.
 class PostureEngine {
   final ExerciseFormConfig config;
@@ -127,6 +128,15 @@ class PostureEngine {
 
   LiveFeedback? _transient;
   int _transientUntilMs = 0;
+
+  /// The person's own torso lean while at rest in this set, for the sway check (exponential average).
+  double? _restLean;
+  static const _restLeanSmoothing = 0.2;
+
+  /// Holds: per-check tallies over valid frames once the position has been taken.
+  final Map<String, _Tally> _holdChecks = {};
+
+  bool get _checksOn => config.evaluation != FormEvaluation.none && config.checks.isNotEmpty;
 
   int get reps => _counter.count;
   int get partialReps => _counter.partialAttempts;
@@ -161,18 +171,55 @@ class PostureEngine {
       hold.update(m, frame.timestampMs);
       final s = hold.heldSeconds;
       final clock = '${s ~/ 60}:${(s % 60).toString().padLeft(2, '0')}';
-      return _result(true, m, null,
-          hold.inPosition ? LiveFeedback('Holding — $clock. Keep breathing') : LiveFeedback(config.holdCue, isWarning: true));
+      // Hold checks: corrections on every frame (also while getting into position); the session statistics only count
+      // frames after the position was first taken.
+      FormCheck? holdFailing;
+      if (_checksOn) {
+        for (final check in config.checks) {
+          final outcome = check.evaluate(m);
+          if (outcome == CheckOutcome.notApplicable) {
+            _failStreak.remove(check.id);
+            continue;
+          }
+          final tally = hold.entries > 0 ? _holdChecks.putIfAbsent(check.id, _Tally.new) : null;
+          if (tally != null) tally.evaluated++;
+          if (outcome == CheckOutcome.pass) {
+            tally?.passed++;
+            _failStreak.remove(check.id);
+          } else if ((_failStreak[check.id] = (_failStreak[check.id] ?? 0) + 1) >= _framesToWarn) {
+            holdFailing ??= check;
+          }
+        }
+      }
+      final LiveFeedback feedback;
+      if (holdFailing != null) {
+        feedback = LiveFeedback(holdFailing.cueFor(m), isWarning: true, highlight: holdFailing.highlight);
+      } else if (hold.inPosition) {
+        feedback = LiveFeedback('Holding — $clock. Keep breathing');
+      } else {
+        feedback = LiveFeedback(config.holdCue, isWarning: true);
+      }
+      return _result(true, m, null, feedback);
     }
 
-    final event = _counter.update(m.primaryAngle, frame.timestampMs);
+    final rawEvent = _counter.update(m.primaryAngle, frame.timestampMs);
     final phase = _counter.phase;
     final moving = phase == RepPhase.descending || phase == RepPhase.bottom || phase == RepPhase.ascending;
 
+    // Context for the checks: sway from the person's own resting posture, and whether this is the turning point.
+    final lean = m.torsoLean;
+    if (!moving && lean != null) {
+      final rest = _restLean;
+      _restLean = rest == null ? lean : rest + _restLeanSmoothing * (lean - rest);
+    }
+    final rest = _restLean;
+    final mc = m.withContext(torsoSway: lean != null && rest != null && moving ? (lean - rest).abs() : null, atPeak: phase == RepPhase.bottom);
+    final event = rawEvent;
+
     FormCheck? failing;
-    if (moving) {
+    if (moving && _checksOn) {
       for (final check in config.checks) {
-        final outcome = check.evaluate(m);
+        final outcome = check.evaluate(mc);
         if (outcome == CheckOutcome.notApplicable) {
           _failStreak.remove(check.id);
           continue;
@@ -198,7 +245,7 @@ class PostureEngine {
 
     LiveFeedback feedback;
     if (failing != null) {
-      feedback = LiveFeedback(failing.cue, isWarning: true, highlight: failing.highlight);
+      feedback = LiveFeedback(failing.cueFor(mc), isWarning: true, highlight: failing.highlight);
     } else if (_transient != null && frame.timestampMs < _transientUntilMs) {
       feedback = _transient!;
     } else {
@@ -231,14 +278,17 @@ class PostureEngine {
     }
     if (acceptable) _acceptableReps++;
 
-    if (!config.scored) {
+    if (config.evaluation == FormEvaluation.none) {
       if (event.counted) _setTransient(LiveFeedback('Rep $reps counted'), nowMs, 1500);
     } else if (!event.counted) {
       _setTransient(LiveFeedback(config.depthCue, isWarning: true, highlight: _primaryJoints), nowMs, 2500);
     } else if (firstFailed != null) {
       _setTransient(LiveFeedback(firstFailed.cue, isWarning: true, highlight: firstFailed.highlight), nowMs, 2500);
-    } else {
+    } else if (config.scored) {
       _setTransient(const LiveFeedback('Great rep — good form!'), nowMs, 2000);
+    } else {
+      // Experimental checks: report what was measured, without claiming the form was good.
+      _setTransient(LiveFeedback('Rep $reps — no form issues detected'), nowMs, 2000);
     }
   }
 
@@ -292,9 +342,16 @@ class PostureEngine {
   SessionFormReport buildReport({int? targetSeconds, String movement = 'movement'}) {
     final hold = _hold;
     if (hold != null) return _holdReport(hold, targetSeconds);
-    if (!config.scored) return _basicReport(movement);
+    if (config.evaluation == FormEvaluation.none) return _basicReport(movement);
     final attempts = reps + partialReps;
-    final items = <FormFeedbackItem>[];
+    final items = <FormFeedbackItem>[
+      if (config.evaluation == FormEvaluation.experimental)
+        const FormFeedbackItem(
+          id: 'experimental',
+          verdict: FeedbackVerdict.notAssessed,
+          text: 'Experimental form feedback: checked live from the camera but not yet validated on real users, so no posture score is given',
+        ),
+    ];
 
     if (attempts == 0) {
       items.add(const FormFeedbackItem(
@@ -386,6 +443,12 @@ class PostureEngine {
       accuracy: null,
       holdSeconds: held,
       feedback: [
+        if (config.evaluation == FormEvaluation.experimental)
+          const FormFeedbackItem(
+            id: 'experimental',
+            verdict: FeedbackVerdict.notAssessed,
+            text: 'Experimental form feedback: checked live from the camera but not yet validated on real users, so no posture score is given',
+          ),
         FormFeedbackItem(
           id: 'hold',
           verdict: held == 0
@@ -395,8 +458,17 @@ class PostureEngine {
               ? 'The camera did not see you in the hold position'
               : 'Held in position for $held s${target > 0 ? ' of the planned $target s' : ''} (longest ${hold.longestMs ~/ 1000} s)',
         ),
-        const FormFeedbackItem(
-            id: 'tracking', verdict: FeedbackVerdict.notAssessed, text: 'Basic tracking: time in position was measured; form was not scored'),
+        for (final check in config.checks)
+          if ((_holdChecks[check.id]?.evaluated ?? 0) >= minFramesForAccuracy)
+            _holdChecks[check.id]!.passed / _holdChecks[check.id]!.evaluated >= repPassRate
+                ? FormFeedbackItem(id: check.id, verdict: FeedbackVerdict.passed, text: check.passedText)
+                : FormFeedbackItem(
+                    id: check.id,
+                    verdict: FeedbackVerdict.failed,
+                    text: '${check.failedText} for ${(100 - 100 * _holdChecks[check.id]!.passed / _holdChecks[check.id]!.evaluated).round()}% of the hold'),
+        if (config.evaluation == FormEvaluation.none)
+          const FormFeedbackItem(
+              id: 'tracking', verdict: FeedbackVerdict.notAssessed, text: 'Basic tracking: time in position was measured; form was not scored'),
       ],
       validFrames: _validFrames,
       totalFrames: _totalFrames,

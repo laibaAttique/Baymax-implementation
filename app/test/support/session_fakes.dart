@@ -32,4 +32,11 @@ class FakeStore implements WorkoutLogStore {
 
   @override
   Future<List<WorkoutLogEntry>> recent({int limit = 20}) async => const [];
+
+  @override
+  Future<List<WorkoutLogEntry>> since(DateTime from) async => [
+        for (var i = 0; i < saved.length; i++)
+          if (!saved[i].endedAt.isBefore(from))
+            WorkoutLogEntry.fromJson('s$i', Map<String, dynamic>.from(WorkoutLog.toJson(saved[i]))),
+      ];
 }

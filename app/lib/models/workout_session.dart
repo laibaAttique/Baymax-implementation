@@ -103,6 +103,32 @@ class SessionExercise {
   }
 }
 
+/// Which planned exercise a session belongs to (Module 4 → Module 5). Sessions started from the generic exercise
+/// library have none and are saved as independent workouts.
+class PlanLink {
+  /// The plan's fingerprint (`WorkoutPlanSnapshot`), so a regenerated plan does not inherit old progress.
+  final String planId;
+
+  /// 0 = Monday … 6 = Sunday: the plan day the exercise belongs to.
+  final int weekday;
+
+  /// Position of the exercise in that day's list (warm-up is 0).
+  final int entryIndex;
+
+  /// The calendar day the session is done (YYYY-MM-DD).
+  final String date;
+
+  const PlanLink({required this.planId, required this.weekday, required this.entryIndex, required this.date});
+
+  PlanLink get nextEntry => PlanLink(planId: planId, weekday: weekday, entryIndex: entryIndex + 1, date: date);
+
+  @override
+  bool operator ==(Object other) =>
+      other is PlanLink && other.planId == planId && other.weekday == weekday && other.entryIndex == entryIndex && other.date == date;
+  @override
+  int get hashCode => Object.hash(planId, weekday, entryIndex, date);
+}
+
 /// What the Workout Plan module hands over to start a session.
 class WorkoutSessionRequest {
   final SessionExercise exercise;
@@ -110,17 +136,23 @@ class WorkoutSessionRequest {
   /// Exercises that follow in the same workout, in order. Empty when unknown.
   final List<SessionExercise> upNext;
 
-  const WorkoutSessionRequest({required this.exercise, this.upNext = const []});
+  /// The planned exercise this session completes, when started from the user's plan.
+  final PlanLink? plan;
 
-  factory WorkoutSessionRequest.fromPlanned(PlannedExercise planned, {List<PlannedExercise> upNext = const []}) =>
+  const WorkoutSessionRequest({required this.exercise, this.upNext = const [], this.plan});
+
+  /// [plan] links the session to the planned entry; the exercises up next get the following entries of the same day.
+  factory WorkoutSessionRequest.fromPlanned(PlannedExercise planned, {List<PlannedExercise> upNext = const [], PlanLink? plan}) =>
       WorkoutSessionRequest(
         exercise: SessionExercise.fromPlanned(planned),
         upNext: [for (final p in upNext) SessionExercise.fromPlanned(p)],
+        plan: plan,
       );
 
   /// The request for the next exercise in the sequence, or null at the end.
-  WorkoutSessionRequest? get next =>
-      upNext.isEmpty ? null : WorkoutSessionRequest(exercise: upNext.first, upNext: upNext.sublist(1));
+  WorkoutSessionRequest? get next => upNext.isEmpty
+      ? null
+      : WorkoutSessionRequest(exercise: upNext.first, upNext: upNext.sublist(1), plan: plan?.nextEntry);
 }
 
 enum FeedbackVerdict { passed, failed, notAssessed }
@@ -162,11 +194,20 @@ class SessionSummary {
   final bool skipped;
   final bool tooDifficult;
 
-  /// Camera mode: false when the exercise only had basic tracking (repetitions or hold time, no form score).
+  /// Camera mode: true when a posture score is given (validated evaluation only).
   final bool formScored;
+
+  /// Camera mode: true when form checks ran (validated or experimental). False for basic tracking.
+  final bool formChecked;
 
   /// Camera mode, static holds: seconds the camera saw the person in position. Null otherwise.
   final int? holdSeconds;
+
+  /// The planned exercise this session belongs to, if any.
+  final PlanLink? plan;
+
+  /// True when the planned target was reached (reps, hold time or sets) — only then is the planned exercise complete.
+  final bool completedTarget;
 
   const SessionSummary({
     required this.exercise,
@@ -183,7 +224,10 @@ class SessionSummary {
     this.skipped = false,
     this.tooDifficult = false,
     this.formScored = true,
+    this.formChecked = true,
     this.holdSeconds,
+    this.plan,
+    this.completedTarget = false,
   });
 
   bool get postureAnalysed => mode == SessionMode.camera;

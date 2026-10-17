@@ -6,6 +6,7 @@ import '../../models/workout_session.dart';
 import '../api_client.dart' show ApiException;
 import '../posture/posture_engine.dart';
 import '../user_session.dart';
+import 'plan_progress.dart';
 import 'workout_log_service.dart';
 
 /// Progress of saving the last finished session.
@@ -42,8 +43,11 @@ abstract class WorkoutSessionContext implements Listenable {
   /// Null when posture is not being analysed or there is not enough data yet.
   int? get postureScore;
 
-  /// Camera mode: false when the exercise only has basic tracking (reps or hold time counted, form not judged).
+  /// Camera mode: true when a posture score is given (validated evaluation only).
   bool get formScored;
+
+  /// Camera mode: true when form checks run (validated or experimental); false for basic tracking.
+  bool get formChecked;
 
   /// Camera mode, static holds: seconds held in position so far. Null otherwise.
   int? get holdSeconds;
@@ -62,12 +66,16 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
   /// [store] receives every finished session; null keeps sessions in memory
   /// only (tests). [onTooDifficult] is told about exercises the user marked
   /// too difficult, so the next plan generation can adjust them.
-  WorkoutSessionController({this.store, this.onTooDifficult});
+  WorkoutSessionController({this.store, this.onTooDifficult, this.onFinished});
 
   static final WorkoutSessionController instance = WorkoutSessionController(
     store: FirebaseWorkoutLog.instance,
     onTooDifficult: (id) => UserSession.instance.tooDifficult.add(id),
+    onFinished: (s) => PlanProgress.instance.record(s),
   );
+
+  /// Told about every finished session (Module 4 progress: planned-exercise completion).
+  void Function(SessionSummary summary)? onFinished;
 
   WorkoutLogStore? store;
   final void Function(String exerciseId)? onTooDifficult;
@@ -84,6 +92,7 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
   SessionMode? _mode;
   SessionExercise? _exercise;
   List<SessionExercise> _upNext = const [];
+  PlanLink? _plan;
   int _reps = 0;
   int _partialReps = 0;
   int _setsCompleted = 0;
@@ -95,6 +104,7 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
   int? _postureScore;
   int? _holdSeconds;
   bool _formScored = true;
+  bool _formChecked = true;
   bool _finishRequested = false;
   SessionSummary? _lastSummary;
   final List<SessionSummary> _history = [];
@@ -133,6 +143,8 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
   @override
   bool get formScored => _formScored;
   @override
+  bool get formChecked => _formChecked;
+  @override
   SessionSummary? get lastSummary => _lastSummary;
   @override
   bool get hasActiveSession => _status == SessionStatus.active || _status == SessionStatus.paused;
@@ -146,10 +158,12 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
   bool get finishRequested => _finishRequested;
 
   /// [formScored]: false for camera sessions with basic tracking only, so nothing (screen or voice) claims a form verdict.
-  void start(WorkoutSessionRequest request, SessionMode mode, {bool formScored = true}) {
+  void start(WorkoutSessionRequest request, SessionMode mode, {bool formScored = true, bool? formChecked}) {
     _formScored = formScored;
+    _formChecked = formChecked ?? formScored;
     _exercise = request.exercise;
     _upNext = request.upNext;
+    _plan = request.plan;
     _mode = mode;
     _status = SessionStatus.active;
     _reps = 0;
@@ -240,10 +254,21 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
     bool skipped = false,
     bool tooDifficult = false,
     bool formScored = true,
+    bool? formChecked,
   }) {
     final exercise = _exercise;
     if (exercise == null) throw StateError('finish() called without a session');
     _clock.stop();
+    final camera = (_mode ?? SessionMode.manual) == SessionMode.camera;
+    final reps = report?.reps ?? _reps;
+    final held = report?.holdSeconds;
+    // The planned exercise is complete only when its target was reached — never just because a session was opened.
+    final reachedTarget = !skipped &&
+        (held != null
+            ? held >= exercise.sets * exercise.seconds && held > 0
+            : camera
+                ? (exercise.timed ? _clock.elapsed.inSeconds >= exercise.sets * exercise.seconds && exercise.seconds > 0 : reps >= exercise.targetReps && reps > 0)
+                : _setsCompleted >= exercise.sets && _setsCompleted > 0);
     final summary = SessionSummary(
       exercise: exercise,
       mode: _mode ?? SessionMode.manual,
@@ -259,11 +284,15 @@ class WorkoutSessionController extends ChangeNotifier implements WorkoutSessionC
       skipped: skipped,
       tooDifficult: tooDifficult,
       formScored: formScored,
+      formChecked: formChecked ?? formScored,
       holdSeconds: report?.holdSeconds,
+      plan: _plan,
+      completedTarget: reachedTarget,
     );
     _lastSummary = summary;
     _history.add(summary);
     if (tooDifficult) onTooDifficult?.call(exercise.id);
+    onFinished?.call(summary);
     _summarySaved = false;
     _flagSaved = !tooDifficult;
     unawaited(retrySave());

@@ -15,6 +15,13 @@ class WorkoutLogEntry {
   final int? postureScore;
   final bool tooDifficult;
 
+  /// Set when the session was started from the user's plan (see [PlanLink]).
+  final String? planId;
+  final String? planDate;
+  final int? planWeekday;
+  final int? planEntry;
+  final bool planCompleted;
+
   const WorkoutLogEntry({
     required this.id,
     required this.exerciseId,
@@ -25,6 +32,11 @@ class WorkoutLogEntry {
     required this.reps,
     this.postureScore,
     this.tooDifficult = false,
+    this.planId,
+    this.planDate,
+    this.planWeekday,
+    this.planEntry,
+    this.planCompleted = false,
   });
 
   factory WorkoutLogEntry.fromJson(String id, Map<String, dynamic> j) => WorkoutLogEntry(
@@ -37,6 +49,11 @@ class WorkoutLogEntry {
         reps: (j['reps'] as num).toInt(),
         postureScore: (j['postureScore'] as num?)?.toInt(),
         tooDifficult: j['tooDifficult'] as bool? ?? false,
+        planId: j['planId'] as String?,
+        planDate: j['planDate'] as String?,
+        planWeekday: (j['planWeekday'] as num?)?.toInt(),
+        planEntry: (j['planEntry'] as num?)?.toInt(),
+        planCompleted: j['planCompleted'] as bool? ?? false,
       );
 }
 
@@ -53,6 +70,9 @@ abstract class WorkoutLogStore {
 
   /// Most recent sessions first.
   Future<List<WorkoutLogEntry>> recent({int limit = 20});
+
+  /// Sessions that ended at or after [from], oldest first (used for today's plan progress).
+  Future<List<WorkoutLogEntry>> since(DateTime from);
 }
 
 /// Converts a summary to the shape accepted by `database.rules.json`.
@@ -63,7 +83,8 @@ class WorkoutLog {
   /// exercise is not hidden forever after one hard day.
   static const flagLifetime = Duration(days: 28);
 
-  static Map<String, Object?> toJson(SessionSummary s) => {
+  /// [withPlan] false leaves the plan link out (fallback while the database rules do not know those fields yet).
+  static Map<String, Object?> toJson(SessionSummary s, {bool withPlan = true}) => {
         'exerciseId': s.exercise.id,
         'exerciseName': s.exercise.name,
         'mode': s.mode.name,
@@ -79,6 +100,13 @@ class WorkoutLog {
         if (s.averageFps != null) 'averageFps': double.parse(s.averageFps!.toStringAsFixed(1)),
         'skipped': s.skipped,
         'tooDifficult': s.tooDifficult,
+        if (withPlan && s.plan != null) ...{
+          'planId': s.plan!.planId,
+          'planDate': s.plan!.date,
+          'planWeekday': s.plan!.weekday,
+          'planEntry': s.plan!.entryIndex,
+          'planCompleted': s.completedTarget,
+        },
         'feedback': {
           for (var i = 0; i < s.feedback.length; i++)
             '$i': {
@@ -98,9 +126,25 @@ class FirebaseWorkoutLog implements WorkoutLogStore {
   FirebaseWorkoutLog._();
   static final FirebaseWorkoutLog instance = FirebaseWorkoutLog._();
 
+  /// False after a save had to leave the plan link out (the live database rules are older than this app).
+  bool planLinkAccepted = true;
+
   @override
-  Future<void> save(SessionSummary summary) {
-    return RealtimeDb.guard(() => RealtimeDb.userRef('workoutSessions').push().set(WorkoutLog.toJson(summary)));
+  Future<void> save(SessionSummary summary) async {
+    final ref = RealtimeDb.userRef('workoutSessions').push();
+    if (summary.plan == null) {
+      await RealtimeDb.guard(() => ref.set(WorkoutLog.toJson(summary)));
+      return;
+    }
+    try {
+      await RealtimeDb.guard(() => ref.set(WorkoutLog.toJson(summary)));
+      planLinkAccepted = true;
+    } catch (_) {
+      // Database rules without the plan fields refuse the whole write; keep the session itself rather than lose it.
+      // Same key, so a retry can never create two records.
+      await RealtimeDb.guard(() => ref.set(WorkoutLog.toJson(summary, withPlan: false)));
+      planLinkAccepted = false;
+    }
   }
 
   @override
@@ -135,6 +179,18 @@ class FirebaseWorkoutLog implements WorkoutLogStore {
         for (final e in all.entries) WorkoutLogEntry.fromJson(e.key, Map<String, dynamic>.from(e.value as Map)),
       ]..sort((a, b) => b.endedAt.compareTo(a.endedAt));
       return entries;
+    });
+  }
+
+  @override
+  Future<List<WorkoutLogEntry>> since(DateTime from) {
+    return RealtimeDb.guard(() async {
+      final snap = await RealtimeDb.userRef('workoutSessions').orderByChild('endedAt').startAt(from.millisecondsSinceEpoch).get();
+      if (!snap.exists) return <WorkoutLogEntry>[];
+      final all = RealtimeDb.plain(snap.value) as Map<String, dynamic>;
+      return [
+        for (final e in all.entries) WorkoutLogEntry.fromJson(e.key, Map<String, dynamic>.from(e.value as Map)),
+      ]..sort((a, b) => a.endedAt.compareTo(b.endedAt));
     });
   }
 }

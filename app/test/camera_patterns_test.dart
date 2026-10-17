@@ -107,12 +107,20 @@ void main() {
       expect(ExerciseLibrary.byId('hamstring_stretch_lying')!.noTrackingReason, NoTrackingReason.stretch);
     });
 
-    test('only the four tried-and-tuned exercises get full form scoring', () {
-      final full = [
+    test('only the four tried-and-tuned exercises show a posture score; others are experimental or basic', () {
+      final scored = [
         for (final e in [...ExerciseLibrary.all, ...ExerciseCatalog.all])
-          if (MovementPatterns.resolve(e.id, e.movement, e.noTrackingReason).supportsFormEvaluation) e.id,
+          if (MovementPatterns.resolve(e.id, e.movement, e.noTrackingReason).showsPostureScore) e.id,
       ]..sort();
-      expect(full, ['chair_squat', 'knee_pushup', 'pushup', 'squat']);
+      expect(scored, ['chair_squat', 'knee_pushup', 'pushup', 'squat']);
+      for (final e in [...ExerciseLibrary.all, ...ExerciseCatalog.all]) {
+        final c = MovementPatterns.resolve(e.id, e.movement, e.noTrackingReason);
+        if (c.isExperimental) {
+          expect(c.form!.checks, isNotEmpty, reason: '${e.id}: experimental means real checks');
+          expect(c.form!.evaluation, FormEvaluation.experimental);
+        }
+        if (c.level == CameraSupportLevel.basicTracking) expect(c.form!.checks, isEmpty, reason: e.id);
+      }
     });
 
     test('the session request carries the pattern from Module 4', () {
@@ -120,7 +128,8 @@ void main() {
       final req = WorkoutSessionRequest.fromPlanned(PlannedExercise(exercise: curl, sets: 3, reps: 10, seconds: 0, restSeconds: 60));
       expect(req.exercise.movement, MovementPattern.curl);
       final c = MovementPatterns.forSession(req.exercise);
-      expect(c.level, CameraSupportLevel.basicTracking);
+      expect(c.level, CameraSupportLevel.experimentalForm);
+      expect(c.checkLabels, containsAll(['Upper-arm position', 'Torso stability']));
       expect(c.requiredLandmarks, containsAll([PoseIndex.leftElbow, PoseIndex.rightWrist]));
     });
   });
@@ -146,13 +155,18 @@ void main() {
         }
         expect(engine.reps, 3, reason: '${p.name} start=$start turn=$turn');
         expect(engine.partialReps, 1, reason: p.name);
-        expect(last!.postureScore, isNull, reason: 'basic tracking never shows a posture score');
+        expect(last!.postureScore, isNull, reason: 'only validated configurations show a posture score');
         final report = engine.buildReport(movement: p.measures);
         expect(report.postureScore, isNull);
         expect(report.accuracy, isNull);
-        expect(report.feedback.single.id, 'tracking');
-        expect(report.feedback.single.verdict, FeedbackVerdict.notAssessed);
-        expect(report.feedback.single.text, contains('Form was not scored'));
+        if (c.evaluation == FormEvaluation.none) {
+          expect(report.feedback.single.id, 'tracking');
+          expect(report.feedback.single.verdict, FeedbackVerdict.notAssessed);
+          expect(report.feedback.single.text, contains('Form was not scored'));
+        } else {
+          expect(report.feedback.first.id, 'experimental');
+          expect(report.feedback.first.text, contains('not yet validated'));
+        }
       });
     }
 
@@ -281,12 +295,15 @@ void main() {
       final coach = CoachResponder(session: session, schedule: const FakeSchedule());
       Future<String> ask(String q) async => (await coach.respond(await intents.detect(q))).text;
 
-      final curl = SessionExercise.fromPlanned(PlannedExercise(
-          exercise: ExerciseCatalog.byId('Dumbbell_Bicep_Curl')!, sets: 2, reps: 10, seconds: 0, restSeconds: 60));
+      // Sit-ups have basic tracking only (no measurable form check from the camera).
+      final curl = SessionExercise.fromPlanned(
+          PlannedExercise(exercise: ExerciseCatalog.byId('Sit-Up')!, sets: 2, reps: 10, seconds: 0, restSeconds: 60));
       final c = MovementPatterns.forSession(curl);
-      session.start(WorkoutSessionRequest(exercise: curl), SessionMode.camera, formScored: c.supportsFormEvaluation);
+      expect(c.level, CameraSupportLevel.basicTracking);
+      session.start(WorkoutSessionRequest(exercise: curl), SessionMode.camera,
+          formScored: c.showsPostureScore, formChecked: c.supportsFormEvaluation);
       final engine = PostureEngine(c.form!);
-      final m = JointMotion(c.form!, startAngle: 165).hold(300).moveTo(60, 700).hold(150).moveTo(165, 700).hold(250);
+      final m = JointMotion(c.form!, startAngle: 125).hold(300).moveTo(70, 700).hold(150).moveTo(125, 700).hold(250);
       for (final f in m.frames) {
         session.updatePosture(engine.process(f), angleLabel: c.form!.primaryJoint);
       }
@@ -298,7 +315,7 @@ void main() {
       final plank = SessionExercise.fromPlanned(
           PlannedExercise(exercise: ExerciseLibrary.byId('plank')!, sets: 2, reps: 0, seconds: 20, restSeconds: 30));
       final h = MovementPatterns.forSession(plank);
-      session.start(WorkoutSessionRequest(exercise: plank), SessionMode.camera, formScored: false);
+      session.start(WorkoutSessionRequest(exercise: plank), SessionMode.camera, formScored: false, formChecked: true);
       final holdEngine = PostureEngine(h.form!);
       for (final f in JointMotion(h.form!, startAngle: 176, baseDeg: 90).hold(4000).frames) {
         session.updatePosture(holdEngine.process(f), angleLabel: h.form!.primaryJoint);
@@ -340,11 +357,13 @@ void main() {
     SessionExercise planned(String datasetId, {int sets = 2, int reps = 10}) => SessionExercise.fromPlanned(PlannedExercise(
         exercise: ExerciseCatalog.byId(datasetId)!, sets: sets, reps: reps, seconds: 0, restSeconds: 60));
 
-    testWidgets('a dataset exercise can now choose Camera Detection, labelled as basic tracking', (tester) async {
+    testWidgets('a dataset exercise can now choose Camera Detection, labelled as experimental form feedback', (tester) async {
       final curl = planned('Dumbbell_Bicep_Curl');
       await pump(tester, PostureModeSelection(request: WorkoutSessionRequest(exercise: curl)));
-      expect(find.textContaining('Basic tracking: counts your repetitions from your elbow bend'), findsOneWidget);
+      expect(find.textContaining('Experimental form feedback: the camera counts your repetitions and checks upper-arm position'), findsOneWidget);
       expect(find.textContaining('Camera tracking is not available'), findsNothing);
+      await tester.ensureVisible(find.byKey(const Key('cameraConsent')));
+      await tester.pump();
       await tester.tap(find.byKey(const Key('cameraConsent')));
       await tester.pump();
       await tester.ensureVisible(find.text('Continue'));
@@ -355,14 +374,15 @@ void main() {
       expect(session.mode, SessionMode.camera);
     });
 
-    testWidgets('basic tracking counts curls, shows no posture score and saves the session', (tester) async {
+    testWidgets('experimental evaluation counts curls, labels itself, shows no posture score and saves the session', (tester) async {
       final curl = planned('Dumbbell_Bicep_Curl');
       final stream = ScriptedPoseStream();
       await pump(tester, CameraDetection(request: WorkoutSessionRequest(exercise: curl), poseStream: stream, speechOutput: FakeSpeechOutput()));
       await tester.pump();
-      expect(find.byKey(const ValueKey('basic-tracking-label')), findsOneWidget);
+      expect(find.byKey(const ValueKey('experimental-label')), findsOneWidget);
+      expect(find.textContaining('upper-arm position'), findsOneWidget);
       expect(find.text('Posture score'), findsNothing);
-      expect(find.text('Not scored'), findsOneWidget);
+      expect(find.text('Incomplete range'), findsOneWidget);
 
       final c = MovementPatterns.forSession(curl).form!;
       final m = JointMotion(c, startAngle: 165).hold(300);
@@ -381,9 +401,10 @@ void main() {
       await tester.tap(find.text('Stop Session'));
       await settle(tester);
       expect(find.byType(PostureFeedbackScreen), findsOneWidget);
-      expect(find.text('Form not scored'), findsOneWidget);
+      expect(find.text('Experimental form feedback'), findsOneWidget);
       expect(session.lastSummary!.postureScore, isNull);
       expect(session.lastSummary!.formScored, isFalse);
+      expect(session.lastSummary!.formChecked, isTrue);
       await tester.pump();
       expect(store.saved.single.reps, 4);
       expect(store.saved.single.mode, SessionMode.camera);
@@ -411,7 +432,7 @@ void main() {
       expect(find.text('Held'), findsOneWidget);
       expect(session.lastSummary!.holdSeconds, inInclusiveRange(5, 6));
       await tester.pump();
-      expect(store.saved.single.feedback.first.text, contains('of the planned 40 s'));
+      expect(store.saved.single.feedback.map((f) => f.text).join(' '), contains('of the planned 40 s'));
     });
 
     testWidgets('an exercise the camera cannot follow explains why and keeps Manual Guidance', (tester) async {
@@ -429,6 +450,8 @@ void main() {
     testWidgets('camera permission refused: the camera does not start for a basic-tracking exercise either', (tester) async {
       permissions.camera = PermissionOutcome.denied;
       await pump(tester, PostureModeSelection(request: WorkoutSessionRequest(exercise: planned('Barbell_Squat'))));
+      await tester.ensureVisible(find.byKey(const Key('cameraConsent')));
+      await tester.pump();
       await tester.tap(find.byKey(const Key('cameraConsent')));
       await tester.pump();
       await tester.ensureVisible(find.text('Continue'));

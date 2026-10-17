@@ -16,7 +16,7 @@ import '../../widgets/glass.dart';
 import '../../widgets/progress_ring.dart';
 import '../allergy/allergy_scanner.dart';
 import '../chatbot/chatbot_screen.dart';
-import '../posture_detection/exercise_picker.dart';
+import '../posture_detection/posture_home.dart';
 import '../community/community_screen.dart';
 import '../analytics/body_transform_screen.dart';
 import '../specialists/specialists_screen.dart';
@@ -507,7 +507,7 @@ class _HomeDashboardState extends State<HomeDashboard> {
                         children: [
                           _buildQuickTile(Icons.fitness_center_rounded, 'Workout\nplan', onTap: () => widget.onNavigateTab(2)),
                           _buildQuickTile(Icons.restaurant_menu_rounded, 'Diet\ntracker', onTap: () => widget.onNavigateTab(1), color: AppTheme.teal),
-                          _buildQuickTile(Icons.self_improvement_rounded, 'Posture\ncheck', onTap: () => _push(const ExercisePickerScreen())),
+                          _buildQuickTile(Icons.self_improvement_rounded, 'Posture\ncheck', onTap: () => _push(const PostureDetectionHome())),
                           _buildQuickTile(Icons.trending_up_rounded, 'Body\ntransform', onTap: () => _push(const BodyTransformScreen()), color: AppTheme.macroFat),
                           _buildQuickTile(Icons.emoji_events_rounded, 'Leader-\nboard', onTap: _openCommunity, color: AppTheme.warning),
                           _buildQuickTile(Icons.shield_rounded, 'Allergy\nscanner', onTap: () => _push(const AllergyScanner()), color: AppTheme.teal),

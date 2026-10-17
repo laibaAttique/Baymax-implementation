@@ -135,6 +135,11 @@ class _PostureFeedbackScreenState extends State<PostureFeedbackScreen> with Sing
       return _buildNoScore(Icons.accessibility_new, 'Posture not analysed',
           'This was a Manual Guidance session, so there is no posture score.');
     }
+    if (!_summary.formScored && _summary.formChecked) {
+      return _buildNoScore(Icons.science_outlined, 'Experimental form feedback',
+          'Your form was checked live, but these checks are not yet validated on real users, so no posture score is given. '
+          'See the feedback below.');
+    }
     if (!_summary.formScored) {
       return _buildNoScore(Icons.track_changes, 'Form not scored',
           'This exercise has basic camera tracking: the camera ${_summary.holdSeconds != null ? 'timed your hold' : 'counted your repetitions'}, '

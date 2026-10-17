@@ -13,7 +13,8 @@ import re
 PATTERNS = {
     'squat', 'lunge', 'hinge', 'hipExtension', 'pushup', 'benchPress', 'dip', 'overheadPress', 'armRaise', 'row',
     'pulldown', 'curl', 'tricepsExtension', 'tricepsPushdown', 'legExtension', 'legCurl', 'sitUp', 'legRaise',
-    'kneeLift', 'jumpingJack', 'plankHold', 'wallSitHold', 'none',
+    'kneeLift', 'jumpingJack', 'uprightRow', 'singleLegExtension', 'plankKneeDrive', 'kneeTuck', 'plankHold',
+    'wallSitHold', 'none',
 }
 
 # Reasons for `none`; the user-facing texts are in movement_patterns.dart.
@@ -51,6 +52,8 @@ def classify(rec):
         return none('complex', 'multi-phase')
     if cat == 'plyometrics' and not _has(name, 'squat', 'lunge', 'split', 'jack', 'push-up', 'pushup', 'high knee'):
         return none('complex', 'plyometric-other')
+    if _has(name, 'upright'):
+        return ('uprightRow', None, 'upright-row')
     if _has(name, 'wrist', 'finger', 'pinch', 'gripper', 'forearm') or primary <= {'forearms'}:
         return none('smallMovement', 'small-forearm')
     if _has(name, 'shrug') or primary <= {'traps'}:
@@ -67,7 +70,13 @@ def classify(rec):
     if _has(name, 'crunch'):
         # Lifting the shoulder blades is a small angle change; counting it from landmarks is unreliable.
         return none('smallMovement', 'crunch')
-    if _has(name, 'fly', 'flye', 'crossover', 'pec deck', 'pullover', 'face pull', 'upright', 'rear delt', 'rear lateral',
+    if _has(name, 'kickback') and not ('triceps' in primary or _has(name, 'tricep')):
+        return ('singleLegExtension', None, 'leg-kickback')
+    if _has(name, 'pull-in', 'pull in', 'leg tuck', 'knee tuck') and cat != 'plyometrics':
+        return ('kneeTuck', None, 'knee-tuck')
+    if _has(name, 'hip flexion'):
+        return ('kneeLift', None, 'standing-hip-flexion')
+    if _has(name, 'fly', 'flye', 'crossover', 'pec deck', 'pullover', 'face pull', 'rear delt', 'rear lateral',
             'reverse fly', 'scaption', r'\by raise', r'\bt raise', 'bent over .*(raise|lateral)', 'bent-over .*(raise|lateral)'):
         return none('smallMovement', 'shoulder-horizontal')
     if _has(name, 'straight-arm .*pull', 'straight arm .*pull'):

@@ -44,6 +44,19 @@ Found while writing the cases: nothing in the app failed; the only defects were 
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-17 — Modules 4 + 5: real posture evaluation, personalised Posture Detection, plan completion sync
+
+Report: `docs/MODULE4_5_INTEGRATION_REPORT.md`; validation procedure: `docs/MODULE5_DEVICE_VALIDATION.md`; audit: `docs/review/camera_support_audit.{md,csv,json}`.
+
+- **Posture evaluation:** new measurements (secondary joint angles, upper-arm angle, signed hip offset, arm symmetry, foot spread, torso sway from the person's own starting posture) and reusable checks (`form_checks.dart`), assigned per pattern and variant. Capability levels: validated 4 (unchanged, score shown) · experimental 250 (real checks + live corrections, clearly labelled, no score) · basic 50 · unsupported 228 (with reasons). 4 new patterns (upright row, single-leg hip extension, plank knee drive, knee tuck). No custom exercises were needed.
+- **Unified catalogue:** `ExerciseRepository` (889 exercises, canonical ids, no duplicates, normalised `CatalogEntry`).
+- **Posture Detection home** (Home tile + drawer): Today's workout / My plan / Exercise library; loading, no-plan and screening states; entries start with a plan link.
+- **Completion sync:** sessions that reach their target complete the planned exercise (`PlanProgress`); a fully completed day is marked through the existing `ActivityService.markDone` (feeds fitness score, streaks, badges, analytics); "Done today" in the workout tab and Posture Detection; no duplicates; regenerated plans start fresh; library sessions stay independent.
+- **Database rules:** 5 optional plan fields added to `workoutSessions` in `database.rules.json` (dry run valid, only additions vs live). **Not deployed yet — awaiting confirmation.** Until deployed, sessions are saved without the plan link (fallback).
+- **Safety:** unchanged order; a test checks camera capability never makes an exercise eligible.
+- **Tests:** 866 pass, 13 skipped, 0 fail. New `posture_evaluation_test.dart` (18), `plan_integration_test.dart` (15).
+- **Device testing:** none for the new checks (phone disconnected); only the squat has a recorded device test (2026-10-15).
+
 ### 2026-10-17 — Module 5: camera tracking for generated exercises (movement patterns)
 
 Write-up: `docs/MODULE5_CAMERA_PATTERNS.md`; audit: `docs/review/camera_support_audit.md` / `.csv`.

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/plan.dart';
 import '../../models/workout_session.dart';
+import '../../services/workout_session/plan_progress.dart';
 import '../../services/exercise_catalog.dart';
 import '../../services/met_calculator.dart';
 import '../../services/user_session.dart';
@@ -21,7 +22,10 @@ class ExerciseDetail extends StatelessWidget {
   /// The whole session this exercise belongs to; guidance walks through it from [planned] onward.
   final List<PlannedExercise> queue;
 
-  const ExerciseDetail({super.key, required this.planned, this.safetyNotes = const [], this.queue = const []});
+  /// The plan day (0 = Monday) [queue] belongs to, so the session is linked to the planned exercise (Module 4 progress).
+  final int? weekday;
+
+  const ExerciseDetail({super.key, required this.planned, this.safetyNotes = const [], this.queue = const [], this.weekday});
 
   Widget _buildMetricMini(String val, String lbl) {
     return Expanded(
@@ -305,9 +309,12 @@ class ExerciseDetail extends StatelessWidget {
                 // Hand-off to Module 5: camera detection where supported, manual guidance otherwise.
                 final idx = queue.indexOf(planned);
                 final upNext = idx >= 0 ? queue.sublist(idx + 1) : queue.where((p) => p != planned).toList();
+                final day = weekday;
+                final link = day != null && idx >= 0 ? PlanProgress.instance.linkFor(day, idx) : null;
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => PostureModeSelection(request: WorkoutSessionRequest.fromPlanned(planned, upNext: upNext))),
+                  MaterialPageRoute(
+                      builder: (_) => PostureModeSelection(request: WorkoutSessionRequest.fromPlanned(planned, upNext: upNext, plan: link))),
                 );
               },
             ),

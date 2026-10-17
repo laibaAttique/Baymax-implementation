@@ -354,6 +354,21 @@
             "tooDifficult": {
               ".validate": "newData.isBoolean()"
             },
+            "planId": {
+              ".validate": "newData.isString() && newData.val().length <= 16"
+            },
+            "planDate": {
+              ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)"
+            },
+            "planWeekday": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 6"
+            },
+            "planEntry": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 99"
+            },
+            "planCompleted": {
+              ".validate": "newData.isBoolean()"
+            },
             "feedback": {
               "$i": {
                 ".validate": "newData.hasChildren(['id', 'verdict', 'text'])",
