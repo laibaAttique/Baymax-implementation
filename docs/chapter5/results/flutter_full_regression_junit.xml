@@ -980,6 +980,16 @@
     <testcase classname="test/community_test.dart" name="settings model round trip and safe defaults" time="0.000">
     </testcase>
   </testsuite>
+  <testsuite name="test/data_test.dart" tests="4" failures="0" skipped="0">
+    <testcase classname="test/data_test.dart" name="plain() converts nested Map&lt;Object?, Object?&gt; and lists" time="0.000">
+    </testcase>
+    <testcase classname="test/data_test.dart" name="a profile survives a round trip through the database" time="0.000">
+    </testcase>
+    <testcase classname="test/data_test.dart" name="a profile with empty lists and blank fields loads without errors" time="0.000">
+    </testcase>
+    <testcase classname="test/data_test.dart" name="food entries keep their id and date after loading" time="0.000">
+    </testcase>
+  </testsuite>
   <testsuite name="test/consultation_test.dart" tests="49" failures="0" skipped="0">
     <testcase classname="test/consultation_test.dart" name="Availability and Specialist parsing a valid record parses" time="0.000">
     </testcase>
@@ -1078,16 +1088,6 @@
     <testcase classname="test/consultation_test.dart" name="My appointments screen cancelling asks first, then calls back and shows the new status" time="0.000">
     </testcase>
     <testcase classname="test/consultation_test.dart" name="My appointments screen a started appointment has no cancel button" time="0.000">
-    </testcase>
-  </testsuite>
-  <testsuite name="test/data_test.dart" tests="4" failures="0" skipped="0">
-    <testcase classname="test/data_test.dart" name="plain() converts nested Map&lt;Object?, Object?&gt; and lists" time="0.000">
-    </testcase>
-    <testcase classname="test/data_test.dart" name="a profile survives a round trip through the database" time="0.000">
-    </testcase>
-    <testcase classname="test/data_test.dart" name="a profile with empty lists and blank fields loads without errors" time="0.000">
-    </testcase>
-    <testcase classname="test/data_test.dart" name="food entries keep their id and date after loading" time="0.000">
     </testcase>
   </testsuite>
   <testsuite name="test/exercise_selector_test.dart" tests="20" failures="0" skipped="0">

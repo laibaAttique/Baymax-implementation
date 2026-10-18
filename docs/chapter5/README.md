@@ -1,43 +1,53 @@
 # Chapter 5: Modules 4, 5 and 6 testing documentation
 
+## Deliverables
+
 | File | What it is |
 |---|---|
-| `Baymax_Chapter5_Test_Cases.original.docx` | Byte-identical copy of the team's original (`~/Downloads/Baymax_Chapter5_Test_Cases.docx`, SHA-256 `392b3df0…a162`). Never edited. |
-| `Baymax_Chapter5_Complete_Testing_Modules_4_5_6.docx` | The completed chapter (generated). |
-| `Baymax_Chapter5_Complete_Testing_Modules_4_5_6.pdf`, `pages/` | Word export (71 pages) and page images used for the visual check. |
-| `CHANGE_REPORT.md` | Every insertion and the only edited cells. |
-| `results/atc_m456.jsonl` | The 123 Flutter ATC results (ATC_LOG output); the DOCX tables are generated from it. |
-| `results/flutter_m456_junit.xml`, `results/flutter_m456_reporter.json`, `results/flutter_m456_run.txt` | Same run as JUnit XML, raw JSON reporter output and console text. |
-| `results/flutter_full_regression_*` | Complete app test run (all modules). |
-| `results/integrity_report.json` | Output of `tools/verify_integrity.py`. |
-| `figures/` | Figure 5.2 (rendered from the console log). Figure 5.3 is `automation/appium/screenshots/device_smoke_dashboard.png`. |
-| `tools/build_chapter5.py` | Builds the DOCX from the original + results. |
-| `tools/verify_integrity.py` | Checks the original is preserved (all 241 body elements unchanged and in order). |
-| `tools/flutter_json_to_junit.py` | Flutter JSON reporter → JUnit XML. |
+| `Baymax_Chapter5_Complete_Testing_Modules_4_5_6.docx` | Completed chapter, generated from the team's merged base |
+| `Baymax_Chapter5_Complete_Testing_Modules_4_5_6.pdf`, `pages/` | Word export (76 pages) and page images used for the layout check |
+| `base_Baymax_Chapter5complete_Test_Cases.docx` | Exact copy of the base supplied on 2026-10-18 (never edited) |
+| `CHANGE_REPORT.md` | Every insertion, the only edited cells, the test-run history |
+| `results/integrity_report.json` | Output of `tools/verify_integrity_device.py` |
+| `REAL_PERSON_VALIDATION.md` | Real-person posture validation status (separate from automated tests) |
+
+## Evidence
+
+| Folder / file | Content |
+|---|---|
+| `results/atc_m456.jsonl` | 123 headless Flutter ATC results of Modules 4-6 (ATC_LOG); `flutter_m456_junit.xml`, `flutter_m456_reporter.json` |
+| `results/flutter_full_regression_*` | Complete headless app run (JSON reporter + JUnit XML) |
+| `device_evidence/<run>/` | Real-device runs: `device.txt`, `flutter_drive.log`, `device_results.json`, `device_junit.xml`, `screenshots/` |
+
+Counted device runs: `run3_smoke`, `run6_module4_workout`, `run7_module5_posture`, `run6_module6_voice`, `run7_cross_module`.
+The others are kept as history (see CHANGE_REPORT.md).
 
 ## Regenerate
 
+Headless (from `app/`; delete the old `atc_m456.jsonl` first, the log is appended to):
+
 ```bash
-cd app
 ATC_LOG=../docs/chapter5/results/atc_m456.jsonl flutter test test/atc/atc_m456_unit_test.dart test/atc/atc_m456_functional_test.dart test/atc/atc_m456_rules_test.dart test/atc/atc_m456_integration_test.dart
 ```
 
-(delete the old `atc_m456.jsonl` first; the log is appended to), then from `docs/chapter5`:
+Real device (from `app/`, phone connected; see `app/integration_test/README.md`):
 
 ```bash
-python tools/build_chapter5.py
+bash integration_test/run_on_device.sh integration_test/module5_posture_test.dart run8_module5_posture
+```
+
+Document (from `docs/chapter5`; needs python-docx, lxml):
+
+```bash
+python tools/build_chapter5_device.py run3_smoke run6_module4_workout run7_module5_posture run6_module6_voice run7_cross_module
 ```
 
 ```bash
-python tools/verify_integrity.py
+python tools/verify_integrity_device.py
 ```
 
-Needs `python-docx`, `lxml` and `Pillow`. The real-device suite and its status are described in `automation/appium/README.md`.
+`tools/device_results_to_junit.py <run folder>` converts a device run to JUnit XML; `tools/flutter_json_to_junit.py` does the same for
+headless runs. These are format conversions only; no Java JUnit is used.
 
-## What the evidence does and does not show
-
-- Posture cases use synthetic landmark frames and real-photo replays: they test the logic, not live detection accuracy (only the squat has a live device check).
-- Voice cases use a simulated recogniser and speech output: not microphone or recognition-accuracy validation.
-- Safety-rule cases show the rules run as written; they are not evidence of clinical safety.
-- The 12 Appium cases are Blocked by the phone (MIUI security setting) and are never counted as passed.
-- M5-FR18.4 (injury-risk notice) is not implemented.
+The previous round's files (`Baymax_Chapter5_Test_Cases.original.docx`, `tools/build_chapter5.py`, `tools/verify_integrity.py`,
+the Appium suite in `automation/appium/`) belong to the earlier version of the chapter and are not used for this document.

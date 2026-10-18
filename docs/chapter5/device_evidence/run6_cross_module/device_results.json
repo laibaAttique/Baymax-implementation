@@ -1,0 +1,55 @@
+{
+  "cases": [
+    {
+      "id": "ATC-DEV-INT-01",
+      "req": "M4-SFR4",
+      "objective": "Home → plan → exercise → Manual Guidance session → summary → the planned exercise is recorded as completed (Modules 4 → 5 → 4)",
+      "input": "Test user (6 days a week); Workout tab → training day (today, or the first training day when today is a rest day) → its quickest repetition exercise → Start exercise → Manual Guidance → \"Completed ✓\" for every set (rest timers run) → Finish → Back to Workout Plan",
+      "expected": "Summary \"Confirmed N reps\" with N = sets × reps; target reached; session saved with its plan link; plan progress records the entry as done",
+      "actual": "Error: Timed out after 20 s waiting for finish",
+      "status": "Failed",
+      "file": "integration_test/cross_module_test.dart",
+      "test": "ATC-DEV-INT-01 Home → plan → exercise → Manual Guidance session → summary → the planned exercise is recorded as completed (Modules 4 → 5 → 4)",
+      "started": "2026-10-18T17:59:38.297201",
+      "durationMs": 133107,
+      "screenshot": "ATC-DEV-INT-01.png",
+      "tool": "Flutter integration_test (IntegrationTestWidgetsFlutterBinding), real device"
+    },
+    {
+      "id": "ATC-DEV-INT-02",
+      "req": "M6-SFR2",
+      "objective": "During a live camera session the voice assistant answers from that session and the session continues (Modules 5 ↔ 6)",
+      "input": "Planned camera exercise → consent → Continue → menu \"Ask Baymax (voice)\" → chip \"How many reps?\" → close",
+      "expected": "Reply states the camera counter's reps for that exercise; after closing, the camera session is still active",
+      "actual": "Error: Timed out after 25 s waiting for the live camera",
+      "status": "Failed",
+      "file": "integration_test/cross_module_test.dart",
+      "test": "ATC-DEV-INT-02 During a live camera session the voice assistant answers from that session and the session continues (Modules 5 ↔ 6)",
+      "started": "2026-10-18T18:01:52.258357",
+      "durationMs": 34749,
+      "screenshot": "not captured (StateError)",
+      "tool": "Flutter integration_test (IntegrationTestWidgetsFlutterBinding), real device"
+    },
+    {
+      "id": "ATC-DEV-INT-03",
+      "req": "M6-SFR3",
+      "objective": "The voice chip \"Pause workout\" pauses the running posture session (Module 6 → 5)",
+      "input": "Planned exercise → Manual Guidance → \"Ask Baymax\" → chip \"How many reps?\" → chip \"Pause workout\" → close",
+      "expected": "Session paused; the guidance screen shows \"Resume\"",
+      "actual": "Session paused; \"Resume\" shown 1",
+      "status": "Passed",
+      "file": "integration_test/cross_module_test.dart",
+      "test": "ATC-DEV-INT-03 The voice chip \"Pause workout\" pauses the running posture session (Module 6 → 5)",
+      "started": "2026-10-18T18:02:27.601928",
+      "durationMs": 20718,
+      "screenshot": "not captured (StateError)",
+      "tool": "Flutter integration_test (IntegrationTestWidgetsFlutterBinding), real device"
+    }
+  ],
+  "permissions": {
+    "camera": "denied",
+    "microphone": "denied"
+  },
+  "os": "TKQ1.221114.001 test-keys",
+  "_note": "1 screenshot byte arrays removed from this file; the same images are saved as screenshots/<name>.png"
+}

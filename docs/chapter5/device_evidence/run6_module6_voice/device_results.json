@@ -1,0 +1,69 @@
+{
+  "cases": [
+    {
+      "id": "ATC-DEV-M6-01",
+      "req": "M6-FR19.1",
+      "objective": "The chatbot's mic opens the Module 6 voice assistant, which shows the state matching the phone's microphone permission",
+      "input": "Home → AI chatbot (Module 13) → \"Voice assistant\"; microphone permission as set on the phone",
+      "expected": "Voice assistant screen (not the chatbot); granted → \"Listening...\"; not granted → \"Voice input unavailable\" with the reason and \"Try again\"",
+      "actual": "Phone microphone permission: denied; assistant state: unavailable; reason shown 1; \"Try again\" 1; chatbot still on top: 0",
+      "status": "Passed",
+      "file": "integration_test/module6_voice_test.dart",
+      "test": "ATC-DEV-M6-01 The chatbot's mic opens the Module 6 voice assistant, which shows the state matching the phone's microphone permission",
+      "started": "2026-10-18T17:57:46.661373",
+      "durationMs": 16977,
+      "screenshot": "ATC-DEV-M6-01.png",
+      "tool": "Flutter integration_test (IntegrationTestWidgetsFlutterBinding), real device"
+    },
+    {
+      "id": "ATC-DEV-M6-02",
+      "req": "M6-FR19.3",
+      "objective": "A quick-action chip is answered from the real session state and spoken with the phone's text-to-speech",
+      "input": "No active workout; tap the chip \"How many reps?\"",
+      "expected": "Reply card says there is no active workout session (no invented numbers); text-to-speech reports no failure; at most 3 chips",
+      "actual": "Reply: \"There's no active workout session right now. Open an exercise and tap Start Exercise to begin.\"; engine On-device rules (Dialogflow unavailable); speech output failed false; chips 2",
+      "status": "Passed",
+      "file": "integration_test/module6_voice_test.dart",
+      "test": "ATC-DEV-M6-02 A quick-action chip is answered from the real session state and spoken with the phone's text-to-speech",
+      "started": "2026-10-18T17:58:04.344066",
+      "durationMs": 6669,
+      "screenshot": "not captured (StateError)",
+      "tool": "Flutter integration_test (IntegrationTestWidgetsFlutterBinding), real device"
+    },
+    {
+      "id": "ATC-DEV-M6-03",
+      "req": "M6-FR19.3",
+      "objective": "\"What's my workout today?\" is answered from the personalised plan",
+      "input": "Test user's plan; tap the chip \"What's my workout today?\"",
+      "expected": "Reply names today's plan day, or says today is a rest day, matching the plan",
+      "actual": "Plan today: rest day; reply \"Today is a rest day in your plan. Light walking or stretching is fine if you feel like moving.\"",
+      "status": "Passed",
+      "file": "integration_test/module6_voice_test.dart",
+      "test": "ATC-DEV-M6-03 \"What's my workout today?\" is answered from the personalised plan",
+      "started": "2026-10-18T17:58:11.396582",
+      "durationMs": 5474,
+      "screenshot": "not captured (StateError)",
+      "tool": "Flutter integration_test (IntegrationTestWidgetsFlutterBinding), real device"
+    },
+    {
+      "id": "ATC-DEV-M6-04",
+      "req": "M6-FR19.4",
+      "objective": "The close button leaves the voice assistant and the app stays usable",
+      "input": "Home → chatbot → voice assistant → \"Close voice assistant\" → Back",
+      "expected": "Voice assistant closed; chatbot shown; Back returns to Home",
+      "actual": "Voice assistant closed; chatbot shown 1; Home shown after Back",
+      "status": "Passed",
+      "file": "integration_test/module6_voice_test.dart",
+      "test": "ATC-DEV-M6-04 The close button leaves the voice assistant and the app stays usable",
+      "started": "2026-10-18T17:58:17.244415",
+      "durationMs": 5679,
+      "screenshot": "not captured (StateError)",
+      "tool": "Flutter integration_test (IntegrationTestWidgetsFlutterBinding), real device"
+    }
+  ],
+  "permissions": {
+    "microphone": "denied"
+  },
+  "os": "TKQ1.221114.001 test-keys",
+  "_note": "1 screenshot byte arrays removed from this file; the same images are saved as screenshots/<name>.png"
+}
