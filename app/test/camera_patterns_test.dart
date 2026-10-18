@@ -142,7 +142,8 @@ void main() {
       test('${p.name}: three full cycles count three reps; a short one is not counted', () {
         final (start, turn) = _range(c);
         final engine = PostureEngine(c);
-        final motion = JointMotion(c, startAngle: start).hold(300);
+        // Overhead presses: wrists above the shoulders, as in a real press (a hanging arm is ignored by design).
+        final motion = JointMotion(c, startAngle: start, baseDeg: c.ignoreLoweredArm ? -100 : 0).hold(300);
         for (var i = 0; i < 3; i++) {
           motion.moveTo(turn, 700).hold(150).moveTo(start, 700).hold(250);
         }

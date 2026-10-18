@@ -80,8 +80,11 @@ class ExercisePostureConfig {
 ///   ([form_checks.dart]) — these are EXPERIMENTAL until validated on a device: live corrections, no score.
 /// * Patterns (or variants) whose form cannot be inferred from the visible landmarks stay basic tracking.
 ///
-/// ASSUMPTIONS: phase angles and check thresholds are team-chosen starting values from the usual range of each movement
-/// and common coaching cues. They have not been validated on test subjects and are not form or medical criteria.
+/// CALIBRATION (2026-10-18): phase angles and check thresholds of the non-validated patterns were calibrated on REAL
+/// people — MediaPipe landmarks of the free-exercise-db photos (start/end position), from the app's own model on the
+/// phone and on the PC — using the calibration half only, and are checked on the held-out half by
+/// test/real_pose_replay_test.dart (see docs/MODULE5_DEVICE_VALIDATION.md). They are still not clinical criteria, and
+/// live-movement validation (fault sensitivity, speed) remains open.
 class MovementPatterns {
   MovementPatterns._();
 
@@ -166,6 +169,7 @@ class MovementPatterns {
     required double peak,
     bool opening = false,
     AngleAggregate aggregate = AngleAggregate.mean,
+    bool ignoreLoweredArm = false,
     int minRepMs = 600,
     double maxAngleJump = 50,
     List<FormCheck> checks = const [],
@@ -185,6 +189,7 @@ class MovementPatterns {
         flexedAngle: peak,
         opening: opening,
         aggregate: aggregate,
+        ignoreLoweredArm: ignoreLoweredArm,
         minRepMs: minRepMs,
         maxAngleJump: maxAngleJump,
         bodyLineLeft: bodyLineLeft,
@@ -242,22 +247,22 @@ class MovementPatterns {
   static ExerciseFormConfig? _build(String id, MovementPattern p) {
     switch (p) {
       case MovementPattern.squat:
-        return _reps(id, 'Knee', _knee, rest: 160, attempt: 140, peak: 100,
-            checks: const [TorsoLeanCheck(60), KneeTrackingCheck(0.65)], setup: _sideOn, down: 'Bend your knees', up: 'Stand back up');
+        return _reps(id, 'Knee', _knee, rest: 143, attempt: 130, peak: 105,
+            checks: const [TorsoLeanCheck(70), KneeTrackingCheck(0.6)], setup: _sideOn, down: 'Bend your knees', up: 'Stand back up');
       case MovementPattern.lunge:
-        return _reps(id, 'Knee', _knee, rest: 160, attempt: 140, peak: 110, aggregate: AngleAggregate.furthest,
+        return _reps(id, 'Knee', _knee, rest: 140, attempt: 125, peak: 100, aggregate: AngleAggregate.furthest,
             checks: const [TorsoLeanCheck(30, cue: 'Keep your torso upright', failedText: 'Torso leaned forward in the lunge')],
             setup: _sideOn, down: 'Lower into the lunge', up: 'Push back up');
       case MovementPattern.hinge:
         final straightLeg = _has(id, ['stiff', 'romanian', 'good_morning']);
-        return _reps(id, 'Hip', _hip, rest: 160, attempt: 145, peak: 120,
+        return _reps(id, 'Hip', _hip, rest: 140, attempt: 132, peak: 120,
             checks: straightLeg
                 ? const [
                     JointRangeCheck(
                         id: 'knees_soft',
                         label: 'Leg position',
                         measure: Measure.knee,
-                        min: 130,
+                        min: 120,
                         lowCue: 'Keep your legs nearly straight — push your hips back',
                         passedText: 'Legs stayed nearly straight',
                         failedText: 'Knees bent too much, turning it into a squat'),
@@ -267,7 +272,7 @@ class MovementPatterns {
                         id: 'hinge_not_squat',
                         label: 'Hip hinge',
                         measure: Measure.knee,
-                        min: 80,
+                        min: 70,
                         atPeakOnly: true,
                         lowCue: 'Push your hips back — this is a hinge, not a squat',
                         passedText: 'Moved from the hips, not into a squat',
@@ -276,7 +281,7 @@ class MovementPatterns {
             setup: _sideOn, down: 'Hinge at the hips', up: 'Stand tall');
       case MovementPattern.hipExtension:
         final bridge = _has(id, ['bridge', 'thrust', 'hip_lift', 'butt_lift']);
-        return _reps(id, 'Hip', _hip, rest: 145, attempt: 152, peak: 165, opening: true,
+        return _reps(id, 'Hip', _hip, rest: 135, attempt: 142, peak: 150, opening: true,
             checks: bridge
                 ? const [
                     JointRangeCheck(
@@ -303,12 +308,12 @@ class MovementPatterns {
                   ],
             setup: _floorSideOn, down: 'Lower with control', up: 'Lift your hips');
       case MovementPattern.pushup:
-        return _reps(id, 'Elbow', _elbow, rest: 155, attempt: 135, peak: 95,
+        return _reps(id, 'Elbow', _elbow, rest: 140, attempt: 125, peak: 100,
             checks: const [HipLineCheck()], bodyLineLeft: PoseIndex.leftAnkle, bodyLineRight: PoseIndex.rightAnkle,
             setup: _floorSideOn, down: 'Lower with control', up: 'Press back up');
       case MovementPattern.benchPress:
         // Lying on a bench, side-on: the torso line shows the hips lifting off the bench.
-        return _reps(id, 'Elbow', _elbow, rest: 150, attempt: 130, peak: 100, aggregate: AngleAggregate.furthest,
+        return _reps(id, 'Elbow', _elbow, rest: 135, attempt: 126, peak: 115, aggregate: AngleAggregate.furthest,
             checks: const [TorsoSwayCheck(10, cue: 'Keep your hips and back on the bench')],
             setup: _upperSideOn, down: 'Lower with control', up: 'Press up');
       case MovementPattern.dip:
@@ -320,56 +325,57 @@ class MovementPatterns {
             setup: _sideOn, down: 'Lower with control', up: 'Press back up');
       case MovementPattern.overheadPress:
         final oneArm = _has(id, ['one-arm', 'one_arm', 'single', 'alternating', 'seesaw', 'see-saw']);
-        return _reps(id, 'Elbow', _elbow, rest: 110, attempt: 125, peak: 155, opening: true, aggregate: AngleAggregate.furthest,
+        return _reps(id, 'Elbow', _elbow, rest: 120, attempt: 130, peak: 140, opening: true, aggregate: AngleAggregate.furthest,
+            ignoreLoweredArm: true,
             checks: [
-              const TorsoLeanCheck(15, cue: "Stand tall — don't lean back", failedText: 'Torso leaned during the press'),
-              if (!oneArm) const ArmSymmetryCheck(25),
+              const TorsoLeanCheck(20, cue: "Stand tall — don't lean back", failedText: 'Torso leaned during the press'),
+              if (!oneArm) const ArmSymmetryCheck(40),
             ],
             setup: _upperSideOn, down: 'Lower to your shoulders', up: 'Press overhead');
       case MovementPattern.armRaise:
-        return _reps(id, 'Shoulder', _shoulder, rest: 35, attempt: 50, peak: 75, opening: true, aggregate: AngleAggregate.furthest,
+        return _reps(id, 'Shoulder', _shoulder, rest: 45, attempt: 55, peak: 72, opening: true, aggregate: AngleAggregate.furthest,
             checks: const [
               JointRangeCheck(
                   id: 'arms_straight',
                   label: 'Arm position',
                   measure: Measure.elbow,
-                  min: 130,
+                  min: 120,
                   lowCue: 'Keep your arms almost straight',
                   passedText: 'Arms stayed almost straight',
                   failedText: 'Elbows bent during the raise'),
-              TorsoSwayCheck(12),
+              TorsoSwayCheck(14),
             ],
             setup: _front, down: 'Lower slowly', up: 'Raise your arms');
       case MovementPattern.uprightRow:
-        return _reps(id, 'Shoulder', _shoulder, rest: 30, attempt: 45, peak: 70, opening: true,
-            checks: const [TorsoSwayCheck(12)], setup: _front, down: 'Lower slowly', up: 'Lift your elbows');
+        return _reps(id, 'Shoulder', _shoulder, rest: 35, attempt: 48, peak: 68, opening: true,
+            checks: const [TorsoSwayCheck(15)], setup: _front, down: 'Lower slowly', up: 'Lift your elbows');
       case MovementPattern.row:
-        return _reps(id, 'Elbow', _elbow, rest: 150, attempt: 130, peak: 100, aggregate: AngleAggregate.furthest,
-            checks: const [TorsoSwayCheck(15, cue: 'Keep your torso still — pull with your arms')],
+        return _reps(id, 'Elbow', _elbow, rest: 138, attempt: 128, peak: 115, aggregate: AngleAggregate.furthest,
+            checks: const [TorsoSwayCheck(20, cue: 'Keep your torso still — pull with your arms')],
             setup: _upperSideOn, down: 'Pull', up: 'Straighten your arms');
       case MovementPattern.pulldown:
-        return _reps(id, 'Elbow', _elbow, rest: 150, attempt: 130, peak: 95, aggregate: AngleAggregate.furthest,
+        return _reps(id, 'Elbow', _elbow, rest: 130, attempt: 115, peak: 95, aggregate: AngleAggregate.furthest,
             checks: const [TorsoSwayCheck(20, cue: "Don't lean back to pull")],
             setup: _upperSideOn, down: 'Pull down', up: 'Straighten your arms');
       case MovementPattern.curl:
         // Braced curls hold the upper arm forward on purpose, so the upper-arm check only applies to free curls.
         final braced = _has(id, ['preacher', 'incline', 'lying', 'concentration', 'spider', 'overhead', 'high_cable', 'prone']);
-        return _reps(id, 'Elbow', _elbow, rest: 150, attempt: 120, peak: 70, aggregate: AngleAggregate.furthest,
-            checks: [if (!braced) const UpperArmStillCheck(35), const TorsoSwayCheck(10)],
+        return _reps(id, 'Elbow', _elbow, rest: 140, attempt: 128, peak: 108, aggregate: AngleAggregate.furthest,
+            checks: [if (!braced) const UpperArmStillCheck(55), const TorsoSwayCheck(20)],
             setup: _upperSideOn, down: 'Curl up', up: 'Lower slowly');
       case MovementPattern.tricepsExtension:
-        return _reps(id, 'Elbow', _elbow, rest: 150, attempt: 130, peak: 95, aggregate: AngleAggregate.furthest,
+        return _reps(id, 'Elbow', _elbow, rest: 130, attempt: 120, peak: 105, aggregate: AngleAggregate.furthest,
             checks: const [TorsoSwayCheck(12)], setup: _upperSideOn, down: 'Bend your elbows', up: 'Straighten your arms');
       case MovementPattern.tricepsPushdown:
-        return _reps(id, 'Elbow', _elbow, rest: 110, attempt: 125, peak: 150, opening: true, aggregate: AngleAggregate.furthest,
-            checks: const [UpperArmStillCheck(35), TorsoSwayCheck(12)],
+        return _reps(id, 'Elbow', _elbow, rest: 115, attempt: 125, peak: 140, opening: true, aggregate: AngleAggregate.furthest,
+            checks: const [UpperArmStillCheck(50), TorsoSwayCheck(12)],
             setup: _upperSideOn, down: 'Return with control', up: 'Straighten your arms');
       case MovementPattern.legExtension:
-        return _reps(id, 'Knee', _knee, rest: 110, attempt: 125, peak: 155, opening: true, aggregate: AngleAggregate.furthest,
+        return _reps(id, 'Knee', _knee, rest: 110, attempt: 122, peak: 145, opening: true, aggregate: AngleAggregate.furthest,
             checks: const [TorsoSwayCheck(15, cue: 'Keep your back against the seat')],
             setup: _sideOn, down: 'Lower with control', up: 'Straighten your leg');
       case MovementPattern.legCurl:
-        return _reps(id, 'Knee', _knee, rest: 150, attempt: 130, peak: 100, aggregate: AngleAggregate.furthest,
+        return _reps(id, 'Knee', _knee, rest: 125, attempt: 115, peak: 100, aggregate: AngleAggregate.furthest,
             checks: const [TorsoSwayCheck(15, cue: 'Keep your hips down and still')],
             setup: _sideOn, down: 'Curl your heel in', up: 'Straighten your leg');
       case MovementPattern.sitUp:

@@ -1,0 +1,3739 @@
+{
+ "source": "free-exercise-db photos (Unlicense), commit f00c92c7dcf1216a928a52c3706c7ce8e2f71ed5; landmarks from pose_landmarker_lite on a Redmi Note 11 (Android 13)",
+ "method": "two real photos per exercise (start/end); production MediaPipe landmarks replayed through the production engine; thresholds tuned on the calibration half, reported on the held-out half",
+ "totals": {
+  "calibration": {
+   "pairs": 136,
+   "repSpanPct": 70,
+   "repCountedPct": 69,
+   "inPositionPct": 100,
+   "anyFalseAlarmPct": 10,
+   "falseAlarmPctByCheck": {
+    "sway": 5,
+    "arms_straight": 1,
+    "torso": 1,
+    "upper_arm": 2,
+    "knees": 1
+   }
+  },
+  "heldOut": {
+   "pairs": 120,
+   "repSpanPct": 66,
+   "repCountedPct": 66,
+   "anyFalseAlarmPct": 13,
+   "falseAlarmPctByCheck": {
+    "sway": 6,
+    "upper_arm": 2,
+    "torso": 3,
+    "knees_soft": 2,
+    "arms_straight": 1,
+    "legs_straight": 1
+   }
+  }
+ },
+ "patterns": {
+  "calibration": {
+   "curl": {
+    "pairs": 20,
+    "repSpanPct": 80,
+    "repCountedPct": 80,
+    "anyFalseAlarmPct": 20,
+    "falseAlarmPctByCheck": {
+     "upper_arm": 5,
+     "sway": 15
+    }
+   },
+   "overheadPress": {
+    "pairs": 17,
+    "repSpanPct": 94,
+    "repCountedPct": 94,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "armRaise": {
+    "pairs": 11,
+    "repSpanPct": 73,
+    "repCountedPct": 73,
+    "anyFalseAlarmPct": 18,
+    "falseAlarmPctByCheck": {
+     "arms_straight": 9,
+     "sway": 9
+    }
+   },
+   "tricepsExtension": {
+    "pairs": 11,
+    "repSpanPct": 45,
+    "repCountedPct": 45,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "hinge": {
+    "pairs": 4,
+    "repSpanPct": 100,
+    "repCountedPct": 100,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "benchPress": {
+    "pairs": 20,
+    "repSpanPct": 50,
+    "repCountedPct": 50,
+    "anyFalseAlarmPct": 10,
+    "falseAlarmPctByCheck": {
+     "sway": 10
+    }
+   },
+   "lunge": {
+    "pairs": 6,
+    "repSpanPct": 83,
+    "repCountedPct": 83,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "row": {
+    "pairs": 11,
+    "repSpanPct": 55,
+    "repCountedPct": 55,
+    "anyFalseAlarmPct": 9,
+    "falseAlarmPctByCheck": {
+     "sway": 9
+    }
+   },
+   "squat": {
+    "pairs": 13,
+    "repSpanPct": 77,
+    "repCountedPct": 69,
+    "anyFalseAlarmPct": 23,
+    "falseAlarmPctByCheck": {
+     "torso": 15,
+     "knees": 8
+    }
+   },
+   "uprightRow": {
+    "pairs": 5,
+    "repSpanPct": 60,
+    "repCountedPct": 60,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "kneeTuck": {
+    "pairs": 1,
+    "repSpanPct": 100,
+    "repCountedPct": 100,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "pulldown": {
+    "pairs": 4,
+    "repSpanPct": 75,
+    "repCountedPct": 75,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "kneeLift": {
+    "pairs": 1,
+    "repSpanPct": 100,
+    "repCountedPct": 100,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "plankHold": {
+    "pairs": 1,
+    "inPositionPct": 100,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "pushup": {
+    "pairs": 1,
+    "repSpanPct": 100,
+    "repCountedPct": 100,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "hipExtension": {
+    "pairs": 1,
+    "repSpanPct": 0,
+    "repCountedPct": 0,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "tricepsPushdown": {
+    "pairs": 6,
+    "repSpanPct": 67,
+    "repCountedPct": 67,
+    "anyFalseAlarmPct": 33,
+    "falseAlarmPctByCheck": {
+     "upper_arm": 33
+    }
+   },
+   "legCurl": {
+    "pairs": 2,
+    "repSpanPct": 50,
+    "repCountedPct": 50,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "legExtension": {
+    "pairs": 1,
+    "repSpanPct": 0,
+    "repCountedPct": 0,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   }
+  },
+  "heldOut": {
+   "row": {
+    "pairs": 16,
+    "repSpanPct": 75,
+    "repCountedPct": 75,
+    "anyFalseAlarmPct": 6,
+    "falseAlarmPctByCheck": {
+     "sway": 6
+    }
+   },
+   "legCurl": {
+    "pairs": 1,
+    "repSpanPct": 100,
+    "repCountedPct": 100,
+    "anyFalseAlarmPct": 100,
+    "falseAlarmPctByCheck": {
+     "sway": 100
+    }
+   },
+   "curl": {
+    "pairs": 26,
+    "repSpanPct": 54,
+    "repCountedPct": 54,
+    "anyFalseAlarmPct": 8,
+    "falseAlarmPctByCheck": {
+     "sway": 8
+    }
+   },
+   "squat": {
+    "pairs": 10,
+    "repSpanPct": 90,
+    "repCountedPct": 90,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "benchPress": {
+    "pairs": 10,
+    "repSpanPct": 80,
+    "repCountedPct": 80,
+    "anyFalseAlarmPct": 10,
+    "falseAlarmPctByCheck": {
+     "sway": 10
+    }
+   },
+   "overheadPress": {
+    "pairs": 13,
+    "repSpanPct": 69,
+    "repCountedPct": 69,
+    "anyFalseAlarmPct": 15,
+    "falseAlarmPctByCheck": {
+     "torso": 15
+    }
+   },
+   "tricepsPushdown": {
+    "pairs": 4,
+    "repSpanPct": 50,
+    "repCountedPct": 50,
+    "anyFalseAlarmPct": 50,
+    "falseAlarmPctByCheck": {
+     "upper_arm": 50
+    }
+   },
+   "tricepsExtension": {
+    "pairs": 11,
+    "repSpanPct": 64,
+    "repCountedPct": 64,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "armRaise": {
+    "pairs": 7,
+    "repSpanPct": 57,
+    "repCountedPct": 57,
+    "anyFalseAlarmPct": 14,
+    "falseAlarmPctByCheck": {
+     "arms_straight": 14,
+     "sway": 14
+    }
+   },
+   "dip": {
+    "pairs": 2,
+    "repSpanPct": 50,
+    "repCountedPct": 50,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "pulldown": {
+    "pairs": 3,
+    "repSpanPct": 67,
+    "repCountedPct": 67,
+    "anyFalseAlarmPct": 33,
+    "falseAlarmPctByCheck": {
+     "sway": 33
+    }
+   },
+   "singleLegExtension": {
+    "pairs": 2,
+    "repSpanPct": 0,
+    "repCountedPct": 0,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "hipExtension": {
+    "pairs": 3,
+    "repSpanPct": 33,
+    "repCountedPct": 33,
+    "anyFalseAlarmPct": 33,
+    "falseAlarmPctByCheck": {
+     "legs_straight": 33
+    }
+   },
+   "legExtension": {
+    "pairs": 1,
+    "repSpanPct": 100,
+    "repCountedPct": 100,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "hinge": {
+    "pairs": 6,
+    "repSpanPct": 100,
+    "repCountedPct": 100,
+    "anyFalseAlarmPct": 33,
+    "falseAlarmPctByCheck": {
+     "knees_soft": 33
+    }
+   },
+   "lunge": {
+    "pairs": 2,
+    "repSpanPct": 0,
+    "repCountedPct": 0,
+    "anyFalseAlarmPct": 50,
+    "falseAlarmPctByCheck": {
+     "torso": 50
+    }
+   },
+   "plankKneeDrive": {
+    "pairs": 1,
+    "repSpanPct": 0,
+    "repCountedPct": 0,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   },
+   "uprightRow": {
+    "pairs": 2,
+    "repSpanPct": 100,
+    "repCountedPct": 100,
+    "anyFalseAlarmPct": 0,
+    "falseAlarmPctByCheck": {}
+   }
+  }
+ },
+ "exercises": [
+  {
+   "id": "Alternate_Hammer_Curl",
+   "name": "Alternate Hammer Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    147,
+    78
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Alternate_Incline_Dumbbell_Curl",
+   "name": "Alternate Incline Dumbbell Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    134,
+    178
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Alternating_Cable_Shoulder_Press",
+   "name": "Alternating Cable Shoulder Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    80,
+    149
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Alternating_Deltoid_Raise",
+   "name": "Alternating Deltoid Raise",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    22,
+    94
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Alternating_Kettlebell_Press",
+   "name": "Alternating Kettlebell Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    107,
+    165
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Alternating_Kettlebell_Row",
+   "name": "Alternating Kettlebell Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    147,
+    127
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Arnold_Dumbbell_Press",
+   "name": "Arnold Dumbbell Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    75,
+    149
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Ball_Leg_Curl",
+   "name": "Ball Leg Curl",
+   "pattern": "legCurl",
+   "split": "heldOut",
+   "angles": [
+    160,
+    57
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Band_Skull_Crusher",
+   "name": "Band Skull Crusher",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    106,
+    131
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Curl",
+   "name": "Barbell Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    149,
+    96
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Curls_Lying_Against_An_Incline",
+   "name": "Barbell Curls Lying Against An Incline",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    149,
+    76
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Deadlift",
+   "name": "Barbell Deadlift",
+   "pattern": "hinge",
+   "split": "calibration",
+   "angles": [
+    48,
+    167
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Full_Squat",
+   "name": "Barbell Full Squat",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    154,
+    98
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Guillotine_Bench_Press",
+   "name": "Barbell Guillotine Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    147,
+    71
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Hack_Squat",
+   "name": "Barbell Hack Squat",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    80,
+    156
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+   "name": "Barbell Incline Bench Press - Medium Grip",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    147,
+    81
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Lunge",
+   "name": "Barbell Lunge",
+   "pattern": "lunge",
+   "split": "calibration",
+   "angles": [
+    161,
+    90
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Shoulder_Press",
+   "name": "Barbell Shoulder Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    159,
+    92
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Side_Split_Squat",
+   "name": "Barbell Side Split Squat",
+   "pattern": "lunge",
+   "split": "calibration",
+   "angles": [
+    148,
+    80
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Barbell_Squat",
+   "name": "Barbell Squat",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    164,
+    86
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": [
+    "knees"
+   ]
+  },
+  {
+   "id": "Bent_Over_Barbell_Row",
+   "name": "Bent Over Barbell Row",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    148,
+    95
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Bent_Over_One-Arm_Long_Bar_Row",
+   "name": "Bent Over One-Arm Long Bar Row",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    150,
+    125
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Bent_Over_Two-Arm_Long_Bar_Row",
+   "name": "Bent Over Two-Arm Long Bar Row",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    148,
+    114
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Bent_Over_Two-Dumbbell_Row",
+   "name": "Bent Over Two-Dumbbell Row",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    149,
+    78
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Bent_Over_Two-Dumbbell_Row_With_Palms_In",
+   "name": "Bent Over Two-Dumbbell Row With Palms In",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    149,
+    86
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Bradford_Rocky_Presses",
+   "name": "Bradford/Rocky Presses",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    85,
+    151
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Chest_Press",
+   "name": "Cable Chest Press",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    94,
+    130
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Deadlifts",
+   "name": "Cable Deadlifts",
+   "pattern": "hinge",
+   "split": "calibration",
+   "angles": [
+    77,
+    170
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Hammer_Curls_-_Rope_Attachment",
+   "name": "Cable Hammer Curls - Rope Attachment",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    142,
+    78
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Incline_Pushdown",
+   "name": "Cable Incline Pushdown",
+   "pattern": "tricepsPushdown",
+   "split": "heldOut",
+   "angles": [
+    148,
+    157
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "upper_arm"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Incline_Triceps_Extension",
+   "name": "Cable Incline Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    85,
+    158
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Lying_Triceps_Extension",
+   "name": "Cable Lying Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    113,
+    159
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_One_Arm_Tricep_Extension",
+   "name": "Cable One Arm Tricep Extension",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    145,
+    144
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Preacher_Curl",
+   "name": "Cable Preacher Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    139,
+    75
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Rope_Overhead_Triceps_Extension",
+   "name": "Cable Rope Overhead Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    100,
+    150
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Rope_Rear-Delt_Rows",
+   "name": "Cable Rope Rear-Delt Rows",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    148,
+    102
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Seated_Lateral_Raise",
+   "name": "Cable Seated Lateral Raise",
+   "pattern": "armRaise",
+   "split": "heldOut",
+   "angles": [
+    78,
+    110
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cable_Shoulder_Press",
+   "name": "Cable Shoulder Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    107,
+    164
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "tricep_dip",
+   "name": "Chair Dips",
+   "pattern": "dip",
+   "split": "heldOut",
+   "angles": [
+    138,
+    108
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Chair_Squat",
+   "name": "Chair Squat",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    161,
+    98
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": [
+    "knees"
+   ]
+  },
+  {
+   "id": "Close-Grip_Barbell_Bench_Press",
+   "name": "Close-Grip Barbell Bench Press",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    76,
+    155
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Close-Grip_Dumbbell_Press",
+   "name": "Close-Grip Dumbbell Press",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    158,
+    93
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Close-Grip_EZ_Bar_Curl",
+   "name": "Close-Grip EZ Bar Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    140,
+    92
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Close-Grip_EZ-Bar_Curl_with_Band",
+   "name": "Close-Grip EZ-Bar Curl with Band",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    147,
+    74
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Close-Grip_EZ-Bar_Press",
+   "name": "Close-Grip EZ-Bar Press",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    160,
+    74
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Close-Grip_Front_Lat_Pulldown",
+   "name": "Close-Grip Front Lat Pulldown",
+   "pattern": "pulldown",
+   "split": "heldOut",
+   "angles": [
+    147,
+    70
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Close-Grip_Standing_Barbell_Curl",
+   "name": "Close-Grip Standing Barbell Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    142,
+    84
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Concentration_Curls",
+   "name": "Concentration Curls",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    126,
+    117
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Cross_Body_Hammer_Curl",
+   "name": "Cross Body Hammer Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    103,
+    118
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "dead_bug",
+   "name": "Dead Bug",
+   "pattern": "singleLegExtension",
+   "split": "heldOut",
+   "angles": [
+    70,
+    140
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Decline_Barbell_Bench_Press",
+   "name": "Decline Barbell Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    133,
+    157
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Decline_Close-Grip_Bench_To_Skull_Crusher",
+   "name": "Decline Close-Grip Bench To Skull Crusher",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    150,
+    107
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Decline_Dumbbell_Bench_Press",
+   "name": "Decline Dumbbell Bench Press",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    87,
+    156
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Decline_Dumbbell_Triceps_Extension",
+   "name": "Decline Dumbbell Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    147,
+    59
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Decline_EZ_Bar_Triceps_Extension",
+   "name": "Decline EZ Bar Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    157,
+    98
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Decline_Smith_Press",
+   "name": "Decline Smith Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    152,
+    63
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Dip_Machine",
+   "name": "Dip Machine",
+   "pattern": "dip",
+   "split": "heldOut",
+   "angles": [
+    76,
+    153
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Double_Kettlebell_Push_Press",
+   "name": "Double Kettlebell Push Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    93,
+    87
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Drag_Curl",
+   "name": "Drag Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    161,
+    97
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Alternate_Bicep_Curl",
+   "name": "Dumbbell Alternate Bicep Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    104,
+    103
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Bench_Press",
+   "name": "Dumbbell Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    114,
+    146
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Bench_Press_with_Neutral_Grip",
+   "name": "Dumbbell Bench Press with Neutral Grip",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    161,
+    76
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Bicep_Curl",
+   "name": "Dumbbell Bicep Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    143,
+    102
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Incline_Row",
+   "name": "Dumbbell Incline Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    155,
+    107
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Lunges",
+   "name": "Dumbbell Lunges",
+   "pattern": "lunge",
+   "split": "calibration",
+   "angles": [
+    149,
+    61
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_One-Arm_Shoulder_Press",
+   "name": "Dumbbell One-Arm Shoulder Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    99,
+    153
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_One-Arm_Triceps_Extension",
+   "name": "Dumbbell One-Arm Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    111,
+    144
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_One-Arm_Upright_Row",
+   "name": "Dumbbell One-Arm Upright Row",
+   "pattern": "uprightRow",
+   "split": "calibration",
+   "angles": [
+    67,
+    16
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Prone_Incline_Curl",
+   "name": "Dumbbell Prone Incline Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    91,
+    147
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Raise",
+   "name": "Dumbbell Raise",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    40,
+    67
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "arms_straight"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Rear_Lunge",
+   "name": "Dumbbell Rear Lunge",
+   "pattern": "lunge",
+   "split": "calibration",
+   "angles": [
+    150,
+    89
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Shoulder_Press",
+   "name": "Dumbbell Shoulder Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    113,
+    146
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Squat",
+   "name": "Dumbbell Squat",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    154,
+    70
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Squat_To_A_Bench",
+   "name": "Dumbbell Squat To A Bench",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    143,
+    69
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Dumbbell_Tricep_Extension_-Pronated_Grip",
+   "name": "Dumbbell Tricep Extension -Pronated Grip",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    71,
+    160
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Elevated_Back_Lunge",
+   "name": "Elevated Back Lunge",
+   "pattern": "lunge",
+   "split": "calibration",
+   "angles": [
+    168,
+    52
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Elevated_Cable_Rows",
+   "name": "Elevated Cable Rows",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    138,
+    88
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Exercise_Ball_Pull-In",
+   "name": "Exercise Ball Pull-In",
+   "pattern": "kneeTuck",
+   "split": "calibration",
+   "angles": [
+    151,
+    38
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "EZ-Bar_Curl",
+   "name": "EZ-Bar Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    145,
+    86
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "EZ-Bar_Skullcrusher",
+   "name": "EZ-Bar Skullcrusher",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    154,
+    100
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Flexor_Incline_Dumbbell_Curls",
+   "name": "Flexor Incline Dumbbell Curls",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    136,
+    103
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Front_Cable_Raise",
+   "name": "Front Cable Raise",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    47,
+    78
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Front_Dumbbell_Raise",
+   "name": "Front Dumbbell Raise",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    21,
+    135
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Front_Incline_Dumbbell_Raise",
+   "name": "Front Incline Dumbbell Raise",
+   "pattern": "armRaise",
+   "split": "heldOut",
+   "angles": [
+    47,
+    77
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Front_Squats_With_Two_Kettlebells",
+   "name": "Front Squats With Two Kettlebells",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    158,
+    48
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Front_Two-Dumbbell_Raise",
+   "name": "Front Two-Dumbbell Raise",
+   "pattern": "armRaise",
+   "split": "heldOut",
+   "angles": [
+    18,
+    124
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Full_Range-Of-Motion_Lat_Pulldown",
+   "name": "Full Range-Of-Motion Lat Pulldown",
+   "pattern": "pulldown",
+   "split": "calibration",
+   "angles": [
+    154,
+    66
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "glute_bridge",
+   "name": "Glute Bridge",
+   "pattern": "hipExtension",
+   "split": "heldOut",
+   "angles": [
+    145,
+    161
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Goblet_Squat",
+   "name": "Goblet Squat",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    158,
+    57
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Hack_Squat",
+   "name": "Hack Squat",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    148,
+    52
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Hammer_Curls",
+   "name": "Hammer Curls",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    142,
+    88
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Hammer_Grip_Incline_DB_Bench_Press",
+   "name": "Hammer Grip Incline DB Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    85,
+    145
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "High_Cable_Curls",
+   "name": "High Cable Curls",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    148,
+    70
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Hip_Flexion_with_Band",
+   "name": "Hip Flexion with Band",
+   "pattern": "kneeLift",
+   "split": "calibration",
+   "angles": [
+    169,
+    82
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Incline_Barbell_Triceps_Extension",
+   "name": "Incline Barbell Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    143,
+    146
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Incline_Cable_Chest_Press",
+   "name": "Incline Cable Chest Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    81,
+    151
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Incline_Dumbbell_Bench_With_Palms_Facing_In",
+   "name": "Incline Dumbbell Bench With Palms Facing In",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    140,
+    90
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Incline_Dumbbell_Curl",
+   "name": "Incline Dumbbell Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    168,
+    136
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Incline_Dumbbell_Press",
+   "name": "Incline Dumbbell Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    24,
+    138
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Incline_Hammer_Curls",
+   "name": "Incline Hammer Curls",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    171,
+    73
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Incline_Inner_Biceps_Curl",
+   "name": "Incline Inner Biceps Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    144,
+    106
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Jefferson_Squats",
+   "name": "Jefferson Squats",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    156,
+    63
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Kettlebell_Arnold_Press",
+   "name": "Kettlebell Arnold Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    122,
+    162
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": [
+    "symmetry"
+   ]
+  },
+  {
+   "id": "Kettlebell_One-Legged_Deadlift",
+   "name": "Kettlebell One-Legged Deadlift",
+   "pattern": "hinge",
+   "split": "calibration",
+   "angles": [
+    143,
+    73
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Kettlebell_Seated_Press",
+   "name": "Kettlebell Seated Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    84,
+    164
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "torso"
+   ],
+   "notApplicable": [
+    "symmetry"
+   ]
+  },
+  {
+   "id": "Kettlebell_Seesaw_Press",
+   "name": "Kettlebell Seesaw Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    101,
+    153
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "torso"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Kneeling_Cable_Triceps_Extension",
+   "name": "Kneeling Cable Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    101,
+    136
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Kneeling_High_Pulley_Row",
+   "name": "Kneeling High Pulley Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    144,
+    54
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Kneeling_Single-Arm_High_Pulley_Row",
+   "name": "Kneeling Single-Arm High Pulley Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    152,
+    101
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lateral_Raise_-_With_Bands",
+   "name": "Lateral Raise - With Bands",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    26,
+    97
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Leg_Extensions",
+   "name": "Leg Extensions",
+   "pattern": "legExtension",
+   "split": "heldOut",
+   "angles": [
+    103,
+    157
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Leg_Press",
+   "name": "Leg Press",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    140,
+    55
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": [
+    "knees"
+   ]
+  },
+  {
+   "id": "Leg-Over_Floor_Press",
+   "name": "Leg-Over Floor Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    121,
+    169
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Leverage_Chest_Press",
+   "name": "Leverage Chest Press",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    130,
+    129
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Leverage_Deadlift",
+   "name": "Leverage Deadlift",
+   "pattern": "hinge",
+   "split": "heldOut",
+   "angles": [
+    76,
+    172
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Leverage_Decline_Chest_Press",
+   "name": "Leverage Decline Chest Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    118,
+    132
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Leverage_High_Row",
+   "name": "Leverage High Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    145,
+    77
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Leverage_Incline_Chest_Press",
+   "name": "Leverage Incline Chest Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    105,
+    122
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Leverage_Iso_Row",
+   "name": "Leverage Iso Row",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    132,
+    68
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Leverage_Shoulder_Press",
+   "name": "Leverage Shoulder Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    96,
+    141
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Low_Cable_Triceps_Extension",
+   "name": "Low Cable Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    96,
+    156
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Low_Pulley_Row_To_Neck",
+   "name": "Low Pulley Row To Neck",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    148,
+    88
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lunge_Pass_Through",
+   "name": "Lunge Pass Through",
+   "pattern": "lunge",
+   "split": "heldOut",
+   "angles": [
+    150,
+    104
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "torso"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Lunge_Sprint",
+   "name": "Lunge Sprint",
+   "pattern": "lunge",
+   "split": "calibration",
+   "angles": [
+    89,
+    128
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Cable_Curl",
+   "name": "Lying Cable Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    148,
+    88
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Cambered_Barbell_Row",
+   "name": "Lying Cambered Barbell Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    142,
+    112
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Close-Grip_Bar_Curl_On_High_Pulley",
+   "name": "Lying Close-Grip Bar Curl On High Pulley",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    166,
+    111
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Close-Grip_Barbell_Triceps_Extension_Behind_The_Head",
+   "name": "Lying Close-Grip Barbell Triceps Extension Behind The Head",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    115,
+    159
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Close-Grip_Barbell_Triceps_Press_To_Chin",
+   "name": "Lying Close-Grip Barbell Triceps Press To Chin",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    145,
+    77
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Dumbbell_Tricep_Extension",
+   "name": "Lying Dumbbell Tricep Extension",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    87,
+    160
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_High_Bench_Barbell_Curl",
+   "name": "Lying High Bench Barbell Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    156,
+    87
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Machine_Squat",
+   "name": "Lying Machine Squat",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    100,
+    151
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "torso"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_One-Arm_Lateral_Raise",
+   "name": "Lying One-Arm Lateral Raise",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    44,
+    62
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Supine_Dumbbell_Curl",
+   "name": "Lying Supine Dumbbell Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    124,
+    151
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_T-Bar_Row",
+   "name": "Lying T-Bar Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    146,
+    101
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Lying_Triceps_Press",
+   "name": "Lying Triceps Press",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    157,
+    59
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Machine_Bench_Press",
+   "name": "Machine Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    143,
+    144
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Machine_Bicep_Curl",
+   "name": "Machine Bicep Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    145,
+    107
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "upper_arm"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Machine_Preacher_Curls",
+   "name": "Machine Preacher Curls",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    137,
+    89
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Machine_Shoulder_Military_Press",
+   "name": "Machine Shoulder (Military) Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    111,
+    161
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Machine_Triceps_Extension",
+   "name": "Machine Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    100,
+    158
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "mountain_climbers",
+   "name": "Mountain Climbers",
+   "pattern": "plankKneeDrive",
+   "split": "heldOut",
+   "angles": [
+    36,
+    49
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Narrow_Stance_Hack_Squats",
+   "name": "Narrow Stance Hack Squats",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    46,
+    170
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": [
+    "knees"
+   ]
+  },
+  {
+   "id": "Narrow_Stance_Leg_Press",
+   "name": "Narrow Stance Leg Press",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    68,
+    134
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": [
+    "knees"
+   ]
+  },
+  {
+   "id": "Narrow_Stance_Squats",
+   "name": "Narrow Stance Squats",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    160,
+    94
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One_Arm_Dumbbell_Bench_Press",
+   "name": "One Arm Dumbbell Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    109,
+    148
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One_Arm_Dumbbell_Preacher_Curl",
+   "name": "One Arm Dumbbell Preacher Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    98,
+    68
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "One_Arm_Floor_Press",
+   "name": "One Arm Floor Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    140,
+    165
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One_Arm_Lat_Pulldown",
+   "name": "One Arm Lat Pulldown",
+   "pattern": "pulldown",
+   "split": "heldOut",
+   "angles": [
+    169,
+    42
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "One_Arm_Pronated_Dumbbell_Triceps_Extension",
+   "name": "One Arm Pronated Dumbbell Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    117,
+    57
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One_Arm_Supinated_Dumbbell_Triceps_Extension",
+   "name": "One Arm Supinated Dumbbell Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "calibration",
+   "angles": [
+    96,
+    154
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Arm_Dumbbell_Row",
+   "name": "One-Arm Dumbbell Row",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    163,
+    118
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Arm_Incline_Lateral_Raise",
+   "name": "One-Arm Incline Lateral Raise",
+   "pattern": "armRaise",
+   "split": "heldOut",
+   "angles": [
+    41,
+    131
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Arm_Kettlebell_Military_Press_To_The_Side",
+   "name": "One-Arm Kettlebell Military Press To The Side",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    96,
+    161
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Arm_Kettlebell_Para_Press",
+   "name": "One-Arm Kettlebell Para Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    112,
+    148
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Arm_Kettlebell_Push_Press",
+   "name": "One-Arm Kettlebell Push Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    105,
+    96
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Arm_Kettlebell_Row",
+   "name": "One-Arm Kettlebell Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    127,
+    124
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Arm_Long_Bar_Row",
+   "name": "One-Arm Long Bar Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    162,
+    106
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Arm_Side_Laterals",
+   "name": "One-Arm Side Laterals",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    44,
+    82
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "One-Legged_Cable_Kickback",
+   "name": "One-Legged Cable Kickback",
+   "pattern": "singleLegExtension",
+   "split": "heldOut",
+   "angles": [
+    154,
+    147
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Overhead_Cable_Curl",
+   "name": "Overhead Cable Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    133,
+    86
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Physioball_Hip_Bridge",
+   "name": "Physioball Hip Bridge",
+   "pattern": "hipExtension",
+   "split": "heldOut",
+   "angles": [
+    73,
+    87
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "plank",
+   "name": "Plank Hold",
+   "pattern": "plankHold",
+   "split": "calibration",
+   "angles": [
+    143,
+    169
+   ],
+   "inPosition": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Plie_Dumbbell_Squat",
+   "name": "Plie Dumbbell Squat",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    159,
+    69
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Preacher_Curl",
+   "name": "Preacher Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    129,
+    79
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Preacher_Hammer_Dumbbell_Curl",
+   "name": "Preacher Hammer Dumbbell Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    156,
+    101
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Pull_Through",
+   "name": "Pull Through",
+   "pattern": "hinge",
+   "split": "heldOut",
+   "angles": [
+    101,
+    164
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Push-Ups_With_Feet_On_An_Exercise_Ball",
+   "name": "Push-Ups With Feet On An Exercise Ball",
+   "pattern": "pushup",
+   "split": "calibration",
+   "angles": [
+    94,
+    141
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Reverse_Barbell_Curl",
+   "name": "Reverse Barbell Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    147,
+    90
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Reverse_Barbell_Preacher_Curls",
+   "name": "Reverse Barbell Preacher Curls",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    164,
+    69
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Reverse_Cable_Curl",
+   "name": "Reverse Cable Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    78,
+    147
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Reverse_Grip_Bent-Over_Rows",
+   "name": "Reverse Grip Bent-Over Rows",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    151,
+    151
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Reverse_Grip_Triceps_Pushdown",
+   "name": "Reverse Grip Triceps Pushdown",
+   "pattern": "tricepsPushdown",
+   "split": "heldOut",
+   "angles": [
+    99,
+    148
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Reverse_Hyperextension",
+   "name": "Reverse Hyperextension",
+   "pattern": "hipExtension",
+   "split": "calibration",
+   "angles": [
+    91,
+    141
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Reverse_Triceps_Bench_Press",
+   "name": "Reverse Triceps Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    154,
+    153
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Romanian_Deadlift",
+   "name": "Romanian Deadlift",
+   "pattern": "hinge",
+   "split": "heldOut",
+   "angles": [
+    67,
+    164
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "knees_soft"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Barbell_Military_Press",
+   "name": "Seated Barbell Military Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    92,
+    160
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Bent-Over_One-Arm_Dumbbell_Triceps_Extension",
+   "name": "Seated Bent-Over One-Arm Dumbbell Triceps Extension",
+   "pattern": "tricepsPushdown",
+   "split": "calibration",
+   "angles": [
+    112,
+    170
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "upper_arm"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Bent-Over_Two-Arm_Dumbbell_Triceps_Extension",
+   "name": "Seated Bent-Over Two-Arm Dumbbell Triceps Extension",
+   "pattern": "tricepsPushdown",
+   "split": "calibration",
+   "angles": [
+    128,
+    170
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Cable_Rows",
+   "name": "Seated Cable Rows",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    159,
+    90
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Cable_Shoulder_Press",
+   "name": "Seated Cable Shoulder Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    95,
+    164
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Dumbbell_Curl",
+   "name": "Seated Dumbbell Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    157,
+    87
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Dumbbell_Inner_Biceps_Curl",
+   "name": "Seated Dumbbell Inner Biceps Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    146,
+    100
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Dumbbell_Press",
+   "name": "Seated Dumbbell Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    159,
+    119
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Leg_Curl",
+   "name": "Seated Leg Curl",
+   "pattern": "legCurl",
+   "split": "calibration",
+   "angles": [
+    128,
+    89
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_One-arm_Cable_Pulley_Rows",
+   "name": "Seated One-arm Cable Pulley Rows",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    144,
+    78
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Seated_Side_Lateral_Raise",
+   "name": "Seated Side Lateral Raise",
+   "pattern": "armRaise",
+   "split": "heldOut",
+   "angles": [
+    24,
+    117
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "See-Saw_Press_Alternating_Side_Press",
+   "name": "See-Saw Press (Alternating Side Press)",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    104,
+    151
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Shotgun_Row",
+   "name": "Shotgun Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    145,
+    89
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Shoulder_Press_-_With_Bands",
+   "name": "Shoulder Press - With Bands",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    98,
+    156
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Side_Lateral_Raise",
+   "name": "Side Lateral Raise",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    26,
+    102
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Side_Laterals_to_Front_Raise",
+   "name": "Side Laterals to Front Raise",
+   "pattern": "armRaise",
+   "split": "heldOut",
+   "angles": [
+    25,
+    93
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Single_Dumbbell_Raise",
+   "name": "Single Dumbbell Raise",
+   "pattern": "armRaise",
+   "split": "heldOut",
+   "angles": [
+    45,
+    94
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "arms_straight",
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Single-Leg_Leg_Extension",
+   "name": "Single-Leg Leg Extension",
+   "pattern": "legExtension",
+   "split": "calibration",
+   "angles": [
+    104,
+    78
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Bent_Over_Row",
+   "name": "Smith Machine Bent Over Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    140,
+    121
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Close-Grip_Bench_Press",
+   "name": "Smith Machine Close-Grip Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    46,
+    133
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Decline_Press",
+   "name": "Smith Machine Decline Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    99,
+    148
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Incline_Bench_Press",
+   "name": "Smith Machine Incline Bench Press",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    90,
+    150
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Leg_Press",
+   "name": "Smith Machine Leg Press",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    141,
+    80
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "torso"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_One-Arm_Upright_Row",
+   "name": "Smith Machine One-Arm Upright Row",
+   "pattern": "uprightRow",
+   "split": "calibration",
+   "angles": [
+    45,
+    71
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Pistol_Squat",
+   "name": "Smith Machine Pistol Squat",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    143,
+    69
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Squat",
+   "name": "Smith Machine Squat",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    138,
+    162
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Stiff-Legged_Deadlift",
+   "name": "Smith Machine Stiff-Legged Deadlift",
+   "pattern": "hinge",
+   "split": "heldOut",
+   "angles": [
+    70,
+    171
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "knees_soft"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Smith_Machine_Upright_Row",
+   "name": "Smith Machine Upright Row",
+   "pattern": "uprightRow",
+   "split": "calibration",
+   "angles": [
+    33,
+    120
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Speed_Band_Overhead_Triceps",
+   "name": "Speed Band Overhead Triceps",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    133,
+    135
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Spider_Curl",
+   "name": "Spider Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    162,
+    76
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Split_Squat_with_Dumbbells",
+   "name": "Split Squat with Dumbbells",
+   "pattern": "lunge",
+   "split": "heldOut",
+   "angles": [
+    96,
+    81
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Squat_with_Plate_Movers",
+   "name": "Squat with Plate Movers",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    155,
+    83
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Squats_-_With_Bands",
+   "name": "Squats - With Bands",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    160,
+    85
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Alternating_Dumbbell_Press",
+   "name": "Standing Alternating Dumbbell Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    106,
+    140
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Barbell_Press_Behind_Neck",
+   "name": "Standing Barbell Press Behind Neck",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    111,
+    168
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Bent-Over_One-Arm_Dumbbell_Triceps_Extension",
+   "name": "Standing Bent-Over One-Arm Dumbbell Triceps Extension",
+   "pattern": "tricepsPushdown",
+   "split": "calibration",
+   "angles": [
+    101,
+    143
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Bent-Over_Two-Arm_Dumbbell_Triceps_Extension",
+   "name": "Standing Bent-Over Two-Arm Dumbbell Triceps Extension",
+   "pattern": "tricepsPushdown",
+   "split": "calibration",
+   "angles": [
+    94,
+    140
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "upper_arm"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Biceps_Cable_Curl",
+   "name": "Standing Biceps Cable Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    140,
+    81
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Bradford_Press",
+   "name": "Standing Bradford Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    112,
+    117
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Cable_Chest_Press",
+   "name": "Standing Cable Chest Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    100,
+    111
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Dumbbell_Press",
+   "name": "Standing Dumbbell Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    91,
+    153
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Dumbbell_Reverse_Curl",
+   "name": "Standing Dumbbell Reverse Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    146,
+    102
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Dumbbell_Straight-Arm_Front_Delt_Raise_Above_Head",
+   "name": "Standing Dumbbell Straight-Arm Front Delt Raise Above Head",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    21,
+    162
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "sway"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Dumbbell_Upright_Row",
+   "name": "Standing Dumbbell Upright Row",
+   "pattern": "uprightRow",
+   "split": "heldOut",
+   "angles": [
+    116,
+    15
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Front_Barbell_Raise_Over_Head",
+   "name": "Standing Front Barbell Raise Over Head",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    18,
+    163
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Inner-Biceps_Curl",
+   "name": "Standing Inner-Biceps Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    144,
+    93
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Leg_Curl",
+   "name": "Standing Leg Curl",
+   "pattern": "legCurl",
+   "split": "calibration",
+   "angles": [
+    134,
+    117
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Low-Pulley_Deltoid_Raise",
+   "name": "Standing Low-Pulley Deltoid Raise",
+   "pattern": "armRaise",
+   "split": "calibration",
+   "angles": [
+    103,
+    35
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Military_Press",
+   "name": "Standing Military Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    95,
+    169
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_One-Arm_Cable_Curl",
+   "name": "Standing One-Arm Cable Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    126,
+    74
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_One-Arm_Dumbbell_Curl_Over_Incline_Bench",
+   "name": "Standing One-Arm Dumbbell Curl Over Incline Bench",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    68,
+    68
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_One-Arm_Dumbbell_Triceps_Extension",
+   "name": "Standing One-Arm Dumbbell Triceps Extension",
+   "pattern": "tricepsExtension",
+   "split": "heldOut",
+   "angles": [
+    134,
+    141
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Palm-In_One-Arm_Dumbbell_Press",
+   "name": "Standing Palm-In One-Arm Dumbbell Press",
+   "pattern": "overheadPress",
+   "split": "heldOut",
+   "angles": [
+    113,
+    146
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Standing_Palms-In_Dumbbell_Press",
+   "name": "Standing Palms-In Dumbbell Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    158,
+    115
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Stiff_Leg_Barbell_Good_Morning",
+   "name": "Stiff Leg Barbell Good Morning",
+   "pattern": "hinge",
+   "split": "heldOut",
+   "angles": [
+    168,
+    83
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Stiff-Legged_Barbell_Deadlift",
+   "name": "Stiff-Legged Barbell Deadlift",
+   "pattern": "hinge",
+   "split": "calibration",
+   "angles": [
+    53,
+    169
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Stiff-Legged_Dumbbell_Deadlift",
+   "name": "Stiff-Legged Dumbbell Deadlift",
+   "pattern": "hinge",
+   "split": "heldOut",
+   "angles": [
+    165,
+    54
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Straight_Bar_Bench_Mid_Rows",
+   "name": "Straight Bar Bench Mid Rows",
+   "pattern": "row",
+   "split": "calibration",
+   "angles": [
+    161,
+    93
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "T-Bar_Row_with_Handle",
+   "name": "T-Bar Row with Handle",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    156,
+    95
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Tricep_Dumbbell_Kickback",
+   "name": "Tricep Dumbbell Kickback",
+   "pattern": "tricepsPushdown",
+   "split": "heldOut",
+   "angles": [
+    176,
+    149
+   ],
+   "repCounted": false,
+   "falseAlarms": [
+    "upper_arm"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Triceps_Pushdown",
+   "name": "Triceps Pushdown",
+   "pattern": "tricepsPushdown",
+   "split": "heldOut",
+   "angles": [
+    103,
+    156
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Triceps_Pushdown_-_Rope_Attachment",
+   "name": "Triceps Pushdown - Rope Attachment",
+   "pattern": "tricepsPushdown",
+   "split": "calibration",
+   "angles": [
+    103,
+    149
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Triceps_Pushdown_-_V-Bar_Attachment",
+   "name": "Triceps Pushdown - V-Bar Attachment",
+   "pattern": "tricepsPushdown",
+   "split": "calibration",
+   "angles": [
+    107,
+    148
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Two-Arm_Dumbbell_Preacher_Curl",
+   "name": "Two-Arm Dumbbell Preacher Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    155,
+    70
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Two-Arm_Kettlebell_Military_Press",
+   "name": "Two-Arm Kettlebell Military Press",
+   "pattern": "overheadPress",
+   "split": "calibration",
+   "angles": [
+    102,
+    164
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Two-Arm_Kettlebell_Row",
+   "name": "Two-Arm Kettlebell Row",
+   "pattern": "row",
+   "split": "heldOut",
+   "angles": [
+    159,
+    124
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Underhand_Cable_Pulldowns",
+   "name": "Underhand Cable Pulldowns",
+   "pattern": "pulldown",
+   "split": "calibration",
+   "angles": [
+    134,
+    75
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Upright_Barbell_Row",
+   "name": "Upright Barbell Row",
+   "pattern": "uprightRow",
+   "split": "heldOut",
+   "angles": [
+    116,
+    19
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Upright_Cable_Row",
+   "name": "Upright Cable Row",
+   "pattern": "uprightRow",
+   "split": "calibration",
+   "angles": [
+    103,
+    25
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Upright_Row_-_With_Bands",
+   "name": "Upright Row - With Bands",
+   "pattern": "uprightRow",
+   "split": "calibration",
+   "angles": [
+    20,
+    138
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "V-Bar_Pulldown",
+   "name": "V-Bar Pulldown",
+   "pattern": "pulldown",
+   "split": "calibration",
+   "angles": [
+    75,
+    136
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Weighted_Ball_Hyperextension",
+   "name": "Weighted Ball Hyperextension",
+   "pattern": "hipExtension",
+   "split": "heldOut",
+   "angles": [
+    151,
+    111
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "legs_straight"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Weighted_Jump_Squat",
+   "name": "Weighted Jump Squat",
+   "pattern": "squat",
+   "split": "heldOut",
+   "angles": [
+    155,
+    56
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Wide_Stance_Barbell_Squat",
+   "name": "Wide Stance Barbell Squat",
+   "pattern": "squat",
+   "split": "calibration",
+   "angles": [
+    160,
+    97
+   ],
+   "repCounted": true,
+   "falseAlarms": [
+    "knees"
+   ],
+   "notApplicable": []
+  },
+  {
+   "id": "Wide-Grip_Barbell_Bench_Press",
+   "name": "Wide-Grip Barbell Bench Press",
+   "pattern": "benchPress",
+   "split": "calibration",
+   "angles": [
+    147,
+    142
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Wide-Grip_Decline_Barbell_Bench_Press",
+   "name": "Wide-Grip Decline Barbell Bench Press",
+   "pattern": "benchPress",
+   "split": "heldOut",
+   "angles": [
+    154,
+    93
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Wide-Grip_Lat_Pulldown",
+   "name": "Wide-Grip Lat Pulldown",
+   "pattern": "pulldown",
+   "split": "calibration",
+   "angles": [
+    138,
+    127
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Wide-Grip_Pulldown_Behind_The_Neck",
+   "name": "Wide-Grip Pulldown Behind The Neck",
+   "pattern": "pulldown",
+   "split": "heldOut",
+   "angles": [
+    98,
+    141
+   ],
+   "repCounted": false,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Wide-Grip_Standing_Barbell_Curl",
+   "name": "Wide-Grip Standing Barbell Curl",
+   "pattern": "curl",
+   "split": "heldOut",
+   "angles": [
+    141,
+    101
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  },
+  {
+   "id": "Zottman_Curl",
+   "name": "Zottman Curl",
+   "pattern": "curl",
+   "split": "calibration",
+   "angles": [
+    165,
+    65
+   ],
+   "repCounted": true,
+   "falseAlarms": [],
+   "notApplicable": []
+  }
+ ]
+}

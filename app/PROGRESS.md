@@ -44,6 +44,15 @@ Found while writing the cases: nothing in the app failed; the only defects were 
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-18 — Posture thresholds calibrated on real people (free-exercise-db photos)
+
+- New on-device test `integration_test/dataset_pose_validation_test.dart`: the app's own MediaPipe model and engine on the Redmi Note 11, applied to the two real photos (start/end) of 280 camera-tracked exercises. Person detected in both photos for 94–100 % per pattern. Before calibration only 24 % of real rep pairs were countable and 31 % of correct demonstrations triggered a false correction.
+- Same model file on the PC (MediaPipe Python, isolated venv on D:) to store landmarks for 269 exercises → `test/fixtures/real_poses.json`, replayed through the production engine on every `flutter test` (`test/real_pose_replay_test.dart`). Phone vs PC angles: median 6° apart.
+- Thresholds of the non-validated patterns calibrated on half the exercises (`ml/validation/calibrate_thresholds.py`), reported on the other half: **reps counted 24 % → 66 %, false alarms 31 % → 13 %** (calibration half 69 % / 10 %). One-arm presses now ignore the hanging arm. Regression gate: held-out ≥ 60 % counted, ≤ 18 % false alarms.
+- 8 patterns marked "real-photo checked" in `docs/MODULE5_DEVICE_VALIDATION.md` (squat variants, curl, chest press, overhead press, row, lunge, vertical pull, upright row). The in-app note stays until live validation (fault sensitivity, speed).
+- The 4 tuned configurations were not changed. Tests: 867 pass, 13 skipped, 0 fail.
+- **Side effect:** the on-device test run uninstalled the Baymax app from the phone (MIUI blocked the reinstall without a tap); data is in Firebase; reinstall needs one tap on the phone.
+
 ### 2026-10-18 — One consistent camera experience; validation record and test checklist
 
 - The prominent "experimental" wording was removed: all 304 camera exercises show the same description, "Posture score" and corrections as the validated four. Untested patterns get one small note under the score ("Form feedback for this movement hasn't been validated on real users yet."), in the session summary and a short sentence from the voice coach. Nothing untested is called validated.

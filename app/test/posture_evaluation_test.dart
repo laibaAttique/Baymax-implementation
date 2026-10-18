@@ -60,7 +60,8 @@ void main() {
       expect(f.facingCamera, isTrue);
       expect(f.ankleSpread!, closeTo(2.2, 0.05));
       final press = _cfg('Dumbbell_Shoulder_Press', MovementPattern.overheadPress);
-      expect(PoseAnalyzer.measure(frontBody(0, arms: 60, armDifference: 40), press)!.armAsymmetry, isNotNull);
+      // pressing overhead: both wrists above the shoulders
+      expect(PoseAnalyzer.measure(frontBody(0, arms: 140, armDifference: 20, elbow: 120), press)!.armAsymmetry, isNotNull);
     });
   });
 
@@ -124,8 +125,9 @@ void main() {
       final engine = PostureEngine(c);
       final messages = _run(engine, [
         ...sweep((t, v) => sideBody(t, elbow: 165), 0, 0, 500),
-        ...sweep((t, v) => sideBody(t, elbow: v, lean: (165 - v) / 110 * 25), 165, 55, 900, startMs: 600),
-        ...sweep((t, v) => sideBody(t, elbow: v, lean: (165 - v) / 110 * 25), 55, 165, 900, startMs: 1500),
+        // a clear lean-back (35°), beyond the 20° calibrated on real people
+        ...sweep((t, v) => sideBody(t, elbow: v, lean: (165 - v) / 110 * 35), 165, 55, 900, startMs: 600),
+        ...sweep((t, v) => sideBody(t, elbow: v, lean: (165 - v) / 110 * 35), 55, 165, 900, startMs: 1500),
       ]);
       expect(messages, contains("Keep your body still — don't swing"));
     });

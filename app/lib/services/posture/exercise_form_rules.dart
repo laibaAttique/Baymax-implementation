@@ -266,6 +266,10 @@ class ExerciseFormConfig {
   final AngleAggregate aggregate;
   final TrackingKind kind;
 
+  /// Overhead work: ignore an arm whose wrist is below its shoulder (it is hanging, not pressing), so a one-arm press
+  /// is followed by the pressing arm.
+  final bool ignoreLoweredArm;
+
   /// Posture checks and the posture score are reported only for configurations that were tried on real movements
   /// (the four original exercises, [FormEvaluation.validated]). Experimental configurations run real checks and give live
   /// corrections but show no score; [FormEvaluation.none] counts movement cycles or hold time only.
@@ -322,6 +326,7 @@ class ExerciseFormConfig {
     this.opening = false,
     this.aggregate = AngleAggregate.mean,
     this.kind = TrackingKind.reps,
+    this.ignoreLoweredArm = false,
     this.evaluation = FormEvaluation.validated,
     this.holdMinAngle,
     this.holdMaxAngle,
@@ -456,8 +461,10 @@ class PoseAnalyzer {
     double? angle(JointTriple t) =>
         visible(t.a) && visible(t.vertex) && visible(t.c) ? PoseMath.jointAngle(pt(t.a), pt(t.vertex), pt(t.c)) : null;
 
-    final left = angle(config.leftPrimary);
-    final right = angle(config.rightPrimary);
+    // A hanging arm (wrist below the shoulder) is not pressing overhead.
+    bool lowered(JointTriple t) => config.ignoreLoweredArm && visible(t.a) && visible(t.c) && image[t.c].y > image[t.a].y + 0.02;
+    final left = lowered(config.leftPrimary) ? null : angle(config.leftPrimary);
+    final right = lowered(config.rightPrimary) ? null : angle(config.rightPrimary);
     final primary = config.aggregate == AngleAggregate.furthest
         ? (config.opening ? _max(left, right) : _min(left, right))
         : _mean(left, right);
