@@ -13,8 +13,8 @@ import '../../services/workout_session/plan_progress.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/exercise_visual.dart';
 import '../../widgets/training_profile_card.dart';
-import '../../widgets/exercise_photo.dart';
 import '../../widgets/specialist_plan_banner.dart';
 import '../../widgets/notification_bell.dart';
 import '../../widgets/glass.dart';
@@ -253,12 +253,9 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
               context, MaterialPageRoute(builder: (_) => ExerciseDetail(planned: p, safetyNotes: notes, queue: queue, weekday: weekday))),
           child: Row(
             children: [
-              ExerciseCatalog.imagesFor(e).isEmpty
+              ExerciseVisualInfo.of(e).kind == VisualKind.none
                   ? IconWell(icon: AppIcons.exercise(e.group), size: 50)
-                  : SizedBox(
-                      width: 50,
-                      child: ExercisePhoto(urls: ExerciseCatalog.imagesFor(e), group: e.group, height: 50, radius: 14, animate: false),
-                    ),
+                  : SizedBox(width: 50, child: ExerciseVisual(exercise: e, height: 50, radius: 14, animate: false)),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(

@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import '../../models/plan.dart';
 import '../../models/workout_session.dart';
 import '../../services/workout_session/plan_progress.dart';
-import '../../services/exercise_catalog.dart';
 import '../../services/met_calculator.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/exercise_photo.dart';
+import '../../widgets/exercise_visual.dart';
 import '../../widgets/glass.dart';
 import '../posture_detection/posture_mode.dart';
 
@@ -136,7 +135,7 @@ class ExerciseDetail extends StatelessWidget {
       weightKg: weight,
       active: Duration(seconds: planned.activeSeconds),
     );
-    final photos = ExerciseCatalog.imagesFor(e);
+    final visual = ExerciseVisualInfo.of(e);
 
     final metrics = planned.timed
         ? [
@@ -166,7 +165,7 @@ class ExerciseDetail extends StatelessWidget {
                 Reveal(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 6),
-                    child: photos.isEmpty
+                    child: visual.kind == VisualKind.none
                         ? Container(
                             width: double.infinity,
                             height: 176,
@@ -186,14 +185,14 @@ class ExerciseDetail extends StatelessWidget {
                               child: Icon(AppIcons.exercise(e.group), size: 46, color: Colors.white),
                             ),
                           )
-                        : ExercisePhoto(urls: photos, group: e.group, height: 220),
+                        : ExerciseVisual(exercise: e, height: 220),
                   ),
                 ),
-                if (photos.isNotEmpty)
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(22, 0, 22, 10),
-                    child: Text('Photos: free-exercise-db (public domain). Start and end positions alternate.',
-                        style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                if (visual.kind != VisualKind.none)
+                  Padding(
+                    key: const ValueKey('visual-caption'),
+                    padding: const EdgeInsets.fromLTRB(22, 0, 22, 10),
+                    child: Text(visual.caption, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
                   ),
                 Reveal(
                   index: 1,

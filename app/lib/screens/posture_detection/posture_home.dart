@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import '../../models/health_profile.dart';
 import '../../models/plan.dart';
 import '../../models/workout_session.dart';
-import '../../services/exercise_catalog.dart';
 import '../../services/exercise_repository.dart';
 import '../../services/posture/movement_patterns.dart';
 import '../../services/user_session.dart';
 import '../../services/workout_session/plan_progress.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
-import '../../widgets/exercise_photo.dart';
+import '../../widgets/exercise_visual.dart';
 import '../../widgets/glass.dart';
 import '../health_profiling/step1_personal_info.dart';
 import '../workout_and_exercise/workout_readiness_screen.dart';
@@ -181,7 +180,6 @@ class _PostureDetectionHomeState extends State<PostureDetectionHome> {
     final e = p.exercise;
     final posture = ExerciseRepository.postureFor(e);
     final done = weekday == PlanProgress.instance.todayIndex && PlanProgress.instance.isDoneToday(weekday, index);
-    final photos = ExerciseCatalog.imagesFor(e);
     return Padding(
       key: ValueKey('entry-$weekday-$index'),
       padding: const EdgeInsets.only(bottom: 10),
@@ -191,9 +189,9 @@ class _PostureDetectionHomeState extends State<PostureDetectionHome> {
         semanticLabel: '${e.name}, ${p.prescription}${done ? ', done today' : ''}. Start',
         child: Row(
           children: [
-            photos.isEmpty
+            ExerciseVisualInfo.of(e).kind == VisualKind.none
                 ? IconWell(icon: AppIcons.exercise(e.group), size: 50)
-                : SizedBox(width: 50, child: ExercisePhoto(urls: photos, group: e.group, height: 50, radius: 14, animate: false)),
+                : SizedBox(width: 50, child: ExerciseVisual(exercise: e, height: 50, radius: 14, animate: false)),
             const SizedBox(width: 14),
             Expanded(
               child: Column(

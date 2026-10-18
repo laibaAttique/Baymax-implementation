@@ -56,7 +56,13 @@ class _ExercisePhotoState extends State<ExercisePhoto> with SingleTickerProvider
         semanticLabel: 'Exercise photo',
         loadingBuilder: (context, child, progress) => progress == null ? child : _fallback(),
         errorBuilder: (context, error, stack) {
-          if (!_failed) WidgetsBinding.instance.addPostFrameCallback((_) => mounted ? setState(() => _failed = true) : null);
+          if (!_failed) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              _loop.stop(); // nothing to alternate between once the photo cannot load
+              setState(() => _failed = true);
+            });
+          }
           return _fallback();
         },
       );
