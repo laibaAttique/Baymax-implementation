@@ -230,7 +230,7 @@ class CoachResponder {
       buffer.write(reps >= target ? ' — you have reached your target of $target' : ' of $target, ${target - reps} to go');
     }
     buffer.write('.');
-    if (session.partialReps > 0 && session.formChecked) {
+    if (session.partialReps > 0) {
       buffer.write(' ${session.partialReps} more ${session.partialReps == 1 ? 'was' : 'were'} too shallow to count.');
     }
     return CoachResponse(buffer.toString(), chips: const ['Check my form', 'Pause workout']);
@@ -296,11 +296,13 @@ class CoachResponder {
         chips: const ['How do I do it?'],
       );
     }
-    if (!session.formScored) {
+    final s = session.postureScore;
+    if (!session.formScored && s != null) {
       return CoachResponse(
         session.formChecked
-            ? "This exercise has experimental form checks, so there's no posture score yet. I'll still tell you what to correct."
-            : 'There is no posture score for this exercise: the camera only tracks the movement, it does not score form.',
+            ? 'Your posture score so far is $s percent. It is experimental: the form checks for this exercise are not yet validated on real users.'
+            : 'Your range score so far is $s percent: the share of your reps that reached the full movement range. '
+                "The camera can't measure posture for this exercise.",
         chips: const ['How do I do it?', 'How many reps?'],
       );
     }

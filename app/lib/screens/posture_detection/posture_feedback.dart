@@ -135,16 +135,6 @@ class _PostureFeedbackScreenState extends State<PostureFeedbackScreen> with Sing
       return _buildNoScore(Icons.accessibility_new, 'Posture not analysed',
           'This was a Manual Guidance session, so there is no posture score.');
     }
-    if (!_summary.formScored && _summary.formChecked) {
-      return _buildNoScore(Icons.science_outlined, 'Experimental form feedback',
-          'Your form was checked live, but these checks are not yet validated on real users, so no posture score is given. '
-          'See the feedback below.');
-    }
-    if (!_summary.formScored) {
-      return _buildNoScore(Icons.track_changes, 'Form not scored',
-          'This exercise has basic camera tracking: the camera ${_summary.holdSeconds != null ? 'timed your hold' : 'counted your repetitions'}, '
-          'but posture is only scored for exercises with tested form rules.');
-    }
     if (score == null) {
       return _buildNoScore(Icons.hourglass_empty, 'Not enough data',
           'No complete repetition was detected, so a posture score could not be calculated.');
@@ -177,7 +167,11 @@ class _PostureFeedbackScreenState extends State<PostureFeedbackScreen> with Sing
             ],
           ),
         ),
-        const Text('Posture Score', style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+        Text(
+          _summary.formScored ? 'Posture Score' : (_summary.formChecked ? 'Posture Score (experimental)' : 'Range Score'),
+          key: const ValueKey('score-label'),
+          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+        ),
       ],
     );
   }
@@ -286,7 +280,7 @@ class _PostureFeedbackScreenState extends State<PostureFeedbackScreen> with Sing
                       verdict: FeedbackVerdict.notAssessed,
                       text: 'Form was not assessed. Use Camera Detection for form feedback.',
                     )),
-                  if (s.partialReps > 0 && s.formScored)
+                  if (s.partialReps > 0)
                     _buildFeedbackItem(FormFeedbackItem(
                       id: 'partial',
                       verdict: FeedbackVerdict.notAssessed,

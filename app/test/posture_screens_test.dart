@@ -170,10 +170,10 @@ void main() {
       expect(permissions.cameraRequests, 0);
     });
 
-    testWidgets('a plank offers camera hold timing with experimental hip checks, without a score', (tester) async {
+    testWidgets('a plank offers camera hold timing with hip checks and an experimental score', (tester) async {
       await _pump(tester, const PostureModeSelection(request: _plank));
       expect(find.textContaining('times your hold'), findsOneWidget);
-      expect(find.textContaining('no score is shown'), findsOneWidget);
+      expect(find.textContaining('a posture score'), findsOneWidget);
       expect(find.textContaining('Camera tracking is not available'), findsNothing);
     });
 

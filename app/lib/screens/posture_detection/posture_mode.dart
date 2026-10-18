@@ -160,8 +160,9 @@ class _PostureModeSelectionState extends State<PostureModeSelection> {
   String _cameraDescription(String name) => switch (_support.level) {
         CameraSupportLevel.validatedForm => 'Track posture using live camera for real-time adjustments and analysis.',
         CameraSupportLevel.experimentalForm =>
-          'Experimental form feedback: the camera ${_support.supportsHoldTiming ? 'times your hold and checks' : 'counts your repetitions and checks'} '
-              '${_support.checkLabels.join(', ').toLowerCase()}, with live corrections. Not yet validated on real users, so no score is shown.',
+          'Live camera tracking: ${_support.supportsHoldTiming ? 'times your hold and checks' : 'counts your repetitions and checks'} '
+              '${_support.checkLabels.join(', ').toLowerCase()}, with real-time corrections and a posture score '
+              '(experimental until these checks are tested on real users).',
         CameraSupportLevel.basicTracking => _support.supportsHoldTiming
             ? 'Basic tracking: times your hold while the camera sees you in position. Form is not scored for this exercise.'
             : 'Basic tracking: counts your repetitions from your ${_support.movementPattern.measures} with the live camera. '

@@ -5,8 +5,8 @@ Every exercise the Module 4 generator can schedule (curated library + free-exerc
 | Camera capability | Exercises |
 |---|---|
 | Validated posture evaluation | 4 |
-| Experimental posture evaluation | 250 |
-| Basic camera tracking (repetitions) | 50 |
+| Experimental posture evaluation | 300 |
+| Basic camera tracking (repetitions) | 0 |
 | Basic camera tracking (hold time) | 0 |
 | Not reliably supported | 228 |
 | **Total** | **532** |
@@ -19,11 +19,11 @@ Manual Guidance: available for all 532 exercises with instructions (0 without).
 |---|---|---|---|---|
 | Squat | knee bend | 2 | 24 | 0 |
 | Lunge | front-knee bend | 0 | 11 | 0 |
-| Hip hinge | hip bend | 0 | 5 | 5 |
-| Hip extension | hip lift | 0 | 3 | 2 |
+| Hip hinge | hip bend | 0 | 10 | 0 |
+| Hip extension | hip lift | 0 | 5 | 0 |
 | Push-up | elbow bend | 2 | 7 | 0 |
-| Chest press | elbow bend | 0 | 0 | 39 |
-| Dip | elbow bend | 0 | 1 | 1 |
+| Chest press | elbow bend | 0 | 39 | 0 |
+| Dip | elbow bend | 0 | 2 | 0 |
 | Overhead press | elbow straightening | 0 | 33 | 0 |
 | Arm raise | arm lift | 0 | 18 | 0 |
 | Row | elbow bend | 0 | 27 | 0 |
@@ -33,13 +33,13 @@ Manual Guidance: available for all 532 exercises with instructions (0 without).
 | Triceps pushdown / kickback | elbow straightening | 0 | 10 | 0 |
 | Leg extension | knee straightening | 0 | 2 | 0 |
 | Leg curl | knee bend | 0 | 4 | 0 |
-| Leg raise | hip bend | 0 | 1 | 1 |
+| Leg raise | hip bend | 0 | 2 | 0 |
 | Knee lift | knee lift | 0 | 3 | 0 |
 | Jumping jack | arm swing | 0 | 2 | 0 |
 | Upright row | arm lift | 0 | 7 | 0 |
 | Single-leg hip extension | hip extension | 0 | 4 | 0 |
 | Plank knee drive | knee drive | 0 | 2 | 0 |
-| Knee tuck | hip bend | 0 | 0 | 2 |
+| Knee tuck | hip bend | 0 | 2 | 0 |
 | Plank hold | body line | 0 | 2 | 0 |
 | Wall sit hold | knee angle | 0 | 1 | 0 |
 

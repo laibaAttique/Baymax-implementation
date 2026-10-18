@@ -44,6 +44,13 @@ Found while writing the cases: nothing in the app failed; the only defects were 
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-18 — Posture score for every camera exercise
+
+- At the user's request every camera-tracked exercise now behaves like the validated four: reps, FPS, landmarks, live corrections and a posture score (same formula: acceptable reps ÷ attempts; holds: share of hold time in a correct position), on screen, in the summary, saved to `workoutSessions`, and from the voice coach.
+- The 50 rep-only exercises got measurable checks, so all 304 tracked exercises run form checks: validated 4, experimental 300, unsupported 228 (Manual Guidance with the reason).
+- Scores that are not device-validated are labelled "Posture score (experimental)".
+- Tests: 866 pass, 13 skipped, 0 fail.
+
 ### 2026-10-17 — Modules 4 + 5: real posture evaluation, personalised Posture Detection, plan completion sync
 
 Report: `docs/MODULE4_5_INTEGRATION_REPORT.md`; validation procedure: `docs/MODULE5_DEVICE_VALIDATION.md`; audit: `docs/review/camera_support_audit.{md,csv,json}`.

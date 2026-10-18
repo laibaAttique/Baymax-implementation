@@ -141,15 +141,25 @@ class PostureEngine {
   int get reps => _counter.count;
   int get partialReps => _counter.partialAttempts;
 
+  /// Same formula for every tracked exercise (see the class comment). Holds: 100 × hold frames in a correct position ÷
+  /// frames since the position was first taken. Whether the score is validated is a property of the configuration
+  /// ([ExerciseFormConfig.scored]); the screens label unvalidated scores as experimental.
   int? get postureScore {
-    if (!config.scored) return null;
+    if (_hold != null) {
+      return _holdFrames.evaluated < minFramesForAccuracy ? null : (100 * _holdFrames.passed / _holdFrames.evaluated).round().clamp(0, 100);
+    }
     final attempts = reps + partialReps;
     return attempts == 0 ? null : (100 * _acceptableReps / attempts).round().clamp(0, 100);
   }
 
-  int? get accuracy => !config.scored || _frames.evaluated < minFramesForAccuracy
-      ? null
-      : (100 * _frames.passed / _frames.evaluated).round().clamp(0, 100);
+  int? get accuracy {
+    final evaluated = _hold != null ? _holdChecks.values.fold(0, (s, t) => s + t.evaluated) : _frames.evaluated;
+    final passed = _hold != null ? _holdChecks.values.fold(0, (s, t) => s + t.passed) : _frames.passed;
+    return evaluated < minFramesForAccuracy ? null : (100 * passed / evaluated).round().clamp(0, 100);
+  }
+
+  /// Holds: frames since the position was first taken, and how many of them were in a correct position.
+  final _Tally _holdFrames = _Tally();
 
   PostureAnalysis process(PoseFrame frame) {
     _totalFrames++;
@@ -174,6 +184,7 @@ class PostureEngine {
       // Hold checks: corrections on every frame (also while getting into position); the session statistics only count
       // frames after the position was first taken.
       FormCheck? holdFailing;
+      var frameOk = true;
       if (_checksOn) {
         for (final check in config.checks) {
           final outcome = check.evaluate(m);
@@ -186,10 +197,15 @@ class PostureEngine {
           if (outcome == CheckOutcome.pass) {
             tally?.passed++;
             _failStreak.remove(check.id);
-          } else if ((_failStreak[check.id] = (_failStreak[check.id] ?? 0) + 1) >= _framesToWarn) {
-            holdFailing ??= check;
+          } else {
+            frameOk = false;
+            if ((_failStreak[check.id] = (_failStreak[check.id] ?? 0) + 1) >= _framesToWarn) holdFailing ??= check;
           }
         }
+      }
+      if (hold.entries > 0) {
+        _holdFrames.evaluated++;
+        if (hold.inPosition && frameOk) _holdFrames.passed++;
       }
       final LiveFeedback feedback;
       if (holdFailing != null) {
@@ -278,17 +294,17 @@ class PostureEngine {
     }
     if (acceptable) _acceptableReps++;
 
-    if (config.evaluation == FormEvaluation.none) {
-      if (event.counted) _setTransient(LiveFeedback('Rep $reps counted'), nowMs, 1500);
-    } else if (!event.counted) {
+    if (!event.counted) {
       _setTransient(LiveFeedback(config.depthCue, isWarning: true, highlight: _primaryJoints), nowMs, 2500);
     } else if (firstFailed != null) {
       _setTransient(LiveFeedback(firstFailed.cue, isWarning: true, highlight: firstFailed.highlight), nowMs, 2500);
     } else if (config.scored) {
       _setTransient(const LiveFeedback('Great rep — good form!'), nowMs, 2000);
-    } else {
-      // Experimental checks: report what was measured, without claiming the form was good.
+    } else if (_checksOn) {
+      // Experimental checks: report what was measured, without claiming the form was validated as good.
       _setTransient(LiveFeedback('Rep $reps — no form issues detected'), nowMs, 2000);
+    } else {
+      _setTransient(LiveFeedback('Rep $reps — full range'), nowMs, 2000);
     }
   }
 
@@ -342,15 +358,9 @@ class PostureEngine {
   SessionFormReport buildReport({int? targetSeconds, String movement = 'movement'}) {
     final hold = _hold;
     if (hold != null) return _holdReport(hold, targetSeconds);
-    if (config.evaluation == FormEvaluation.none) return _basicReport(movement);
     final attempts = reps + partialReps;
     final items = <FormFeedbackItem>[
-      if (config.evaluation == FormEvaluation.experimental)
-        const FormFeedbackItem(
-          id: 'experimental',
-          verdict: FeedbackVerdict.notAssessed,
-          text: 'Experimental form feedback: checked live from the camera but not yet validated on real users, so no posture score is given',
-        ),
+      if (_experimentalNote case final note?) note,
     ];
 
     if (attempts == 0) {
@@ -415,23 +425,22 @@ class PostureEngine {
     );
   }
 
-  SessionFormReport _basicReport(String movement) => SessionFormReport(
-        reps: reps,
-        partialReps: partialReps,
-        postureScore: null,
-        accuracy: null,
-        feedback: [
-          FormFeedbackItem(
-            id: 'tracking',
-            verdict: FeedbackVerdict.notAssessed,
-            text: reps == 0
-                ? 'Basic tracking: no repetitions were detected'
-                : 'Basic tracking: $reps reps counted from your $movement. Form was not scored for this exercise',
-          ),
-        ],
-        validFrames: _validFrames,
-        totalFrames: _totalFrames,
+  /// What the score is based on, when it is not a validated configuration.
+  FormFeedbackItem? get _experimentalNote {
+    if (config.scored) return null;
+    if (!_checksOn) {
+      return const FormFeedbackItem(
+        id: 'range_only',
+        verdict: FeedbackVerdict.notAssessed,
+        text: 'No posture check is measurable for this exercise from the camera: the score reflects movement range only',
       );
+    }
+    return const FormFeedbackItem(
+      id: 'experimental',
+      verdict: FeedbackVerdict.notAssessed,
+      text: 'Experimental form checks: not yet validated on real users, so treat the score as a guide',
+    );
+  }
 
   SessionFormReport _holdReport(HoldTracker hold, int? targetSeconds) {
     final held = hold.heldSeconds;
@@ -439,16 +448,11 @@ class PostureEngine {
     return SessionFormReport(
       reps: 0,
       partialReps: 0,
-      postureScore: null,
-      accuracy: null,
+      postureScore: postureScore,
+      accuracy: accuracy,
       holdSeconds: held,
       feedback: [
-        if (config.evaluation == FormEvaluation.experimental)
-          const FormFeedbackItem(
-            id: 'experimental',
-            verdict: FeedbackVerdict.notAssessed,
-            text: 'Experimental form feedback: checked live from the camera but not yet validated on real users, so no posture score is given',
-          ),
+        if (_experimentalNote case final note?) note,
         FormFeedbackItem(
           id: 'hold',
           verdict: held == 0
@@ -466,9 +470,6 @@ class PostureEngine {
                     id: check.id,
                     verdict: FeedbackVerdict.failed,
                     text: '${check.failedText} for ${(100 - 100 * _holdChecks[check.id]!.passed / _holdChecks[check.id]!.evaluated).round()}% of the hold'),
-        if (config.evaluation == FormEvaluation.none)
-          const FormFeedbackItem(
-              id: 'tracking', verdict: FeedbackVerdict.notAssessed, text: 'Basic tracking: time in position was measured; form was not scored'),
       ],
       validFrames: _validFrames,
       totalFrames: _totalFrames,

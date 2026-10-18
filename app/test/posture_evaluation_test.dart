@@ -109,13 +109,14 @@ void main() {
       expect(good.reps, 2);
       expect(goodMessages.any((m) => m.contains('upper arm')), isFalse);
       final goodReport = good.buildReport();
-      expect(goodReport.postureScore, isNull, reason: 'experimental: no numeric score');
+      expect(goodReport.postureScore, 100, reason: 'both reps acceptable');
       expect(goodReport.feedback.firstWhere((f) => f.id == 'upper_arm').verdict, FeedbackVerdict.passed);
 
       final bad = PostureEngine(c);
       final badMessages = _run(bad, reps(60));
       expect(badMessages, contains('Keep your upper arm still, close to your body'));
       expect(bad.buildReport().feedback.firstWhere((f) => f.id == 'upper_arm').verdict, FeedbackVerdict.failed);
+      expect(bad.postureScore, 0, reason: 'every rep had the fault');
     });
 
     test('curl: leaning back to lift is caught as torso sway relative to the starting posture', () {
@@ -151,7 +152,7 @@ void main() {
       final pike = _run(engine, sweep((t, v) => plankBody(t, hipOffset: 0.25), 0, 0, 600, startMs: 3800));
       expect(pike.last, contains('Lower your hips'));
       final report = engine.buildReport(targetSeconds: 30);
-      expect(report.postureScore, isNull);
+      expect(report.postureScore, inExclusiveRange(0, 100), reason: 'straight part counts for, sag and pike against');
       expect(report.feedback.first.id, 'experimental');
       expect(report.feedback.firstWhere((f) => f.id == 'hips').verdict, FeedbackVerdict.failed);
     });

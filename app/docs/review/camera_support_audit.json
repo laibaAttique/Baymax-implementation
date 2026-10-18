@@ -231,8 +231,8 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -240,8 +240,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -779,8 +781,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -788,8 +790,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -899,8 +903,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "hinge",
-      "postureConfigId": "hinge/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "hinge/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 5.0,
       "safetyTags": [
         "impact:low",
@@ -908,8 +912,10 @@
         "joint:lowerBack",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Hip hinge"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -980,8 +986,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -989,8 +995,10 @@
         "joint:shoulder",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -1060,8 +1068,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -1069,8 +1077,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -1538,8 +1548,8 @@
       "instructions": 7,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -1547,8 +1557,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -1896,16 +1908,18 @@
       "instructions": 3,
       "images": 0,
       "movementPattern": "legRaise",
-      "postureConfigId": "legRaise/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "legRaise/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 2.8,
       "safetyTags": [
         "impact:low",
         "joint:lowerBack",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Leg position"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -2319,8 +2333,8 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -2328,8 +2342,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -2417,8 +2433,8 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "hinge",
-      "postureConfigId": "hinge/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "hinge/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -2426,8 +2442,10 @@
         "joint:knee",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Hip hinge"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -3731,16 +3749,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -3768,16 +3788,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -3883,16 +3905,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -4347,8 +4371,8 @@
       "instructions": 6,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -4356,8 +4380,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -4424,8 +4450,8 @@
       "instructions": 6,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -4433,8 +4459,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -4565,8 +4593,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -4574,8 +4602,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -4603,8 +4633,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "dip",
-      "postureConfigId": "dip/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "dip/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -4612,8 +4642,10 @@
         "joint:wrist",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Back alignment"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -4892,8 +4924,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -4901,8 +4933,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -4930,8 +4964,8 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -4939,8 +4973,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -6011,15 +6047,17 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "kneeTuck",
-      "postureConfigId": "kneeTuck/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "kneeTuck/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 2.8,
       "safetyTags": [
         "impact:low",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -6047,8 +6085,8 @@
       "instructions": 2,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -6056,8 +6094,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -6829,8 +6869,8 @@
       "instructions": 7,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -6838,8 +6878,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -7167,8 +7209,8 @@
       "instructions": 3,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -7176,8 +7218,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -7235,8 +7279,8 @@
       "instructions": 7,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -7244,8 +7288,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -7370,8 +7416,8 @@
       "instructions": 7,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -7379,8 +7425,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -7594,16 +7642,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -7993,8 +8043,8 @@
       "instructions": 3,
       "images": 2,
       "movementPattern": "hinge",
-      "postureConfigId": "hinge/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "hinge/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 5.0,
       "safetyTags": [
         "impact:low",
@@ -8003,8 +8053,10 @@
         "joint:lowerBack",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Hip hinge"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -8849,8 +8901,8 @@
       "instructions": 3,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -8858,8 +8910,10 @@
         "joint:shoulder",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -8887,8 +8941,8 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -8896,8 +8950,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -8925,8 +8981,8 @@
       "instructions": 2,
       "images": 2,
       "movementPattern": "hinge",
-      "postureConfigId": "hinge/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "hinge/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -8934,8 +8990,10 @@
         "joint:knee",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Hip hinge"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -8963,8 +9021,8 @@
       "instructions": 3,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -8972,8 +9030,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -9039,8 +9099,8 @@
       "instructions": 3,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -9048,8 +9108,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -9596,16 +9658,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -10060,8 +10124,8 @@
       "instructions": 7,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -10069,8 +10133,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -10644,8 +10710,8 @@
       "instructions": 7,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -10653,8 +10719,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -10719,16 +10787,18 @@
       "instructions": 7,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -11067,8 +11137,8 @@
       "instructions": 3,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -11076,8 +11146,10 @@
         "joint:shoulder",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -12089,8 +12161,8 @@
       "instructions": 2,
       "images": 2,
       "movementPattern": "hinge",
-      "postureConfigId": "hinge/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "hinge/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -12098,8 +12170,10 @@
         "joint:knee",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Hip hinge"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -12415,16 +12489,18 @@
       "instructions": 3,
       "images": 0,
       "movementPattern": "kneeTuck",
-      "postureConfigId": "kneeTuck/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "kneeTuck/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 2.8,
       "safetyTags": [
         "impact:low",
         "joint:lowerBack",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -12586,16 +12662,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "hipExtension",
-      "postureConfigId": "hipExtension/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "hipExtension/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Leg position"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -12681,16 +12759,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -13692,16 +13772,18 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -14461,8 +14543,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -14470,8 +14552,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -14568,16 +14652,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -14605,16 +14691,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -14705,8 +14793,8 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -14714,8 +14802,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -15660,8 +15750,8 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -15669,8 +15759,10 @@
         "joint:shoulder",
         "level:1"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -17235,16 +17327,18 @@
       "instructions": 5,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
         "tag:externalLoad",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -18127,16 +18221,18 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "hipExtension",
-      "postureConfigId": "hipExtension/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "hipExtension/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 2.8,
       "safetyTags": [
         "impact:low",
         "joint:lowerBack",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Leg position"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -18387,8 +18483,8 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -18396,8 +18492,10 @@
         "joint:shoulder",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,
@@ -18425,8 +18523,8 @@
       "instructions": 4,
       "images": 2,
       "movementPattern": "benchPress",
-      "postureConfigId": "benchPress/basicTracking",
-      "postureCapability": "basicTracking",
+      "postureConfigId": "benchPress/experimentalForm",
+      "postureCapability": "experimentalForm",
       "metValue": 3.5,
       "safetyTags": [
         "impact:low",
@@ -18434,8 +18532,10 @@
         "joint:shoulder",
         "level:2"
       ],
-      "cameraSupport": "Basic camera tracking (repetitions)",
-      "formChecks": [],
+      "cameraSupport": "Experimental posture evaluation",
+      "formChecks": [
+        "Torso stability"
+      ],
       "trackingKind": "reps",
       "requiredLandmarks": [
         11,

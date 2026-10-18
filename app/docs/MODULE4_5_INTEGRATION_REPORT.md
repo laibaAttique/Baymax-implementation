@@ -1,5 +1,13 @@
 # Modules 2 → 4 → 5 integration and posture evaluation expansion — implementation report (2026-10-17)
 
+> **Update 2026-10-18 (at the user's request):** every camera-tracked exercise now works like the validated four —
+> reps, FPS, landmarks, live corrections **and a posture score** (same formula), shown on screen, in the summary, saved,
+> and read by the voice coach. All 304 tracked exercises have at least one measurable form check (the 50 former
+> "basic" ones got one: hips on the bench, hinge-not-squat, straight legs in back extensions, chest-dip lean, knees
+> bent in sit-ups and bent-knee raises, still upper body in knee tucks). Counts now: **validated 4 · experimental 300 ·
+> basic 0 · unsupported 228**. Non-validated scores are labelled "Posture score (experimental)" until the device
+> validation in MODULE5_DEVICE_VALIDATION.md is done; holds score the share of hold time in a correct position.
+
 Related: [MODULE5_CAMERA_PATTERNS.md](MODULE5_CAMERA_PATTERNS.md) (tracker architecture),
 [MODULE5_DEVICE_VALIDATION.md](MODULE5_DEVICE_VALIDATION.md) (validation procedure and record),
 [review/camera_support_audit.md](review/camera_support_audit.md) / `.csv` / `.json` (generated capability audit),

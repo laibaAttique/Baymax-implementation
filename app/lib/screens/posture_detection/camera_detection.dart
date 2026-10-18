@@ -78,7 +78,7 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
 
     WidgetsBinding.instance.addObserver(this);
     _session.start(widget.request, SessionMode.camera,
-        formScored: _support.showsPostureScore, formChecked: _support.supportsFormEvaluation);
+        formScored: _support.scoreValidated, formChecked: _support.supportsFormEvaluation);
     _session.addListener(_onSessionChanged);
     _ticker = Timer.periodic(const Duration(seconds: 1), (_) {
       if (mounted && _session.status == SessionStatus.active) setState(() {});
@@ -216,7 +216,7 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
         movement: _support.movementPattern.measures.isEmpty ? 'movement' : _support.movementPattern.measures,
       ),
       averageFps: fps,
-      formScored: _support.showsPostureScore,
+      formScored: _support.scoreValidated,
       formChecked: _support.supportsFormEvaluation,
     );
     if (!mounted) return;
@@ -280,17 +280,15 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
                   const SizedBox(height: 6),
                   const Text('Camera Detection',
                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-                  if (!_support.showsPostureScore)
+                  if (!_support.scoreValidated)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         key: ValueKey(_support.isExperimental ? 'experimental-label' : 'basic-tracking-label'),
                         _support.isExperimental
-                            ? 'Experimental form feedback: ${_support.checkLabels.join(', ').toLowerCase()} checked live. '
-                                'Not yet validated on real users, so no score is shown.'
-                            : _support.supportsHoldTiming
-                                ? 'Basic tracking: times your hold while you stay in position. Form is not scored.'
-                                : 'Basic tracking: counts repetitions from your ${_support.movementPattern.measures}. Form is not scored.',
+                            ? 'Experimental: ${_support.checkLabels.join(', ').toLowerCase()} checked live. '
+                                'The score is a guide until these checks are tested on real users.'
+                            : 'No posture check is measurable for this exercise: the score reflects movement range only.',
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
                       ),
@@ -317,17 +315,12 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
               child: Row(
                 children: [
                   _buildStat(_elapsed, 'Time'),
-                  if (_support.showsPostureScore) ...[
-                    _buildStat(score == null ? '—' : '$score%', 'Posture score'),
-                    _buildStat('${_session.partialReps}', 'Too shallow'),
-                  ] else if (_support.supportsHoldTiming) ...[
+                  if (_support.supportsHoldTiming) ...[
                     _buildStat(_clock(_session.holdSeconds ?? 0), 'In position'),
-                    _buildStat(_clock(widget.request.exercise.sets * widget.request.exercise.seconds), 'Planned'),
+                    _buildStat(score == null ? '—' : '$score%', _support.scoreLabel),
                   ] else ...[
-                    _buildStat('${_session.reps} / ${widget.request.exercise.timed ? '—' : widget.request.exercise.targetReps}', 'Reps / target'),
-                    _support.isExperimental
-                        ? _buildStat('${_session.partialReps}', 'Incomplete range')
-                        : _buildStat('Not scored', 'Form'),
+                    _buildStat(score == null ? '—' : '$score%', _support.scoreLabel),
+                    _buildStat('${_session.partialReps}', 'Too shallow'),
                   ],
                 ],
               ),

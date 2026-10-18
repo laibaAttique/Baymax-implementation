@@ -359,7 +359,7 @@ void main() {
       final session = SessionExercise.fromPlanned(db);
       expect(ExerciseFormRules.supports(session.id), isFalse, reason: 'no tested form rules for this one');
       expect(session.movement, MovementPattern.benchPress);
-      expect(MovementPatterns.forSession(session).level, CameraSupportLevel.basicTracking, reason: 'bench press: no measurable form check');
+      expect(MovementPatterns.forSession(session).level, CameraSupportLevel.experimentalForm, reason: 'bench press: hips-on-bench check');
     });
 
     test('plan snapshot is versioned and its fingerprint is stable', () {
