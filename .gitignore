@@ -29,3 +29,6 @@ app/ml/food_classifier/results_2026-10-12/flagged_label_noise.png
 .next/
 *.tsbuildinfo
 next-env.d.ts
+
+# Kotlin compiler daemon session files (build cache)
+app/android/.kotlin/
