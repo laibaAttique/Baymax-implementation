@@ -1,0 +1,662 @@
+[Appium] Available drivers:
+[Appium]   - uiautomator2@8.7.0 (automationName 'UiAutomator2')
+[Appium] No plugins have been installed. Use the "appium plugin" command to install the one(s) you want to use.
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:udid":"f3fd6781","appium:appPackage":"com.example.app","appium:appActivity":".MainActivity","appium:noReset":true,"appium:autoGrantPermissions":false,"appium:skipDeviceInitialization":true,"appium:disableWindowAnimation":false,"appium:newCommandTimeout":180,"appium:uiautomator2ServerInstallTimeout":180000,"appium:uiautomator2ServerLaunchTimeout":120000,"appium:adbExecTimeout":60000},"firstMatch":[{}]}}
+[Appium] Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[Appium] The 'uiautomator2' driver was installed and matched caps.
+[Appium] Will require it at D:\fyp\Baymax-Phase 2\Baymax-implementation\automation\appium\node_modules\appium-uiautomator2-driver
+[AppiumDriver@809b] Appium v3.8.0 creating new AndroidUiautomator2Driver (v8.7.0) session
+[AppiumDriver@809b] Checking BaseDriver versions for Appium and AndroidUiautomator2Driver
+[AppiumDriver@809b] Appium's BaseDriver version is 10.8.1
+[AppiumDriver@809b] AndroidUiautomator2Driver's BaseDriver version is 10.8.1
+[77a8003f][AndroidUiautomator2Driver@fd69] Session created with session id: 77a8003f-1f55-43ee-901f-9bd816d339e9
+[77a8003f][ADB] Found 2 'build-tools' folders under 'D:/android-sdk' (newest first):
+[77a8003f][ADB]     D:\android-sdk\build-tools\36.0.0
+[77a8003f][ADB]     D:\android-sdk\build-tools\35.0.0
+[77a8003f][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[77a8003f][AndroidUiautomator2Driver@fd69] Retrieving device list
+[77a8003f][AndroidUiautomator2Driver@fd69] Using device: f3fd6781
+[77a8003f][BaseDriver] Subscribing fd69ccc3-04ad-400f-b464-5a9c8353c7c9 to topic 'uiautomator2:sessionUdidClaimed'
+[77a8003f][BaseDriver] Subscribing fd69ccc3-04ad-400f-b464-5a9c8353c7c9 to topic 'uiautomator2:sessionUdidContended'
+[77a8003f][BaseDriver] Subscribing fd69ccc3-04ad-400f-b464-5a9c8353c7c9 to topic 'uiautomator2:sessionUdidReleased'
+[77a8003f][BaseDriver] Unsubscribing fd69ccc3-04ad-400f-b464-5a9c8353c7c9 from topic 'uiautomator2:sessionUdidContended'
+[77a8003f][BaseDriver] Unsubscribing fd69ccc3-04ad-400f-b464-5a9c8353c7c9 from topic 'uiautomator2:sessionUdidReleased'
+[77a8003f][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[77a8003f][AndroidUiautomator2Driver@fd69] Starting 'com.example.app' directly on the device
+[77a8003f][ADB] Getting device platform version
+[77a8003f][AndroidUiautomator2Driver@fd69] Relaxing hidden api policy
+[77a8003f][AndroidUiautomator2Driver@fd69] 'skipDeviceInitialization' is set. Skipping device initialization.
+[77a8003f][AndroidUiautomator2Driver@fd69] Unable to set mock location for app 'io.appium.settings': Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell appops set io.appium.settings android\:mock_location allow' exited with code 255'; Command output: Error: No UID for io.appium.settings in user 0
+
+[77a8003f][AndroidUiautomator2Driver@fd69] Hidden API policy (https://developer.android.com/guide/app-compatibility/restrictions-non-sdk-interfaces) cannot be enabled. This might be happening because the device under test is not configured properly. Please check https://github.com/appium/appium/issues/13802 for more details. You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ignore this error, which might later lead to unexpected crashes or behavior of the automation server. Original error: Check https://github.com/appium/appium/issues/13802 for throubleshooting. Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1'' exited with code 255'; Command output: 
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+[77a8003f][BaseDriver] Unsubscribing fd69ccc3-04ad-400f-b464-5a9c8353c7c9 from topic 'uiautomator2:sessionUdidClaimed'
+[77a8003f][AndroidUiautomator2Driver@fd69] Restoring hidden api policy to the device default configuration
+[HTTP] <-- POST /session 500 1144 ms - 15860
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:udid":"f3fd6781","appium:appPackage":"com.example.app","appium:appActivity":".MainActivity","appium:noReset":true,"appium:autoGrantPermissions":false,"appium:skipDeviceInitialization":true,"appium:disableWindowAnimation":false,"appium:newCommandTimeout":180,"appium:uiautomator2ServerInstallTimeout":180000,"appium:uiautomator2ServerLaunchTimeout":120000,"appium:adbExecTimeout":60000},"firstMatch":[{}]}}
+[Appium] Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[Appium] The 'uiautomator2' driver was installed and matched caps.
+[Appium] Will require it at D:\fyp\Baymax-Phase 2\Baymax-implementation\automation\appium\node_modules\appium-uiautomator2-driver
+[AppiumDriver@809b] Appium v3.8.0 creating new AndroidUiautomator2Driver (v8.7.0) session
+[AppiumDriver@809b] Checking BaseDriver versions for Appium and AndroidUiautomator2Driver
+[AppiumDriver@809b] Appium's BaseDriver version is 10.8.1
+[AppiumDriver@809b] AndroidUiautomator2Driver's BaseDriver version is 10.8.1
+[8942049a][AndroidUiautomator2Driver@e062] Session created with session id: 8942049a-d756-4726-8d21-8b60310e60d1
+[8942049a][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[8942049a][AndroidUiautomator2Driver@e062] Retrieving device list
+[8942049a][AndroidUiautomator2Driver@e062] Using device: f3fd6781
+[8942049a][BaseDriver] Subscribing e062ee6b-4c01-49b9-95a2-b580b75c75c9 to topic 'uiautomator2:sessionUdidClaimed'
+[8942049a][BaseDriver] Subscribing e062ee6b-4c01-49b9-95a2-b580b75c75c9 to topic 'uiautomator2:sessionUdidContended'
+[8942049a][BaseDriver] Subscribing e062ee6b-4c01-49b9-95a2-b580b75c75c9 to topic 'uiautomator2:sessionUdidReleased'
+[8942049a][BaseDriver] Unsubscribing e062ee6b-4c01-49b9-95a2-b580b75c75c9 from topic 'uiautomator2:sessionUdidContended'
+[8942049a][BaseDriver] Unsubscribing e062ee6b-4c01-49b9-95a2-b580b75c75c9 from topic 'uiautomator2:sessionUdidReleased'
+[8942049a][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[8942049a][AndroidUiautomator2Driver@e062] Starting 'com.example.app' directly on the device
+[8942049a][ADB] Getting device platform version
+[8942049a][AndroidUiautomator2Driver@e062] Relaxing hidden api policy
+[8942049a][AndroidUiautomator2Driver@e062] 'skipDeviceInitialization' is set. Skipping device initialization.
+[8942049a][AndroidUiautomator2Driver@e062] Unable to set mock location for app 'io.appium.settings': Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell appops set io.appium.settings android\:mock_location allow' exited with code 255'; Command output: Error: No UID for io.appium.settings in user 0
+
+[8942049a][AndroidUiautomator2Driver@e062] Hidden API policy (https://developer.android.com/guide/app-compatibility/restrictions-non-sdk-interfaces) cannot be enabled. This might be happening because the device under test is not configured properly. Please check https://github.com/appium/appium/issues/13802 for more details. You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ignore this error, which might later lead to unexpected crashes or behavior of the automation server. Original error: Check https://github.com/appium/appium/issues/13802 for throubleshooting. Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1'' exited with code 255'; Command output: 
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+[8942049a][BaseDriver] Unsubscribing e062ee6b-4c01-49b9-95a2-b580b75c75c9 from topic 'uiautomator2:sessionUdidClaimed'
+[8942049a][AndroidUiautomator2Driver@e062] Restoring hidden api policy to the device default configuration
+[HTTP] <-- POST /session 500 735 ms - 15860
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:udid":"f3fd6781","appium:appPackage":"com.example.app","appium:appActivity":".MainActivity","appium:noReset":true,"appium:autoGrantPermissions":false,"appium:skipDeviceInitialization":true,"appium:disableWindowAnimation":false,"appium:newCommandTimeout":180,"appium:uiautomator2ServerInstallTimeout":180000,"appium:uiautomator2ServerLaunchTimeout":120000,"appium:adbExecTimeout":60000},"firstMatch":[{}]}}
+[Appium] Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[Appium] The 'uiautomator2' driver was installed and matched caps.
+[Appium] Will require it at D:\fyp\Baymax-Phase 2\Baymax-implementation\automation\appium\node_modules\appium-uiautomator2-driver
+[AppiumDriver@809b] Appium v3.8.0 creating new AndroidUiautomator2Driver (v8.7.0) session
+[AppiumDriver@809b] Checking BaseDriver versions for Appium and AndroidUiautomator2Driver
+[AppiumDriver@809b] Appium's BaseDriver version is 10.8.1
+[AppiumDriver@809b] AndroidUiautomator2Driver's BaseDriver version is 10.8.1
+[cc173d6e][AndroidUiautomator2Driver@7495] Session created with session id: cc173d6e-26b6-4ea6-b8c3-bb2d2d303297
+[cc173d6e][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[cc173d6e][AndroidUiautomator2Driver@7495] Retrieving device list
+[cc173d6e][AndroidUiautomator2Driver@7495] Using device: f3fd6781
+[cc173d6e][BaseDriver] Subscribing 7495170c-72c9-4fd6-a24e-465f98b0e807 to topic 'uiautomator2:sessionUdidClaimed'
+[cc173d6e][BaseDriver] Subscribing 7495170c-72c9-4fd6-a24e-465f98b0e807 to topic 'uiautomator2:sessionUdidContended'
+[cc173d6e][BaseDriver] Subscribing 7495170c-72c9-4fd6-a24e-465f98b0e807 to topic 'uiautomator2:sessionUdidReleased'
+[cc173d6e][BaseDriver] Unsubscribing 7495170c-72c9-4fd6-a24e-465f98b0e807 from topic 'uiautomator2:sessionUdidContended'
+[cc173d6e][BaseDriver] Unsubscribing 7495170c-72c9-4fd6-a24e-465f98b0e807 from topic 'uiautomator2:sessionUdidReleased'
+[cc173d6e][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[cc173d6e][AndroidUiautomator2Driver@7495] Starting 'com.example.app' directly on the device
+[cc173d6e][ADB] Getting device platform version
+[cc173d6e][AndroidUiautomator2Driver@7495] Relaxing hidden api policy
+[cc173d6e][AndroidUiautomator2Driver@7495] 'skipDeviceInitialization' is set. Skipping device initialization.
+[cc173d6e][AndroidUiautomator2Driver@7495] Unable to set mock location for app 'io.appium.settings': Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell appops set io.appium.settings android\:mock_location allow' exited with code 255'; Command output: Error: No UID for io.appium.settings in user 0
+
+[cc173d6e][AndroidUiautomator2Driver@7495] Hidden API policy (https://developer.android.com/guide/app-compatibility/restrictions-non-sdk-interfaces) cannot be enabled. This might be happening because the device under test is not configured properly. Please check https://github.com/appium/appium/issues/13802 for more details. You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ignore this error, which might later lead to unexpected crashes or behavior of the automation server. Original error: Check https://github.com/appium/appium/issues/13802 for throubleshooting. Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1'' exited with code 255'; Command output: 
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+[cc173d6e][BaseDriver] Unsubscribing 7495170c-72c9-4fd6-a24e-465f98b0e807 from topic 'uiautomator2:sessionUdidClaimed'
+[cc173d6e][AndroidUiautomator2Driver@7495] Restoring hidden api policy to the device default configuration
+[HTTP] <-- POST /session 500 936 ms - 15860
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:udid":"f3fd6781","appium:appPackage":"com.example.app","appium:appActivity":".MainActivity","appium:noReset":true,"appium:autoGrantPermissions":false,"appium:skipDeviceInitialization":true,"appium:disableWindowAnimation":false,"appium:newCommandTimeout":180,"appium:uiautomator2ServerInstallTimeout":180000,"appium:uiautomator2ServerLaunchTimeout":120000,"appium:adbExecTimeout":60000},"firstMatch":[{}]}}
+[Appium] Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[Appium] The 'uiautomator2' driver was installed and matched caps.
+[Appium] Will require it at D:\fyp\Baymax-Phase 2\Baymax-implementation\automation\appium\node_modules\appium-uiautomator2-driver
+[AppiumDriver@809b] Appium v3.8.0 creating new AndroidUiautomator2Driver (v8.7.0) session
+[AppiumDriver@809b] Checking BaseDriver versions for Appium and AndroidUiautomator2Driver
+[AppiumDriver@809b] Appium's BaseDriver version is 10.8.1
+[AppiumDriver@809b] AndroidUiautomator2Driver's BaseDriver version is 10.8.1
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] Session created with session id: 8a4d0ff3-6dce-4902-a7d0-8ec188d30457
+[8a4d0ff3][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] Retrieving device list
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] Using device: f3fd6781
+[8a4d0ff3][BaseDriver] Subscribing fbad7944-8ed4-4fdf-ba6e-f725ca834e96 to topic 'uiautomator2:sessionUdidClaimed'
+[8a4d0ff3][BaseDriver] Subscribing fbad7944-8ed4-4fdf-ba6e-f725ca834e96 to topic 'uiautomator2:sessionUdidContended'
+[8a4d0ff3][BaseDriver] Subscribing fbad7944-8ed4-4fdf-ba6e-f725ca834e96 to topic 'uiautomator2:sessionUdidReleased'
+[8a4d0ff3][BaseDriver] Unsubscribing fbad7944-8ed4-4fdf-ba6e-f725ca834e96 from topic 'uiautomator2:sessionUdidContended'
+[8a4d0ff3][BaseDriver] Unsubscribing fbad7944-8ed4-4fdf-ba6e-f725ca834e96 from topic 'uiautomator2:sessionUdidReleased'
+[8a4d0ff3][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] Starting 'com.example.app' directly on the device
+[8a4d0ff3][ADB] Getting device platform version
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] Relaxing hidden api policy
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] 'skipDeviceInitialization' is set. Skipping device initialization.
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] Unable to set mock location for app 'io.appium.settings': Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell appops set io.appium.settings android\:mock_location allow' exited with code 255'; Command output: Error: No UID for io.appium.settings in user 0
+
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] Hidden API policy (https://developer.android.com/guide/app-compatibility/restrictions-non-sdk-interfaces) cannot be enabled. This might be happening because the device under test is not configured properly. Please check https://github.com/appium/appium/issues/13802 for more details. You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ignore this error, which might later lead to unexpected crashes or behavior of the automation server. Original error: Check https://github.com/appium/appium/issues/13802 for throubleshooting. Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1'' exited with code 255'; Command output: 
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+[8a4d0ff3][BaseDriver] Unsubscribing fbad7944-8ed4-4fdf-ba6e-f725ca834e96 from topic 'uiautomator2:sessionUdidClaimed'
+[8a4d0ff3][AndroidUiautomator2Driver@fbad] Restoring hidden api policy to the device default configuration
+[HTTP] <-- POST /session 500 923 ms - 15860
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:udid":"f3fd6781","appium:appPackage":"com.example.app","appium:appActivity":".MainActivity","appium:noReset":true,"appium:autoGrantPermissions":false,"appium:skipDeviceInitialization":true,"appium:disableWindowAnimation":false,"appium:newCommandTimeout":180,"appium:uiautomator2ServerInstallTimeout":180000,"appium:uiautomator2ServerLaunchTimeout":120000,"appium:adbExecTimeout":60000},"firstMatch":[{}]}}
+[Appium] Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[Appium] The 'uiautomator2' driver was installed and matched caps.
+[Appium] Will require it at D:\fyp\Baymax-Phase 2\Baymax-implementation\automation\appium\node_modules\appium-uiautomator2-driver
+[AppiumDriver@809b] Appium v3.8.0 creating new AndroidUiautomator2Driver (v8.7.0) session
+[AppiumDriver@809b] Checking BaseDriver versions for Appium and AndroidUiautomator2Driver
+[AppiumDriver@809b] Appium's BaseDriver version is 10.8.1
+[AppiumDriver@809b] AndroidUiautomator2Driver's BaseDriver version is 10.8.1
+[f4199037][AndroidUiautomator2Driver@0e46] Session created with session id: f4199037-cafb-425e-bec5-dcbada8a7e97
+[f4199037][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[f4199037][AndroidUiautomator2Driver@0e46] Retrieving device list
+[f4199037][AndroidUiautomator2Driver@0e46] Using device: f3fd6781
+[f4199037][BaseDriver] Subscribing 0e46826e-457c-4404-a4f0-d96b81ff9dbe to topic 'uiautomator2:sessionUdidClaimed'
+[f4199037][BaseDriver] Subscribing 0e46826e-457c-4404-a4f0-d96b81ff9dbe to topic 'uiautomator2:sessionUdidContended'
+[f4199037][BaseDriver] Subscribing 0e46826e-457c-4404-a4f0-d96b81ff9dbe to topic 'uiautomator2:sessionUdidReleased'
+[f4199037][BaseDriver] Unsubscribing 0e46826e-457c-4404-a4f0-d96b81ff9dbe from topic 'uiautomator2:sessionUdidContended'
+[f4199037][BaseDriver] Unsubscribing 0e46826e-457c-4404-a4f0-d96b81ff9dbe from topic 'uiautomator2:sessionUdidReleased'
+[f4199037][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[f4199037][AndroidUiautomator2Driver@0e46] Starting 'com.example.app' directly on the device
+[f4199037][ADB] Getting device platform version
+[f4199037][AndroidUiautomator2Driver@0e46] Relaxing hidden api policy
+[f4199037][AndroidUiautomator2Driver@0e46] 'skipDeviceInitialization' is set. Skipping device initialization.
+[f4199037][AndroidUiautomator2Driver@0e46] Unable to set mock location for app 'io.appium.settings': Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell appops set io.appium.settings android\:mock_location allow' exited with code 255'; Command output: Error: No UID for io.appium.settings in user 0
+
+[f4199037][AndroidUiautomator2Driver@0e46] Hidden API policy (https://developer.android.com/guide/app-compatibility/restrictions-non-sdk-interfaces) cannot be enabled. This might be happening because the device under test is not configured properly. Please check https://github.com/appium/appium/issues/13802 for more details. You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ignore this error, which might later lead to unexpected crashes or behavior of the automation server. Original error: Check https://github.com/appium/appium/issues/13802 for throubleshooting. Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1'' exited with code 255'; Command output: 
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+[f4199037][BaseDriver] Unsubscribing 0e46826e-457c-4404-a4f0-d96b81ff9dbe from topic 'uiautomator2:sessionUdidClaimed'
+[f4199037][AndroidUiautomator2Driver@0e46] Restoring hidden api policy to the device default configuration
+[HTTP] <-- POST /session 500 783 ms - 15860
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:udid":"f3fd6781","appium:appPackage":"com.example.app","appium:appActivity":".MainActivity","appium:noReset":true,"appium:autoGrantPermissions":false,"appium:skipDeviceInitialization":true,"appium:disableWindowAnimation":false,"appium:newCommandTimeout":180,"appium:uiautomator2ServerInstallTimeout":180000,"appium:uiautomator2ServerLaunchTimeout":120000,"appium:adbExecTimeout":60000},"firstMatch":[{}]}}
+[Appium] Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[Appium] The 'uiautomator2' driver was installed and matched caps.
+[Appium] Will require it at D:\fyp\Baymax-Phase 2\Baymax-implementation\automation\appium\node_modules\appium-uiautomator2-driver
+[AppiumDriver@809b] Appium v3.8.0 creating new AndroidUiautomator2Driver (v8.7.0) session
+[AppiumDriver@809b] Checking BaseDriver versions for Appium and AndroidUiautomator2Driver
+[AppiumDriver@809b] Appium's BaseDriver version is 10.8.1
+[AppiumDriver@809b] AndroidUiautomator2Driver's BaseDriver version is 10.8.1
+[ef379cde][AndroidUiautomator2Driver@999b] Session created with session id: ef379cde-d439-40a0-a1dd-ed461bc26803
+[ef379cde][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[ef379cde][AndroidUiautomator2Driver@999b] Retrieving device list
+[ef379cde][AndroidUiautomator2Driver@999b] Using device: f3fd6781
+[ef379cde][BaseDriver] Subscribing 999bba53-277e-4473-a43a-f94d12fd5cad to topic 'uiautomator2:sessionUdidClaimed'
+[ef379cde][BaseDriver] Subscribing 999bba53-277e-4473-a43a-f94d12fd5cad to topic 'uiautomator2:sessionUdidContended'
+[ef379cde][BaseDriver] Subscribing 999bba53-277e-4473-a43a-f94d12fd5cad to topic 'uiautomator2:sessionUdidReleased'
+[ef379cde][BaseDriver] Unsubscribing 999bba53-277e-4473-a43a-f94d12fd5cad from topic 'uiautomator2:sessionUdidContended'
+[ef379cde][BaseDriver] Unsubscribing 999bba53-277e-4473-a43a-f94d12fd5cad from topic 'uiautomator2:sessionUdidReleased'
+[ef379cde][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[ef379cde][AndroidUiautomator2Driver@999b] Starting 'com.example.app' directly on the device
+[ef379cde][ADB] Getting device platform version
+[ef379cde][AndroidUiautomator2Driver@999b] Relaxing hidden api policy
+[ef379cde][AndroidUiautomator2Driver@999b] 'skipDeviceInitialization' is set. Skipping device initialization.
+[ef379cde][AndroidUiautomator2Driver@999b] Unable to set mock location for app 'io.appium.settings': Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell appops set io.appium.settings android\:mock_location allow' exited with code 255'; Command output: Error: No UID for io.appium.settings in user 0
+
+[ef379cde][AndroidUiautomator2Driver@999b] Hidden API policy (https://developer.android.com/guide/app-compatibility/restrictions-non-sdk-interfaces) cannot be enabled. This might be happening because the device under test is not configured properly. Please check https://github.com/appium/appium/issues/13802 for more details. You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ignore this error, which might later lead to unexpected crashes or behavior of the automation server. Original error: Check https://github.com/appium/appium/issues/13802 for throubleshooting. Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1'' exited with code 255'; Command output: 
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+[ef379cde][BaseDriver] Unsubscribing 999bba53-277e-4473-a43a-f94d12fd5cad from topic 'uiautomator2:sessionUdidClaimed'
+[ef379cde][AndroidUiautomator2Driver@999b] Restoring hidden api policy to the device default configuration
+[HTTP] <-- POST /session 500 846 ms - 15860
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:udid":"f3fd6781","appium:appPackage":"com.example.app","appium:appActivity":".MainActivity","appium:noReset":true,"appium:autoGrantPermissions":false,"appium:skipDeviceInitialization":true,"appium:disableWindowAnimation":false,"appium:newCommandTimeout":180,"appium:uiautomator2ServerInstallTimeout":180000,"appium:uiautomator2ServerLaunchTimeout":120000,"appium:adbExecTimeout":60000},"firstMatch":[{}]}}
+[Appium] Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[Appium] The 'uiautomator2' driver was installed and matched caps.
+[Appium] Will require it at D:\fyp\Baymax-Phase 2\Baymax-implementation\automation\appium\node_modules\appium-uiautomator2-driver
+[AppiumDriver@809b] Appium v3.8.0 creating new AndroidUiautomator2Driver (v8.7.0) session
+[AppiumDriver@809b] Checking BaseDriver versions for Appium and AndroidUiautomator2Driver
+[AppiumDriver@809b] Appium's BaseDriver version is 10.8.1
+[AppiumDriver@809b] AndroidUiautomator2Driver's BaseDriver version is 10.8.1
+[fdf37574][AndroidUiautomator2Driver@ce13] Session created with session id: fdf37574-3931-4c29-8f9c-3c7609f9e133
+[fdf37574][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[fdf37574][AndroidUiautomator2Driver@ce13] Retrieving device list
+[fdf37574][AndroidUiautomator2Driver@ce13] Using device: f3fd6781
+[fdf37574][BaseDriver] Subscribing ce13131a-9fb0-4e35-a6b5-91f00f2a4573 to topic 'uiautomator2:sessionUdidClaimed'
+[fdf37574][BaseDriver] Subscribing ce13131a-9fb0-4e35-a6b5-91f00f2a4573 to topic 'uiautomator2:sessionUdidContended'
+[fdf37574][BaseDriver] Subscribing ce13131a-9fb0-4e35-a6b5-91f00f2a4573 to topic 'uiautomator2:sessionUdidReleased'
+[fdf37574][BaseDriver] Unsubscribing ce13131a-9fb0-4e35-a6b5-91f00f2a4573 from topic 'uiautomator2:sessionUdidContended'
+[fdf37574][BaseDriver] Unsubscribing ce13131a-9fb0-4e35-a6b5-91f00f2a4573 from topic 'uiautomator2:sessionUdidReleased'
+[fdf37574][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[fdf37574][AndroidUiautomator2Driver@ce13] Starting 'com.example.app' directly on the device
+[fdf37574][ADB] Getting device platform version
+[fdf37574][AndroidUiautomator2Driver@ce13] Relaxing hidden api policy
+[fdf37574][AndroidUiautomator2Driver@ce13] 'skipDeviceInitialization' is set. Skipping device initialization.
+[fdf37574][AndroidUiautomator2Driver@ce13] Unable to set mock location for app 'io.appium.settings': Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell appops set io.appium.settings android\:mock_location allow' exited with code 255'; Command output: Error: No UID for io.appium.settings in user 0
+
+[fdf37574][AndroidUiautomator2Driver@ce13] Hidden API policy (https://developer.android.com/guide/app-compatibility/restrictions-non-sdk-interfaces) cannot be enabled. This might be happening because the device under test is not configured properly. Please check https://github.com/appium/appium/issues/13802 for more details. You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ignore this error, which might later lead to unexpected crashes or behavior of the automation server. Original error: Check https://github.com/appium/appium/issues/13802 for throubleshooting. Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1'' exited with code 255'; Command output: 
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+[fdf37574][BaseDriver] Unsubscribing ce13131a-9fb0-4e35-a6b5-91f00f2a4573 from topic 'uiautomator2:sessionUdidClaimed'
+[fdf37574][AndroidUiautomator2Driver@ce13] Restoring hidden api policy to the device default configuration
+[HTTP] <-- POST /session 500 694 ms - 15860
+[HTTP] --> POST /session {"capabilities":{"alwaysMatch":{"platformName":"Android","appium:automationName":"UiAutomator2","appium:udid":"f3fd6781","appium:appPackage":"com.example.app","appium:appActivity":".MainActivity","appium:noReset":true,"appium:autoGrantPermissions":false,"appium:skipDeviceInitialization":true,"appium:disableWindowAnimation":false,"appium:newCommandTimeout":180,"appium:uiautomator2ServerInstallTimeout":180000,"appium:uiautomator2ServerLaunchTimeout":120000,"appium:adbExecTimeout":60000},"firstMatch":[{}]}}
+[Appium] Attempting to find matching driver for automationName 'UiAutomator2' and platformName 'Android'
+[Appium] The 'uiautomator2' driver was installed and matched caps.
+[Appium] Will require it at D:\fyp\Baymax-Phase 2\Baymax-implementation\automation\appium\node_modules\appium-uiautomator2-driver
+[AppiumDriver@809b] Appium v3.8.0 creating new AndroidUiautomator2Driver (v8.7.0) session
+[AppiumDriver@809b] Checking BaseDriver versions for Appium and AndroidUiautomator2Driver
+[AppiumDriver@809b] Appium's BaseDriver version is 10.8.1
+[AppiumDriver@809b] AndroidUiautomator2Driver's BaseDriver version is 10.8.1
+[70e43e74][AndroidUiautomator2Driver@01db] Session created with session id: 70e43e74-85fe-4479-b378-93613be547d2
+[70e43e74][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[70e43e74][AndroidUiautomator2Driver@01db] Retrieving device list
+[70e43e74][AndroidUiautomator2Driver@01db] Using device: f3fd6781
+[70e43e74][BaseDriver] Subscribing 01db8a7f-6a18-471b-9f22-16f1f86b40a7 to topic 'uiautomator2:sessionUdidClaimed'
+[70e43e74][BaseDriver] Subscribing 01db8a7f-6a18-471b-9f22-16f1f86b40a7 to topic 'uiautomator2:sessionUdidContended'
+[70e43e74][BaseDriver] Subscribing 01db8a7f-6a18-471b-9f22-16f1f86b40a7 to topic 'uiautomator2:sessionUdidReleased'
+[70e43e74][BaseDriver] Unsubscribing 01db8a7f-6a18-471b-9f22-16f1f86b40a7 from topic 'uiautomator2:sessionUdidContended'
+[70e43e74][BaseDriver] Unsubscribing 01db8a7f-6a18-471b-9f22-16f1f86b40a7 from topic 'uiautomator2:sessionUdidReleased'
+[70e43e74][ADB] Using 'adb.exe' from 'D:\android-sdk\platform-tools\adb.exe'
+[70e43e74][AndroidUiautomator2Driver@01db] Starting 'com.example.app' directly on the device
+[70e43e74][ADB] Getting device platform version
+[70e43e74][AndroidUiautomator2Driver@01db] Relaxing hidden api policy
+[70e43e74][AndroidUiautomator2Driver@01db] 'skipDeviceInitialization' is set. Skipping device initialization.
+[70e43e74][AndroidUiautomator2Driver@01db] Unable to set mock location for app 'io.appium.settings': Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell appops set io.appium.settings android\:mock_location allow' exited with code 255'; Command output: Error: No UID for io.appium.settings in user 0
+
+[70e43e74][AndroidUiautomator2Driver@01db] Hidden API policy (https://developer.android.com/guide/app-compatibility/restrictions-non-sdk-interfaces) cannot be enabled. This might be happening because the device under test is not configured properly. Please check https://github.com/appium/appium/issues/13802 for more details. You could also set the "appium:ignoreHiddenApiPolicyError" capability to true in order to ignore this error, which might later lead to unexpected crashes or behavior of the automation server. Original error: Check https://github.com/appium/appium/issues/13802 for throubleshooting. Error executing adbExec. Original error: 'Command ''D:\android-sdk\platform-tools\adb.exe' -P 5037 -s f3fd6781 shell 'settings put global hidden_api_policy_pre_p_apps 1;settings put global hidden_api_policy_p_apps 1;settings put global hidden_api_policy 1'' exited with code 255'; Command output: 
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+Exception occurred while executing 'put':
+java.lang.SecurityException: Permission denial: writing to settings requires:android.permission.WRITE_SECURE_SETTINGS
+	at com.android.providers.settings.SettingsProvider.enforceWritePermission(SettingsProvider.java:2329)
+	at com.android.providers.settings.SettingsProvider.mutateGlobalSetting(SettingsProvider.java:1473)
+	at com.android.providers.settings.SettingsProvider.insertGlobalSetting(SettingsProvider.java:1427)
+	at com.android.providers.settings.SettingsProvider.call(SettingsProvider.java:455)
+	at android.content.ContentProvider.call(ContentProvider.java:2533)
+	at android.content.ContentProvider$Transport.call(ContentProvider.java:530)
+	at com.android.providers.settings.SettingsService$MyShellCommand.putForUser(SettingsService.java:382)
+	at com.android.providers.settings.SettingsService$MyShellCommand.onCommand(SettingsService.java:278)
+	at com.android.modules.utils.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:97)
+	at android.os.ShellCommand.exec(ShellCommand.java:38)
+	at com.android.providers.settings.SettingsService.onShellCommand(SettingsService.java:50)
+	at android.os.Binder.shellCommand(Binder.java:1054)
+	at android.os.Binder.onTransact(Binder.java:882)
+	at android.os.Binder.execTransactInternal(Binder.java:1290)
+	at android.os.Binder.execTransact(Binder.java:1249)
+
+[70e43e74][BaseDriver] Unsubscribing 01db8a7f-6a18-471b-9f22-16f1f86b40a7 from topic 'uiautomator2:sessionUdidClaimed'
+[70e43e74][AndroidUiautomator2Driver@01db] Restoring hidden api policy to the device default configuration
+[HTTP] <-- POST /session 500 687 ms - 15860

@@ -269,14 +269,18 @@ class _VoiceAssistantScreenState extends State<VoiceAssistantScreen> with Single
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle),
-                    alignment: Alignment.center,
-                    child: const Icon(Icons.close, color: Colors.white, size: 18),
+                child: Semantics(
+                  button: true,
+                  label: 'Close voice assistant',
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle),
+                      alignment: Alignment.center,
+                      child: const Icon(Icons.close, color: Colors.white, size: 18),
+                    ),
                   ),
                 ),
               ),

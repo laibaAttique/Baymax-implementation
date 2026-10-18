@@ -1,0 +1,2112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1006" failures="0" skipped="13">
+  <testsuite name="test/atc/atc_integration_test.dart" tests="7" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_integration_test.dart" name="ATC-INT-01 A diabetic user with a dairy allergy gets a safe plan from profile to meals" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_integration_test.dart" name="ATC-INT-02 A cardiac user gets a low-intensity plan and a calorie target above the safe floor" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_integration_test.dart" name="ATC-INT-03 Typed meals become a daily summary with the correct totals and a fair verdict" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_integration_test.dart" name="ATC-INT-04 A week of activity earns a badge and raises no inactivity alert; a long gap raises one" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_integration_test.dart" name="ATC-INT-05 A booking is checked, paid through the test gateway and becomes a cancellable request without a video link" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_integration_test.dart" name="ATC-INT-06 A specialist's diet plan changes the calorie target but never puts an allergen back into the meals" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_integration_test.dart" name="ATC-INT-07 The chatbot answers calories left from the user's own plan and food log" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_functional_test.dart" tests="61" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 1 sign-up screen ATC-M1-F01 Create account is disabled on an empty form" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 1 sign-up screen ATC-M1-F02 A weak password is explained and blocks sign-up" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 1 sign-up screen ATC-M1-F03 Terms must be accepted before the account can be created" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 1 sign-up screen ATC-M1-F04 A different confirmation password disables sign-up again" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 2, 4 and 9 result screens ATC-M2-F01 The BMI screen shows the computed BMI, the BMR method and the calorie deficit" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 2, 4 and 9 result screens ATC-M2-F02 The classification screen lists the reported condition as a risk factor" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 2, 4 and 9 result screens ATC-M4-F01 A cardiac workout plan shows the category, warm-up, and a rest day when a day is tapped" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 2, 4 and 9 result screens ATC-M4-F02 A heart condition without clearance from a doctor gets no automatic plan, and the reason is shown" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 2, 4 and 9 result screens ATC-M9-F01 The nutrition plan shows the calorie target and lists the user's allergen foods under &quot;avoid&quot;" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F01 The greeting names the user and follows the time of day" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name='Module 3 home dashboard ATC-M3-F02 With no profile Home says "Welcome back" and asks for the health profile instead of inventing a plan' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F03 The activity cards show calories burned, active minutes and an honest steps card" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F04 The workout card shows today's session from the user's plan and Open goes to the Workout tab" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F05 The mood selector shows the chosen mood with a gentle suggestion, and tapping it again clears it" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F06 Quick Access lists the eight areas the report names" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F07 Quick Access tiles that belong to a tab switch to that tab" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F08 The profile avatar shows the user's initial and opens the Profile tab" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F09 The notification bell shows the unread count and caps it at 9+" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 3 home dashboard ATC-M3-F10 The bottom navigation bar has the five labelled tabs and each reports its index" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 8 diet screens ATC-M8-F01 The daily summary shows consumed, burned and net calories with a verdict" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 8 diet screens ATC-M8-F02 An empty day says nothing is logged and invents no macro split" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 8 diet screens food search ATC-M8-F03 Typing a local name finds the food by its other name" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 8 diet screens food search ATC-M8-F04 Picking a suggestion adds it to the meal and closes the list" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 8 diet screens food search ATC-M8-F05 A food that matches the user's allergy is flagged in the search results" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 8 diet screens food search ATC-M8-F06 A search with no result says so instead of showing an empty box" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 10 allergy result screen ATC-M10-F01 An allergen found on a label raises an alert dialog and then lists the ingredients" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name='Module 10 allergy result screen ATC-M10-F02 A safe label shows no alert and a clear "No allergens found"' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 12 badges screen ATC-M12-F01 My badges shows the level, XP and the unlock rule of a locked badge" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 12 badges screen ATC-M12-F02 A failed load shows no invented numbers" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 16 notifications screen ATC-M16-F01 Notifications show unread counts per tab and filter by tab" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 16 notifications screen ATC-M16-F02 Mark all read reports exactly the unread items" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 16 notifications screen ATC-M16-F03 A failed load shows an error, not an empty inbox" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 17 analytics screen ATC-M17-F01 Analytics shows the calorie chart, the weekly score and an honest scope note" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 17 analytics screen ATC-M17-F02 A failed analytics load offers a retry" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F01 The specialist list shows a count and disables Book for a specialist who is not taking bookings" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F02 The type chip filters the list" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F03 Search by specialty finds the trainer" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F04 A specialist with no reviews is shown as New and not hidden" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F05 A failed load is explained and can be retried" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F06 Confirm booking stays disabled until a time is chosen, and nothing is shared by default" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F07 Booking sends exactly the chosen time, type, shares and note, then opens the payment screen" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F08 A time someone else just took is refused and the screen stays" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F09 A time that is already booked is not offered" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F10 The notes box stops at 500 characters" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F11 My appointments separates upcoming from past and shows the specialist's notes only under Past" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F12 A request shows as awaiting acceptance, has no video link and can be cancelled" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F13 A declined request shows the reason and offers no cancel" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F14 A confirmed appointment shows the meeting link and the join window rule" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F15 The room is announced as open inside the join window" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F16 Cancelling asks for confirmation first and then shows the new status" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 14 specialist list, booking and appointments ATC-M14-F17 An appointment that has already started has no cancel button" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F01 The payment screen shows the booking, the fee breakdown with an explicit zero platform fee and the test-mode notice" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F02 The total includes the platform fee" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F03 Pay stays disabled until all card fields are valid, the CVV is hidden and the number is grouped as typed" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F04 Paying sends exactly the card and amount, blocks a second tap while running, then shows the receipt" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F05 A declined card shows the reason, keeps the screen and does not give the time back" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F06 Pay at clinic needs no details and says nothing is charged now" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F07 A saved card asks only for its CVV and is charged by token" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F08 If the fee cannot be read there is an error and Pay stays disabled" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F09 A hold that ran out says nothing was charged and gives the time back" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_functional_test.dart" name="Module 15 payment screens ATC-M15-F10 Leaving the payment screen without paying gives the time back" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_m456_functional_test.dart" tests="21" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 4 workout plan and exercise detail ATC-M4-F03 Exercise detail shows the prescribed dose and a start/end illustration" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 4 workout plan and exercise detail ATC-M4-F04 A dataset exercise shows its photos with the source caption" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name='Functional Testing: Module 4 workout plan and exercise detail ATC-M4-F05 "Start exercise" opens mode selection linked to the planned exercise' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 4 workout plan and exercise detail ATC-M4-F06 The workout tab shows the training profile of the health classification" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F01 Posture Detection offers Today's workout, My plan and the Exercise library" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F02 Without a plan an empty state is shown, not invented exercises" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F03 My plan lists the real plan day with camera capability and starts an entry with its plan link" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F04 The generic exercise library is kept with camera and manual sections" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F05 Camera permission is not requested before the consent toggle is on" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name='Functional Testing: Module 5 posture detection screens ATC-M5-F06 "Skip for now" returns to the previous screen' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F07 Refused camera permission keeps the camera off and offers Manual Guidance" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F08 Camera screen counts reps from pose frames and shows status and privacy notice" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name='Functional Testing: Module 5 posture detection screens ATC-M5-F09 "Stop Session" ends the session and shows the summary with score, stats and feedback' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F10 Manual guidance: confirmed sets add reps; the form checklist and response buttons are shown" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name='Functional Testing: Module 5 posture detection screens ATC-M5-F11 "Next Exercise" advances to the following exercise' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F12 A plank in camera mode shows a hold timer instead of a rep counter" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F13 An exercise the camera cannot follow explains why and keeps Manual Guidance" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 6 voice assistant screen ATC-M6-F01 Opening the assistant asks for the microphone and shows the listening state" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 6 voice assistant screen ATC-M6-F02 A spoken question shows the transcript, the reply card, at most three chips and is spoken aloud" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 6 voice assistant screen ATC-M6-F03 A refused microphone is explained and a retry is offered" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 6 voice assistant screen ATC-M6-F04 Leaving the assistant releases the microphone without running a command" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_m456_integration_test.dart" tests="11" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 2 → Module 4 (health classification drives the plan) ATC-INT-34 The Module 2 health category sets the intensity ceiling of the generated plan" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 2 → Module 4 (health classification drives the plan) ATC-INT-35 A condition recorded in Module 2 removes restricted exercises from the Module 4 plan" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 4 → Module 5 (plan entries open posture sessions) ATC-INT-36 A planned exercise starts a posture session with the planned dose and a camera configuration" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 4 (sessions complete planned exercises) ATC-INT-37 Completing every main exercise of the day marks the plan day done once" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 4 (sessions complete planned exercises) ATC-INT-38 A skipped or incomplete session does not complete the planned exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 6 (posture results reach the voice assistant) ATC-INT-39 A posture correction from the camera engine is spoken once by the cue announcer" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 6 (posture results reach the voice assistant) ATC-INT-40 Asking &quot;how's my form&quot; answers from the live posture analysis" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 6 (posture results reach the voice assistant) ATC-INT-41 The rep count spoken by the assistant equals the camera counter" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name='Integration Testing: Module 6 → Module 5 (voice commands control the posture session) ATC-INT-42 A spoken "pause" stops rep counting until "resume"' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 6 → Module 5 (voice commands control the posture session) ATC-INT-43 Ending a session by voice needs confirmation before the session is asked to finish" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: end-to-end Modules 2 → 4 → 5 → 6 ATC-INT-44 Profile → plan → posture sessions with voice queries → plan day completed" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_m456_rules_test.dart" tests="40" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B01 Screening gate: symptoms No, heart condition No, clearance Not needed, profile data Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B02 Screening gate: symptoms Yes, heart condition No, clearance Not needed, profile data Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B03 Screening gate: symptoms No, heart condition Yes, clearance No, profile data Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B04 Screening gate: symptoms No, heart condition Yes, clearance Yes, profile data Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B05 Screening gate: symptoms No, heart condition No, clearance Not needed, profile data No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B06 Exercise eligibility: Healthy, impact Low, tag None, injury No, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B07 Exercise eligibility: Hypertension, impact Low, tag HIIT, injury No, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B08 Exercise eligibility: Obese, impact High, tag None, injury No, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B09 Exercise eligibility: Healthy, impact High, tag None, injury Knee, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B10 Exercise eligibility: Healthy, impact Low, tag None, injury Knee, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B11 Exercise eligibility: Hypertension, impact Low, tag None, injury No, MET No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B12 Equipment rule: owns Dumbbell, exercise needs Dumbbell" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B13 Equipment rule: owns None, exercise needs Dumbbell" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B14 Equipment rule: owns Dumbbell, exercise needs Barbell" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B01 Camera capability of squat: validatedForm" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B02 Camera capability of Barbell_Squat: experimentalForm" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B03 Camera capability of Standing_Calf_Raises: notSupported" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B04 Rep acceptance: depth reached Yes, duration ≥ minimum Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B05 Rep acceptance: depth reached No, duration ≥ minimum Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B06 Rep acceptance: depth reached Yes, duration ≥ minimum No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B07 Landmark visibility 0.9 (threshold 0.5)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B08 Landmark visibility 0.3 (threshold 0.5)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B09 Correction trigger: fault No, persists ≥ 3 frames n/a" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B10 Correction trigger: fault Yes, persists ≥ 3 frames No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B11 Correction trigger: fault Yes, persists ≥ 3 frames Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B12 Plan completion: all sets Yes, skipped No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B13 Plan completion: all sets No, skipped No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B14 Plan completion: all sets Yes, skipped Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B01 Voice command "pause workout" with session active' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B02 Voice command "resume workout" with session paused' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B03 Voice command "pause workout" with session none' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B04 Voice command "my knee hurts" with session active' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B05 Microphone permission granted" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B06 Microphone permission denied" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B07 Microphone permission permanently denied" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B08 Recognition result: final text "how many reps"' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B09 Recognition result: no match" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B10 Recognition result: timeout (silence)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B11 Text-to-speech works" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B12 Text-to-speech fails" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_m456_unit_test.dart" tests="51" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U07 The free-exercise-db dataset is imported with every usable record" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U08 Exercise IDs are unique and a dataset duplicate of a curated exercise is not offered twice" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U09 A missing optional field is tolerated, not invented" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U10 Equipment exercises are offered only for equipment the user owns" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U11 Expert-level dataset exercises are never scheduled (program rule)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U12 Each health category maps to its training profile" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U13 Hypertension excludes high-intensity intervals and names the rule" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U14 Several conditions merge to the most restrictive limits" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U15 Owned equipment brings dataset exercises in, with the reason shown" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U16 The week has the chosen number of training days; the rest are rest days" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U17 The same inputs always give the same plan (deterministic)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U18 MET values are matched to the 2024 Compendium with a recorded match type" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U19 An exercise without a MET value is never offered for planning" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U20 Calories = MET × body weight × active hours" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U21 Intensity bands follow the WHO MET bands at the boundaries" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U22 Diabetes: no more than two rest days in a row" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U23 Warning symptoms stop plan generation and give the reason" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U24 A planned exercise counts as completed only when its target is reached" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U01 Joint angle at the middle landmark is computed correctly" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U02 Landmarks below the visibility threshold are not used" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U03 Missing landmarks are named in the guidance" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U04 The movement phases follow top → descending → bottom → ascending → top" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U05 Three full squats count three reps" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U06 A half repetition is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U07 A movement faster than the minimum rep time is rejected as noise" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U08 The angle is smoothed (exponential average)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U09 A plank hold is timed only while in position" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U10 The back-alignment rule passes upright and fails a deep forward lean" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U11 The hip rule gives the right correction for sagging and piking" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U12 Posture score = acceptable reps ÷ attempted reps" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U13 A correction is shown only after the fault persists for 3 frames" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U14 Exercises map to a movement pattern by movement, not muscle" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U15 An exercise the camera cannot follow is unsupported with a reason" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U16 Camera capability of every schedulable exercise (current code)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U17 Number of movement patterns with a tracker" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U18 An opening movement (overhead press) is counted on the mirrored angle" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U01 A rep question is recognised" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U02 A form question is recognised" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U03 A pause command is recognised" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U04 An unrelated question falls back to unknown" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U05 Empty speech input is not treated as a command" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U06 A pain report is recognised as a safety intent" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U07 The reply uses the live rep counter, never an invented number" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U08 With no session the assistant says so instead of inventing numbers" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U09 Quick-action chips are contextual and at most three" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U10 Microphone denied: the assistant never listens" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U11 Microphone permanently denied: the settings link is offered" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U12 Recognition errors give a clear message and nothing is spoken" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U13 A speech-synthesis failure still shows the reply" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U14 Closing releases the microphone and ignores a pending command" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U15 Replies never overlap; replay speaks the same reply once more" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_rules_test.dart" tests="59" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B01 Health category: None, BMI Normal" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B02 Health category: None, BMI Overweight" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B03 Health category: None, BMI Obese" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B04 Health category: None, BMI Underweight" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B05 Health category: Hypertension, BMI Normal" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B06 Health category: Diabetes, BMI Normal" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B07 Health category: Diabetes, BMI Obese" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B08 Health category: Heart disease, BMI Normal" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M2-1 health category ATC-M2-B09 Health category: Heart disease and diabetes, BMI Obese" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name='DT-M10-1 allergen verdict ATC-M10-B01 Allergen verdict: listed Yes, in ingredients Yes, "may contain" No' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name='DT-M10-1 allergen verdict ATC-M10-B02 Allergen verdict: listed Yes, in ingredients No, "may contain" Yes' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name='DT-M10-1 allergen verdict ATC-M10-B03 Allergen verdict: listed Yes, in ingredients No, "may contain" No' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name='DT-M10-1 allergen verdict ATC-M10-B04 Allergen verdict: listed No, in ingredients Yes, "may contain" No' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name='DT-M10-1 allergen verdict ATC-M10-B05 Allergen verdict: listed Yes, in ingredients Yes, "may contain" Yes' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name='DT-M10-1 allergen verdict ATC-M10-B06 Allergen verdict: listed No, in ingredients No, "may contain" Yes' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B01 Pay button for Card, fields Valid, fee Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B02 Pay button for Card, fields Invalid (check digit), fee Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B03 Pay button for Card, fields Valid, fee No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B04 Pay button for Wallet (JazzCash), fields Valid number, fee Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B05 Pay button for Wallet (JazzCash), fields Invalid number, fee Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B06 Pay button for Pay at clinic, fields Not needed, fee Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B07 Pay button for Pay at clinic, fields Not needed, fee No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B08 Pay button for Saved card, fields CVV entered, not expired, fee Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B09 Pay button for Saved card, fields CVV missing, fee Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M15-1 Pay button enabled ATC-M15-B10 Pay button for Saved card, fields Card expired, fee Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-1 booking validity ATC-M14-B01 Booking check: Taking bookings Yes, Time chosen Yes, Time free Yes, 15+ min ahead Yes, Within working hours Yes, Note 500 or less Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-1 booking validity ATC-M14-B02 Booking check: Taking bookings No, Time chosen Yes, Time free Yes, 15+ min ahead Yes, Within working hours Yes, Note 500 or less Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-1 booking validity ATC-M14-B03 Booking check: Taking bookings Yes, Time chosen No, Time free -, 15+ min ahead -, Within working hours -, Note 500 or less Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-1 booking validity ATC-M14-B04 Booking check: Taking bookings Yes, Time chosen Yes, Time free No, 15+ min ahead Yes, Within working hours Yes, Note 500 or less Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-1 booking validity ATC-M14-B05 Booking check: Taking bookings Yes, Time chosen Yes, Time free Yes, 15+ min ahead No, Within working hours Yes, Note 500 or less Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-1 booking validity ATC-M14-B06 Booking check: Taking bookings Yes, Time chosen Yes, Time free Yes, 15+ min ahead Yes, Within working hours No, Note 500 or less Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-1 booking validity ATC-M14-B07 Booking check: Taking bookings Yes, Time chosen Yes, Time free Yes, 15+ min ahead Yes, Within working hours Yes, Note 500 or less No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-2 join and cancel windows ATC-M14-B08 Appointment Confirmed, 6 minutes before start" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-2 join and cancel windows ATC-M14-B09 Appointment Confirmed, 5 minutes before start" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-2 join and cancel windows ATC-M14-B10 Appointment Confirmed, 10 minutes after start" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-2 join and cancel windows ATC-M14-B11 Appointment Confirmed, after the slot ended" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-2 join and cancel windows ATC-M14-B12 Appointment Requested, 30 minutes before start" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-2 join and cancel windows ATC-M14-B13 Appointment Requested, at the start time" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-2 join and cancel windows ATC-M14-B14 Appointment Declined, 30 minutes before start" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-2 join and cancel windows ATC-M14-B15 Appointment Completed, 1 hour after start" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-3 whose diet plan applies ATC-M14-B16 Diet plan: specialist plan None, member chose Specialist" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-3 whose diet plan applies ATC-M14-B17 Diet plan: specialist plan None, member chose Baymax" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-3 whose diet plan applies ATC-M14-B18 Diet plan: specialist plan Approved as is, member chose Specialist" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-3 whose diet plan applies ATC-M14-B19 Diet plan: specialist plan Changed (1800 kcal), member chose Specialist" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M14-3 whose diet plan applies ATC-M14-B20 Diet plan: specialist plan Changed (1800 kcal), member chose Baymax" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B01 Workout reminder: switch Yes, planned day Yes, workout done No, time passed Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B02 Workout reminder: switch No, planned day Yes, workout done No, time passed Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B03 Workout reminder: switch Yes, planned day No, workout done No, time passed Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B04 Workout reminder: switch Yes, planned day Yes, workout done Yes, time passed Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B05 Workout reminder: switch Yes, planned day Yes, workout done No, time passed No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B06 Meal reminder: switch Yes, food logged No, time passed Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B07 Meal reminder: switch No, food logged No, time passed Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B08 Meal reminder: switch Yes, food logged Yes, time passed Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M16-1 workout and meal reminders ATC-M16-B09 Meal reminder: switch Yes, food logged No, time passed No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M13-1 chatbot answers safety first ATC-M13-B01 Chatbot: message about a possible emergency" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M13-1 chatbot answers safety first ATC-M13-B02 Chatbot: message about an emergency and an exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M13-1 chatbot answers safety first ATC-M13-B03 Chatbot: message about a symptom" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M13-1 chatbot answers safety first ATC-M13-B04 Chatbot: message about BMI" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_rules_test.dart" name="DT-M13-1 chatbot answers safety first ATC-M13-B05 Chatbot: message about no known topic" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_unit_test.dart" tests="128" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U01 Email validator accepts a well-formed address" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U02 Email validator rejects an address without a domain dot" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U03 Email validator rejects an empty value" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U04 Password with 8+ characters, uppercase, number and symbol is accepted" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U05 Password without an uppercase letter is rejected" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U06 Password without a symbol is rejected" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U07 Password shorter than 8 characters is rejected (boundary)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U08 Confirm-password must match the password" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U09 A user who turns 13 tomorrow is too young (boundary)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U10 A user who turns 13 today is accepted (boundary)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U11 Height below 50 cm is rejected (boundary)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U12 Height of 170 cm is accepted" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U13 Weight below 20 kg is rejected (boundary)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U14 The weight range applies in pounds too" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U15 Five failed logins lock the account" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U16 The lock ends after 15 minutes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 1 validators and login guard ATC-M1-U17 A successful login clears the failure count" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U01 BMI is calculated from height and weight" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U02 BMI 27 is categorised as Overweight (WHO)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U03 BMR (Mifflin-St Jeor) for a man" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U04 BMR (Mifflin-St Jeor) for a woman" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U05 Feet and pounds are converted before BMI is calculated" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U06 Age is calculated from the date of birth (day before the birthday)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U07 Normal BMI and no conditions classify as Healthy" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U08 BMI 27.8 classifies as Overweight" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U09 BMI 32.7 classifies as Obese" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U10 Reported heart disease overrides BMI (Cardiac)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U11 Reported diabetes classifies as Diabetic" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U12 Heart disease and diabetes together give the more cautious class" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U13 Hypertension classifies as At-Risk" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U14 Underweight BMI (16.3) classifies as At-Risk" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U15 Risk level and risk factors are listed" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U16 The Logistic Regression model never overrides a reported condition" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U17 The model flags an obese 58-year-old that the rules alone would not" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 2 health calculations and classification ATC-M2-U18 The hybrid is never less cautious than the rules alone" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 3 mood and workout card ATC-M3-U01 The five moods have the report's labels in order" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 3 mood and workout card ATC-M3-U02 Every mood has a suggestion and low moods are never pushed to train hard" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 3 mood and workout card ATC-M3-U03 The calorie estimate on the workout card grows with body weight" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 4 workout plan generation ATC-M4-U01 Cardiac plan has only low-impact exercises and no HIIT or isometric holds" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 4 workout plan generation ATC-M4-U02 Obese plan contains no high-impact exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 4 workout plan generation ATC-M4-U03 Hypertension keeps isometric holds to 20 seconds or less" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 4 workout plan generation ATC-M4-U04 Every workout day starts with a warm-up and ends with a cool-down" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 4 workout plan generation ATC-M4-U05 Balance training is added from age 65, not before" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 4 workout plan generation ATC-M4-U06 Regenerating the plan changes the exercises" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U01 Text entry is parsed into foods and servings" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U02 Gram quantities scale by serving weight" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U03 Fractions are understood" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U04 An unknown food is reported rather than guessed" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U05 Food search finds a food from a partial name" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U06 Macro shares always add up to 100%" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U07 Calories are totalled by meal slot" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U08 Net calories = consumed minus burned" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U09 The daily verdict never praises a very low intake" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 8 food logging logic ATC-M8-U10 The daily verdict recognises a day on target" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 9 nutrition plan ATC-M9-U01 Protein, carbs and fat add up to the calorie target" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 9 nutrition plan ATC-M9-U02 A meal plan never contains the user's allergens" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 9 nutrition plan ATC-M9-U03 A diabetic meal plan has no high-sugar or refined foods" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 9 nutrition plan ATC-M9-U04 Meal calories land near the daily target" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 9 nutrition plan ATC-M9-U05 The calorie deficit never goes below the safe floor" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 9 nutrition plan ATC-M9-U06 No calorie deficit is set for an underweight user" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 9 nutrition plan ATC-M9-U07 Diabetic macros cap carbohydrates at 40% of calories" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 9 nutrition plan ATC-M9-U08 Three nutrition tips a day and none repeats within a week" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 10 allergen matching ATC-M10-U01 Allergens on a label are found for a user with those allergies" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 10 allergen matching ATC-M10-U02 Only the user's own allergies are checked" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 10 allergen matching ATC-M10-U03 Look-alike ingredients are not flagged" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 10 allergen matching ATC-M10-U04 OCR digit/letter confusion is tolerated" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 10 allergen matching ATC-M10-U05 A small spelling error is tolerated (fuzzy match)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name='Module 10 allergen matching ATC-M10-U06 "May contain" statements are reported as trace risk' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 11 weight projection ATC-M11-U01 Too few weigh-ins give no projection and say why" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 11 weight projection ATC-M11-U02 A steady loss is extrapolated and the time to the target is worked out" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 11 weight projection ATC-M11-U03 A trend leading away from the target gives no time to target" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U01 A perfect week scores 100" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U02 A week with nothing done scores 0" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U03 Score parts are weighted 50 / 25 / 25" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U04 Score thresholds map to Beginner / Intermediate / Advanced (boundary values)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U05 K-Means groups a cohort of 15 into three tiers" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U06 A streak counts consecutive active days and today may still be empty" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U07 7-day and 30-day streak badges are earned only at their threshold" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U08 The badge catalogue marks earned badges and keeps locked ones" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 12 scoring, badges and levels ATC-M12-U09 XP levels start at 100 x L x (L-1)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 13 chatbot ATC-M13-U01 Intent is detected from typed text" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 13 chatbot ATC-M13-U02 Calories left today come from the real food log" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 13 chatbot ATC-M13-U03 Calorie lookup adds up several foods" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 13 chatbot ATC-M13-U04 A symptom message recommends a specialist consultation" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 13 chatbot ATC-M13-U05 Chest pain is treated as an emergency" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 13 chatbot ATC-M13-U06 The bot warns when a food is on the user's allergy list" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 13 chatbot ATC-M13-U07 Nonsense input gets a polite fallback" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U01 Time slots follow the specialist's own clock" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U02 A day off has no slots" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U03 Booked times and times that are too soon are not offered" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U04 A specialist who is not taking bookings offers nothing" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U05 A note of exactly 500 characters is accepted (boundary)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U06 A note of 501 characters is rejected (boundary)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U07 A slot that was just taken is refused" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U08 The specialist list filters by type" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U09 Search matches name or specialty, ignoring case" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name='Module 14 consultation rules ATC-M14-U10 "Top rated" needs 4.5 stars and at least one review' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U11 The video room opens five minutes before the start" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U12 There is nothing to join before the specialist accepts" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U13 A request can be cancelled until it starts, but not after" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U14 A request nobody answered before its start time expires" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U15 A specialist's diet plan replaces the calorie target and macros and adds advice first" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name='Module 14 consultation rules ATC-M14-U16 "Approved as is" changes nothing in the plan' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U17 The member's choice to use Baymax's plan is respected" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 14 consultation rules ATC-M14-U18 A specialist's weekly schedule replaces the week with warm-up and cool-down" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U01 A valid card number passes the check-digit test" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U02 A mistyped card number fails the check-digit test" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U03 Visa and Mastercard are recognised" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U04 Other card brands are not accepted" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U05 A card is good through the last day of its expiry month (boundary)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U06 All four card fields are mandatory" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U07 A CVV must be exactly 3 digits" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U08 A Pakistani mobile number is normalised from common spellings" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U09 The total equals consultation fee plus platform fee" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U10 A zero platform fee still gives the right total" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U11 The test gateway declines the published decline card" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name='Module 15 payment rules ATC-M15-U12 A real-looking card is refused by the test gateway, never "charged"' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U13 A successful test payment returns a reference, brand and last four digits only" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 15 payment rules ATC-M15-U14 The hold on an unpaid booking counts down and never goes below zero" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 16 roles and reminders ATC-M16-U01 An unknown or missing role is treated as a plain member" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 16 roles and reminders ATC-M16-U02 A member cannot view assigned patients' data" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 16 roles and reminders ATC-M16-U03 Only a doctor may upload prescriptions" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 16 roles and reminders ATC-M16-U04 An administrator manages accounts but cannot read health data" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 16 roles and reminders ATC-M16-U05 Rest days alone are not inactivity" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 16 roles and reminders ATC-M16-U06 A missed planned day over three days is inactivity" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 16 roles and reminders ATC-M16-U07 The next workout reminder is the next occurrence of the weekday and time" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 17 analytics ATC-M17-U01 The moving average uses only logged days inside a 3-day window" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_unit_test.dart" name="Module 17 analytics ATC-M17-U02 A window with no logged day gives no value rather than zero" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/calorie_optimizer_test.dart" tests="19" failures="0" skipped="0">
+    <testcase classname="test/calorie_optimizer_test.dart" name="not enough data: the formula is kept and the reason is given no data at all" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="not enough data: the formula is kept and the reason is given too few weigh-ins" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="not enough data: the formula is kept and the reason is given weigh-ins that cover under two weeks" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="not enough data: the formula is kept and the reason is given days with only a snack logged are ignored, not treated as eating little" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="energy balance estimate a person who needs more than the formula says is moved upward, partway" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="energy balance estimate data that agrees with the formula leaves the target unchanged" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="energy balance estimate data far from the formula is not trusted (usually unlogged meals), so the formula is kept" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="energy balance estimate whatever is applied stays inside +15% / -10% of the formula" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="energy balance estimate more scatter in the weights means less trust in the data" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="energy balance estimate readings outside the 28-day window are ignored" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="trend weight (smoothing) a constant weight stays constant" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="trend weight (smoothing) a step is followed gradually, and a long gap moves the trend more" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="trend weight (smoothing) empty input" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="safety and plan integration adaptation is blocked for under-18s and for reported heart disease or diabetes" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="safety and plan integration without an adaptation the rule-based target is returned unchanged" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="safety and plan integration an adapted estimate rebuilds the target with the same deficit rule" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="safety and plan integration the minimum safe intake still applies after adaptation" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="safety and plan integration someone underweight still gets no calorie deficit" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_optimizer_test.dart" name="safety and plan integration disabled estimate says why and changes nothing" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/calorie_target_screen_test.dart" tests="6" failures="0" skipped="0">
+    <testcase classname="test/calorie_target_screen_test.dart" name="the plan follows the estimate an adapted estimate changes the daily target, a changed weight drops it again" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_target_screen_test.dart" name="the plan follows the estimate macros and meals follow the new target" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_target_screen_test.dart" name="the plan follows the estimate a user with diabetes keeps the formula target even if an estimate is present" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_target_screen_test.dart" name="screen: formula only, shows what is still needed and saves a weight" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_target_screen_test.dart" name="screen: rejects an impossible weight" time="0.000">
+    </testcase>
+    <testcase classname="test/calorie_target_screen_test.dart" name="screen: an adapted target explains itself and says it is not Gradient Boosting" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/camera_patterns_test.dart" tests="44" failures="0" skipped="0">
+    <testcase classname="test/camera_patterns_test.dart" name="Exercise → movement pattern mapping the Dart patterns and reasons are exactly the importer's" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Exercise → movement pattern mapping every catalogue exercise carries a pattern from the importer, keyed by its dataset id" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Exercise → movement pattern mapping dataset exercises are classified by movement, not by muscle" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Exercise → movement pattern mapping every curated exercise is mapped by hand: a pattern, or a stated reason" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Exercise → movement pattern mapping every camera-tracked exercise has real form checks and a score; only the four tuned ones are validated" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Exercise → movement pattern mapping the session request carries the pattern from Module 4" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern squat: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern lunge: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern hinge: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern hipExtension: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern pushup: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern benchPress: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern dip: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern overheadPress: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern armRaise: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern row: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern pulldown: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern curl: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern tricepsExtension: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern tricepsPushdown: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern legExtension: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern legCurl: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern sitUp: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern legRaise: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern kneeLift: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern jumpingJack: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern uprightRow: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern singleLegExtension: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern plankKneeDrive: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern kneeTuck: three full cycles count three reps; a short one is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern an opening movement does not count a rep when the person simply starts at the peak" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern one arm curling while the other hangs still counts (furthest limb drives the count)" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Repetition counting for every pattern the tested squat configuration is unchanged by the pattern layer" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Static holds plank: only time in position counts, glitches do not stop the clock, standing up does" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Static holds wall sit: knees bent with an upright back is in position; standing is not" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Static holds a knee-supported side plank measures the line to the knee" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Camera positioning guidance missing landmarks are named" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Camera positioning guidance no person in the frame" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Voice coach during basic tracking (Module 6) form and score questions never claim a form verdict; reps and hold time are reported" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Screens a dataset exercise can now choose Camera Detection, labelled as experimental form feedback" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Screens experimental evaluation counts curls, shows a labelled posture score and saves it" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Screens a plank in camera mode times the hold and saves it" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Screens an exercise the camera cannot follow explains why and keeps Manual Guidance" time="0.000">
+    </testcase>
+    <testcase classname="test/camera_patterns_test.dart" name="Screens camera permission refused: the camera does not start for a basic-tracking exercise either" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/camera_support_report_test.dart" tests="1" failures="0" skipped="0">
+    <testcase classname="test/camera_support_report_test.dart" name="the camera capability audit covers every eligible exercise and is up to date" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/chatbot_history_test.dart" tests="20" failures="0" skipped="0">
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history weekly summary uses the real week and names the weakest area" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history when the logs cannot be read it says so instead of inventing numbers" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history streaks and badges name what was earned and what is next" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history last workout is dated, counted and flags missed sessions" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history what did I eat: today, yesterday, and nothing" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history macros are today's logged totals against the plan's targets" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history eating trend averages the logged days of the last week against the target" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history weight progress uses the weigh-ins, the trend and the distance to the target" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history weight going the wrong way for the goal is said plainly" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history no weigh-ins: it says so and points to the log" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="answers come from the user's own history target explanation: formula only, and adjusted from the user's own logs" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="existing answers now use the history calories left comes from the food log, with protein" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="existing answers now use the history a meal suggestion mentions what is already logged and the calories left" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="existing answers now use the history can I eat shows what it does to today's calories" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="existing answers now use the history the greeting carries a line about today" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="existing answers now use the history today's workout says when it is already done and how the week is going" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="routing and safety are unchanged specific phrases beat general ones, and the old intents still win their own phrases" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="routing and safety are unchanged symptoms are still answered first, whatever the history says" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="routing and safety are unchanged suggestions follow the user's situation" time="0.000">
+    </testcase>
+    <testcase classname="test/chatbot_history_test.dart" name="chat screen: loads the user's logs, greets with today's numbers and answers from them" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/community_test.dart" tests="8" failures="0" skipped="0">
+    <testcase classname="test/community_test.dart" name="ProgressSnapshot this week: 1 of 2 planned workouts, 2 of 3 days logged, 1 of 2 logged days on target" time="0.000">
+    </testcase>
+    <testcase classname="test/community_test.dart" name="ProgressSnapshot badges already stored are kept and not reported as new" time="0.000">
+    </testcase>
+    <testcase classname="test/community_test.dart" name="ProgressSnapshot inactivity appears after 3+ days with a missed planned day" time="0.000">
+    </testcase>
+    <testcase classname="test/community_test.dart" name="community screen: score, level, badges and the join prompt" time="0.000">
+    </testcase>
+    <testcase classname="test/community_test.dart" name="community screen: leaderboard rows, own row marked, method stated" time="0.000">
+    </testcase>
+    <testcase classname="test/community_test.dart" name="community screen shows a friendly error" time="0.000">
+    </testcase>
+    <testcase classname="test/community_test.dart" name="settings: everything starts off, and a toggle is saved" time="0.000">
+    </testcase>
+    <testcase classname="test/community_test.dart" name="settings model round trip and safe defaults" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/consultation_test.dart" tests="49" failures="0" skipped="0">
+    <testcase classname="test/consultation_test.dart" name="Availability and Specialist parsing a valid record parses" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Availability and Specialist parsing unusable records are rejected instead of guessed" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Availability and Specialist parsing a specialist without fees or with a bad type is skipped; the rest still load" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Availability and Specialist parsing doctors are addressed as Dr. once" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="slots a working day gives the slots of the specialist's own clock, as the same instants for everyone" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="slots a day off has no slots" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="slots the specialist's calendar day follows their time zone, not the phone's" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="slots booked times and times too soon are not offered" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="slots a specialist who is not taking bookings offers nothing" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="slots the next slot skips a fully booked day" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="slots upcoming days cover the booking window and mark days off as empty" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="the specialist list controls (FR35.1 to FR35.3) sorted best rated first" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="the specialist list controls (FR35.1 to FR35.3) type tab and search work together and the search is not case sensitive" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="the specialist list controls (FR35.1 to FR35.3) top rated needs 4.5 stars and at least one review; emergency needs an available emergency specialist" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="the specialist list controls (FR35.1 to FR35.3) available today uses the next open slot on the member's own day, and filters combine" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="the specialist list controls (FR35.1 to FR35.3) the count line names the type" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="booking rules (FR36) a good booking has no problem" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="booking rules (FR36) each way a booking can fail says so" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="booking rules (FR36) a note of exactly 500 characters is allowed" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="booking rules (FR36) slot keys sort as text in time order" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="an existing appointment the room opens five minutes early and closes when the slot ends" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="an existing appointment only a confirmed appointment that has not started can be cancelled" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="an existing appointment the list shows upcoming soonest first, then past latest first" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="an existing appointment there is nothing to join before the specialist accepts: the room is made on acceptance" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="an existing appointment a request can be cancelled until it starts, is upcoming until then, and expires if nobody answered" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="an existing appointment the list puts requests among the upcoming ones and declined or expired ones in the past" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="an existing appointment an appointment survives a round trip through the database format" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="an existing appointment shares default to nothing" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="formatting fees carry thousands separators" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Find a specialist screen lists specialists with a count, filters by type and search, and disables Book when nothing is open" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Find a specialist screen a specialist an administrator verified shows a Verified badge" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Find a specialist screen a specialist with no reviews is shown as new rather than hidden" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Find a specialist screen an empty catalogue and a failed load are explained, and the failure can be retried" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Find a specialist screen Book opens the booking screen for that specialist" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Book appointment screen confirm stays disabled until a time is chosen; video is the default; nothing is shared by default" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Book appointment screen choosing a time, type and sharing holds exactly that, then opens the payment screen" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Book appointment screen a time taken by someone else shows a message and the screen stays" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Book appointment screen times that are already booked are not offered" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Book appointment screen a specialist with no open days says so" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Book appointment screen the notes box stops at 500 characters" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="Book appointment screen it says the time is held while paying, and that nothing is confirmed yet" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="My appointments screen upcoming and past are separate tabs" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="My appointments screen a request shows as awaiting acceptance with no video link, can be cancelled as a request, and a declined one shows the reason" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="My appointments screen a request nobody answered before its start is shown as expired" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="My appointments screen an empty list and an error are explained" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="My appointments screen detail shows the meeting link, the specialist's notes and what was shared" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="My appointments screen the room is announced as open inside the join window" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="My appointments screen cancelling asks first, then calls back and shows the new status" time="0.000">
+    </testcase>
+    <testcase classname="test/consultation_test.dart" name="My appointments screen a started appointment has no cancel button" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/data_test.dart" tests="4" failures="0" skipped="0">
+    <testcase classname="test/data_test.dart" name="plain() converts nested Map&lt;Object?, Object?&gt; and lists" time="0.000">
+    </testcase>
+    <testcase classname="test/data_test.dart" name="a profile survives a round trip through the database" time="0.000">
+    </testcase>
+    <testcase classname="test/data_test.dart" name="a profile with empty lists and blank fields loads without errors" time="0.000">
+    </testcase>
+    <testcase classname="test/data_test.dart" name="food entries keep their id and date after loading" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/exercise_selector_test.dart" tests="20" failures="0" skipped="0">
+    <testcase classname="test/exercise_selector_test.dart" name="curated library is larger than before and has unique ids" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="curated library every entry carries the body-load fields and only allowed values" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="curated library curated entries are sourced, need no gym equipment and contain no maximal-effort wording" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="curated library every muscle group the templates ask for still has exercises" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="capacity and scoring capacity follows activity, and falls with age and BMI, within 1..3" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="capacity and scoring an exercise that is too hard is penalised more than one that is too easy" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="capacity and scoring a higher BMI counts against knee-loading exercises" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="capacity and scoring older adults and very heavy people are steered away from the floor" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="capacity and scoring complex movements are penalised from age 60 only" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="capacity and scoring repeating an exercise within the week is penalised" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="capacity and scoring goal changes the ranking: weight loss favours energy use, muscle gain favours strength moves" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="capacity and scoring ranking is deterministic and the variant only reorders near-ties" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="plans follow the person different bodies get different exercises for the same goal" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="plans follow the person a heavier body gets lower total joint load than a lean one with the same inputs" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="plans follow the person every training exercise comes with a reason, the fixed warm-up and cool-down do not" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="plans follow the person the cool-down stretches the regions the session worked, with static stretches only" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="plans follow the person body regions map the different muscle labels to the same region" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="plans follow the person exercises are varied across the week" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="plans follow the person same inputs give the same plan, and Regenerate (variant) gives a valid different one" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_selector_test.dart" name="plans follow the person the medical safety rules still hold for 400 random people, with the larger library" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/exercise_visual_test.dart" tests="3" failures="0" skipped="0">
+    <testcase classname="test/exercise_visual_test.dart" name="every schedulable exercise has a start/end picture, with an honest caption" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_visual_test.dart" name="illustrated figures stay inside the picture and on or above the floor" time="0.000">
+    </testcase>
+    <testcase classname="test/exercise_visual_test.dart" name="render the illustration review sheet" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/food_model_test.dart" tests="5" failures="0" skipped="0">
+    <testcase classname="test/food_model_test.dart" name="bundled food model metadata is read correctly" time="0.000">
+    </testcase>
+    <testcase classname="test/food_model_test.dart" name="the model that failed its shipping gate is flagged experimental, with its weak foods named" time="0.000">
+    </testcase>
+    <testcase classname="test/food_model_test.dart" name="every food the model can predict exists in the food catalogue" time="0.000">
+    </testcase>
+    <testcase classname="test/food_model_test.dart" name="a model that passed the gate is not experimental and a missing recall is not weak" time="0.000">
+    </testcase>
+    <testcase classname="test/food_model_test.dart" name="without ship_recommended the model is treated as not validated" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/gamification_test.dart" tests="26" failures="0" skipped="0">
+    <testcase classname="test/gamification_test.dart" name="ISO week id known dates" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="ISO week id week starts on Monday" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="weekly fitness score a perfect week scores 100" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="weekly fitness score nothing done scores 0" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="weekly fitness score parts are weighted 50 / 25 / 25" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="weekly fitness score with no planned day yet only food counts (weights renormalised)" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="weekly fitness score extra workouts cannot push training above 100%" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="weekly fitness score calorie tolerance is ±15%" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="weekly fitness score scores are always within 0..100 and weeklyScores ignores future days" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="levels thresholds" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="levels weeks with no activity are ignored and no data means beginner" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="streaks and badges rest days do not break a workout streak, a missed planned day does" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="streaks and badges logging streak ignores a not-yet-logged today" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="streaks and badges badges are earned by the stated rules and not before" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="streaks and badges catalogue marks earned badges and keeps stored history" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="K-Means separates three clear groups and is deterministic" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="K-Means needs at least k points" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="K-Means small cohorts use the score thresholds and say so" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="K-Means a cohort of 15+ is grouped by K-Means, ordered by average score" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="inactivity (FR-5) rest days alone are not inactivity" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="inactivity (FR-5) missed planned days over three or more days are inactivity" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="inactivity (FR-5) recent activity and no history give no alert" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="reminder times (FR-3) next occurrence of a weekday" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="reminder times (FR-3) inactivity nudge is sent once, never in the past" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="roles (FR-2) unknown or missing roles are plain members" time="0.000">
+    </testcase>
+    <testcase classname="test/gamification_test.dart" name="roles (FR-2) permissions" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/guidance_test.dart" tests="7" failures="0" skipped="4">
+    <testcase classname="test/guidance_test.dart" name="the default session is built from the real plan" time="0.000">
+    </testcase>
+    <testcase classname="test/guidance_test.dart" name="guidance mode: Continue opens the guided session" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/guidance_test.dart" name="camera mode is honest that it is a preview and needs the toggle" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/guidance_test.dart" name="a guided session walks every exercise and ends in an honest summary" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/guidance_test.dart" name="exercise detail hands the whole session on to the guidance screen" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/guidance_test.dart" name="sign-up: Terms and Privacy links open a summary" time="0.000">
+    </testcase>
+    <testcase classname="test/guidance_test.dart" name="Pressable gives feedback and fires once" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/logic_test.dart" tests="42" failures="0" skipped="0">
+    <testcase classname="test/logic_test.dart" name="HealthCalc (Module 1) BMI and WHO category" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="HealthCalc (Module 1) Mifflin-St Jeor BMR" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="HealthCalc (Module 1) unit conversion feeds BMI correctly" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="HealthCalc (Module 1) deficit never drops below the safe floor and is skipped when underweight" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="HealthCalc (Module 1) age from DOB" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="HealthCalc (Module 1) diabetic macros cap carbs at 40%" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Classifier (Module 2) WHO BMI categories" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Classifier (Module 2) medical conditions override BMI" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Classifier (Module 2) risk levels and factors" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) cardiac plan: low intensity, no high impact / HIIT / isometrics, max 4 days" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) obese plan has no high-impact exercises" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) hypertension keeps static holds short (20 s cap) and removes HIIT / high impact" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) balance training is added from age 65 (WHO), not before" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) cardiac plans contain no static holds at all" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) fit healthy user can get high-impact work and requested frequency" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) every workout day has warm-up first and cool-down last" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) regenerating changes the exercises (FE-7)" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) nutrition: macros add up to the calorie target" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) meal plan never contains the user's allergens" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) diabetic meal plan excludes high-sugar and refined foods" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Plan generator (Module 3) meal calories land near the daily target" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Food parsing (Module 7) counts, units and multiple foods" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Food parsing (Module 7) gram quantities scale by serving weight" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Food parsing (Module 7) fractions, sizes, plurals and aliases" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name='Food parsing (Module 7) commas, "and" and "+" separate foods; unknown foods are reported' time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Food parsing (Module 7) search finds foods by partial and misspelled names" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Allergen matcher (Module 8) finds all four allergens in a typical label" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Allergen matcher (Module 8) only checks the user's own allergies" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Allergen matcher (Module 8) does not flag look-alike ingredients" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Allergen matcher (Module 8) tolerates OCR digit/letter confusion and small typos" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name='Allergen matcher (Module 8) "may contain" statements are reported separately as trace risk' time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Allergen matcher (Module 8) handles multi-line OCR text and plurals" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) detects intents" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) answers calorie questions with real numbers" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) looks up foods" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) suggests meals that avoid the user's allergens" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) checks whether a food is safe for the user's allergies" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) explains how to do an exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) recommends a doctor for symptoms (FR-4) and treats emergencies urgently" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) recommends a doctor for risky topics when the profile is high-risk" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) answers FAQs and falls back politely" time="0.000">
+    </testcase>
+    <testcase classname="test/logic_test.dart" name="Chatbot (Module 12) asks for profiling when there is no profile" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/merged_scope_test.dart" tests="33" failures="0" skipped="9">
+    <testcase classname="test/merged_scope_test.dart" name="Validators (scope mockups M2, M3, M4, M6) full name: letters only, 2+ characters" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Validators (scope mockups M2, M3, M4, M6) email" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Validators (scope mockups M2, M3, M4, M6) password needs 8 chars, uppercase, number and symbol" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Validators (scope mockups M2, M3, M4, M6) date of birth: at least 13 on the given day" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Validators (scope mockups M2, M3, M4, M6) height and weight ranges in both units" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Validators (scope mockups M2, M3, M4, M6) target weight: optional, near current or a healthy BMI" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="LoginGuard (5 failures lock for 15 minutes) locks on the fifth failure and unlocks after 15 minutes" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="LoginGuard (5 failures lock for 15 minutes) a success clears the count, other emails are unaffected" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Streaks, XP and the new badges active streak counts workout or meal days; today may still be empty" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Streaks, XP and the new badges 7 and 30 day streak badges" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Streaks, XP and the new badges XP levels: level L starts at 100*L*(L-1)" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Diet summary rules macro shares always add up to 100" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Diet summary rules calories by meal and net calories" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Diet summary rules verdict never praises a very low intake" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Rotating nutrition tips three tips a day, none repeats within a week, and the same day gives the same tips" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Rotating nutrition tips an empty pool gives no tips" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Weekly reset countdown next reset is the next Monday 00:00" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Weekly reset countdown wording" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Due reminders for the notification inbox workout reminder is due after the reminder time; meal reminder only after its own time" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Due reminders for the notification inbox nothing is due when the user did the work, or the reminders are off" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Due reminders for the notification inbox inactivity item appears once per day and ids are stable" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Due reminders for the notification inbox badge notification names the badge and its id is stable" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) more than 2,500 foods, ids unique, all three sources present" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) every listed food has sane numbers, no meal slot and estimated allergens" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) every USDA food names its FDC id; Indian Databank rows agree with their own macros" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) source labels never claim more than the data says" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) a listed food never replaces a curated one, and none reaches meal plans" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) search finds foods by Pakistani / Indian names and by USDA names, curated first on a tie" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) search over the whole list stays fast" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) a damaged list leaves the curated catalogue intact" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Searchable food list (team list + INDB + USDA) common allergens are caught by name (over-warning is intended)" time="0.000">
+      <skipped/>
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Recommended actions on the classification result (Module 2) every user gets exercise, calorie and water actions with the numbers from their own plan" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_test.dart" name="Recommended actions on the classification result (Module 2) condition advice appears only for the matching condition and defers to the doctor" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/merged_scope_screens_test.dart" tests="13" failures="0" skipped="0">
+    <testcase classname="test/merged_scope_screens_test.dart" name="Notifications screen (Module 16) lists everything, counts unread per tab and filters by tab" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Notifications screen (Module 16) mark all read calls back with the unread items" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Notifications screen (Module 16) empty and error states are honest" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Notifications screen (Module 16) a failed load shows an error, not an empty inbox" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="My badges screen (Module 12) shows level, XP, earned badge and the unlock requirement of locked ones" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="My badges screen (Module 12) a failed load shows a message instead of fake numbers" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Daily summary screen (Module 8) shows consumed, burned and net, with a verdict worded for the goal" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Daily summary screen (Module 8) an empty day says nothing is logged and shows no invented macro split" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Sign-up validation (Module 1) Create account stays disabled until every field is valid and the terms are ticked" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Food search dropdown (Module 8) typing shows suggestions, including foods found by another name" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Food search dropdown (Module 8) picking a suggestion adds it to the meal and closes the dropdown" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Food search dropdown (Module 8) a food that matches the user's allergy is flagged in the dropdown" time="0.000">
+    </testcase>
+    <testcase classname="test/merged_scope_screens_test.dart" name="Food search dropdown (Module 8) no match says so instead of showing an empty box" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/ml_models_test.dart" tests="12" failures="0" skipped="0">
+    <testcase classname="test/ml_models_test.dart" name="Logistic Regression health model (Module 2, FE-3) Dart output matches scikit-learn exactly on the exported test vectors" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Logistic Regression health model (Module 2, FE-3) probabilities are valid and risk rises with age and BMI" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Logistic Regression health model (Module 2, FE-3) model metadata documents its data source and limits" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Hybrid classifier (rules decide, model adds risk estimates) reported conditions are never overridden by the model" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Hybrid classifier (rules decide, model adds risk estimates) a young, active, normal-weight person stays Healthy with low model risk" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Hybrid classifier (rules decide, model adds risk estimates) the model raises a flag the rules alone would miss (obese 58-year-old, nothing reported)" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Hybrid classifier (rules decide, model adds risk estimates) a 45-year-old with the same BMI is not flagged (risk below the line)" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Hybrid classifier (rules decide, model adds risk estimates) the model alone never produces Cardiac or Diabetic" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Hybrid classifier (rules decide, model adds risk estimates) the hybrid is never LESS cautious than the rules alone" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Gradient Boosting evaluator (Module 3, FR-4) matches scikit-learn on a synthetic fixture" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Gradient Boosting evaluator (Module 3, FR-4) WorkoutCalorieModel builds features in the training order and never goes negative" time="0.000">
+    </testcase>
+    <testcase classname="test/ml_models_test.dart" name="Calorie model plugged into the plan generator uses the model estimate when a model is provided, MET otherwise" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/module4_profiles_test.dart" tests="19" failures="0" skipped="0">
+    <testcase classname="test/module4_profiles_test.dart" name="K2 intensity bands band boundaries follow WHO 2020 (light &lt; 3, moderate 3–5.9, vigorous ≥ 6)" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K2 intensity bands catalogue band counts match the dataset analysis (plan §1.4)" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K3 profile repository one profile per Module 2 category, cited, pending review; unknown categories get the conservative fallback" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K3 profile repository risk level and statistical risk reach the facts" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K4 profile filter the cap excludes above-band work, keeps the rest, and unknown intensity is not treated as safe" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K4 profile filter an uncapped profile changes nothing, and without a profile the assessment is the rule repository alone" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K4 profile filter a profile never relaxes a rule: 3,000 random people, every scheduled exercise passes the rules and the band cap" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K5 weekly structure diabetes: two chosen days become three so no more than two rest days fall in a row; others keep their choice" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K5 weekly structure longest rest counts across the end of the week" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K5 weekly structure aerobic minutes are moderate-equivalent and a shortfall gives a concrete suggestion" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K5 weekly structure statistical-risk, PCOS and high-risk explanations appear only for those people" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K5 weekly structure same inputs give the same plan and summary" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K7 versions and specialist plans the plan records both the rule and the profile versions" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K7 versions and specialist plans a specialist week is measured against the same profile" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="Module 4 → Module 5 hand-off the safety adaptations travel with the exercise and with the exercises up next" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="Module 4 → Module 5 hand-off no profile cap removes an exercise that camera detection supports" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="Module 4 → Module 5 hand-off mode selection and manual guidance show the adaptations" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="Module 4 → Module 5 hand-off nothing extra is shown when nothing was adapted" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_profiles_test.dart" name="K6 workout tab the training profile card shows the classification, intensity cap and weekly targets" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/module4_test.dart" tests="26" failures="0" skipped="0">
+    <testcase classname="test/module4_test.dart" name="Dataset import (free-exercise-db) records, ids and provenance" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Dataset import (free-exercise-db) dataset fields are kept exactly as published" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Dataset import (free-exercise-db) missing optional fields are tolerated, not invented" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Dataset import (free-exercise-db) image references are validated and pinned to the imported commit" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Dataset import (free-exercise-db) curated exercises link to their dataset entry without duplicating it" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Dataset import (free-exercise-db) hand-supported and forearm exercises are marked as loading the wrist, so the wrist injury rule reaches them" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Dataset import (free-exercise-db) queries filter by equipment, group, muscle and level" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="MET mapping (2024 Adult Compendium) every assigned value is the published Compendium value for its code" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="MET mapping (2024 Adult Compendium) exact, approximate and unmatched examples" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="MET mapping (2024 Adult Compendium) counts match the build report and nothing is marked validated" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="MET mapping (2024 Adult Compendium) the mapping rules only use Compendium codes that exist" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="MET mapping (2024 Adult Compendium) calorie formulas" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Module 2 → Module 4 the plan carries the classification and reacts when it changes" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Module 2 → Module 4 several conditions at once are all applied" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Module 2 → Module 4 no medical history: no medical rules, but the program rules still apply" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Safety in generated plans warning symptoms: no plan at all, and the reason is given" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Safety in generated plans heart condition without clearance blocks; with clearance the cardiac rules still hold" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Safety in generated plans scores never override restrictions: every scheduled exercise passes the rules (400 random people)" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Safety in generated plans owning equipment brings in equipment exercises, with their reason and dataset instructions" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Safety in generated plans identical inputs give an identical plan" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Safety in generated plans regeneration after a profile change produces a different, still valid plan" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Safety in generated plans sets, reps and rest come from the prescription rules, not from MET" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Module 4 → Module 5 and storage the hand-off carries the movement pattern: full form for tested exercises, basic tracking for dataset ones" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Module 4 → Module 5 and storage plan snapshot is versioned and its fingerprint is stable" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Module 4 → Module 5 and storage stored readiness and plan fields are exactly the ones database.rules.json accepts" time="0.000">
+    </testcase>
+    <testcase classname="test/module4_test.dart" name="Module 4 → Module 5 and storage readiness answers round-trip and unknown keys are ignored" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/payment_test.dart" tests="44" failures="0" skipped="0">
+    <testcase classname="test/payment_test.dart" name="card checks (FR37.4) the check-digit test accepts real card numbers and rejects typos" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="card checks (FR37.4) Visa and Mastercard are recognised, other brands are not" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="card checks (FR37.4) typing is formatted as the person goes" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="card checks (FR37.4) a valid card has no errors" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="card checks (FR37.4) each field reports its own problem" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="card checks (FR37.4) a card is good through the last day of its expiry month" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="wallet and order Pakistani mobile numbers are accepted in common spellings" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="wallet and order a wallet needs a provider and a number" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="wallet and order the total is always the fee plus the platform fee, including a zero platform fee" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="wallet and order Pay is possible only when everything the chosen method needs is valid and the fee is known" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="wallet and order the hold counts down and never goes below zero" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="the test gateway published test cards succeed and give a reference, brand and last four digits only" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="the test gateway a token is made only when the member asked to save the card" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name='the test gateway the declined test card is declined, and a real-looking card is refused with a hint rather than "charged"' time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="the test gateway wallets succeed unless the test number ends in 0000" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="the test gateway a saved card is charged by its token and a fresh CVV, never a number" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="the test gateway pay-at-clinic never reaches the gateway" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking a successful card payment confirms the booking with a record that holds no card number" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking a declined payment throws 402, keeps the hold, and confirms nothing" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking a hold that is about to run out is refused before any money is taken" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking an amount that does not match the booking is refused" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking a booking that is not waiting for payment cannot be paid" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking pay at clinic confirms without touching the gateway and records that nothing was paid" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking a second payment for the same booking while one is running is refused" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking if the charge worked but the booking could not be written, the message carries the reference" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="paying for a held booking the card is saved only when ticked, and only as a token; a failure to save does not undo the payment" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="held bookings and payment records in the data model a held booking that was never paid is not an appointment: it is hidden from the list and counts as expired after its hold" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="held bookings and payment records in the data model hold and payment survive a round trip through the database format" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="held bookings and payment records in the data model saved cards parse and bad records are skipped" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) shows the booking read-only, the fee breakdown with an explicit zero platform fee, card as the default method, and the padlock" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) the total updates with the platform fee" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) Pay stays disabled until all four card fields are valid, shows field errors, and the CVV is hidden" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name='Payment screen (FR-1 to FR-6, FR37) "save card" is off by default' time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) paying sends exactly the card and amount, blocks a second tap while running, then shows the receipt" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) a decline shows the reason, keeps the screen, does not give the time back, and Pay works again" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) pay at clinic needs no details, says nothing is charged now, and confirms" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) a wallet needs a provider and a valid mobile number" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) a saved card asks only for its CVV and is paid by token, never by number" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) an expired saved card is not offered" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) if the fee cannot be read there is an error and Pay stays disabled (FR37.2)" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) a hold that has run out says so, gives the time back, and nothing can be paid" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment screen (FR-1 to FR-6, FR37) leaving without paying gives the time back" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment success screen (FR-7) shows the appointment and the payment details, and says plainly that a test payment took no money" time="0.000">
+    </testcase>
+    <testcase classname="test/payment_test.dart" name="Payment success screen (FR-7) a live payment does not carry the test notice" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/plan_integration_test.dart" tests="15" failures="0" skipped="0">
+    <testcase classname="test/plan_integration_test.dart" name="Planned-exercise completion (PlanProgress) only a session that reached its target completes the planned exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Planned-exercise completion (PlanProgress) completing every main exercise marks the day done once, through the Module 4 activity record" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Planned-exercise completion (PlanProgress) another day's exercises are saved but do not complete today" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Planned-exercise completion (PlanProgress) a regenerated plan does not inherit the old plan's progress" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Planned-exercise completion (PlanProgress) progress is read back from saved sessions after a restart" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Planned-exercise completion (PlanProgress) library sessions (no plan link) are independent workouts" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Session controller target reached: camera reps, hold time and manual sets; never when skipped or just opened" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Session controller the next exercise in the sequence gets the next plan entry" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Saved session schema every field the app writes is accepted by database.rules.json" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Saved session schema the fallback record leaves the plan link out" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name='Posture Detection home loading shows a spinner, not "no plan"' time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Posture Detection home no plan: an empty state with a way to create one; the library still works" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Posture Detection home today's workout and the whole week come from the user's own plan" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Posture Detection home a completed planned exercise shows as done today" time="0.000">
+    </testcase>
+    <testcase classname="test/plan_integration_test.dart" name="Posture Detection home Start exercise in the workout plan links the session to its plan entry" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/posture_evaluation_test.dart" tests="18" failures="0" skipped="0">
+    <testcase classname="test/posture_evaluation_test.dart" name="Measurements hip position against the body line: sag is negative, pike positive, straight is zero" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="Measurements secondary angles, symmetry and foot spread are measured only when observable" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="Checks: correct form passes, the measured fault is reported with the right correction hips sagging vs piking give opposite corrections" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="Checks: correct form passes, the measured fault is reported with the right correction a range check reads its own measurement and can be limited to the turning point" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="Checks: correct form passes, the measured fault is reported with the right correction symmetry and sway are not applicable without the measurement" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) curl: a still upper arm gets no correction; swinging it forward does" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) curl: leaning back to lift is caught as torso sway relative to the starting posture" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) lunge: an upright torso passes; folding forward is corrected" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) plank hold: sagging and piking are corrected in the right direction; a straight line is timed" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) push-up (dataset entry): sagging hips during the reps are corrected" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) jumping jack: arms up with the feet staying together is corrected at the top" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) noise filtering: one bad frame never triggers a correction" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) experimental results never claim good form" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="End to end through the engine (experimental level) variants: braced curls skip the upper-arm check; one-arm presses skip symmetry" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="The four validated detectors are unchanged same configurations, still scored" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="Unified catalogue one canonical id per exercise, no dataset duplicate of a curated exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="Safety: camera capability never makes an exercise eligible a camera-tracked exercise the rules exclude is not scheduled (300 random people)" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_evaluation_test.dart" name="required landmarks are part of every tracker configuration" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/posture_screens_test.dart" tests="15" failures="0" skipped="0">
+    <testcase classname="test/posture_screens_test.dart" name="Mode selection camera needs explicit consent before permission is even requested" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Mode selection permission denied: camera does not start and manual is offered" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Mode selection manual guidance works with no camera permission at all" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Mode selection an exercise the camera cannot follow can only use manual guidance, and says why" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Mode selection a plank offers Camera Detection like the validated exercises" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Mode selection skip returns to the previous screen" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Camera detection counts real reps from pose frames and summarises the session" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Camera detection pause releases the camera; resume reopens it" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Camera detection a camera or model failure is shown, not hidden" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Camera detection frames with no person never crash and never count" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Manual guidance user-confirmed sets, rest countdown, and a summary without a posture score" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Manual guidance pause stops the timers; too difficult is recorded" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Manual guidance timed exercise counts down the hold and advances to the next exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Voice assistant screen shows the real state at each step and the spoken reply" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_screens_test.dart" name="Voice assistant screen microphone denied shows why and offers a retry" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/posture_test.dart" tests="28" failures="0" skipped="0">
+    <testcase classname="test/posture_test.dart" name="Joint angle known angles" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Joint angle stays in range for collinear points where rounding could exceed the acos domain" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Joint angle zero-length vectors and invalid coordinates give null, not NaN" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Joint angle lean from vertical" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Joint angle the synthetic fixture produces the requested knee angle" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Landmark validation no pose, wrong landmark count and low visibility are handled without throwing" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Landmark validation NaN coordinates are rejected" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Landmark validation one visible side is enough" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting counts one rep per complete down-and-up cycle" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting does not count until the cycle is complete" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting a shallow movement is a partial attempt, not a rep" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting bouncing at the bottom counts once" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting jitter around standing does not count" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting a single-frame landmark glitch is ignored" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting an impossibly fast cycle is discarded as noise" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting losing tracking mid-rep drops that rep and requires the start position again" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting must start from the extended position" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Repetition counting thresholds are exercise-specific" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Feedback changes when the form changes" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Feedback a correction appears within one second of the fault" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Feedback a shallow attempt asks for more depth" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Score is unavailable until an attempt has finished" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Score is the percentage of attempted reps done with acceptable form" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Score a rep with a posture fault lowers the score" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Score is deterministic and always within 0..100" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Score frames without confident landmarks do not affect score or accuracy" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Score the report covers at least three form criteria per exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/posture_test.dart" name="Score a clean session reports passes and full marks" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/real_pose_replay_test.dart" tests="1" failures="0" skipped="0">
+    <testcase classname="test/real_pose_replay_test.dart" name="real people: rep coverage and false alarms on correct form (held-out half)" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/review_sheet_test.dart" tests="1" failures="0" skipped="0">
+    <testcase classname="test/review_sheet_test.dart" name="the review sheet lists every rule, profile, note and MET mapping, and is up to date" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/session_persistence_test.dart" tests="7" failures="0" skipped="0">
+    <testcase classname="test/session_persistence_test.dart" name='Saving sessions a finished session is saved once, with its "too difficult" mark' time="0.000">
+    </testcase>
+    <testcase classname="test/session_persistence_test.dart" name="Saving sessions a failed save can be retried without duplicating what already succeeded" time="0.000">
+    </testcase>
+    <testcase classname="test/session_persistence_test.dart" name="Saving sessions without a store nothing is attempted" time="0.000">
+    </testcase>
+    <testcase classname="test/session_persistence_test.dart" name="Saving sessions the stored record only uses fields the database rules accept" time="0.000">
+    </testcase>
+    <testcase classname="test/session_persistence_test.dart" name='"Too Difficult" adjusts the next plan a flagged exercise is replaced by an easier or equal one of the same group' time="0.000">
+    </testcase>
+    <testcase classname="test/session_persistence_test.dart" name='"Too Difficult" adjusts the next plan with no easier alternative the exercise stays with a lighter dose' time="0.000">
+    </testcase>
+    <testcase classname="test/session_persistence_test.dart" name='"Too Difficult" adjusts the next plan no flags: the plan is unchanged' time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/screens_test.dart" tests="8" failures="0" skipped="0">
+    <testcase classname="test/screens_test.dart" name="BMI result shows computed BMI/BMR/calories (no overflow)" time="0.000">
+    </testcase>
+    <testcase classname="test/screens_test.dart" name="Health classification screen renders category and risk factors" time="0.000">
+    </testcase>
+    <testcase classname="test/screens_test.dart" name="Workout plan with a heart condition is held back until readiness is answered (Module 4 screening)" time="0.000">
+    </testcase>
+    <testcase classname="test/screens_test.dart" name="Workout plan lists exercises, shows medical notes and can switch days" time="0.000">
+    </testcase>
+    <testcase classname="test/screens_test.dart" name="Exercise detail renders technique steps" time="0.000">
+    </testcase>
+    <testcase classname="test/screens_test.dart" name="Nutrition plan shows macros and no allergens" time="0.000">
+    </testcase>
+    <testcase classname="test/screens_test.dart" name="Allergen result screen raises an alert dialog when an allergen is found" time="0.000">
+    </testcase>
+    <testcase classname="test/screens_test.dart" name="Allergen result screen shows safe state without a dialog" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/sources_test.dart" tests="13" failures="0" skipped="0">
+    <testcase classname="test/sources_test.dart" name="Exercise library data every entry is complete and its provenance is consistent" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Exercise library data safety tags exist where the rules depend on them" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Exercise library data every plan template group has exercises to draw from" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Exercise library data the Exercise model survives a JSON round trip" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Exercise energy values come from the Compendium every exercise cites a Compendium code and has a plausible MET" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Exercise energy values come from the Compendium spot-check against the published 2024 Compendium" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Exercise energy values come from the Compendium exercises not listed in the Compendium are flagged as approximations" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Food provenance every local food declares where its numbers come from" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Food provenance provenance reference is stored with a logged entry" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Firestore food catalogue refreshes only when the server catalogue changed" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Firestore food catalogue a Firestore document converts to a food item" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="Firestore food catalogue the bundled fallback is labelled as such" time="0.000">
+    </testcase>
+    <testcase classname="test/sources_test.dart" name="chatbot explains where its numbers come from" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/specialist_plan_test.dart" tests="18" failures="0" skipped="0">
+    <testcase classname="test/specialist_plan_test.dart" name="reading plans from the database a diet plan keeps what was set and ignores impossible numbers" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="reading plans from the database records without an author or with an unknown status are ignored" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="reading plans from the database a workout plan needs all seven days and at least one training day, or it is ignored" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name='reading plans from the database choices default to following the specialist, and respect an explicit "baymax"' time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="reading plans from the database a food log verdict is read with its reviewer and note" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="putting a specialist's plan over the Baymax plan the specialist's calorie target and macros replace Baymax's, and their advice comes first" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="putting a specialist's plan over the Baymax plan only the numbers a specialist set are replaced" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="putting a specialist's plan over the Baymax plan &quot;approved as is&quot; changes nothing in the plan" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="putting a specialist's plan over the Baymax plan the member's choice to use Baymax's plan is respected" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="putting a specialist's plan over the Baymax plan a specialist's weekly schedule replaces the week, with warm-up and cool-down, rest days empty and unknown exercises skipped" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="putting a specialist's plan over the Baymax plan a schedule whose exercises are all unknown leaves the Baymax week in place" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="putting a specialist's plan over the Baymax plan with no specialist plans the plan is returned as it is" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="screens the banner is absent when no specialist set a plan" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="screens a diet banner names the specialist, shows their note and offers a way back to Baymax's plan" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="screens an approved plan says so and has no switch, since nothing was changed" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="screens switching back shows an error rather than pretending, when the choice cannot be saved" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="screens a food log verdict card shows approved and flagged days" time="0.000">
+    </testcase>
+    <testcase classname="test/specialist_plan_test.dart" name="screens the daily summary shows the nutritionist's verdict for that day" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/ui_test.dart" tests="17" failures="0" skipped="0">
+    <testcase classname="test/ui_test.dart" name="visibility: every text colour stays readable on the aurora glass each text colour reaches 4.5:1 on every surface" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="visibility: every text colour stays readable on the aurora glass white text on every button / badge colour reaches 4.5:1" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="visibility: every text colour stays readable on the aurora glass accent and body text on the soft chip colours" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="visibility: every text colour stays readable on the aurora glass white text is never used on a light surface: the invisible-label bug" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="no screen has a button that does nothing" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="navigation the floating bar is five labelled buttons and each one reports its tab" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="navigation the menu lists every area of the app and its tab entries switch tabs" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="navigation a menu entry opens its screen" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name='screens that used to say "coming soon" analytics shows score, charts and an honest note' time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name='screens that used to say "coming soon" analytics error state offers a retry' time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name='screens that used to say "coming soon" moving average ignores unlogged days and uses a 3-day window' time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name='screens that used to say "coming soon" body transformation states that it is a straight line, not a model' time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name='screens that used to say "coming soon" specialists screen: the chatbot button works' time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="weight projection (straight line through the user's own weigh-ins) too few weigh-ins or too short a span gives no projection, with the reason" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="weight projection (straight line through the user's own weigh-ins) a steady fall is extrapolated and the time to the target is worked out" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="weight projection (straight line through the user's own weigh-ins) a trend leading away from the target gives no time to target" time="0.000">
+    </testcase>
+    <testcase classname="test/ui_test.dart" name="weight projection (straight line through the user's own weigh-ins) a flat trend is called steady" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/voice_test.dart" tests="69" failures="0" skipped="0">
+    <testcase classname="test/voice_test.dart" name="Workout session state camera session: live values, pause/resume and summary" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Workout session state manual session never has a posture score" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Workout session state listeners are not notified for frames that change nothing visible" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "How many reps have I done?" → repCount' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "rep count" → repCount' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "how many squats did I complete so far" → repCount' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "How many sets do I have?" → currentExercise' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Intent recognition (local rules) &quot;How's my form?&quot; → postureFeedback" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "What am I doing wrong" → postureFeedback' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Intent recognition (local rules) &quot;What's my posture score&quot; → postureScore" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "How do I do a squat?" → exerciseTechnique' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "show me how to do this" → exerciseTechnique' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "push ups" → exerciseTechnique' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "What exercise is this?" → currentExercise' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Intent recognition (local rules) &quot;What's next?&quot; → nextExercise" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Intent recognition (local rules) &quot;What's my workout today?&quot; → schedule" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "Show exercises" → schedule' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "How long have I been going" → sessionTime' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "Pause workout" → pauseSession' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "Resume workout" → resumeSession' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "Stop the session" → stopSession' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "End session" → stopSession' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "Yes, end it" → confirmYes' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "No, keep going" → confirmNo' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "My knee hurts" → painOrSymptom' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "I feel dizzy" → painOrSymptom' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "how should I breathe" → generalGuidance' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "what can you do" → help' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "hello" → greeting' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "Start workout" → startWorkout' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "what is the capital of France" → unknown' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name='Intent recognition (local rules) "   " → unknown' time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Intent recognition (local rules) picks the most specific exercise named" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Intent recognition (local rules) a safety report wins over any other wording" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition maps the agent reply to the app intent and its parameters" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition fallback intent and unknown names become unknown" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition every agent intent name exists in the app" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition hybrid: uses Dialogflow when it answers" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition hybrid: safety reports never wait for the network" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition hybrid: not configured → rules answer, and Dialogflow is skipped for a while" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition hybrid: a timeout falls back to the rules" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition hybrid: a low-confidence Dialogflow match defers to a disagreeing rule match" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Dialogflow intent recognition hybrid: Dialogflow fallback intent defers to a rule match" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses with no session, says so instead of inventing numbers" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses rep query reads the live counter" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses form query reports the engine’s latest correction" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses form query with good form, and when the body is not visible" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses score is withheld until there is data" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses manual mode never claims to analyse posture" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses technique uses the exercise’s own instructions" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses technique with no exercise in context asks which one" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses schedule: unavailable, rest day, and a real plan" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses next exercise: uses the handed-over queue, or admits it is unknown" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses pain: stop advice, no diagnosis, and the session is paused" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses ending a session needs confirmation" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Contextual responses unknown questions get a clear fallback and never more than three chips" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline listen → transcribe → intent → response → speech, with real states" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline microphone denied: never listens" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline no recognition service on the device" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline silence or an unrecognised utterance is not submitted" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline tapping the mic again stops and uses what was heard" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline cancel discards what was heard" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline pause and resume by voice drive the session" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline stop by voice asks first and only ends on yes" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline TTS failure still shows the reply" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline replay speaks the same reply once more; replies never overlap" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Voice pipeline closing releases the microphone and ignores a pending command" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Spoken posture cues rate-limited: one warning is not repeated every frame" time="0.000">
+    </testcase>
+    <testcase classname="test/voice_test.dart" name="Spoken posture cues stay quiet while the assistant is open" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/widget_test.dart" tests="1" failures="0" skipped="0">
+    <testcase classname="test/widget_test.dart" name="HealthProfile.toJson nests height/weight with units" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/workout_rules_test.dart" tests="16" failures="0" skipped="0">
+    <testcase classname="test/workout_rules_test.dart" name="the repository reproduces the Module 3 restrictions exactly for 3,000 random people" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Repository integrity ids are unique, every rule cites a known source, and nothing is marked approved" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Screening gate warning symptoms stop plan generation for anyone" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Screening gate heart condition: unanswered needs info, no clearance needs clearance, clearance allows a restricted plan" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Screening gate missing date of birth or weight asks for information" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Screening gate the most severe gate wins when several apply" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Screening gate a healthy person with answers is eligible" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Exercise decisions a documented restriction excludes, and names the rule" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Exercise decisions hypertension: holds are allowed but capped, loaded exercises carry the breathing modification" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Exercise decisions injury: high impact on the joint is excluded, low impact on it is adapted, others untouched" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Exercise decisions unknown impact is not treated as safe when it matters" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Exercise decisions program scope: maximal lifting and expert dataset exercises are never scheduled" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Approval and conflicts an unapproved rule cannot authorise anything" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Approval and conflicts an approved rule lifts only program-scope exclusions, never medical ones" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Approval and conflicts conflicting caps resolve to the most restrictive value" time="0.000">
+    </testcase>
+    <testcase classname="test/workout_rules_test.dart" name="Approval and conflicts identical inputs give identical assessments" time="0.000">
+    </testcase>
+  </testsuite>
+</testsuites>
