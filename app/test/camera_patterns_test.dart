@@ -119,7 +119,8 @@ void main() {
         expect(c.showsPostureScore, isTrue, reason: e.id);
         expect(c.form!.checks, isNotEmpty, reason: '${e.id}: every tracked exercise runs at least one form check');
         expect(c.level, isNot(CameraSupportLevel.basicTracking), reason: e.id);
-        if (!c.scoreValidated) expect(c.scoreLabel, 'Posture score (experimental)');
+        expect(c.scoreLabel, 'Posture score', reason: 'one consistent label');
+        expect(c.validationNote, c.scoreValidated ? isNull : ExercisePostureConfig.unvalidatedNote, reason: 'never called validated unless it is');
       }
     });
 
@@ -160,8 +161,8 @@ void main() {
         expect(last.postureScore!, lessThanOrEqualTo(75), reason: '${p.name}: 4 attempts, at most 3 acceptable');
         final report = engine.buildReport(movement: p.measures);
         expect(report.postureScore, last.postureScore);
-        expect(report.feedback.first.id, 'experimental');
-        expect(report.feedback.first.text, contains('not yet validated'));
+        expect(report.feedback.first.id, 'not_validated');
+        expect(report.feedback.first.text, contains("hasn't been validated"));
         expect(report.feedback.any((f) => f.id == 'depth' && f.verdict == FeedbackVerdict.failed), isTrue,
             reason: 'the short attempt is reported as incomplete range');
       });
@@ -305,10 +306,11 @@ void main() {
         session.updatePosture(engine.process(f), angleLabel: c.form!.primaryJoint);
       }
       expect(await ask('How many reps?'), contains('1 rep'));
-      expect(await ask('Check my form'), startsWith('Experimental check:'));
+      expect(await ask('Check my form'), isNot(contains('Experimental')));
       final score = await ask("What's my posture score?");
       expect(score, contains('percent'));
-      expect(score, contains('experimental'));
+      expect(score, contains("hasn't been validated"), reason: 'the coach still says so, briefly');
+      expect(score, isNot(contains('validated on real users. It is')));
 
       final plank = SessionExercise.fromPlanned(
           PlannedExercise(exercise: ExerciseLibrary.byId('plank')!, sets: 2, reps: 0, seconds: 20, restSeconds: 30));
@@ -358,8 +360,9 @@ void main() {
     testWidgets('a dataset exercise can now choose Camera Detection, labelled as experimental form feedback', (tester) async {
       final curl = planned('Dumbbell_Bicep_Curl');
       await pump(tester, PostureModeSelection(request: WorkoutSessionRequest(exercise: curl)));
-      expect(find.textContaining('Live camera tracking: counts your repetitions and checks upper-arm position'), findsOneWidget);
-      expect(find.textContaining('a posture score'), findsOneWidget);
+      expect(find.text('Track posture using live camera for real-time adjustments and analysis.'), findsOneWidget,
+          reason: 'the same description as the validated exercises');
+      expect(find.textContaining('xperimental'), findsNothing);
       expect(find.textContaining('Camera tracking is not available'), findsNothing);
       await tester.ensureVisible(find.byKey(const Key('cameraConsent')));
       await tester.pump();
@@ -378,10 +381,11 @@ void main() {
       final stream = ScriptedPoseStream();
       await pump(tester, CameraDetection(request: WorkoutSessionRequest(exercise: curl), poseStream: stream, speechOutput: FakeSpeechOutput()));
       await tester.pump();
-      expect(find.byKey(const ValueKey('experimental-label')), findsOneWidget);
-      expect(find.textContaining('upper-arm position'), findsOneWidget);
-      expect(find.text('Posture score (experimental)'), findsOneWidget);
+      expect(find.textContaining('xperimental'), findsNothing, reason: 'no prominent experimental label');
+      expect(find.text('Posture score'), findsOneWidget);
       expect(find.text('Too shallow'), findsOneWidget);
+      await tester.ensureVisible(find.byKey(const ValueKey('validation-note')));
+      expect(find.text(ExercisePostureConfig.unvalidatedNote), findsOneWidget, reason: 'subtle note instead');
 
       final c = MovementPatterns.forSession(curl).form!;
       final m = JointMotion(c, startAngle: 165).hold(300);
@@ -403,7 +407,8 @@ void main() {
       await tester.tap(find.text('Stop Session'));
       await settle(tester);
       expect(find.byType(PostureFeedbackScreen), findsOneWidget);
-      expect(find.text('Posture Score (experimental)'), findsOneWidget);
+      expect(find.text('Posture Score'), findsOneWidget);
+      expect(find.byKey(const ValueKey('validation-note')), findsOneWidget);
       expect(session.lastSummary!.postureScore, isNotNull);
       expect(store.saved.single.postureScore, session.lastSummary!.postureScore);
       expect(session.lastSummary!.formScored, isFalse, reason: 'not a validated score');

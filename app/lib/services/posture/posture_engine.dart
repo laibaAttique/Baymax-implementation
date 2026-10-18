@@ -436,9 +436,9 @@ class PostureEngine {
       );
     }
     return const FormFeedbackItem(
-      id: 'experimental',
+      id: 'not_validated',
       verdict: FeedbackVerdict.notAssessed,
-      text: 'Experimental form checks: not yet validated on real users, so treat the score as a guide',
+      text: "Form feedback for this movement hasn't been validated on real users yet",
     );
   }
 

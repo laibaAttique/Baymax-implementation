@@ -153,7 +153,7 @@ void main() {
       expect(pike.last, contains('Lower your hips'));
       final report = engine.buildReport(targetSeconds: 30);
       expect(report.postureScore, inExclusiveRange(0, 100), reason: 'straight part counts for, sag and pike against');
-      expect(report.feedback.first.id, 'experimental');
+      expect(report.feedback.first.id, 'not_validated');
       expect(report.feedback.firstWhere((f) => f.id == 'hips').verdict, FeedbackVerdict.failed);
     });
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../services/posture/movement_patterns.dart';
 import '../../models/workout_session.dart';
 import '../../services/workout_session/workout_session_controller.dart';
 import '../../theme/app_theme.dart';
@@ -167,11 +168,14 @@ class _PostureFeedbackScreenState extends State<PostureFeedbackScreen> with Sing
             ],
           ),
         ),
-        Text(
-          _summary.formScored ? 'Posture Score' : (_summary.formChecked ? 'Posture Score (experimental)' : 'Range Score'),
-          key: const ValueKey('score-label'),
-          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
-        ),
+        const Text('Posture Score', key: ValueKey('score-label'), style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+        if (!_summary.formScored)
+          const Padding(
+            key: ValueKey('validation-note'),
+            padding: EdgeInsets.fromLTRB(32, 4, 32, 0),
+            child: Text(ExercisePostureConfig.unvalidatedNote,
+                textAlign: TextAlign.center, style: TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+          ),
       ],
     );
   }

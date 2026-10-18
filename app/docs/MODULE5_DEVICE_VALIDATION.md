@@ -1,46 +1,71 @@
-# Module 5 — real-device validation of posture evaluation
+# Module 5 — validation record for camera posture evaluation
 
-Synthetic tests (`test/posture_evaluation_test.dart`, `test/camera_patterns_test.dart`) prove that every check
-measures and reacts to the intended landmark geometry. They are **not** evidence that MediaPipe's landmarks on a real
-person, camera and room are good enough. That needs the procedure below. An experimental configuration is promoted to
-**validated** (posture score shown) only after it passes it.
+All 304 camera-tracked exercises run the same pipeline: MediaPipe Pose Landmarker (33 landmarks, on-device) → joint
+angles → rep counter / hold timer → form checks → live corrections → posture score. The app shows them all the same
+way. Whether a movement pattern's checks have been **validated on a real person with a real phone** is recorded here,
+and the app adds one small note ("Form feedback for this movement hasn't been validated on real users yet.") under the
+score for patterns that have not. Nothing is called validated in the app or in the report unless this file says so.
 
-## What has actually been tested on a device
+- Synthetic tests (`test/posture_evaluation_test.dart`, `test/camera_patterns_test.dart`) prove each check reacts to
+  the intended geometry. They are **not** evidence of accuracy on real people and are not recorded as validation here.
+- Per-exercise capability: `review/camera_support_audit.csv` / `.json` (pattern, checks, required landmarks).
+- How to test: [MODULE5_DEVICE_TEST_CHECKLIST.md](MODULE5_DEVICE_TEST_CHECKLIST.md).
 
-| Exercise | Date | Device | Who | Result | Level |
-|---|---|---|---|---|---|
-| Bodyweight squat (`squat`) | 2026-10-15 | Redmi Note 11, Android 13 | project member (user) | skeleton aligned with the body; rep counter increased on each rep; "Keep your back straight" triggered when leaning too far forward; ~14 FPS after tuning | validated |
-| Chair squat, push-up, knee push-up | — | — | — | not separately recorded on a device | validated level kept from the original Module 5 tuning; **record a session to confirm** |
-| All experimental and basic configurations | — | — | — | **not tested on a device yet** | experimental / basic |
+Status values: **validated** (passed the checklist, recorded below) · **tuned** (original Module 5 configuration,
+thresholds set on real movements, only partly recorded) · **not yet tested**.
 
-Nothing else in this document is a result. Do not report experimental checks as validated until the table above has an
-entry for them.
+## 1. Per-pattern record
 
-## Procedure (per movement pattern)
+An exercise's status is its pattern's status unless section 2 has an exercise-specific entry.
 
-Equipment: the phone on a stand at the stated camera position (`setupHint`), good light, plain background. Debug build
-(`flutter run` or the debug APK), with `adb logcat -s flutter` capturing the `[pose]` lines (angles, phases, reps, cues
-— numbers only, never images).
+| Pattern | Tracked exercises | Camera position | Checks (live corrections) | Status | Test conditions | Observed accuracy | Known limitations |
+|---|---|---|---|---|---|---|---|
+| Squat — curated `squat`, `chair_squat` | 2 | side-on, 2–3 m | back alignment (≤ 60° lean), knee tracking (front view), depth | **tuned**; squat device-tested | 2026-10-15, Redmi Note 11, Android 13, indoor light, 1 person | reps counted on every rep; "keep your back straight" fired when leaning too far forward; ~14 FPS | knee tracking needs a front view; not tested with several people |
+| Squat — dataset variants | 24 | side-on | back alignment, knee tracking | not yet tested | — | — | barbell/rack can hide the knees; back-squat lean is naturally larger |
+| Push-up — curated `pushup`, `knee_pushup` | 2 | floor level, side-on | body line, depth | **tuned** | not separately recorded | — | record a session to confirm |
+| Push-up — other variants | 7 | floor level, side-on | hip position (sag / pike) | not yet tested | — | — | wall and incline push-ups are near-vertical, so the hip check does not apply |
+| Biceps curl | 49 | side-on, upper body | upper arm still (≤ 35°), torso stability (≤ 10° sway), range | not yet tested | — | — | braced curls (preacher, incline) skip the upper-arm check; the far arm is often hidden side-on |
+| Chest press | 39 | side-on | torso stability (hips on bench, ≤ 10°) | not yet tested | — | — | bench and bar can hide the elbows |
+| Overhead press | 33 | side-on (lean) or facing (symmetry) | back alignment (≤ 15° lean), arm symmetry (≤ 25°, facing only) | not yet tested | — | — | symmetry needs a front view; lean needs a side view |
+| Row | 27 | side-on | torso stability (≤ 15°) | not yet tested | — | — | cable/machine may hide the arm |
+| Triceps extension | 27 | side-on | torso stability (≤ 12°) | not yet tested | — | — | overhead variants put the wrists above the frame edge |
+| Arm raise | 18 | facing | arms almost straight (elbow ≥ 130°), torso stability (≤ 12°) | not yet tested | — | — | front raises are better seen side-on |
+| Lunge | 11 | side-on | torso upright (≤ 30° lean), range | not yet tested | — | — | the rear knee may be hidden |
+| Hip hinge | 10 | side-on | straight-leg variants: knees ≥ 130°; others: no squatting (knee ≥ 80° at the bottom) | not yet tested | — | — | the spine's curve is not visible from 3 torso points |
+| Triceps pushdown / kickback | 10 | side-on | upper arm still (≤ 35°), torso stability | not yet tested | — | — | cable stack may hide the hands |
+| Vertical pull | 7 | side-on | torso stability (≤ 20°) | not yet tested | — | — | pull-ups need the bar in frame |
+| Upright row | 7 | facing | torso stability (≤ 12°) | not yet tested | — | — | — |
+| Glute bridge / hip extension | 5 | floor level, side-on | bridges: foot position (knee 60–125° at the top); back extensions: straight legs | not yet tested | — | — | lying poses are harder for MediaPipe |
+| Leg curl | 4 | side-on | torso stability | not yet tested | — | — | machine pads hide the legs |
+| Single-leg hip extension (kickback, bird dog, dead bug) | 4 | floor level, side-on | torso stability (≤ 15°) | not yet tested | — | — | alternating sides |
+| Knee lift (march, high knees) | 3 | side-on | stand tall (≤ 20° lean) | not yet tested | — | — | fast high knees at ~15 FPS |
+| Leg raise | 2 | floor level, side-on | straight legs (≥ 145°) or knees near 90° (bent-knee) | not yet tested | — | — | — |
+| Dip | 2 | side-on | torso lean (≤ 30° triceps, ≤ 45° chest) | not yet tested | — | — | — |
+| Knee tuck | 2 | floor level, side-on | torso stability | not yet tested | — | — | — |
+| Jumping jack | 2 | facing | feet wide at the top (ankles ≥ 1.5 × hip width) | not yet tested | — | — | fast movement at ~15 FPS |
+| Plank hold | 2 | floor level, side-on | hip position (sag > 6 % / pike > 10 % of body length) | not yet tested | — | — | loose clothing hides the hips |
+| Leg extension | 2 | side-on | torso stability | not yet tested | — | — | machine hides the shins |
+| Plank knee drive (mountain climbers) | 2 | floor level, side-on | stay low (torso lean ≥ 50°) | not yet tested | — | — | fast alternating legs |
+| Wall sit | 1 | side-on | knee angle 70–120°, back on the wall (≤ 35° lean) | not yet tested | — | — | — |
+| Sit-up | 0 scheduled | floor level, side-on | knees bent (40–130°) | not yet tested | — | — | — |
 
-1. **Consent.** Participants agree to being filmed only by the phone's live preview; nothing is stored (the app keeps no
-   frames). Record participant id, height range and clothing, not names.
-2. **Correct form, 2 × 10 reps** (or 2 × 30 s holds). Observer counts reps and notes any genuine faults.
-   - Pass if the counted reps equal the observer's count (±1 per set) and no correction fires on more than 1 rep in 10
-     the observer judged correct (false-positive rate ≤ 10 %).
-3. **Deliberate faults, 1 × 10 reps per check** (e.g. swinging the upper arm in a curl, leaning back in a press, sagging
-   hips in a plank, feet together in a jumping jack).
-   - Pass if the matching correction fires on at least 8 of 10 faulty reps (sensitivity ≥ 80 %) within about 1 s.
-4. **Camera problems.** Step partly out of frame; turn the wrong way. Pass if the app names the missing body parts or
-   asks to reposition, and counts nothing while landmarks are missing.
-5. Repeat with at least **3 participants** of different builds.
-6. Write the result in the table above (date, device, participants, counts), and only then change the configuration's
-   `evaluation` to `FormEvaluation.validated` in `movement_patterns.dart` (or move it into `ExerciseFormRules`).
-   Re-run `flutter test` and regenerate the audit (`BAYMAX_WRITE_REVIEW=1 flutter test test/camera_support_report_test.dart`).
+## 2. Exercise-specific records
 
-Thresholds may be tuned from the logged angles during this procedure; any change must be noted here with the values
-before and after.
+Add a row when a particular exercise is tested (it overrides its pattern's status for that exercise only).
 
-## Suggested order (most-used first)
+| Exercise (id) | Pattern | Date | Device | Participants | Camera position, light | Reps (counted / observed) | Corrections (true / false) | Result | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| Bodyweight Squat (`squat`) | squat | 2026-10-15 | Redmi Note 11 | 1 | side-on, indoor | every rep counted (user-confirmed) | back-alignment cue fired on forward lean (user-confirmed) | tuned, partly recorded | full checklist not yet run |
 
-squat (dataset variants) → push-up variants → lunge → plank → glute bridge → biceps curl → overhead press →
-lateral raise → row → jumping jack → the rest.
+## 3. Promoting a pattern
+
+When a pattern passes the checklist:
+1. Fill in its row above: status **validated**, test conditions and observed accuracy.
+2. In `lib/services/posture/movement_patterns.dart`, set that pattern's configuration to `FormEvaluation.validated`. This removes the small note in the app; nothing else changes.
+3. Run `flutter test`, then regenerate the audit:
+
+   ```
+   BAYMAX_WRITE_REVIEW=1 flutter test test/camera_support_report_test.dart
+   ```
+
+If thresholds are tuned from the logged angles, note the values before and after in the "Known limitations" cell.

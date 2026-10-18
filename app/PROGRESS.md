@@ -44,6 +44,13 @@ Found while writing the cases: nothing in the app failed; the only defects were 
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-18 — One consistent camera experience; validation record and test checklist
+
+- The prominent "experimental" wording was removed: all 304 camera exercises show the same description, "Posture score" and corrections as the validated four. Untested patterns get one small note under the score ("Form feedback for this movement hasn't been validated on real users yet."), in the session summary and a short sentence from the voice coach. Nothing untested is called validated.
+- Pipeline, rep counting, scoring and corrections unchanged; Module 4 untouched.
+- Docs: `docs/MODULE5_DEVICE_VALIDATION.md` (per-pattern and per-exercise records: conditions, camera position, observed accuracy, limitations) and `docs/MODULE5_DEVICE_TEST_CHECKLIST.md` (8 major patterns, step by step, pass criteria).
+- Tests: 866 pass, 13 skipped, 0 fail.
+
 ### 2026-10-18 — Posture score for every camera exercise
 
 - At the user's request every camera-tracked exercise now behaves like the validated four: reps, FPS, landmarks, live corrections and a posture score (same formula: acceptable reps ÷ attempts; holds: share of hold time in a correct position), on screen, in the summary, saved to `workoutSessions`, and from the voice coach.

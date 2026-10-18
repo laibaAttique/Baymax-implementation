@@ -1,4 +1,5 @@
 import '../../models/workout_session.dart';
+import '../posture/movement_patterns.dart';
 import '../user_session.dart';
 import '../workout_session/workout_session_controller.dart';
 import 'intent_service.dart';
@@ -268,8 +269,7 @@ class CoachResponder {
     }
     final score = session.postureScore;
     final scoreText = score == null ? '' : ' Your posture score so far is $score percent.';
-    // Experimental checks are real measurements, but say so.
-    final prefix = session.formScored ? '' : 'Experimental check: ';
+    const prefix = '';
     if (session.feedbackIsWarning) {
       return CoachResponse('${prefix}Here is what to fix: $message.$scoreText', chips: const ['How do I do it?', 'How many reps?']);
     }
@@ -300,7 +300,7 @@ class CoachResponder {
     if (!session.formScored && s != null) {
       return CoachResponse(
         session.formChecked
-            ? 'Your posture score so far is $s percent. It is experimental: the form checks for this exercise are not yet validated on real users.'
+            ? 'Your posture score so far is $s percent. ${ExercisePostureConfig.unvalidatedNote}'
             : 'Your range score so far is $s percent: the share of your reps that reached the full movement range. '
                 "The camera can't measure posture for this exercise.",
         chips: const ['How do I do it?', 'How many reps?'],

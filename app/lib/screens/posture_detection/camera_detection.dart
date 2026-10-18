@@ -280,19 +280,6 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
                   const SizedBox(height: 6),
                   const Text('Camera Detection',
                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-                  if (!_support.scoreValidated)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        key: ValueKey(_support.isExperimental ? 'experimental-label' : 'basic-tracking-label'),
-                        _support.isExperimental
-                            ? 'Experimental: ${_support.checkLabels.join(', ').toLowerCase()} checked live. '
-                                'The score is a guide until these checks are tested on real users.'
-                            : 'No posture check is measurable for this exercise: the score reflects movement range only.',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
-                      ),
-                    ),
                   const SizedBox(height: 6),
                   _buildStatusLine(tracking),
                 ],
@@ -349,6 +336,19 @@ class _CameraDetectionState extends State<CameraDetection> with WidgetsBindingOb
             ),
             const Text('Processing is done locally. No video is stored.',
                 style: TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+            if (_support.validationNote case final note?)
+              Padding(
+                key: const ValueKey('validation-note'),
+                padding: const EdgeInsets.fromLTRB(24, 4, 24, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.info_outline, size: 13, color: AppTheme.textSecondary),
+                    const SizedBox(width: 4),
+                    Flexible(child: Text(note, textAlign: TextAlign.center, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11))),
+                  ],
+                ),
+              ),
             const SizedBox(height: 24),
           ],
         ),

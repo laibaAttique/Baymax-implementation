@@ -59,8 +59,14 @@ class ExercisePostureConfig {
   /// The score's thresholds were tuned on real movements; otherwise screens label it experimental / range-only.
   bool get scoreValidated => level == CameraSupportLevel.validatedForm;
 
-  /// "Posture score", "Posture score (experimental)" or "Range score" (no measurable posture check).
-  String get scoreLabel => scoreValidated ? 'Posture score' : (supportsFormEvaluation ? 'Posture score (experimental)' : 'Range score');
+  /// The same label for every tracked exercise; whether it is validated is shown separately by [unvalidatedNote].
+  String get scoreLabel => 'Posture score';
+
+  /// A short, low-key note shown with the score of exercises whose movement pattern has not been validated on a device
+  /// (see docs/MODULE5_DEVICE_VALIDATION.md). Null for validated configurations.
+  String? get validationNote => scoreValidated || !supportsCameraTracking ? null : unvalidatedNote;
+
+  static const unvalidatedNote = "Form feedback for this movement hasn't been validated on real users yet.";
   bool get isExperimental => level == CameraSupportLevel.experimentalForm;
 
   /// The form checks this configuration runs, for the audit.

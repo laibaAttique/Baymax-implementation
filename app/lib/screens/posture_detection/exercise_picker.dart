@@ -36,8 +36,7 @@ class _ExerciseLibraryListState extends State<ExerciseLibraryList> {
   }
 
   static String capabilityLabel(ExercisePostureConfig c) => switch (c.level) {
-        CameraSupportLevel.validatedForm => 'Camera: posture score and corrections',
-        CameraSupportLevel.experimentalForm => 'Camera: experimental form feedback',
+        CameraSupportLevel.validatedForm || CameraSupportLevel.experimentalForm => 'Camera: posture score and corrections',
         CameraSupportLevel.basicTracking => c.supportsHoldTiming ? 'Camera: hold timer' : 'Camera: rep counting',
         CameraSupportLevel.notSupported => 'Manual Guidance only',
       };
