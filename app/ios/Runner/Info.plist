@@ -3,7 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Baymax uses the camera to scan food and product ingredient labels.</string>
+	<string>Baymax uses the camera to scan food and product ingredient labels, and to check your exercise posture on this device.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Baymax uses the microphone so you can ask the voice coach questions during a workout.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Baymax converts your spoken workout questions to text.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Baymax lets you choose photos of food and ingredient labels from your library.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>

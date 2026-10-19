@@ -47,3 +47,7 @@ ml/.venv/
 ml/data/
 ml/*/out/
 ml/pip_*.log
+
+
+# free-exercise-db download cache (rebuilt by ml/exercise_catalog/build_catalog.py)
+ml/exercise_catalog/cache/

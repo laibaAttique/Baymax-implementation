@@ -51,3 +51,9 @@ dependencies {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Module 5: MediaPipe Pose Landmarker (33 body landmarks), run on-device
+    // from PoseLandmarkerChannel.kt.
+    implementation("com.google.mediapipe:tasks-vision:0.10.26")
+}

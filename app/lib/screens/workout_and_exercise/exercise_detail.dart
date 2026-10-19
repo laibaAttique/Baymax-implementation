@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+
 import '../../models/plan.dart';
+import '../../models/workout_session.dart';
+import '../../services/workout_session/plan_progress.dart';
+import '../../services/met_calculator.dart';
+import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/exercise_visual.dart';
 import '../../widgets/glass.dart';
 import '../posture_detection/posture_mode.dart';
 
-/// One exercise as prescribed in the user's plan (Module 3).
+/// One exercise as prescribed in the user's plan (report Module 4, FR-6 / mockup M14): photos, metrics, muscles,
+/// difficulty, why it was chosen, the safety rules that shaped it, technique steps with their source, and the hand-off
+/// to Module 5 (camera detection or manual guidance).
 class ExerciseDetail extends StatelessWidget {
   final PlannedExercise planned;
   final List<String> safetyNotes;
@@ -13,7 +21,10 @@ class ExerciseDetail extends StatelessWidget {
   /// The whole session this exercise belongs to; guidance walks through it from [planned] onward.
   final List<PlannedExercise> queue;
 
-  const ExerciseDetail({Key? key, required this.planned, this.safetyNotes = const [], this.queue = const []}) : super(key: key);
+  /// The plan day (0 = Monday) [queue] belongs to, so the session is linked to the planned exercise (Module 4 progress).
+  final int? weekday;
+
+  const ExerciseDetail({super.key, required this.planned, this.safetyNotes = const [], this.queue = const [], this.weekday});
 
   Widget _buildMetricMini(String val, String lbl) {
     return Expanded(
@@ -44,12 +55,19 @@ class ExerciseDetail extends StatelessWidget {
               Container(
                 width: 30,
                 height: 30,
-                decoration: BoxDecoration(gradient: AppTheme.buttonGradient, shape: BoxShape.circle, boxShadow: AppTheme.glowShadow(blur: 10, opacity: 0.28, offset: const Offset(0, 3))),
+                decoration: BoxDecoration(
+                    gradient: AppTheme.buttonGradient,
+                    shape: BoxShape.circle,
+                    boxShadow: AppTheme.glowShadow(blur: 10, opacity: 0.28, offset: const Offset(0, 3))),
                 alignment: Alignment.center,
                 child: Text(num, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Colors.white)),
               ),
               const SizedBox(width: 14),
-              Expanded(child: Padding(padding: const EdgeInsets.only(top: 4), child: Text(text, style: const TextStyle(color: AppTheme.textPrimary, height: 1.45, fontSize: 14.5, fontWeight: FontWeight.w500)))),
+              Expanded(
+                  child: Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(text,
+                          style: const TextStyle(color: AppTheme.textPrimary, height: 1.45, fontSize: 14.5, fontWeight: FontWeight.w500)))),
             ],
           ),
         ),
@@ -57,16 +75,73 @@ class ExerciseDetail extends StatelessWidget {
     );
   }
 
+  Widget _bullets(String title, IconData icon, Color color, List<String> items) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(children: [
+          Icon(icon, size: 18, color: color),
+          const SizedBox(width: 8),
+          Expanded(child: Text(title, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: color))),
+        ]),
+        for (final r in items)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Padding(padding: const EdgeInsets.only(top: 7), child: Icon(Icons.circle, size: 5, color: color)),
+              const SizedBox(width: 10),
+              Expanded(
+                  child: Text(r, style: const TextStyle(fontSize: 13.5, color: AppTheme.textPrimary, height: 1.4, fontWeight: FontWeight.w500))),
+            ]),
+          ),
+      ],
+    );
+  }
+
+  /// Where the energy estimate comes from, and how sure the match is.
+  String _energyLine(Exercise e) {
+    if (!e.hasMet) {
+      return 'No reliable 2024 Compendium activity matches this exercise, so no energy estimate is shown.';
+    }
+    final code = e.compendium.replaceAll('*', '');
+    final what = e.metDescription.isEmpty ? '' : ' “${e.metDescription}”';
+    final match = e.metMatch == 'exact' ? 'exact match' : 'approximate match (closest listed activity, pending review)';
+    final band = e.intensityBand!;
+    return 'Energy estimate: ${e.met} METs (${band.label.toLowerCase()} intensity, ${band.range}) — 2024 Adult Compendium of '
+        'Physical Activities, code $code$what; $match.';
+  }
+
+  String _techniqueSource(Exercise e) {
+    if (e.source == 'free-exercise-db') {
+      return 'Instructions from the free-exercise-db open dataset (public domain), shown as published: ${e.referenceId}. '
+          'They have not been reviewed by the Baymax team or a professional — follow the sets and reps above, not any '
+          '"as many as possible" wording.';
+    }
+    if (e.techniqueSource == 'free-exercise-db') {
+      return 'Muscles and technique adapted from the free-exercise-db open dataset (public domain): ${e.referenceId}'
+          '${e.referenceMatch == 'related' ? ' — closest match' : ''}. Cues are rewritten for the prescribed sets and safety.';
+    }
+    return 'Technique written by the Baymax team (no matching entry in an open dataset); pending professional review.';
+  }
+
   @override
   Widget build(BuildContext context) {
     final e = planned.exercise;
     final levelColor = e.level == 1 ? AppTheme.success : (e.level == 2 ? AppTheme.warning : AppTheme.error);
     final minutes = (planned.totalSeconds / 60).ceil();
+    final weight = UserSession.instance.profile?.weightKg ?? 0;
+    final kcal = MetCalculator.kcalCompendium(
+      met: e.hasMet ? e.met : null,
+      weightKg: weight,
+      active: Duration(seconds: planned.activeSeconds),
+    );
+    final visual = ExerciseVisualInfo.of(e);
 
     final metrics = planned.timed
         ? [
             if (planned.sets > 1) _buildMetricMini('${planned.sets}', 'Sets'),
-            _buildMetricMini(planned.seconds >= 120 ? '${(planned.seconds / 60).round()}m' : '${planned.seconds}s', planned.sets > 1 ? 'Per set' : 'Duration'),
+            _buildMetricMini(
+                planned.seconds >= 120 ? '${(planned.seconds / 60).round()}m' : '${planned.seconds}s', planned.sets > 1 ? 'Per set' : 'Duration'),
             if (planned.restSeconds > 0) _buildMetricMini('${planned.restSeconds}s', 'Rest'),
             _buildMetricMini('${minutes}m', 'Total'),
           ]
@@ -87,56 +162,58 @@ class ExerciseDetail extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // hero: a gradient panel with a large icon and soft light
                 Reveal(
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-                    width: double.infinity,
-                    height: 176,
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      gradient: AppTheme.heroGradient,
-                      borderRadius: BorderRadius.circular(AppTheme.rHero),
-                      boxShadow: AppTheme.glowShadow(blur: 30, opacity: 0.32, offset: const Offset(0, 14)),
-                    ),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          right: -40,
-                          top: -50,
-                          child: Container(
-                            width: 200,
-                            height: 200,
-                            decoration: BoxDecoration(shape: BoxShape.circle, gradient: RadialGradient(colors: [Colors.white.withOpacity(0.24), Colors.white.withOpacity(0)])),
-                          ),
-                        ),
-                        Container(
-                          width: 92,
-                          height: 92,
-                          decoration: BoxDecoration(color: Colors.white.withOpacity(0.16), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.4)),
-                          child: Icon(AppIcons.exercise(e.group), size: 46, color: Colors.white),
-                        ),
-                      ],
-                    ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 8, 20, 6),
+                    child: visual.kind == VisualKind.none
+                        ? Container(
+                            width: double.infinity,
+                            height: 176,
+                            decoration: BoxDecoration(
+                              gradient: AppTheme.heroGradient,
+                              borderRadius: BorderRadius.circular(AppTheme.rHero),
+                              boxShadow: AppTheme.glowShadow(blur: 30, opacity: 0.32, offset: const Offset(0, 14)),
+                            ),
+                            alignment: Alignment.center,
+                            child: Container(
+                              width: 92,
+                              height: 92,
+                              decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.16),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.white.withValues(alpha: 0.5), width: 1.4)),
+                              child: Icon(AppIcons.exercise(e.group), size: 46, color: Colors.white),
+                            ),
+                          )
+                        : ExerciseVisual(exercise: e, height: 220),
                   ),
                 ),
+                if (visual.kind != VisualKind.none)
+                  Padding(
+                    key: const ValueKey('visual-caption'),
+                    padding: const EdgeInsets.fromLTRB(22, 0, 22, 10),
+                    child: Text(visual.caption, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                  ),
                 Reveal(
                   index: 1,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: GlassCard(padding: const EdgeInsets.symmetric(vertical: 16), child: Row(children: metrics)),
-                  ),
-                ),
-                if (e.compendium.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
-                    child: Text(
-                      'Energy estimate: ${e.met} METs — 2024 Compendium of Physical Activities, code ${e.compendium.replaceAll('*', '')}'
-                      '${e.compendium.endsWith('*') ? ' (closest listed activity)' : ''}',
-                      style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, height: 1.4),
+                    child: GlassCard(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Row(children: [
+                        ...metrics,
+                        if (kcal != null) _buildMetricMini('≈${kcal.round()}', 'kcal'),
+                      ]),
                     ),
                   ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
+                  child: Text(
+                    '${_energyLine(e)}${kcal != null ? ' Calories ≈ MET × your weight × active time (rest excluded); an approximate figure, not a measurement.' : ''}',
+                    style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, height: 1.4),
+                  ),
+                ),
                 const SectionHeader('Muscle groups', padding: EdgeInsets.fromLTRB(20, 22, 20, 10)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -150,11 +227,12 @@ class ExerciseDetail extends StatelessWidget {
                     runSpacing: 8,
                     children: [
                       InfoChip(e.levelLabel, icon: Icons.bolt_rounded, color: levelColor),
-                      InfoChip(e.impact == 'low' ? 'Low impact' : 'High impact', icon: Icons.compress_rounded, color: AppTheme.macroFat),
+                      InfoChip(e.impact == 'low' ? 'Low impact' : (e.impact == 'high' ? 'High impact' : 'Impact not recorded'),
+                          icon: Icons.compress_rounded, color: AppTheme.macroFat),
                     ],
                   ),
                 ),
-                if (planned.reasons.isNotEmpty || e.equipment != 'none')
+                if (planned.reasons.isNotEmpty || planned.ruleNotes.isNotEmpty || e.equipment != 'none')
                   Padding(
                     padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
                     child: GlassCard(
@@ -162,29 +240,21 @@ class ExerciseDetail extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (planned.reasons.isNotEmpty) ...[
-                            const Row(children: [
-                              Icon(Icons.tips_and_updates_rounded, size: 18, color: AppTheme.primary),
-                              SizedBox(width: 8),
-                              Expanded(child: Text('Why this exercise for you', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14, color: AppTheme.primary))),
-                            ]),
-                            for (final r in planned.reasons)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  const Padding(padding: EdgeInsets.only(top: 7), child: Icon(Icons.circle, size: 5, color: AppTheme.primary)),
-                                  const SizedBox(width: 10),
-                                  Expanded(child: Text(r, style: const TextStyle(fontSize: 13.5, color: AppTheme.textPrimary, height: 1.4, fontWeight: FontWeight.w500))),
-                                ]),
-                              ),
+                          if (planned.reasons.isNotEmpty)
+                            _bullets('Why this exercise for you', Icons.tips_and_updates_rounded, AppTheme.primary, planned.reasons),
+                          if (planned.ruleNotes.isNotEmpty) ...[
+                            if (planned.reasons.isNotEmpty) const SizedBox(height: 14),
+                            _bullets('Adapted for you by the safety rules', Icons.health_and_safety_rounded, AppTheme.teal, planned.ruleNotes),
                           ],
                           if (e.equipment != 'none')
                             Padding(
-                              padding: EdgeInsets.only(top: planned.reasons.isNotEmpty ? 12 : 0),
+                              padding: EdgeInsets.only(top: planned.reasons.isNotEmpty || planned.ruleNotes.isNotEmpty ? 12 : 0),
                               child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 const Icon(Icons.chair_alt_rounded, size: 18, color: AppTheme.textSecondary),
                                 const SizedBox(width: 8),
-                                Expanded(child: Text('You will need: ${e.equipment}', style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w600))),
+                                Expanded(
+                                    child: Text('You will need: ${e.equipment}',
+                                        style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w600))),
                               ]),
                             ),
                         ],
@@ -194,13 +264,7 @@ class ExerciseDetail extends StatelessWidget {
                 const SectionHeader('Technique', padding: EdgeInsets.fromLTRB(20, 24, 20, 6)),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-                  child: Text(
-                    e.techniqueSource == 'free-exercise-db'
-                        ? 'Muscles and technique adapted from the free-exercise-db open dataset (public domain): ${e.referenceId}'
-                            '${e.referenceMatch == 'related' ? ' — closest match' : ''}. Cues are rewritten for the prescribed sets and safety.'
-                        : 'Technique written by the Baymax team (no matching entry in an open dataset); pending professional review.',
-                    style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, height: 1.45),
-                  ),
+                  child: Text(_techniqueSource(e), style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, height: 1.45)),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -220,9 +284,9 @@ class ExerciseDetail extends StatelessWidget {
                         const SizedBox(width: 14),
                         Expanded(
                           child: Text(
-                            e.impact == 'low'
-                                ? 'Selected as safe for your profile. Move with control and stop if you feel sharp pain, dizziness or chest discomfort.'
-                                : 'High-impact move. Land softly, keep your core braced and stop if you feel sharp pain, dizziness or chest discomfort.',
+                            '${e.impact == 'high' ? 'High-impact move: land softly and keep your core braced. ' : 'Move with control. '}'
+                            'No recorded restriction excludes this exercise for you under the current rules, which are pending professional review — '
+                            'this is not medical clearance. Stop if you feel sharp pain, dizziness or chest discomfort.',
                             style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13.5, height: 1.45, fontWeight: FontWeight.w500),
                           ),
                         ),
@@ -241,9 +305,16 @@ class ExerciseDetail extends StatelessWidget {
               icon: Icons.play_arrow_rounded,
               label: 'Start exercise',
               onPressed: () {
-                final q = queue.isEmpty ? [planned] : queue;
-                final i = q.indexOf(planned);
-                Navigator.push(context, MaterialPageRoute(builder: (_) => PostureModeSelection(queue: q, startIndex: i < 0 ? 0 : i)));
+                // Hand-off to Module 5: camera detection where supported, manual guidance otherwise.
+                final idx = queue.indexOf(planned);
+                final upNext = idx >= 0 ? queue.sublist(idx + 1) : queue.where((p) => p != planned).toList();
+                final day = weekday;
+                final link = day != null && idx >= 0 ? PlanProgress.instance.linkFor(day, idx) : null;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => PostureModeSelection(request: WorkoutSessionRequest.fromPlanned(planned, upNext: upNext, plan: link))),
+                );
               },
             ),
           ),

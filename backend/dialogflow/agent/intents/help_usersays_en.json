@@ -1,0 +1,67 @@
+[
+  {
+    "id": "e479e936-b5af-e4ac-81da-7e2afd9adf29",
+    "data": [
+      {
+        "text": "help",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "cd98c237-fb74-5a38-ac0a-c9035965dd9b",
+    "data": [
+      {
+        "text": "what can you do",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "9c58ef16-cba4-5316-7a48-48afa3b02f24",
+    "data": [
+      {
+        "text": "what can I ask",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "27f99d9c-f93d-ac15-1db5-3bad40e99c73",
+    "data": [
+      {
+        "text": "what commands are there",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "5c3a18b3-cc04-3438-68c1-6ea0a2d93a0f",
+    "data": [
+      {
+        "text": "how do you work",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

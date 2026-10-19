@@ -1,369 +1,378 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../../models/plan.dart';
-import '../../theme/app_icons.dart';
-import '../../theme/app_theme.dart';
-import '../../widgets/glass.dart';
-import '../../widgets/progress_ring.dart';
-import '../workout_and_exercise/workout_plan.dart';
-import 'posture_feedback.dart';
-import 'session_queue.dart';
 
-/// A guided session through the user's own exercises: the technique cues, a countdown for timed exercises or a set counter for
-/// rep-based ones, and Done / Skip / Too difficult. Everything shown comes from the plan; nothing is simulated.
+import 'package:flutter/material.dart';
+
+import '../../models/workout_session.dart';
+import '../../services/workout_session/workout_session_controller.dart';
+import '../../theme/app_theme.dart';
+import '../voice_assistant/voice_assistant_screen.dart';
+import 'posture_feedback.dart';
+import 'widgets/safety_notes_card.dart';
+
+/// S-14: guided exercise without the camera (Module 5, FR-10 / FR-11).
+///
+/// Nothing here is measured by the app: sets and reps are what the user
+/// confirms, and no posture score is produced.
 class ManualGuidance extends StatefulWidget {
-  final List<PlannedExercise> queue;
-  final int startIndex;
-  const ManualGuidance({Key? key, required this.queue, this.startIndex = 0}) : super(key: key);
+  final WorkoutSessionRequest request;
+  const ManualGuidance({super.key, required this.request});
 
   @override
   State<ManualGuidance> createState() => _ManualGuidanceState();
 }
 
-class _ManualGuidanceState extends State<ManualGuidance> {
-  late int _index = widget.startIndex.clamp(0, widget.queue.length - 1);
-  final Stopwatch _session = Stopwatch()..start();
+class _ManualGuidanceState extends State<ManualGuidance> with SingleTickerProviderStateMixin {
+  final WorkoutSessionController _session = WorkoutSessionController.instance;
+  late final AnimationController _float;
   Timer? _ticker;
 
-  int _completed = 0;
-  int _skipped = 0;
-  int _setsDone = 0;
+  /// Form cues ticked off in the current set.
+  final Set<int> _done = {};
 
-  // per-exercise state
-  int _setsThisExercise = 0;
-  int _secondsLeft = 0;
-  bool _running = false;
+  /// Seconds left of the rest between sets; 0 when not resting.
+  int _restLeft = 0;
 
-  PlannedExercise get _current => widget.queue[_index];
-  bool get _isLast => _index == widget.queue.length - 1;
+  /// Seconds left of the current hold, for timed exercises.
+  int _holdLeft = 0;
+  bool _leaving = false;
+
+  SessionExercise get _exercise => widget.request.exercise;
+  bool get _resting => _restLeft > 0;
+  bool get _paused => _session.status == SessionStatus.paused;
+  bool get _allSetsDone => _session.setsCompleted >= _exercise.sets;
 
   @override
   void initState() {
     super.initState();
-    _resetExercise();
+    _float = AnimationController(vsync: this, duration: const Duration(seconds: 3))..repeat(reverse: true);
+    // The timer starts as soon as the screen opens (report FR17.1).
+    _session.start(widget.request, SessionMode.manual);
+    _session.addListener(_onSessionChanged);
+    _holdLeft = _exercise.timed ? _exercise.seconds : 0;
+    _ticker = Timer.periodic(const Duration(seconds: 1), (_) => _tick());
   }
 
   @override
   void dispose() {
     _ticker?.cancel();
+    _float.dispose();
+    _session.removeListener(_onSessionChanged);
+    if (!_leaving) _session.abandon();
     super.dispose();
   }
 
-  void _resetExercise() {
-    _ticker?.cancel();
-    _running = false;
-    _setsThisExercise = 0;
-    _secondsLeft = _current.timed ? _current.seconds : 0;
-  }
-
-  void _toggleTimer() {
-    HapticFeedback.selectionClick();
-    if (_running) {
-      _ticker?.cancel();
-      setState(() => _running = false);
-      return;
-    }
-    if (_secondsLeft <= 0) _secondsLeft = _current.seconds;
-    setState(() => _running = true);
-    _ticker = Timer.periodic(const Duration(seconds: 1), (t) {
-      if (!mounted) return;
-      if (_secondsLeft > 1) {
-        setState(() => _secondsLeft--);
-      } else {
-        t.cancel();
-        HapticFeedback.heavyImpact();
-        setState(() {
-          _secondsLeft = 0;
-          _running = false;
-          _setsThisExercise++;
-          _setsDone++;
-          if (_setsThisExercise < _current.sets) _secondsLeft = _current.seconds; // ready for the next set
-        });
+  void _tick() {
+    if (!mounted || _session.status != SessionStatus.active) return;
+    setState(() {
+      if (_resting) {
+        _restLeft--;
+        if (_restLeft == 0 && _exercise.timed) _holdLeft = _exercise.seconds;
+      } else if (_exercise.timed && !_allSetsDone && _holdLeft > 0) {
+        _holdLeft--;
+        if (_holdLeft == 0) _completeSet();
       }
     });
   }
 
-  void _setDone() {
-    HapticFeedback.selectionClick();
-    if (_setsThisExercise >= _current.sets) return;
-    setState(() {
-      _setsThisExercise++;
-      _setsDone++;
-    });
-  }
-
-  void _undoSet() {
-    if (_setsThisExercise == 0) return;
-    setState(() {
-      _setsThisExercise--;
-      _setsDone--;
-    });
-  }
-
-  void _advance({required bool skipped}) {
-    _ticker?.cancel();
-    if (skipped) {
-      _skipped++;
-    } else {
-      _completed++;
-    }
-    if (_isLast) {
-      _session.stop();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PostureFeedbackScreen(
-            result: SessionResult(total: widget.queue.length, completed: _completed, skipped: _skipped, setsDone: _setsDone, elapsed: _session.elapsed),
-          ),
-        ),
-      );
+  void _onSessionChanged() {
+    if (!mounted || _leaving) return;
+    if (_session.finishRequested) {
+      _finish();
       return;
     }
-    setState(() {
-      _index++;
-      _resetExercise();
-    });
+    _paused ? _float.stop() : _float.repeat(reverse: true);
+    setState(() {});
   }
 
-  Future<void> _confirmExit() async {
-    final leave = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Leave this session?'),
-        content: const Text('Your progress in this guided session will not be kept.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Keep going')),
-          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Leave')),
-        ],
-      ),
-    );
-    if (leave == true && mounted) Navigator.pop(context);
+  /// The user confirms one set of the prescribed reps (report FR17.2).
+  void _completeSet() {
+    if (_allSetsDone || _resting) return;
+    _session.recordManualSet(_exercise.reps);
+    _done.clear();
+    if (_allSetsDone) {
+      _finish();
+    } else {
+      _restLeft = _exercise.restSeconds;
+      if (_restLeft == 0 && _exercise.timed) _holdLeft = _exercise.seconds;
+    }
   }
 
-  String _mmss(int s) => '${(s ~/ 60).toString().padLeft(2, '0')}:${(s % 60).toString().padLeft(2, '0')}';
+  /// Saves the session, then moves on: to the next exercise when the workout
+  /// supplied one and [advance] is set, otherwise to the summary.
+  void _finish({bool skipped = false, bool tooDifficult = false, bool advance = false}) {
+    if (_leaving) return;
+    _leaving = true;
+    final summary = _session.finish(skipped: skipped, tooDifficult: tooDifficult);
+    final next = widget.request.next;
+    final navigator = Navigator.of(context);
+    final route = ModalRoute.of(context);
+    navigator.popUntil((r) => r == route || r.isFirst);
+    navigator.pushReplacement(MaterialPageRoute(
+      builder: (_) => advance && next != null ? ManualGuidance(request: next) : PostureFeedbackScreen(summary: summary),
+    ));
+  }
 
-  Widget _counterCard(PlannedExercise p) {
-    final done = _setsThisExercise >= p.sets;
-    if (p.timed) {
-      final frac = p.seconds == 0 ? 0.0 : 1 - (_secondsLeft / p.seconds);
-      return GlassCard(
-        padding: const EdgeInsets.all(20),
+  static String _clock(int seconds) =>
+      '${(seconds ~/ 60).toString().padLeft(2, '0')}:${(seconds % 60).toString().padLeft(2, '0')}';
+
+  Widget _buildFormCue(int index, String text) {
+    final done = _done.contains(index);
+    final firstPending = List.generate(_exercise.steps.length, (i) => i).where((i) => !_done.contains(i));
+    final active = !done && firstPending.isNotEmpty && firstPending.first == index;
+    return GestureDetector(
+      onTap: () => setState(() => done ? _done.remove(index) : _done.add(index)),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppTheme.card,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: active ? AppTheme.primary : Colors.transparent, width: 1.5),
+        ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ProgressRing(
-              size: 118,
-              stroke: 11,
-              value: done ? 1 : frac,
-              semanticLabel: '${_mmss(_secondsLeft)} remaining',
-              child: Text(done ? 'Done' : _mmss(_secondsLeft), style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.6)),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('SET', style: AppTheme.overline),
-                  Text('${(_setsThisExercise + 1).clamp(1, p.sets)} of ${p.sets}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.4)),
-                  const SizedBox(height: 4),
-                  Text('${p.seconds >= 120 ? '${(p.seconds / 60).round()} min' : '${p.seconds}s'} per set${p.restSeconds > 0 && p.sets > 1 ? ' · rest ${p.restSeconds}s' : ''}',
-                      style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 12),
-                  if (!done)
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(minimumSize: const Size(0, 46)),
-                      onPressed: _toggleTimer,
-                      icon: Icon(_running ? Icons.pause_rounded : Icons.play_arrow_rounded),
-                      label: Text(_running ? 'Pause' : (_secondsLeft == p.seconds ? 'Start' : 'Resume')),
-                    ),
-                ],
+            Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                color: done ? AppTheme.success : (active ? AppTheme.primaryLight : AppTheme.border),
+                shape: BoxShape.circle,
               ),
+              alignment: Alignment.center,
+              child: done
+                  ? const Icon(Icons.check, color: Colors.white, size: 16)
+                  : Text('${index + 1}',
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: active ? AppTheme.primary : AppTheme.textSecondary)),
             ),
+            const SizedBox(width: 12),
+            Expanded(
+                child: Text(text, style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14, height: 1.4))),
           ],
         ),
-      );
-    }
-    return GlassCard(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          ProgressRing(
-            size: 118,
-            stroke: 11,
-            value: p.sets == 0 ? 0 : _setsThisExercise / p.sets,
-            semanticLabel: '$_setsThisExercise of ${p.sets} sets done',
-            child: Column(mainAxisSize: MainAxisSize.min, children: [
-              Text('$_setsThisExercise', style: const TextStyle(fontSize: 32, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, height: 1, letterSpacing: -0.8)),
-              Text('of ${p.sets} sets', style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700, color: AppTheme.textSecondary)),
-            ]),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('TARGET', style: AppTheme.overline),
-                Text('${p.reps} reps', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.4)),
-                if (p.restSeconds > 0 && p.sets > 1)
-                  Text('Rest ${p.restSeconds}s between sets', style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 12),
-                Row(children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(minimumSize: const Size(0, 46)),
-                      onPressed: done ? null : _setDone,
-                      icon: const Icon(Icons.check_rounded),
-                      label: const Text('Set done'),
-                    ),
-                  ),
-                  IconButton(onPressed: _setsThisExercise == 0 ? null : _undoSet, icon: const Icon(Icons.undo_rounded), tooltip: 'Undo last set'),
-                ]),
-              ],
+      ),
+    );
+  }
+
+  Widget _buildCounterCard(String label, String value, {String? suffix, String? note}) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(20)),
+        child: Column(
+          children: [
+            Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey)),
+            const SizedBox(height: 4),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: RichText(
+                text: TextSpan(
+                  style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppTheme.primary),
+                  children: [
+                    TextSpan(text: value),
+                    if (suffix != null)
+                      TextSpan(text: suffix, style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary)),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+            if (note != null) ...[
+              const SizedBox(height: 4),
+              Text(note, style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+            ],
+          ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final p = _current;
-    final e = p.exercise;
-    final n = widget.queue.length;
-    final allSetsDone = _setsThisExercise >= p.sets;
+    final e = _exercise;
+    final currentSet = (_session.setsCompleted + 1).clamp(1, e.sets);
+    final hasNext = widget.request.next != null;
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _confirmExit();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(icon: const Icon(Icons.close_rounded), tooltip: 'End session', onPressed: _confirmExit),
-          title: Text('Exercise ${_index + 1} of $n'),
-        ),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0, end: (_index) / n),
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeOutCubic,
-                  builder: (context, v, _) => LinearProgressIndicator(value: v, minHeight: 6),
-                ),
+    final String timeNote;
+    if (_paused) {
+      timeNote = 'Paused';
+    } else if (_resting) {
+      timeNote = 'Rest ${_clock(_restLeft)}';
+    } else if (e.timed) {
+      timeNote = 'Hold ${_clock(_holdLeft)}';
+    } else {
+      timeNote = 'Elapsed';
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Manual Guidance', style: TextStyle(fontSize: 16)),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'Ask Baymax',
+            icon: const Icon(Icons.mic_none),
+            onPressed: () =>
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const VoiceAssistantScreen())),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              height: 200,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                    colors: [Color(0xFF1C2B3A), Color(0xFF0F1923)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight),
+                borderRadius: BorderRadius.circular(24),
               ),
-              const SizedBox(height: 18),
-              AnimatedSwitcher(
-                duration: const Duration(milliseconds: 280),
-                child: Column(
-                  key: ValueKey(_index),
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(22),
-                      decoration: BoxDecoration(
-                        gradient: AppTheme.heroGradient,
-                        borderRadius: BorderRadius.circular(AppTheme.rHero),
-                        boxShadow: AppTheme.glowShadow(blur: 28, opacity: 0.3, offset: const Offset(0, 12)),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 72,
-                            height: 72,
-                            decoration: BoxDecoration(color: Colors.white.withOpacity(0.16), shape: BoxShape.circle, border: Border.all(color: Colors.white.withOpacity(0.5), width: 1.4)),
-                            child: Icon(AppIcons.exercise(e.group), size: 36, color: Colors.white),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(e.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: Colors.white, letterSpacing: -0.5, height: 1.15)),
-                                const SizedBox(height: 6),
-                                Text(e.muscles.take(3).join(' · '), maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.88), fontWeight: FontWeight.w600)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-                    _counterCard(p),
-                  ],
-                ),
+              alignment: Alignment.center,
+              child: AnimatedBuilder(
+                animation: _float,
+                builder: (_, child) => Transform.translate(offset: Offset(0, -10 * _float.value), child: child),
+                child: Text(e.icon, style: const TextStyle(fontSize: 92)),
               ),
-              const SectionHeader('How to do it', padding: EdgeInsets.fromLTRB(0, 24, 0, 10)),
-              for (var i = 0; i < e.steps.length; i++)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: GlassCard(
-                    radius: AppTheme.rMedium,
-                    padding: const EdgeInsets.all(14),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 28,
-                          height: 28,
-                          decoration: const BoxDecoration(gradient: AppTheme.buttonGradient, shape: BoxShape.circle),
-                          alignment: Alignment.center,
-                          child: Text('${i + 1}', style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w800, color: Colors.white)),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(child: Padding(padding: const EdgeInsets.only(top: 3), child: Text(e.steps[i], style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14.5, height: 1.45, fontWeight: FontWeight.w500)))),
-                      ],
-                    ),
-                  ),
-                ),
-              const SizedBox(height: 14),
-              GlowButton(
-                icon: _isLast ? Icons.flag_rounded : Icons.arrow_forward_rounded,
-                label: _isLast ? 'Finish session' : (allSetsDone ? 'Done — next exercise' : 'Mark done and continue'),
-                onPressed: () => _advance(skipped: false),
-              ),
-              const SizedBox(height: 10),
-              Row(
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
                 children: [
-                  Expanded(child: OutlinedButton(onPressed: () => _advance(skipped: true), child: const Text('Skip'))),
-                  const SizedBox(width: 10),
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => showDialog<void>(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                          title: const Text('Make it easier'),
-                          content: const Text(
-                            'Do fewer repetitions, rest longer, or choose an easier version (for example a wall push-up instead of a floor push-up). '
-                            'Stop if anything hurts. You can also regenerate your plan from the Workout tab.',
-                          ),
-                          actions: [
-                            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close')),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(ctx);
-                                Navigator.push(context, MaterialPageRoute(builder: (_) => const WorkoutPlan()));
-                              },
-                              child: const Text('Open my workout plan'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      child: const Text('Too difficult'),
+                    child: Text(e.name,
+                        style: const TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+                  ),
+                  if (e.group.isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration:
+                          BoxDecoration(color: AppTheme.primaryLight, borderRadius: BorderRadius.circular(20)),
+                      child: Text(e.group.toUpperCase(),
+                          style: const TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.primary)),
+                    ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Text(
+                'Target: ${e.targetLabel}${e.restSeconds > 0 ? ' · ${e.restSeconds}s rest' : ''}'
+                '${e.muscles.isEmpty ? '' : '\nWorks: ${e.muscles.join(', ')}'}',
+                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14, height: 1.4),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              child: Row(
+                children: [
+                  _buildCounterCard('TIME', _clock(_session.elapsed.inSeconds), note: timeNote),
+                  const SizedBox(width: 10),
+                  e.timed
+                      ? _buildCounterCard('SETS', '${_session.setsCompleted}', suffix: ' /${e.sets}', note: 'confirmed')
+                      : _buildCounterCard('REPS', '${_session.reps}',
+                          suffix: ' /${e.targetReps}', note: 'Set $currentSet of ${e.sets}'),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+              child: OutlinedButton.icon(
+                onPressed: () => _paused ? _session.resume() : _session.pause(),
+                icon: Icon(_paused ? Icons.play_arrow : Icons.pause),
+                label: Text(_paused ? 'Resume' : 'Pause'),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 2),
+              child: Text('Proper Form',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
+              child: Text('Tap each cue as you check it during the set.',
+                  style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: e.steps.isEmpty
+                  ? const Text('No technique steps are available for this exercise.',
+                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 14))
+                  : Column(children: [for (var i = 0; i < e.steps.length; i++) _buildFormCue(i, e.steps[i])]),
+            ),
+            SafetyNotesCard(e.safetyNotes, margin: const EdgeInsets.fromLTRB(20, 8, 20, 0)),
+            Container(
+              margin: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
+              child: const Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('🛡️', style: TextStyle(fontSize: 20)),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Move with control and breathe steadily. Stop if you feel sharp pain, dizziness or chest discomfort.',
+                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 13, height: 1.4),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 14),
-              const Text('Stop if you feel sharp pain, dizziness or chest discomfort.', style: TextStyle(fontSize: 12.5, color: AppTheme.textSecondary, height: 1.45)),
-            ],
-          ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 16, 20, 8),
+              child: Text("How's it feeling?",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppTheme.textPrimary)),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: _resting || _paused || _allSetsDone ? null : () => setState(_completeSet),
+                    child: Text(_resting ? 'Resting… ${_clock(_restLeft)}' : 'Completed ✓'),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => _finish(skipped: true),
+                          style: OutlinedButton.styleFrom(
+                              foregroundColor: AppTheme.textPrimary, side: const BorderSide(color: AppTheme.border)),
+                          child: const Text('Skip'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => _finish(tooDifficult: true),
+                          style: OutlinedButton.styleFrom(
+                              foregroundColor: AppTheme.textPrimary, side: const BorderSide(color: AppTheme.border)),
+                          child: const Text('Too Difficult'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: ElevatedButton(
+                onPressed: () => _finish(advance: true),
+                style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 56)),
+                child: Text(hasNext ? 'Next Exercise →' : 'Finish Session →', style: const TextStyle(fontSize: 16)),
+              ),
+            ),
+          ],
         ),
       ),
     );

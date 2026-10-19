@@ -1,0 +1,106 @@
+[
+  {
+    "id": "d710a3de-8975-ca0c-dd1a-4967c3f78b64",
+    "data": [
+      {
+        "text": "resume",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "ecb9d0f9-b3b3-b3fe-eed7-8cce86cb4c81",
+    "data": [
+      {
+        "text": "resume workout",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "4fd8da8b-8a0a-df81-1542-1083af944155",
+    "data": [
+      {
+        "text": "continue",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "3c6dd28a-8fe5-59dc-61c3-a01830965cee",
+    "data": [
+      {
+        "text": "keep going",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "5b79bc87-5332-bc69-1504-586971fb0c58",
+    "data": [
+      {
+        "text": "carry on",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "31ce4a49-de32-e7d0-1866-cd1c3a5c086d",
+    "data": [
+      {
+        "text": "I am ready",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "db12b12b-f31a-3406-d885-e4af6c94d8a8",
+    "data": [
+      {
+        "text": "start again",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "8a1b2e16-2877-cb65-5030-21f71260e52c",
+    "data": [
+      {
+        "text": "unpause",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

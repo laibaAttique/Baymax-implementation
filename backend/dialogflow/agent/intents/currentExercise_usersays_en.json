@@ -1,0 +1,93 @@
+[
+  {
+    "id": "1b7858bc-7496-4c61-f7e5-5e47e463062a",
+    "data": [
+      {
+        "text": "what exercise is this",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "c322b711-e014-cc14-5af3-607867b30cb9",
+    "data": [
+      {
+        "text": "which exercise am I doing",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "4742c947-1af1-957e-61e1-720e452e38b4",
+    "data": [
+      {
+        "text": "what am I doing now",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "38e2ee68-1660-8000-bcde-7c72dbc14169",
+    "data": [
+      {
+        "text": "what is my target",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "4164036d-146b-25cb-ed56-90203af38abe",
+    "data": [
+      {
+        "text": "how many sets",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "570d7e38-46de-047d-af4b-3db9749fc664",
+    "data": [
+      {
+        "text": "what muscles does this work",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "78279031-4b7b-010f-4e4e-1c04742f96e1",
+    "data": [
+      {
+        "text": "current exercise",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

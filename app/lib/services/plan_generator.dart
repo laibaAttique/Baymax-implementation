@@ -2,8 +2,13 @@ import '../models/food.dart';
 import '../models/health_profile.dart';
 import '../models/plan.dart';
 import '../utils/health_calc.dart';
+import '../models/workout_readiness.dart';
+import 'exercise_catalog.dart';
 import 'exercise_library.dart';
 import 'exercise_selector.dart';
+import 'workout_rules/classification_profiles.dart';
+import 'workout_rules/safety_rule_engine.dart';
+import 'workout_rules/safety_rule_repository.dart';
 import 'food_database.dart';
 import 'health_classifier.dart';
 import 'ml/gradient_boosting_model.dart';
@@ -37,6 +42,10 @@ class PlanRestrictions {
   final int? maxHoldSeconds;
   final List<String> notes;
 
+  /// The rule-repository result these restrictions came from (Module 4). When present it decides eligibility,
+  /// including injuries and unknown impact; the flags above are kept for existing callers.
+  final SafetyAssessment? assessment;
+
   const PlanRestrictions({
     required this.noHighImpact,
     required this.noHiit,
@@ -49,9 +58,27 @@ class PlanRestrictions {
     required this.maxSessionMin,
     required this.maxHoldSeconds,
     required this.notes,
+    this.assessment,
   });
 
+  factory PlanRestrictions.from(SafetyAssessment a) => PlanRestrictions(
+        noHighImpact: a.excludedImpact.contains('high'),
+        noHiit: a.excludedTags.contains('hiit'),
+        noIsometric: a.excludedTags.contains('isometric'),
+        noPlyo: a.excludedTags.contains('plyo'),
+        includeBalance: a.includeBalance,
+        strengthFocus: a.strengthFocus,
+        maxLevel: a.maxLevel,
+        maxDays: a.maxDays,
+        maxSessionMin: a.maxSessionMin,
+        maxHoldSeconds: a.maxHoldSeconds,
+        notes: a.notes,
+        assessment: a,
+      );
+
   bool allows(Exercise e) {
+    final a = assessment;
+    if (a != null) return a.decide(e).schedulable;
     if (e.level > maxLevel) return false;
     if (noHighImpact && e.impact == 'high') return false;
     if (noHiit && e.tags.contains('hiit')) return false;
@@ -113,34 +140,93 @@ class PlanGenerator {
     _Template('Strength Mix', 'Strength & stability', [_Slot('push', 2), _Slot('legs', 2), _Slot('core', 1), _Slot('mobility', 1)]),
   ];
 
-  PersonalizedPlan generate(HealthProfile profile, ClassificationResult cls, {int variant = 0}) {
+  /// [tooDifficult]: ids of exercises the user recently marked "Too Difficult"
+  /// in Manual Guidance (report FR17.4). Each is swapped for an easier or
+  /// equally easy exercise of the same group when one is allowed, otherwise it
+  /// stays with a lighter dose.
+  ///
+  /// [readiness] turns on Module 4 screening: the plan is only generated when the safety rules allow it (otherwise the
+  /// week is empty and [PersonalizedPlan.gate] says why), reported injuries are applied, and catalogue exercises for the
+  /// equipment the person owns join the curated library. Without it the plan is generated as in Module 3.
+  PersonalizedPlan generate(
+    HealthProfile profile,
+    ClassificationResult cls, {
+    int variant = 0,
+    Set<String> tooDifficult = const {},
+    WorkoutReadiness? readiness,
+  }) {
     final intensity = _intensity(profile, cls);
-    final restrictions = _restrictions(profile, cls, intensity);
+    // Module 4: the training profile of the Module 2 classification caps the intensity band and sets the weekly targets.
+    final trainingProfile = ClassificationProfiles.forCategory(cls.category);
+    final facts = HealthFacts.from(profile, cls, intensity, readiness: readiness);
+    final assessment = SafetyRuleRepository.engine.assess(facts, profile: trainingProfile);
+    final restrictions = PlanRestrictions.from(assessment);
+
+    if (readiness != null && assessment.gate.status != WorkoutGateStatus.eligible) {
+      return PersonalizedPlan(
+        category: cls.category,
+        intensity: intensity,
+        variant: variant,
+        week: List<WorkoutDay?>.filled(7, null),
+        restrictionNotes: assessment.gate.reasons,
+        nutrition: _nutrition(profile, cls, variant),
+        gate: assessment.gate,
+        rulesVersion: assessment.rulesVersion,
+      );
+    }
+    final extraPool = readiness == null ? const <Exercise>[] : ExerciseCatalog.plannableWith(readiness.equipment);
 
     final templateGoal = restrictions.strengthFocus ? 'Gain Muscle' : profile.primaryGoal;
     final templates = templateGoal == 'Lose Weight'
         ? _loseTemplates
         : (templateGoal == 'Gain Muscle' ? _gainTemplates : _maintainTemplates);
 
-    final days = profile.workoutFrequency.clamp(2, restrictions.maxDays);
+    final chosenDays = profile.workoutFrequency.clamp(2, restrictions.maxDays);
+    final days = _daysForRestLimit(chosenDays, trainingProfile.maxRestDaysInRow, restrictions.maxDays);
     final slots = _schedule[days]!;
     final week = List<WorkoutDay?>.filled(7, null);
     // FR-2/FR-3: within the exercises the safety rules allow, the selector ranks by this person's body parameters and answers.
     final selector = ExerciseSelector(BodyProfile.from(profile), variant: variant);
     final weekUsage = <String, int>{};
+    final adjusted = <String>{};
     for (var i = 0; i < slots.length; i++) {
       final template = templates[(i + variant) % templates.length];
-      week[slots[i]] = _withModelEstimate(_buildDay(template, intensity, restrictions, profile.weightKg, selector, weekUsage), profile);
+      week[slots[i]] =
+          _withModelEstimate(_buildDay(template, intensity, restrictions, profile.weightKg, selector, weekUsage, tooDifficult, adjusted, extraPool), profile);
     }
+
+    final summary = ClassificationProfiles.summarize(trainingProfile, week, facts, extraNotes: [
+      if (days > chosenDays)
+        '$days workout days instead of $chosenDays: no more than ${trainingProfile.maxRestDaysInRow} days in a row without '
+            'exercise is recommended for you. (${trainingProfile.id})',
+    ]);
 
     return PersonalizedPlan(
       category: cls.category,
       intensity: intensity,
       variant: variant,
       week: week,
-      restrictionNotes: restrictions.notes,
+      profile: summary,
+      restrictionNotes: [
+        ...restrictions.notes,
+        if (adjusted.isNotEmpty) 'Made easier because you marked them as too difficult: ${adjusted.join('; ')}.',
+      ],
       nutrition: _nutrition(profile, cls, variant),
+      gate: readiness == null ? null : assessment.gate,
+      rulesVersion: assessment.rulesVersion,
     );
+  }
+
+  /// The fewest weekly days (at least [chosen], at most [maxDays]) whose schedule never leaves more than [maxRest] rest
+  /// days in a row. Without a limit, or when no allowed schedule meets it, [chosen] is kept.
+  static int _daysForRestLimit(int chosen, int? maxRest, int maxDays) {
+    if (maxRest == null) return chosen;
+    for (var d = chosen; d <= maxDays; d++) {
+      final slots = _schedule[d];
+      if (slots == null) continue;
+      if (ClassificationProfiles.longestRest([for (var i = 0; i < 7; i++) slots.contains(i)]) <= maxRest) return d;
+    }
+    return chosen;
   }
 
   // --- FR-3: intensity by health category ---------------------------------
@@ -159,94 +245,40 @@ class PlanGenerator {
   }
 
   // --- FR-1: medical restriction rules -------------------------------------
-
-  PlanRestrictions _restrictions(HealthProfile p, ClassificationResult cls, String intensity) {
-    final bmi = p.bmi;
-    final age = p.age ?? 30;
-    final cardiac = cls.isCardiac;
-    final hypertension = p.hasCondition('Hypertension');
-    final diabetic = p.hasCondition('Diabetes');
-    final asthma = p.hasCondition('Asthma');
-    final underweight = bmi > 0 && bmi < 18.5;
-    final obese = bmi >= 30;
-    final overweight = bmi >= 25;
-    final senior = age >= 55;
-    final beginner = p.activityLevel == 'Sedentary';
-
-    final noHighImpact = obese || cardiac || hypertension || senior;
-    final noHiit = cardiac || hypertension || diabetic || asthma || senior || bmi >= 35 || intensity == 'Low';
-    // Heart disease: no static holds as a precaution (needs clinician review).
-    // Hypertension: holds stay but are kept short, with breathing cues.
-    final noIsometric = cardiac;
-    final noPlyo = noHighImpact || overweight;
-    final maxLevel = (cardiac || beginner || intensity == 'Low' || noHiit) ? 2 : 3;
-    final maxDays = cardiac || age >= 60 ? 4 : (obese || hypertension || diabetic ? 5 : 6);
-    final maxSession = cardiac ? 30 : (intensity == 'Low' ? 35 : (intensity == 'Moderate' ? 45 : 55));
-
-    final notes = <String>[];
-    if (cardiac) {
-      notes.add('Heart condition: only low-impact, steady-effort exercise is included — no maximal-effort or breath-holding work. '
-          'Get your doctor\'s clearance before starting, and stop immediately if you feel chest pain, dizziness or unusual breathlessness.');
-    }
-    if (hypertension) {
-      notes.add('Hypertension: high-intensity intervals and high-impact moves are removed, and static holds (planks, wall sits) are capped at 20 seconds. '
-          'Breathe steadily and never hold your breath — straining raises blood pressure. Check with your doctor about the right intensity for you.');
-    }
-    if (diabetic) {
-      notes.add('Diabetes: sessions are steady and moderate. Check your blood sugar before and after exercise, keep fast-acting carbohydrates nearby, and ask your doctor before training on an empty stomach.');
-    }
-    if (asthma) {
-      notes.add('Asthma: high-intensity intervals are removed. Warm up thoroughly and keep your reliever inhaler with you.');
-    }
-    if (obese && !cardiac) {
-      notes.add('BMI ${bmi.toStringAsFixed(1)}: jumping and running-style moves are replaced with low-impact options to protect your knees and ankles.');
-    } else if (overweight && !noHighImpact) {
-      notes.add('Jump (plyometric) exercises are removed to reduce joint stress at your current weight.');
-    }
-    if (underweight) {
-      notes.add('Underweight BMI: the plan focuses on strength training and limits cardio so you do not burn the energy you need to gain healthy weight.');
-    }
-    if (senior) {
-      notes.add('Age 55+: high-impact moves are removed as a precaution.');
-    }
-    if (age >= 65) {
-      notes.add('Age 65+: balance training is added, as WHO recommends for older adults.');
-    }
-    if (beginner) {
-      notes.add('You are starting from a sedentary baseline, so sessions are shorter and exercises are beginner-friendly. Increase gradually.');
-    }
-    if (notes.isEmpty) {
-      notes.add('No medical restrictions detected. Warm up before every session and stop if something hurts.');
-    }
-
-    return PlanRestrictions(
-      noHighImpact: noHighImpact,
-      noHiit: noHiit,
-      noIsometric: noIsometric,
-      noPlyo: noPlyo,
-      includeBalance: age >= 65,
-      strengthFocus: underweight,
-      maxLevel: maxLevel,
-      maxDays: maxDays,
-      maxSessionMin: maxSession,
-      maxHoldSeconds: hypertension ? 20 : null,
-      notes: notes,
-    );
-  }
+  // The rules live in the versioned repository `workout_rules/safety_rule_repository.dart` (Module 4) and are evaluated
+  // by `SafetyRuleEngine`; `test/workout_rules_test.dart` checks they reproduce the original Module 3 rules exactly.
 
   // --- FR-2 / FR-5: templates and weekly schedule --------------------------
 
-  WorkoutDay _buildDay(_Template t, String intensity, PlanRestrictions r, double weightKg, ExerciseSelector selector, Map<String, int> weekUsage) {
+  WorkoutDay _buildDay(_Template t, String intensity, PlanRestrictions r, double weightKg, ExerciseSelector selector, Map<String, int> weekUsage,
+      [Set<String> tooDifficult = const {}, Set<String>? adjusted, List<Exercise> extraPool = const []]) {
     final usedIds = <String>{};
     final main = <PlannedExercise>[];
 
     for (final slot in t.slots) {
-      final pool = ExerciseLibrary.all.where((e) => e.group == slot.group && r.allows(e) && !usedIds.contains(e.id)).toList();
+      final pool = [...ExerciseLibrary.all, ...extraPool].where((e) => e.group == slot.group && r.allows(e) && !usedIds.contains(e.id)).toList();
       if (pool.isEmpty) continue;
       for (final picked in selector.rank(pool, weekUsage: weekUsage).take(slot.count)) {
-        usedIds.add(picked.exercise.id);
-        weekUsage[picked.exercise.id] = (weekUsage[picked.exercise.id] ?? 0) + 1;
-        main.add(_prescribe(picked.exercise, intensity, maxHold: r.maxHoldSeconds).withReasons(picked.reasons));
+        var e = picked.exercise;
+        var lighter = false;
+        if (tooDifficult.contains(e.id)) {
+          // FR17.4: swap flagged exercise for an easier/equal one of the same group
+          final flagged = e;
+          final alternative = pool
+              .where((a) => !tooDifficult.contains(a.id) && a.level <= flagged.level && !usedIds.contains(a.id))
+              .firstOrNull;
+          if (alternative != null) {
+            e = alternative;
+            adjusted?.add('${flagged.name} → ${alternative.name}');
+          } else {
+            lighter = true;
+            adjusted?.add('${flagged.name} (lighter dose)');
+          }
+        }
+        usedIds.add(e.id);
+        weekUsage[e.id] = (weekUsage[e.id] ?? 0) + 1;
+        final planned = _withRules(_prescribe(e, intensity, maxHold: r.maxHoldSeconds).withReasons(picked.reasons), r);
+        main.add(lighter ? _lighter(planned) : planned);
       }
     }
 
@@ -257,20 +289,20 @@ class PlanGenerator {
       final eachSec = ((totalMin * 60 / steady.length) / 30).round() * 30;
       for (final s in steady) {
         final i = main.indexOf(s);
-        main[i] = PlannedExercise(exercise: s.exercise, sets: 1, reps: 0, seconds: eachSec, restSeconds: s.restSeconds, reasons: s.reasons);
+        main[i] = PlannedExercise(exercise: s.exercise, sets: 1, reps: 0, seconds: eachSec, restSeconds: s.restSeconds, reasons: s.reasons, ruleNotes: s.ruleNotes);
       }
     }
 
     if (r.includeBalance) {
       final balance = ExerciseLibrary.all.firstWhere((e) => e.id == 'single_leg_balance');
-      main.add(_prescribe(balance, intensity, maxHold: r.maxHoldSeconds).withReasons(const ['Balance training is recommended from age 65']));
+      main.add(_withRules(_prescribe(balance, intensity, maxHold: r.maxHoldSeconds).withReasons(const ['Balance training is recommended from age 65']), r));
     }
 
     // Cool-down: up to two static stretches for the body regions this session actually worked.
     final stretches = _cooldownStretches(main, r, selector, weekUsage);
 
-    final warm = _prescribe(ExerciseLibrary.warmUp, intensity);
-    final cool = _prescribe(ExerciseLibrary.coolDown, intensity);
+    final warm = _withRules(_prescribe(ExerciseLibrary.warmUp, intensity), r);
+    final cool = _withRules(_prescribe(ExerciseLibrary.coolDown, intensity), r);
 
     List<PlannedExercise> all() => [warm, ...main, ...stretches, cool];
     int minutes() => WorkoutDay(name: '', focus: '', exercises: all()).durationMin;
@@ -306,7 +338,7 @@ class PlanGenerator {
       if (overlap.every(covered.contains)) continue; // would only repeat a region already stretched
       covered.addAll(overlap);
       weekUsage[s.exercise.id] = (weekUsage[s.exercise.id] ?? 0) + 1;
-      out.add(_prescribe(s.exercise, 'Low').withReasons(['Stretches what you just worked: ${overlap.map(_regionLabel).join(', ')}']));
+      out.add(_withRules(_prescribe(s.exercise, 'Low').withReasons(['Stretches what you just worked: ${overlap.map(_regionLabel).join(', ')}']), r));
     }
     return out;
   }
@@ -363,6 +395,25 @@ class PlanGenerator {
     final scale = const [0.8, 1.0, 1.1][idx];
     return PlannedExercise(exercise: e, sets: sets, reps: (e.baseReps * scale).round(), seconds: 0, restSeconds: rest);
   }
+
+  /// Attaches the safety rules that shaped this exercise for this person (Module 4 explanations).
+  PlannedExercise _withRules(PlannedExercise p, PlanRestrictions r) {
+    final a = r.assessment;
+    if (a == null) return p;
+    final d = a.decide(p.exercise);
+    return d.notes.isEmpty ? p : p.withRuleNotes(d.notes);
+  }
+
+  /// One set fewer and about 30% fewer reps or seconds (never below 1 set).
+  PlannedExercise _lighter(PlannedExercise p) => PlannedExercise(
+        exercise: p.exercise,
+        sets: p.sets > 1 ? p.sets - 1 : 1,
+        reps: p.reps == 0 ? 0 : (p.reps * 0.7).round().clamp(1, p.reps),
+        seconds: p.seconds == 0 ? 0 : (((p.seconds * 0.7) / 5).round() * 5).clamp(5, p.seconds),
+        restSeconds: p.restSeconds,
+        reasons: p.reasons,
+        ruleNotes: p.ruleNotes,
+      );
 
   // --- FR-4 / FR-6: calories, macros and meals ------------------------------
 

@@ -1,136 +1,239 @@
 import 'package:flutter/material.dart';
-import '../../models/plan.dart';
+
+import '../../models/workout_session.dart';
+import '../../services/app_permissions.dart';
+import '../../services/posture/movement_patterns.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/notification_bell.dart';
-import '../../widgets/glass.dart';
 import 'camera_detection.dart';
 import 'manual_guidance.dart';
-import 'session_queue.dart';
+import 'widgets/safety_notes_card.dart';
 
-/// Choose how to be guided through a session: live camera (preview only in this version) or manual guidance.
+/// S-12: choose Camera Detection or Manual Guidance for one exercise.
+///
+/// INTEGRATION POINT (Workout Plan module): this is the entry to Modules 5/6.
+/// Push it with a [WorkoutSessionRequest] for the selected exercise.
 class PostureModeSelection extends StatefulWidget {
-  /// The exercises to walk through; empty means today's workout.
-  final List<PlannedExercise> queue;
-  final int startIndex;
-  const PostureModeSelection({Key? key, this.queue = const [], this.startIndex = 0}) : super(key: key);
+  final WorkoutSessionRequest request;
+  const PostureModeSelection({super.key, required this.request});
 
   @override
   State<PostureModeSelection> createState() => _PostureModeSelectionState();
 }
 
 class _PostureModeSelectionState extends State<PostureModeSelection> {
-  String _selectedMode = 'manual';
-  bool _cameraEnabled = false;
+  // Camera tracking follows the exercise's movement pattern; full form scoring only where the rules were tested.
+  late final ExercisePostureConfig _support = MovementPatterns.forSession(widget.request.exercise);
+  late final bool _cameraSupported = _support.supportsCameraTracking;
+  late SessionMode _selectedMode = _cameraSupported ? SessionMode.camera : SessionMode.manual;
 
-  Widget _buildModeCard(String id, IconData icon, String title, String desc, {String? badge}) {
-    final isSelected = _selectedMode == id;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 14),
-      child: Semantics(
-        selected: isSelected,
-        button: true,
-        label: title,
-        excludeSemantics: true,
-        child: Pressable(
-          radius: AppTheme.rLarge,
-          onTap: () => setState(() => _selectedMode = id),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 240),
-            curve: Curves.easeOutCubic,
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.white.withOpacity(0.92) : AppTheme.card,
-              borderRadius: BorderRadius.circular(AppTheme.rLarge),
-              border: Border.all(color: isSelected ? AppTheme.primary : Colors.white, width: isSelected ? 2 : 1.2),
-              boxShadow: isSelected ? AppTheme.glowShadow(blur: 26, opacity: 0.22, offset: const Offset(0, 10)) : AppTheme.softShadow(),
+  // Consent is off until the user gives it (report FR15.3).
+  bool _cameraConsent = false;
+  bool _requesting = false;
+
+  Future<void> _continue() async {
+    if (_selectedMode == SessionMode.manual) {
+      await Navigator.push(context, MaterialPageRoute(builder: (_) => ManualGuidance(request: widget.request)));
+      return;
+    }
+    if (!_cameraConsent) {
+      _showMessage('Turn on "I agree to enable camera access" to use Camera Detection, or choose Manual Guidance.');
+      return;
+    }
+    setState(() => _requesting = true);
+    final outcome = await AppPermissions.instance.requestCamera();
+    if (!mounted) return;
+    setState(() => _requesting = false);
+    if (outcome == PermissionOutcome.granted) {
+      await Navigator.push(context, MaterialPageRoute(builder: (_) => CameraDetection(request: widget.request)));
+    } else {
+      await _showPermissionDenied(outcome == PermissionOutcome.permanentlyDenied);
+    }
+  }
+
+  void _showMessage(String text) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(text)));
+  }
+
+  Future<void> _showPermissionDenied(bool permanently) {
+    return showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Camera access needed'),
+        content: Text(
+          permanently
+              ? 'Camera access is turned off for Baymax. You can enable it in Settings, or continue with Manual Guidance, which does not use the camera.'
+              : 'Camera Detection cannot start without camera permission. You can continue with Manual Guidance, which does not use the camera.',
+        ),
+        actions: [
+          if (permanently)
+            TextButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                AppPermissions.instance.openSettings();
+              },
+              child: const Text('Open Settings'),
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                IconWell(icon: icon, size: 50, filled: isSelected),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        Flexible(child: Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.3))),
-                        if (badge != null) ...[const SizedBox(width: 8), InfoChip(badge, color: AppTheme.warning)],
-                      ]),
-                      const SizedBox(height: 4),
-                      Text(desc, style: const TextStyle(color: AppTheme.textSecondary, height: 1.4, fontSize: 13.5, fontWeight: FontWeight.w500)),
-                    ],
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              setState(() => _selectedMode = SessionMode.manual);
+            },
+            child: const Text('Use Manual Guidance'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModeCard(SessionMode mode, String icon, String title, String desc, {bool enabled = true}) {
+    final isSelected = _selectedMode == mode;
+    return Opacity(
+      opacity: enabled ? 1 : 0.55,
+      child: GestureDetector(
+        onTap: enabled ? () => setState(() => _selectedMode = mode) : null,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 14),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppTheme.card,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: isSelected ? AppTheme.primary : AppTheme.border, width: 2),
+            boxShadow: isSelected
+                ? [BoxShadow(color: AppTheme.primary.withValues(alpha: 0.15), blurRadius: 20, offset: const Offset(0, 4))]
+                : null,
+          ),
+          child: Stack(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppTheme.primaryLight : AppTheme.background,
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(icon, style: const TextStyle(fontSize: 22)),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(title,
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+                          const SizedBox(height: 4),
+                          Text(desc, style: const TextStyle(color: AppTheme.textSecondary, height: 1.4, fontSize: 13)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              if (isSelected)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                    width: 26,
+                    height: 26,
+                    decoration: const BoxDecoration(color: AppTheme.primary, shape: BoxShape.circle),
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.check, color: Colors.white, size: 16),
                   ),
                 ),
-                const SizedBox(width: 8),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(isSelected ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-                      key: ValueKey(isSelected), color: isSelected ? AppTheme.primary : AppTheme.border),
-                ),
-              ],
-            ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  void _continue() {
-    final queue = widget.queue.isNotEmpty ? widget.queue : defaultSessionQueue();
-    final start = widget.queue.isNotEmpty ? widget.startIndex : 0;
-    if (_selectedMode == 'camera') {
-      if (!_cameraEnabled) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Turn on camera access below to preview camera detection.')));
-        return;
-      }
-      Navigator.push(context, MaterialPageRoute(builder: (_) => CameraDetection(queue: queue, startIndex: start)));
-    } else {
-      if (queue.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('There is no workout to guide you through yet. Complete your health profile first.')));
-        return;
-      }
-      Navigator.push(context, MaterialPageRoute(builder: (_) => ManualGuidance(queue: queue, startIndex: start)));
-    }
-  }
+  String _cameraDescription(String name) => switch (_support.level) {
+        CameraSupportLevel.validatedForm ||
+        CameraSupportLevel.experimentalForm =>
+          'Track posture using live camera for real-time adjustments and analysis.',
+        CameraSupportLevel.basicTracking => _support.supportsHoldTiming
+            ? 'Basic tracking: times your hold while the camera sees you in position. Form is not scored for this exercise.'
+            : 'Basic tracking: counts your repetitions from your ${_support.movementPattern.measures} with the live camera. '
+                'Form is not scored for this exercise.',
+        CameraSupportLevel.notSupported => 'Camera tracking is not available for $name: ${_support.unsupportedReason} Use Manual Guidance.',
+      };
 
   @override
   Widget build(BuildContext context) {
+    final exercise = widget.request.exercise;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose guidance'),
-        actions: [
-          const NotificationBell(),
-          const SizedBox(width: 4),
-        ],
+        title: const Text('Select Mode', style: TextStyle(fontSize: 16)),
+        centerTitle: true,
+        actions: const [NotificationBell(), SizedBox(width: 8)],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 4, 20, 32),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('How would you like to be guided?', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: AppTheme.textPrimary, letterSpacing: -0.7, height: 1.2)),
-            const SizedBox(height: 18),
-            Reveal(child: _buildModeCard('manual', Icons.self_improvement_rounded, 'Manual guidance', 'Step-by-step cues, a timer and set counter for each exercise in your plan.')),
-            Reveal(
-              index: 1,
-              child: _buildModeCard('camera', Icons.videocam_rounded, 'Camera detection', 'Real-time posture tracking with your camera. A preview only in this version.', badge: 'Preview'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+              child: Row(
+                children: [
+                  Text(exercise.icon, style: const TextStyle(fontSize: 22)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      '${exercise.name} · ${exercise.targetLabel}',
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.textPrimary),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            Reveal(
-              index: 2,
-              child: GlassCard(
+            SafetyNotesCard(exercise.safetyNotes),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 6),
+              child: Column(
+                children: [
+                  _buildModeCard(
+                    SessionMode.camera,
+                    '📷',
+                    'Camera Detection',
+                    _cameraDescription(exercise.name),
+                    enabled: _cameraSupported,
+                  ),
+                  _buildModeCard(
+                    SessionMode.manual,
+                    '🏃',
+                    'Manual Guidance',
+                    'Follow guided exercises with visual cues without active camera tracking.',
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(color: AppTheme.card, borderRadius: BorderRadius.circular(16)),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const IconWell(icon: Icons.lock_rounded, color: AppTheme.teal, size: 38),
+                    const Text('ℹ️', style: TextStyle(fontSize: 20)),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: Text.rich(
-                        const TextSpan(
-                          style: TextStyle(color: AppTheme.textSecondary, fontSize: 13.5, height: 1.45, fontWeight: FontWeight.w500),
+                      child: RichText(
+                        text: const TextSpan(
+                          style: TextStyle(color: AppTheme.textSecondary, fontSize: 13, height: 1.4),
                           children: [
-                            TextSpan(text: 'When camera analysis is available, video will be processed '),
-                            TextSpan(text: 'locally on your device', style: TextStyle(fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+                            TextSpan(text: 'Camera data is processed '),
+                            TextSpan(
+                                text: 'locally on your device',
+                                style: TextStyle(fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
                             TextSpan(text: ' and never stored or sent to our servers.'),
                           ],
                         ),
@@ -140,19 +243,42 @@ class _PostureModeSelectionState extends State<PostureModeSelection> {
                 ),
               ),
             ),
-            if (_selectedMode == 'camera')
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: SwitchListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-                  title: const Text('Enable camera access', style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
-                  value: _cameraEnabled,
-                  onChanged: (val) => setState(() => _cameraEnabled = val),
-                ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'I agree to enable camera access',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: _cameraSupported ? AppTheme.textPrimary : AppTheme.textSecondary,
+                      ),
+                    ),
+                  ),
+                  Switch(
+                    key: const Key('cameraConsent'),
+                    value: _cameraConsent,
+                    onChanged: _cameraSupported ? (val) => setState(() => _cameraConsent = val) : null,
+                  ),
+                ],
               ),
-            const SizedBox(height: 18),
-            GlowButton(icon: Icons.arrow_forward_rounded, label: 'Continue', onPressed: _continue),
-            Center(child: TextButton(onPressed: () => Navigator.pop(context), child: const Text('Skip for now', style: TextStyle(color: AppTheme.textSecondary)))),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: ElevatedButton(
+                onPressed: _requesting ? null : _continue,
+                child: const Text('Continue'),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Skip for now', style: TextStyle(color: AppTheme.textSecondary)),
+              ),
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),

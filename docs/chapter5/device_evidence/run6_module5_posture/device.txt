@@ -1,0 +1,9 @@
+started: 2026-10-18T17:52:08+05:00
+target: integration_test/module5_posture_test.dart
+command: flutter drive --driver=test_driver/integration_test.dart --target=integration_test/module5_posture_test.dart -d f3fd6781 --keep-app-running
+device: f3fd6781 model=2201117TG android=13 sdk=33 miui=V816
+Flutter 3.47.7 • channel stable • https://github.com/flutter/flutter.git
+Framework • revision abaf9c5237 (10 days ago) • 2026-10-08 09:51:21 -0700
+Engine • hash d8a2d6c768c334d53e16277f837970ffa1e2de81 (revision deb287481e) (10 days ago) • 2026-10-07 17:09:12.000Z
+Tools • Dart 3.13.5 • DevTools 2.60.0
+finished: 2026-10-18T17:56:10+05:00

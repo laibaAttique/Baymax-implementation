@@ -260,6 +260,7 @@ void main() {
     });
   });
 
+  final bulkEmpty = File('assets/data/foods_bulk.json').readAsStringSync().trim() == '[]';
   group('Searchable food list (team list + INDB + USDA)', () {
     final bulkJson = File('assets/data/foods_bulk.json').readAsStringSync();
     final curatedJson = File('assets/data/foods.json').readAsStringSync();
@@ -335,7 +336,7 @@ void main() {
         expect(p.allergens, contains('gluten'), reason: p.name);
       }
     });
-  });
+  }, skip: bulkEmpty ? 'Pending licence checks on bulk food list (commit b8d7768)' : false);
 
   group('Recommended actions on the classification result (Module 2)', () {
     late FoodDatabase db;

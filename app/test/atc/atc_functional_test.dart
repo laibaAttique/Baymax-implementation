@@ -39,6 +39,7 @@ import 'package:app/services/payment_gateway.dart';
 import 'package:app/services/payment_service.dart';
 import 'package:app/services/progress_service.dart';
 import 'package:app/services/user_session.dart';
+import 'package:app/models/workout_readiness.dart';
 import 'package:app/services/xp_service.dart';
 import 'package:app/theme/app_theme.dart';
 import 'package:app/widgets/glass.dart';
@@ -157,6 +158,9 @@ void main() {
         });
     atcWidget('ATC-M4-F01', req: 'M4-FR5', objective: 'A cardiac workout plan shows the category, warm-up, and a rest day when a day is tapped', input: 'Profile with "Heart Disease"; tap Sunday',
         expected: 'Title, "Cardiac", "Dynamic Warm-Up"; Sunday says rest day', run: (t) async {
+          // Module 4 screening: a heart condition needs the readiness answers with a doctor's clearance first
+          // (blocked case: ATC-M4-F02 and test/screens_test.dart).
+          UserSession.instance.readiness = const WorkoutReadiness(clearance: true);
           await session(t, _profile(conditions: ['Heart Disease']));
           await _pump(t, const WorkoutPlan());
           final head = find.text('Your workout plan').evaluate().length;
@@ -166,6 +170,15 @@ void main() {
           await t.pumpAndSettle();
           final rest = find.textContaining('rest day').evaluate().length;
           return check(head == 1 && cat == 1 && warm > 0 && rest == 1, 'Title $head, category label $cat, warm-up $warm, rest-day text $rest');
+        });
+    atcWidget('ATC-M4-F02', req: 'M4-FR1', objective: 'A heart condition without clearance from a doctor gets no automatic plan, and the reason is shown', input: 'Profile with "Heart Disease"; readiness: clearance "No"',
+        expected: 'The clearance message, no warm-up listed', run: (t) async {
+          UserSession.instance.readiness = const WorkoutReadiness(clearance: false);
+          await session(t, _profile(conditions: ['Heart Disease']));
+          await _pump(t, const WorkoutPlan());
+          final gate = find.textContaining('clearance comes first').evaluate().length;
+          final warm = find.text('Dynamic Warm-Up').evaluate().length;
+          return check(gate == 1 && warm == 0, 'Clearance message $gate, warm-up items $warm');
         });
     atcWidget('ATC-M9-F01', req: 'M9-FR6', objective: 'The nutrition plan shows the calorie target and lists the user\'s allergen foods under "avoid"', input: 'Profile with Dairy and Nuts allergies',
         expected: 'The target number and "Dairy products" on screen', run: (t) async {

@@ -1,0 +1,253 @@
+{
+  "base_elements": 356,
+  "new_elements": 399,
+  "problems": [],
+  "changed_cells": [
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 1,
+      "col": 2,
+      "old": "105",
+      "new": "156"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 1,
+      "col": 3,
+      "old": "105",
+      "new": "156"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 2,
+      "col": 2,
+      "old": "73",
+      "new": "115"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 2,
+      "col": 3,
+      "old": "73",
+      "new": "114"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 2,
+      "col": 5,
+      "old": "0",
+      "new": "1"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 3,
+      "col": 2,
+      "old": "84",
+      "new": "124"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 3,
+      "col": 3,
+      "old": "84",
+      "new": "124"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 4,
+      "col": 2,
+      "old": "27",
+      "new": "41"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 4,
+      "col": 3,
+      "old": "27",
+      "new": "40"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 4,
+      "col": 5,
+      "old": "0",
+      "new": "1"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 5,
+      "col": 2,
+      "old": "289",
+      "new": "436"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 5,
+      "col": 3,
+      "old": "289",
+      "new": "434"
+    },
+    {
+      "table": "Table 5.1  Summary of the automated test cases",
+      "row": 5,
+      "col": 5,
+      "old": "0",
+      "new": "2"
+    },
+    {
+      "table": "Table 5.31  Execution results (from the latest run)",
+      "row": 1,
+      "col": 1,
+      "old": "203",
+      "new": "326"
+    },
+    {
+      "table": "Table 5.31  Execution results (from the latest run)",
+      "row": 1,
+      "col": 2,
+      "old": "203",
+      "new": "326"
+    },
+    {
+      "table": "Table 5.31  Execution results (from the latest run)",
+      "row": 4,
+      "col": 1,
+      "old": "289",
+      "new": "412"
+    },
+    {
+      "table": "Table 5.31  Execution results (from the latest run)",
+      "row": 4,
+      "col": 2,
+      "old": "289",
+      "new": "412"
+    }
+  ],
+  "base_elements_found_in_order": 356,
+  "table_5_1": [
+    [
+      "Type",
+      "Section",
+      "Test cases",
+      "Passed",
+      "Failed",
+      "Not run"
+    ],
+    [
+      "Unit",
+      "5.1",
+      "156",
+      "156",
+      "0",
+      "0"
+    ],
+    [
+      "Functional",
+      "5.2",
+      "115",
+      "114",
+      "0",
+      "1"
+    ],
+    [
+      "Business rules (decision tables)",
+      "5.3",
+      "124",
+      "124",
+      "0",
+      "0"
+    ],
+    [
+      "Integration",
+      "5.4",
+      "41",
+      "40",
+      "0",
+      "1"
+    ],
+    [
+      "Total",
+      "",
+      "436",
+      "434",
+      "0",
+      "2"
+    ]
+  ],
+  "table_5_31": [
+    [
+      "Framework",
+      "Automated tests executed",
+      "Passed",
+      "Failed",
+      "Not run"
+    ],
+    [
+      "Flutter test (Dart)",
+      "326",
+      "326",
+      "0",
+      "0"
+    ],
+    [
+      "Node test (API)",
+      "66",
+      "66",
+      "0",
+      "0"
+    ],
+    [
+      "Node test + Firebase emulator",
+      "20",
+      "20",
+      "0",
+      "0"
+    ],
+    [
+      "Total",
+      "412",
+      "412",
+      "0",
+      "0"
+    ]
+  ],
+  "base_test_ids": 412,
+  "base_test_ids_missing": [],
+  "new_test_ids": [
+    "ATC-DEV-INT-01",
+    "ATC-DEV-INT-02",
+    "ATC-DEV-INT-03",
+    "ATC-DEV-M4-01",
+    "ATC-DEV-M4-02",
+    "ATC-DEV-M4-03",
+    "ATC-DEV-M4-04",
+    "ATC-DEV-M4-05",
+    "ATC-DEV-M4-06",
+    "ATC-DEV-M4-07",
+    "ATC-DEV-M5-01",
+    "ATC-DEV-M5-02",
+    "ATC-DEV-M5-03",
+    "ATC-DEV-M5-04",
+    "ATC-DEV-M5-05",
+    "ATC-DEV-M5-06",
+    "ATC-DEV-M5-07",
+    "ATC-DEV-M5-08",
+    "ATC-DEV-M5-09",
+    "ATC-DEV-M6-01",
+    "ATC-DEV-M6-02",
+    "ATC-DEV-M6-03",
+    "ATC-DEV-M6-04",
+    "ATC-DEV-S01"
+  ],
+  "table_numbers": "62 captions, 5.1–5.62",
+  "figure_numbers": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5"
+  ],
+  "base_sha256": "24b8660b711abe6308b69534d222bc5a32a503ad85909f519fdacb3abfbf0168",
+  "downloads_base_unchanged": true,
+  "ok": true
+}

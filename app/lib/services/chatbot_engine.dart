@@ -472,6 +472,8 @@ class ChatbotEngine {
     final plan = ctx.plan;
     final p = ctx.profile;
     if (plan == null || p == null) return _needsProfile('workout_today');
+    final blocked = _workoutBlocked(plan, 'workout_today');
+    if (blocked != null) return blocked;
     final day = plan.workoutFor(ctx.now);
     if (day == null) {
       return const ChatReply('Today is a rest day. A relaxed walk and some stretching are great for recovery.', 'workout_today',
@@ -493,9 +495,21 @@ class ChatbotEngine {
     );
   }
 
+  /// Module 4: when the safety screening stopped the plan, say why instead of listing rest days.
+  ChatReply? _workoutBlocked(PersonalizedPlan plan, String intent) {
+    if (plan.workoutAvailable) return null;
+    return ChatReply(
+      'There is no workout plan yet: ${plan.gate!.reasons.join(' ')}',
+      intent,
+      actions: const [ChatAction('workout', 'Open Workout')],
+    );
+  }
+
   ChatReply _workoutWeek(ChatContext ctx) {
     final plan = ctx.plan;
     if (plan == null) return _needsProfile('workout_plan');
+    final blocked = _workoutBlocked(plan, 'workout_plan');
+    if (blocked != null) return blocked;
     const names = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     final lines = [
       for (var i = 0; i < 7; i++) '${names[i]}: ${plan.week[i]?.name ?? 'Rest'}',
@@ -878,7 +892,7 @@ class ChatbotEngine {
     }
     final day = plan.workoutFor(ctx.now);
     final done = ctx.history.progress?.days.last.workoutDone ?? false;
-    parts.add(day == null ? 'rest day' : '${day.name}${done ? ' (done)' : ''}');
+    parts.add(!plan.workoutAvailable ? 'no workout plan until the safety questions are resolved' : (day == null ? 'rest day' : '${day.name}${done ? ' (done)' : ''}'));
     return 'Today so far: ${parts.join(', ')}.';
   }
 

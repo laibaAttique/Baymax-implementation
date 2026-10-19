@@ -1,0 +1,533 @@
+Exercise,Id,Source,Movement Pattern,Camera Support,Form Checks,Manual Support,Missing Capability
+Ab Crunch Machine,Ab_Crunch_Machine,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Advanced Kettlebell Windmill,Advanced_Kettlebell_Windmill,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Alternate Hammer Curl,Alternate_Hammer_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Alternate Incline Dumbbell Curl,Alternate_Incline_Dumbbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Alternating Cable Shoulder Press,Alternating_Cable_Shoulder_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Alternating Deltoid Raise,Alternating_Deltoid_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Alternating Floor Press,Alternating_Floor_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Alternating Hang Clean,Alternating_Hang_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Alternating Kettlebell Press,Alternating_Kettlebell_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Alternating Kettlebell Row,Alternating_Kettlebell_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Ankle Circles,ankle_circles,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Anti-Gravity Press,Anti-Gravity_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Arm Circles,arm_circles,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Arnold Dumbbell Press,Arnold_Dumbbell_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Around The Worlds,Around_The_Worlds,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Back Flyes - With Bands,Back_Flyes_-_With_Bands,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Backward Medicine Ball Throw,Backward_Medicine_Ball_Throw,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Ball Leg Curl,Ball_Leg_Curl,free-exercise-db,Leg curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Band Hip Adductions,Band_Hip_Adductions,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Band Pull Apart,Band_Pull_Apart,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Band Skull Crusher,Band_Skull_Crusher,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Barbell Ab Rollout,Barbell_Ab_Rollout,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Barbell Bench Press - Medium Grip,Barbell_Bench_Press_-_Medium_Grip,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Barbell Curl,Barbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Barbell Curls Lying Against An Incline,Barbell_Curls_Lying_Against_An_Incline,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Barbell Deadlift,Barbell_Deadlift,free-exercise-db,Hip hinge,Experimental posture evaluation,Hip hinge,Yes,Real-device validation of the form checks
+Barbell Full Squat,Barbell_Full_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Barbell Guillotine Bench Press,Barbell_Guillotine_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Barbell Hack Squat,Barbell_Hack_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Barbell Incline Bench Press - Medium Grip,Barbell_Incline_Bench_Press_-_Medium_Grip,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Barbell Incline Shoulder Raise,Barbell_Incline_Shoulder_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Barbell Lunge,Barbell_Lunge,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Barbell Rear Delt Row,Barbell_Rear_Delt_Row,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Barbell Rollout from Bench,Barbell_Rollout_from_Bench,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Barbell Seated Calf Raise,Barbell_Seated_Calf_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Barbell Shoulder Press,Barbell_Shoulder_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Barbell Shrug,Barbell_Shrug,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Barbell Shrug Behind The Back,Barbell_Shrug_Behind_The_Back,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Barbell Side Bend,Barbell_Side_Bend,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Barbell Side Split Squat,Barbell_Side_Split_Squat,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Barbell Squat,Barbell_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Barbell Step Ups,Barbell_Step_Ups,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: locomotion
+Barbell Walking Lunge,Barbell_Walking_Lunge,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: locomotion
+Bench Press - With Bands,Bench_Press_-_With_Bands,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Bent Over Barbell Row,Bent_Over_Barbell_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Bent Over Dumbbell Rear Delt Raise With Head On Bench,Bent_Over_Dumbbell_Rear_Delt_Raise_With_Head_On_Bench,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Bent Over Low-Pulley Side Lateral,Bent_Over_Low-Pulley_Side_Lateral,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Bent Over One-Arm Long Bar Row,Bent_Over_One-Arm_Long_Bar_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Bent Over Two-Arm Long Bar Row,Bent_Over_Two-Arm_Long_Bar_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Bent Over Two-Dumbbell Row,Bent_Over_Two-Dumbbell_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Bent Over Two-Dumbbell Row With Palms In,Bent_Over_Two-Dumbbell_Row_With_Palms_In,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Bent-Arm Barbell Pullover,Bent-Arm_Barbell_Pullover,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Bent-Arm Dumbbell Pullover,Bent-Arm_Dumbbell_Pullover,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Bent-Knee Leg Lift,hip_raise_bent_knee,curated,Leg raise,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Bicycle Crunch,bicycle_crunch,curated,—,Not reliably supported,,Yes,Camera tracking: rotation
+"Bicycling, Stationary",Bicycling_Stationary,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+Bird Dog,bird_dog,curated,Single-leg hip extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Bodyweight Flyes,Bodyweight_Flyes,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Bodyweight Squat,squat,curated,Squat,Validated posture evaluation,Back alignment; Knee tracking,Yes,
+Bosu Ball Cable Crunch With Side Bends,Bosu_Ball_Cable_Crunch_With_Side_Bends,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Both Knees to Chest,hug_knees,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Bottoms-Up Clean From The Hang Position,Bottoms-Up_Clean_From_The_Hang_Position,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Bradford/Rocky Presses,Bradford_Rocky_Presses,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Brisk Walk,brisk_walk,curated,—,Not reliably supported,,Yes,Camera tracking: locomotion
+Burpees,burpees,curated,—,Not reliably supported,,Yes,Camera tracking: complex
+Butterfly,Butterfly,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cable Chest Press,Cable_Chest_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Cable Crossover,Cable_Crossover,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cable Crunch,Cable_Crunch,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cable Deadlifts,Cable_Deadlifts,free-exercise-db,Hip hinge,Experimental posture evaluation,Hip hinge,Yes,Real-device validation of the form checks
+Cable Hammer Curls - Rope Attachment,Cable_Hammer_Curls_-_Rope_Attachment,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Cable Hip Adduction,Cable_Hip_Adduction,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cable Incline Pushdown,Cable_Incline_Pushdown,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Cable Incline Triceps Extension,Cable_Incline_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Cable Internal Rotation,Cable_Internal_Rotation,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Cable Iron Cross,Cable_Iron_Cross,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Cable Judo Flip,Cable_Judo_Flip,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Cable Lying Triceps Extension,Cable_Lying_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Cable One Arm Tricep Extension,Cable_One_Arm_Tricep_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Cable Preacher Curl,Cable_Preacher_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Cable Rear Delt Fly,Cable_Rear_Delt_Fly,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cable Reverse Crunch,Cable_Reverse_Crunch,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cable Rope Overhead Triceps Extension,Cable_Rope_Overhead_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Cable Rope Rear-Delt Rows,Cable_Rope_Rear-Delt_Rows,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Cable Russian Twists,Cable_Russian_Twists,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Cable Seated Crunch,Cable_Seated_Crunch,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cable Seated Lateral Raise,Cable_Seated_Lateral_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Cable Shoulder Press,Cable_Shoulder_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Cable Shrugs,Cable_Shrugs,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cable Wrist Curl,Cable_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Calf Press,Calf_Press,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Calf Press On The Leg Press Machine,Calf_Press_On_The_Leg_Press_Machine,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Calf Raise On A Dumbbell,Calf_Raise_On_A_Dumbbell,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Calf Raises,calf_raise,curated,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Calf Raises - With Bands,Calf_Raises_-_With_Bands,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Calf Stretch at the Wall,calf_stretch_wall,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Calf-Machine Shoulder Shrug,Calf-Machine_Shoulder_Shrug,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Car Drivers,Car_Drivers,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Cat-Cow,cat_cow,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Catch and Overhead Throw,Catch_and_Overhead_Throw,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Chair Dips,tricep_dip,curated,Dip,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Chair Squat,Chair_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Chest Push (multiple response),Chest_Push_multiple_response,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Chest Push (single response),Chest_Push_single_response,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Chest Push from 3 point stance,Chest_Push_from_3_point_stance,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Chest Push with Run Release,Chest_Push_with_Run_Release,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Chest Stretch on Stability Ball,Chest_Stretch_on_Stability_Ball,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: stretch
+Child's Pose,childs_pose,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Clean and Press,Clean_and_Press,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Close-Grip Barbell Bench Press,Close-Grip_Barbell_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Close-Grip Dumbbell Press,Close-Grip_Dumbbell_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Close-Grip EZ Bar Curl,Close-Grip_EZ_Bar_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Close-Grip EZ-Bar Curl with Band,Close-Grip_EZ-Bar_Curl_with_Band,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Close-Grip EZ-Bar Press,Close-Grip_EZ-Bar_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Close-Grip Front Lat Pulldown,Close-Grip_Front_Lat_Pulldown,free-exercise-db,Vertical pull,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Close-Grip Standing Barbell Curl,Close-Grip_Standing_Barbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Close-Hand Incline Push-Up,incline_pushup_close,curated,Push-up,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Close-Hand Push-Up,pushup_close,curated,Push-up,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Concentration Curls,Concentration_Curls,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Cross Body Hammer Curl,Cross_Body_Hammer_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Cross Over - With Bands,Cross_Over_-_With_Bands,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Cross-Body Crunch,cross_body_crunch,curated,—,Not reliably supported,,Yes,Camera tracking: rotation
+Cross-Body Shoulder Stretch,shoulder_cross_stretch,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Crunch,crunch,curated,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Cuban Press,Cuban_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Dead Bug,dead_bug,curated,Single-leg hip extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Decline Barbell Bench Press,Decline_Barbell_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Decline Close-Grip Bench To Skull Crusher,Decline_Close-Grip_Bench_To_Skull_Crusher,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Decline Dumbbell Bench Press,Decline_Dumbbell_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Decline Dumbbell Flyes,Decline_Dumbbell_Flyes,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Decline Dumbbell Triceps Extension,Decline_Dumbbell_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Decline EZ Bar Triceps Extension,Decline_EZ_Bar_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Decline Smith Press,Decline_Smith_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Dip Machine,Dip_Machine,free-exercise-db,Dip,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Double Kettlebell Alternating Hang Clean,Double_Kettlebell_Alternating_Hang_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Double Kettlebell Jerk,Double_Kettlebell_Jerk,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Double Kettlebell Push Press,Double_Kettlebell_Push_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Double Kettlebell Windmill,Double_Kettlebell_Windmill,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Downward Facing Balance,Downward_Facing_Balance,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Drag Curl,Drag_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Alternate Bicep Curl,Dumbbell_Alternate_Bicep_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Bench Press,Dumbbell_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Bench Press with Neutral Grip,Dumbbell_Bench_Press_with_Neutral_Grip,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Bicep Curl,Dumbbell_Bicep_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Clean,Dumbbell_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Dumbbell Flyes,Dumbbell_Flyes,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Dumbbell Incline Row,Dumbbell_Incline_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Incline Shoulder Raise,Dumbbell_Incline_Shoulder_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Dumbbell Lunges,Dumbbell_Lunges,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Dumbbell Lying One-Arm Rear Lateral Raise,Dumbbell_Lying_One-Arm_Rear_Lateral_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Dumbbell Lying Pronation,Dumbbell_Lying_Pronation,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Dumbbell Lying Rear Lateral Raise,Dumbbell_Lying_Rear_Lateral_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Dumbbell Lying Supination,Dumbbell_Lying_Supination,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Dumbbell One-Arm Shoulder Press,Dumbbell_One-Arm_Shoulder_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Dumbbell One-Arm Triceps Extension,Dumbbell_One-Arm_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Dumbbell One-Arm Upright Row,Dumbbell_One-Arm_Upright_Row,free-exercise-db,Upright row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Prone Incline Curl,Dumbbell_Prone_Incline_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Raise,Dumbbell_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Dumbbell Rear Lunge,Dumbbell_Rear_Lunge,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Dumbbell Scaption,Dumbbell_Scaption,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Dumbbell Seated Box Jump,Dumbbell_Seated_Box_Jump,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Dumbbell Seated One-Leg Calf Raise,Dumbbell_Seated_One-Leg_Calf_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Dumbbell Shoulder Press,Dumbbell_Shoulder_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Dumbbell Shrug,Dumbbell_Shrug,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Dumbbell Side Bend,Dumbbell_Side_Bend,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Dumbbell Squat,Dumbbell_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Dumbbell Squat To A Bench,Dumbbell_Squat_To_A_Bench,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Dumbbell Step Ups,Dumbbell_Step_Ups,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: locomotion
+Dumbbell Tricep Extension -Pronated Grip,Dumbbell_Tricep_Extension_-Pronated_Grip,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Elevated Back Lunge,Elevated_Back_Lunge,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Elevated Cable Rows,Elevated_Cable_Rows,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Elliptical Trainer,Elliptical_Trainer,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+Exercise Ball Crunch,Exercise_Ball_Crunch,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Exercise Ball Pull-In,Exercise_Ball_Pull-In,free-exercise-db,Knee tuck,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Extended Range One-Arm Kettlebell Floor Press,Extended_Range_One-Arm_Kettlebell_Floor_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+External Rotation,External_Rotation,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+External Rotation with Band,External_Rotation_with_Band,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+External Rotation with Cable,External_Rotation_with_Cable,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+EZ-Bar Curl,EZ-Bar_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+EZ-Bar Skullcrusher,EZ-Bar_Skullcrusher,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Face Pull,Face_Pull,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Finger Curls,Finger_Curls,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Flat Bench Cable Flyes,Flat_Bench_Cable_Flyes,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Flexor Incline Dumbbell Curls,Flexor_Incline_Dumbbell_Curls,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Front Cable Raise,Front_Cable_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Front Dumbbell Raise,Front_Dumbbell_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Front Incline Dumbbell Raise,Front_Incline_Dumbbell_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Front Raise And Pullover,Front_Raise_And_Pullover,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Front Squat (Clean Grip),Front_Squat_Clean_Grip,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Front Squats With Two Kettlebells,Front_Squats_With_Two_Kettlebells,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Front Two-Dumbbell Raise,Front_Two-Dumbbell_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Full Range-Of-Motion Lat Pulldown,Full_Range-Of-Motion_Lat_Pulldown,free-exercise-db,Vertical pull,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Glute Bridge,glute_bridge,curated,Hip extension,Experimental posture evaluation,Foot position,Yes,Real-device validation of the form checks
+Goblet Squat,Goblet_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Hack Squat,Hack_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Hammer Curls,Hammer_Curls,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Hammer Grip Incline DB Bench Press,Hammer_Grip_Incline_DB_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Heel Touches,heel_touches,curated,—,Not reliably supported,,Yes,Camera tracking: rotation
+High Cable Curls,High_Cable_Curls,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+High Knees,high_knees,curated,Knee lift,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Hip Extension with Bands,Hip_Extension_with_Bands,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Hip Flexion with Band,Hip_Flexion_with_Band,free-exercise-db,Knee lift,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Hug A Ball,Hug_A_Ball,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: stretch
+Inchworm,inchworm,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Incline Barbell Triceps Extension,Incline_Barbell_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Incline Bench Pull,Incline_Bench_Pull,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Incline Cable Chest Press,Incline_Cable_Chest_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Incline Cable Flye,Incline_Cable_Flye,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Incline Dumbbell Bench With Palms Facing In,Incline_Dumbbell_Bench_With_Palms_Facing_In,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Incline Dumbbell Curl,Incline_Dumbbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Incline Dumbbell Flyes,Incline_Dumbbell_Flyes,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Incline Dumbbell Flyes - With A Twist,Incline_Dumbbell_Flyes_-_With_A_Twist,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Incline Dumbbell Press,Incline_Dumbbell_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Incline Hammer Curls,Incline_Hammer_Curls,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Incline Inner Biceps Curl,Incline_Inner_Biceps_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Incline Push-Up,incline_pushup,curated,Push-up,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Internal Rotation with Band,Internal_Rotation_with_Band,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Jefferson Squats,Jefferson_Squats,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+JM Press,JM_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+"Jogging, Treadmill",Jogging_Treadmill,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+Jump Squats,jump_squats,curated,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Jumping Jacks,jumping_jacks,curated,Jumping jack,Experimental posture evaluation,Arm and leg timing,Yes,Real-device validation of the form checks
+Jumping Lunge,split_jump,curated,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Kettlebell Arnold Press,Kettlebell_Arnold_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Kettlebell Dead Clean,Kettlebell_Dead_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Kettlebell Figure 8,Kettlebell_Figure_8,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Kettlebell Halo,Kettlebell_Halo,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Kettlebell Halo with Overhead Extension,Kettlebell_Halo_With_Overhead_Extension,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Kettlebell Hang Clean,Kettlebell_Hang_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Kettlebell One-Legged Deadlift,Kettlebell_One-Legged_Deadlift,free-exercise-db,Hip hinge,Experimental posture evaluation,Hip hinge,Yes,Real-device validation of the form checks
+Kettlebell Overhead Triceps Extension,Kettlebell_Overhead_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Kettlebell Pass Between The Legs,Kettlebell_Pass_Between_The_Legs,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Kettlebell Pirate Ships,Kettlebell_Pirate_Ships,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Kettlebell Seated Press,Kettlebell_Seated_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Kettlebell Seesaw Press,Kettlebell_Seesaw_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Kettlebell Sumo High Pull,Kettlebell_Sumo_High_Pull,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Kettlebell Thruster,Kettlebell_Thruster,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Kettlebell Turkish Get-Up (Lunge style),Kettlebell_Turkish_Get-Up_Lunge_style,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Kettlebell Turkish Get-Up (Squat style),Kettlebell_Turkish_Get-Up_Squat_style,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Kettlebell Windmill,Kettlebell_Windmill,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Knee Push-Up,knee_pushup,curated,Push-up,Validated posture evaluation,Body line,Yes,
+Knee Side Plank,side_plank_knee,curated,Plank hold,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Kneeling Cable Crunch With Alternating Oblique Twists,Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Kneeling Cable Triceps Extension,Kneeling_Cable_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Kneeling Glute Kickback,glute_kickback,curated,Single-leg hip extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Kneeling High Pulley Row,Kneeling_High_Pulley_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Kneeling Hip Flexor Stretch,kneeling_hip_flexor,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Kneeling Single-Arm High Pulley Row,Kneeling_Single-Arm_High_Pulley_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Landmine 180's,Landmine_180s,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Landmine Linear Jammer,Landmine_Linear_Jammer,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Lateral Raise - With Bands,Lateral_Raise_-_With_Bands,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Leg Extensions,Leg_Extensions,free-exercise-db,Leg extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Leg Press,Leg_Press,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Leg-Over Floor Press,Leg-Over_Floor_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Leverage Chest Press,Leverage_Chest_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Leverage Deadlift,Leverage_Deadlift,free-exercise-db,Hip hinge,Experimental posture evaluation,Hip hinge,Yes,Real-device validation of the form checks
+Leverage Decline Chest Press,Leverage_Decline_Chest_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Leverage High Row,Leverage_High_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Leverage Incline Chest Press,Leverage_Incline_Chest_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Leverage Iso Row,Leverage_Iso_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Leverage Shoulder Press,Leverage_Shoulder_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Leverage Shrug,Leverage_Shrug,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Low Cable Crossover,Low_Cable_Crossover,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Low Cable Triceps Extension,Low_Cable_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Low Pulley Row To Neck,Low_Pulley_Row_To_Neck,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lunge Pass Through,Lunge_Pass_Through,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Lunge Sprint,Lunge_Sprint,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Lunge with Rotation,worlds_greatest_stretch,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Lunges,lunge,curated,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Lying Cable Curl,Lying_Cable_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Cambered Barbell Row,Lying_Cambered_Barbell_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Close-Grip Bar Curl On High Pulley,Lying_Close-Grip_Bar_Curl_On_High_Pulley,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Close-Grip Barbell Triceps Extension Behind The Head,Lying_Close-Grip_Barbell_Triceps_Extension_Behind_The_Head,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Close-Grip Barbell Triceps Press To Chin,Lying_Close-Grip_Barbell_Triceps_Press_To_Chin,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Dumbbell Tricep Extension,Lying_Dumbbell_Tricep_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Glute Twist,knee_across_body,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Lying Hamstring Stretch,hamstring_stretch_lying,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Lying High Bench Barbell Curl,Lying_High_Bench_Barbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Leg Curls,Lying_Leg_Curls,free-exercise-db,Leg curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Leg Raise,leg_raise,curated,Leg raise,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Lying Machine Squat,Lying_Machine_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Lying One-Arm Lateral Raise,Lying_One-Arm_Lateral_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Lying Rear Delt Raise,Lying_Rear_Delt_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Lying Supine Dumbbell Curl,Lying_Supine_Dumbbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying T-Bar Row,Lying_T-Bar_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Lying Triceps Press,Lying_Triceps_Press,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Machine Bench Press,Machine_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Machine Bicep Curl,Machine_Bicep_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Machine Preacher Curls,Machine_Preacher_Curls,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Machine Shoulder (Military) Press,Machine_Shoulder_Military_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Machine Triceps Extension,Machine_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+March in Place,march,curated,Knee lift,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Medicine Ball Chest Pass,Medicine_Ball_Chest_Pass,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Medicine Ball Full Twist,Medicine_Ball_Full_Twist,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Medicine Ball Scoop Throw,Medicine_Ball_Scoop_Throw,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Middle Back Shrug,Middle_Back_Shrug,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Monster Walk,Monster_Walk,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: locomotion
+Mountain Climbers,mountain_climbers,curated,Plank knee drive,Experimental posture evaluation,Plank position,Yes,Real-device validation of the form checks
+Narrow Stance Hack Squats,Narrow_Stance_Hack_Squats,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Narrow Stance Leg Press,Narrow_Stance_Leg_Press,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Narrow Stance Squats,Narrow_Stance_Squats,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Neck Press,Neck_Press,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+One Arm Dumbbell Bench Press,One_Arm_Dumbbell_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One Arm Dumbbell Preacher Curl,One_Arm_Dumbbell_Preacher_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One Arm Floor Press,One_Arm_Floor_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One Arm Lat Pulldown,One_Arm_Lat_Pulldown,free-exercise-db,Vertical pull,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One Arm Pronated Dumbbell Triceps Extension,One_Arm_Pronated_Dumbbell_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One Arm Supinated Dumbbell Triceps Extension,One_Arm_Supinated_Dumbbell_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One-Arm Dumbbell Row,One-Arm_Dumbbell_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One-Arm Flat Bench Dumbbell Flye,One-Arm_Flat_Bench_Dumbbell_Flye,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+One-Arm High-Pulley Cable Side Bends,One-Arm_High-Pulley_Cable_Side_Bends,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+One-Arm Incline Lateral Raise,One-Arm_Incline_Lateral_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+One-Arm Kettlebell Clean,One-Arm_Kettlebell_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+One-Arm Kettlebell Clean and Jerk,One-Arm_Kettlebell_Clean_and_Jerk,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+One-Arm Kettlebell Floor Press,One-Arm_Kettlebell_Floor_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One-Arm Kettlebell Jerk,One-Arm_Kettlebell_Jerk,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+One-Arm Kettlebell Military Press To The Side,One-Arm_Kettlebell_Military_Press_To_The_Side,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+One-Arm Kettlebell Para Press,One-Arm_Kettlebell_Para_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+One-Arm Kettlebell Push Press,One-Arm_Kettlebell_Push_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+One-Arm Kettlebell Row,One-Arm_Kettlebell_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One-Arm Kettlebell Split Jerk,One-Arm_Kettlebell_Split_Jerk,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+One-Arm Long Bar Row,One-Arm_Long_Bar_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+One-Arm Medicine Ball Slam,One-Arm_Medicine_Ball_Slam,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+One-Arm Open Palm Kettlebell Clean,One-Arm_Open_Palm_Kettlebell_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+One-Arm Side Laterals,One-Arm_Side_Laterals,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+One-Legged Cable Kickback,One-Legged_Cable_Kickback,free-exercise-db,Single-leg hip extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Overhead Cable Curl,Overhead_Cable_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Overhead Reach,overhead_reach,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Overhead Slam,Overhead_Slam,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Pallof Press,Pallof_Press,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Pallof Press With Rotation,Pallof_Press_With_Rotation,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Palms-Down Dumbbell Wrist Curl Over A Bench,Palms-Down_Dumbbell_Wrist_Curl_Over_A_Bench,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Palms-Down Wrist Curl Over A Bench,Palms-Down_Wrist_Curl_Over_A_Bench,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Palms-Up Barbell Wrist Curl Over A Bench,Palms-Up_Barbell_Wrist_Curl_Over_A_Bench,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Palms-Up Dumbbell Wrist Curl Over A Bench,Palms-Up_Dumbbell_Wrist_Curl_Over_A_Bench,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Physioball Hip Bridge,Physioball_Hip_Bridge,free-exercise-db,Hip extension,Experimental posture evaluation,Foot position,Yes,Real-device validation of the form checks
+Plank Hold,plank,curated,Plank hold,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Plank Knee Drive,spider_crawl,curated,Plank knee drive,Experimental posture evaluation,Plank position,Yes,Real-device validation of the form checks
+Plie Dumbbell Squat,Plie_Dumbbell_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Power Clean,Power_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Power Partials,Power_Partials,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Preacher Curl,Preacher_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Preacher Hammer Dumbbell Curl,Preacher_Hammer_Dumbbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Pull Through,Pull_Through,free-exercise-db,Hip hinge,Experimental posture evaluation,Hip hinge,Yes,Real-device validation of the form checks
+Push-Ups,pushup,curated,Push-up,Validated posture evaluation,Body line,Yes,
+Push-Ups With Feet On An Exercise Ball,Push-Ups_With_Feet_On_An_Exercise_Ball,free-exercise-db,Push-up,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Pyramid,Pyramid,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: stretch
+Recumbent Bike,Recumbent_Bike,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+Return Push from Stance,Return_Push_from_Stance,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Reverse Barbell Curl,Reverse_Barbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Reverse Barbell Preacher Curls,Reverse_Barbell_Preacher_Curls,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Reverse Cable Curl,Reverse_Cable_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Reverse Crunch,reverse_crunch,curated,Knee tuck,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Reverse Flyes,Reverse_Flyes,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Reverse Flyes With External Rotation,Reverse_Flyes_With_External_Rotation,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Reverse Grip Bent-Over Rows,Reverse_Grip_Bent-Over_Rows,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Reverse Grip Triceps Pushdown,Reverse_Grip_Triceps_Pushdown,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Reverse Hyperextension,Reverse_Hyperextension,free-exercise-db,Hip extension,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Reverse Machine Flyes,Reverse_Machine_Flyes,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Reverse Snow Angels,reverse_snow_angel,curated,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Reverse Triceps Bench Press,Reverse_Triceps_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Rocking Standing Calf Raise,Rocking_Standing_Calf_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Romanian Deadlift,Romanian_Deadlift,free-exercise-db,Hip hinge,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Rope Crunch,Rope_Crunch,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Rope Straight-Arm Pulldown,Rope_Straight-Arm_Pulldown,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+"Rowing, Stationary",Rowing_Stationary,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+"Running, Treadmill",Running_Treadmill,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+Seated Barbell Military Press,Seated_Barbell_Military_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Seated Barbell Twist,Seated_Barbell_Twist,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Seated Bent-Over One-Arm Dumbbell Triceps Extension,Seated_Bent-Over_One-Arm_Dumbbell_Triceps_Extension,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Seated Bent-Over Rear Delt Raise,Seated_Bent-Over_Rear_Delt_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Seated Bent-Over Two-Arm Dumbbell Triceps Extension,Seated_Bent-Over_Two-Arm_Dumbbell_Triceps_Extension,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Seated Cable Rows,Seated_Cable_Rows,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Seated Cable Shoulder Press,Seated_Cable_Shoulder_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Seated Calf Raise,Seated_Calf_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Seated Close-Grip Concentration Barbell Curl,Seated_Close-Grip_Concentration_Barbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Seated Dumbbell Curl,Seated_Dumbbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Seated Dumbbell Inner Biceps Curl,Seated_Dumbbell_Inner_Biceps_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Seated Dumbbell Palms-Down Wrist Curl,Seated_Dumbbell_Palms-Down_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Seated Dumbbell Palms-Up Wrist Curl,Seated_Dumbbell_Palms-Up_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Seated Dumbbell Press,Seated_Dumbbell_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Seated Hamstring Stretch,seated_hamstring_stretch,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Seated Leg Curl,Seated_Leg_Curl,free-exercise-db,Leg curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Seated One-arm Cable Pulley Rows,Seated_One-arm_Cable_Pulley_Rows,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Seated One-Arm Dumbbell Palms-Down Wrist Curl,Seated_One-Arm_Dumbbell_Palms-Down_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Seated One-Arm Dumbbell Palms-Up Wrist Curl,Seated_One-Arm_Dumbbell_Palms-Up_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Seated Palm-Up Barbell Wrist Curl,Seated_Palm-Up_Barbell_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Seated Palms-Down Barbell Wrist Curl,Seated_Palms-Down_Barbell_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Seated Side Lateral Raise,Seated_Side_Lateral_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Seated Spinal Twist,seated_twist,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Seated Triceps Press,Seated_Triceps_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Seated Twist,russian_twist,curated,—,Not reliably supported,,Yes,Camera tracking: rotation
+Seated Two-Arm Palms-Up Low-Pulley Wrist Curl,Seated_Two-Arm_Palms-Up_Low-Pulley_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+See-Saw Press (Alternating Side Press),See-Saw_Press_Alternating_Side_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Shadow Boxing,shadow_boxing,curated,—,Not reliably supported,,Yes,Camera tracking: complex
+Shotgun Row,Shotgun_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Shoulder Press - With Bands,Shoulder_Press_-_With_Bands,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Shoulder Rolls,shoulder_rolls,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Shoulder Taps,shoulder_taps,curated,—,Not reliably supported,,Yes,Camera tracking: alternating
+Side Crunch,oblique_crunch_floor,curated,—,Not reliably supported,,Yes,Camera tracking: rotation
+Side Lateral Raise,Side_Lateral_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Side Laterals to Front Raise,Side_Laterals_to_Front_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Side-Lying Quad Stretch,side_quad_stretch,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Single Dumbbell Raise,Single_Dumbbell_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Single Knee to Chest,knee_to_chest,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Single-Arm Cable Crossover,Single-Arm_Cable_Crossover,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Single-Arm Linear Jammer,Single-Arm_Linear_Jammer,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Single-Leg Balance,single_leg_balance,curated,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Single-Leg Glute Bridge,single_leg_bridge,curated,Hip extension,Experimental posture evaluation,Foot position,Yes,Real-device validation of the form checks
+Single-Leg Leg Extension,Single-Leg_Leg_Extension,free-exercise-db,Leg extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Sit-to-Stand (Chair Squat),chair_squat,curated,Squat,Validated posture evaluation,Back alignment; Knee tracking,Yes,
+Smith Incline Shoulder Raise,Smith_Incline_Shoulder_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Smith Machine Behind the Back Shrug,Smith_Machine_Behind_the_Back_Shrug,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Smith Machine Bench Press,Smith_Machine_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Smith Machine Bent Over Row,Smith_Machine_Bent_Over_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Smith Machine Calf Raise,Smith_Machine_Calf_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Smith Machine Close-Grip Bench Press,Smith_Machine_Close-Grip_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Smith Machine Decline Press,Smith_Machine_Decline_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Smith Machine Hang Power Clean,Smith_Machine_Hang_Power_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Smith Machine Hip Raise,Smith_Machine_Hip_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Smith Machine Incline Bench Press,Smith_Machine_Incline_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Smith Machine Leg Press,Smith_Machine_Leg_Press,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Smith Machine One-Arm Upright Row,Smith_Machine_One-Arm_Upright_Row,free-exercise-db,Upright row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Smith Machine Overhead Shoulder Press,Smith_Machine_Overhead_Shoulder_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Smith Machine Pistol Squat,Smith_Machine_Pistol_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Smith Machine Reverse Calf Raises,Smith_Machine_Reverse_Calf_Raises,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Smith Machine Squat,Smith_Machine_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Smith Machine Stiff-Legged Deadlift,Smith_Machine_Stiff-Legged_Deadlift,free-exercise-db,Hip hinge,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Smith Machine Upright Row,Smith_Machine_Upright_Row,free-exercise-db,Upright row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Smith Single-Leg Split Squat,Smith_Single-Leg_Split_Squat,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Snatch Pull,Snatch_Pull,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Speed Band Overhead Triceps,Speed_Band_Overhead_Triceps,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Spell Caster,Spell_Caster,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Spider Curl,Spider_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Split Squat with Dumbbells,Split_Squat_with_Dumbbells,free-exercise-db,Lunge,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Squat with Plate Movers,Squat_with_Plate_Movers,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Squats - With Bands,Squats_-_With_Bands,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Stairmaster,Stairmaster,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+Standing Alternating Dumbbell Press,Standing_Alternating_Dumbbell_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Standing Barbell Calf Raise,Standing_Barbell_Calf_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Standing Barbell Press Behind Neck,Standing_Barbell_Press_Behind_Neck,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Standing Bent-Over One-Arm Dumbbell Triceps Extension,Standing_Bent-Over_One-Arm_Dumbbell_Triceps_Extension,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing Bent-Over Two-Arm Dumbbell Triceps Extension,Standing_Bent-Over_Two-Arm_Dumbbell_Triceps_Extension,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing Biceps Cable Curl,Standing_Biceps_Cable_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing Bradford Press,Standing_Bradford_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Standing Cable Chest Press,Standing_Cable_Chest_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing Cable Lift,Standing_Cable_Lift,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Standing Cable Wood Chop,Standing_Cable_Wood_Chop,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Standing Calf Raises,Standing_Calf_Raises,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Standing Chest Opener,chest_opener,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Standing Concentration Curl,Standing_Concentration_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing Dumbbell Calf Raise,Standing_Dumbbell_Calf_Raise,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Standing Dumbbell Press,Standing_Dumbbell_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Standing Dumbbell Reverse Curl,Standing_Dumbbell_Reverse_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing Dumbbell Straight-Arm Front Delt Raise Above Head,Standing_Dumbbell_Straight-Arm_Front_Delt_Raise_Above_Head,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing Dumbbell Triceps Extension,Standing_Dumbbell_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing Dumbbell Upright Row,Standing_Dumbbell_Upright_Row,free-exercise-db,Upright row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing Front Barbell Raise Over Head,Standing_Front_Barbell_Raise_Over_Head,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing Hip Circles,hip_circles,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Standing Hip Flexor Stretch,standing_hip_flexor,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Standing Inner-Biceps Curl,Standing_Inner-Biceps_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing Leg Curl,Standing_Leg_Curl,free-exercise-db,Leg curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing Low-Pulley Deltoid Raise,Standing_Low-Pulley_Deltoid_Raise,free-exercise-db,Arm raise,Experimental posture evaluation,Arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing Low-Pulley One-Arm Triceps Extension,Standing_Low-Pulley_One-Arm_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing Military Press,Standing_Military_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Standing One-Arm Cable Curl,Standing_One-Arm_Cable_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Standing One-Arm Dumbbell Curl Over Incline Bench,Standing_One-Arm_Dumbbell_Curl_Over_Incline_Bench,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing One-Arm Dumbbell Triceps Extension,Standing_One-Arm_Dumbbell_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing Overhead Barbell Triceps Extension,Standing_Overhead_Barbell_Triceps_Extension,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Standing Palm-In One-Arm Dumbbell Press,Standing_Palm-In_One-Arm_Dumbbell_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment,Yes,Real-device validation of the form checks
+Standing Palms-In Dumbbell Press,Standing_Palms-In_Dumbbell_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Standing Palms-Up Barbell Behind The Back Wrist Curl,Standing_Palms-Up_Barbell_Behind_The_Back_Wrist_Curl,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Standing Rope Crunch,Standing_Rope_Crunch,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Standing Side Bend,side_bend,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Standing Two-Arm Overhead Throw,Standing_Two-Arm_Overhead_Throw,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Star Jump,star_jump,curated,Jumping jack,Experimental posture evaluation,Arm and leg timing,Yes,Real-device validation of the form checks
+Step Mill,Step_Mill,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+Step-Ups,step_ups,curated,—,Not reliably supported,,Yes,Camera tracking: locomotion
+Stiff Leg Barbell Good Morning,Stiff_Leg_Barbell_Good_Morning,free-exercise-db,Hip hinge,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Stiff-Legged Barbell Deadlift,Stiff-Legged_Barbell_Deadlift,free-exercise-db,Hip hinge,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Stiff-Legged Dumbbell Deadlift,Stiff-Legged_Dumbbell_Deadlift,free-exercise-db,Hip hinge,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Straight Bar Bench Mid Rows,Straight_Bar_Bench_Mid_Rows,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Straight Raises on Incline Bench,Straight_Raises_on_Incline_Bench,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Straight-Arm Dumbbell Pullover,Straight-Arm_Dumbbell_Pullover,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Straight-Arm Pulldown,Straight-Arm_Pulldown,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: noTracker
+Superman,superman,curated,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Supine Chest Throw,Supine_Chest_Throw,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Supine One-Arm Overhead Throw,Supine_One-Arm_Overhead_Throw,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Supine Two-Arm Overhead Throw,Supine_Two-Arm_Overhead_Throw,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+T-Bar Row with Handle,T-Bar_Row_with_Handle,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Tate Press,Tate_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Thigh Abductor,Thigh_Abductor,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Thigh Adductor,Thigh_Adductor,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Torso Rotation,Torso_Rotation,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: stretch
+Tricep Dumbbell Kickback,Tricep_Dumbbell_Kickback,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Triceps Overhead Extension with Rope,Triceps_Overhead_Extension_with_Rope,free-exercise-db,Triceps extension,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Triceps Pushdown,Triceps_Pushdown,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Triceps Pushdown - Rope Attachment,Triceps_Pushdown_-_Rope_Attachment,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Triceps Pushdown - V-Bar Attachment,Triceps_Pushdown_-_V-Bar_Attachment,free-exercise-db,Triceps pushdown / kickback,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Triceps Stretch,triceps_stretch,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Two-Arm Dumbbell Preacher Curl,Two-Arm_Dumbbell_Preacher_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Two-Arm Kettlebell Clean,Two-Arm_Kettlebell_Clean,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Two-Arm Kettlebell Jerk,Two-Arm_Kettlebell_Jerk,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+Two-Arm Kettlebell Military Press,Two-Arm_Kettlebell_Military_Press,free-exercise-db,Overhead press,Experimental posture evaluation,Back alignment; Arm symmetry,Yes,Real-device validation of the form checks
+Two-Arm Kettlebell Row,Two-Arm_Kettlebell_Row,free-exercise-db,Row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Underhand Cable Pulldowns,Underhand_Cable_Pulldowns,free-exercise-db,Vertical pull,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Upper Back Stretch,upper_back_stretch,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Upright Barbell Row,Upright_Barbell_Row,free-exercise-db,Upright row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Upright Cable Row,Upright_Cable_Row,free-exercise-db,Upright row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Upright Row - With Bands,Upright_Row_-_With_Bands,free-exercise-db,Upright row,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+V-Bar Pulldown,V-Bar_Pulldown,free-exercise-db,Vertical pull,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Vertical Swing,Vertical_Swing,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: complex
+"Walking, Treadmill",Walking_Treadmill,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: machineCardio
+Wall Push-Up,wall_pushup,curated,Push-up,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Wall Sit,wall_sit,curated,Wall sit hold,Experimental posture evaluation,Knee angle; Back alignment,Yes,Real-device validation of the form checks
+Weighted Ball Hyperextension,Weighted_Ball_Hyperextension,free-exercise-db,Hip extension,Experimental posture evaluation,Leg position,Yes,Real-device validation of the form checks
+Weighted Ball Side Bend,Weighted_Ball_Side_Bend,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: rotation
+Weighted Crunches,Weighted_Crunches,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Weighted Jump Squat,Weighted_Jump_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Wide Incline Push-Up,incline_pushup_wide,curated,Push-up,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Wide Push-Up,pushup_wide,curated,Push-up,Experimental posture evaluation,Hip position,Yes,Real-device validation of the form checks
+Wide Stance Barbell Squat,Wide_Stance_Barbell_Squat,free-exercise-db,Squat,Experimental posture evaluation,Back alignment; Knee tracking,Yes,Real-device validation of the form checks
+Wide-Grip Barbell Bench Press,Wide-Grip_Barbell_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Wide-Grip Decline Barbell Bench Press,Wide-Grip_Decline_Barbell_Bench_Press,free-exercise-db,Chest press,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Wide-Grip Decline Barbell Pullover,Wide-Grip_Decline_Barbell_Pullover,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Wide-Grip Lat Pulldown,Wide-Grip_Lat_Pulldown,free-exercise-db,Vertical pull,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Wide-Grip Pulldown Behind The Neck,Wide-Grip_Pulldown_Behind_The_Neck,free-exercise-db,Vertical pull,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks
+Wide-Grip Standing Barbell Curl,Wide-Grip_Standing_Barbell_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Wrist Circles,wrist_circles,curated,—,Not reliably supported,,Yes,Camera tracking: stretch
+Wrist Rotations with Straight Bar,Wrist_Rotations_with_Straight_Bar,free-exercise-db,—,Not reliably supported,,Yes,Camera tracking: smallMovement
+Zottman Curl,Zottman_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Upper-arm position; Torso stability,Yes,Real-device validation of the form checks
+Zottman Preacher Curl,Zottman_Preacher_Curl,free-exercise-db,Biceps curl,Experimental posture evaluation,Torso stability,Yes,Real-device validation of the form checks

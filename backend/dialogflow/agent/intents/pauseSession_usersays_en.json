@@ -1,0 +1,93 @@
+[
+  {
+    "id": "dbf6d984-2783-55e3-bca8-b0dab0346b25",
+    "data": [
+      {
+        "text": "pause",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "485ef870-c8d2-6382-c35b-3a0f072ccd59",
+    "data": [
+      {
+        "text": "pause workout",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "c6f2160e-1182-b419-602c-d057bfa68299",
+    "data": [
+      {
+        "text": "pause the session",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "40e2f5d0-6f8a-e9de-cd0a-5bb15311062a",
+    "data": [
+      {
+        "text": "take a break",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "50210ebe-66ed-637d-fa1f-1e0956bc214e",
+    "data": [
+      {
+        "text": "hold on",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "66151c7c-1ff1-b698-0d2c-276519e15f75",
+    "data": [
+      {
+        "text": "give me a minute",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "d742270c-336a-0779-5d4f-77f0726ff744",
+    "data": [
+      {
+        "text": "pause it",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

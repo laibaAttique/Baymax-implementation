@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="1" failures="0" skipped="0">
+  <testsuite name="run2_smoke" tests="1" failures="0" skipped="0">
+    <testcase classname="integration_test/smoke_test.dart" name="ATC-DEV-S01 The app shell starts on the phone and the bottom navigation opens the Workout tab and returns Home" time="13.046">
+      <system-out>{"id": "ATC-DEV-S01", "req": "M3-FR7", "objective": "The app shell starts on the phone and the bottom navigation opens the Workout tab and returns Home", "input": "Controlled test user \"Device Tester\" (in memory); tap \"Workout\", then \"Home\"", "expected": "Home shows \"TODAY'S WORKOUT\"; Workout tab shows \"Your workout plan\"; Home shown again", "actual": "Home shown (greeting \"Device\" 1); Workout tab \"Your workout plan\" 1; returned Home", "status": "Passed", "file": "integration_test/smoke_test.dart", "test": "ATC-DEV-S01 The app shell starts on the phone and the bottom navigation opens the Workout tab and returns Home", "started": "2026-10-18T17:25:25.873844", "durationMs": 13046, "screenshot": "ATC-DEV-S01.png", "tool": "Flutter integration_test (IntegrationTestWidgetsFlutterBinding), real device"}</system-out>
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -12,5 +12,9 @@ import UIKit
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    // Module 5: on-device MediaPipe pose estimation.
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "PoseLandmarkerPlugin") {
+      PoseLandmarkerPlugin.register(with: registrar)
+    }
   }
 }

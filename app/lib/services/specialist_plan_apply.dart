@@ -1,5 +1,6 @@
 import '../models/plan.dart';
 import '../models/specialist_plan.dart';
+import 'workout_rules/classification_profiles.dart';
 
 /// Puts a specialist's plan over the Baymax plan (Module 14, FR-5 / FR-10). Pure: no database, no screens.
 ///
@@ -9,7 +10,8 @@ import '../models/specialist_plan.dart';
 /// * "Approved as is" changes nothing in the plan; it only shows that a specialist reviewed it.
 ///
 /// Nothing here weakens a safety rule silently: a specialist's plan is labelled with who set it, and the member can switch back to
-/// Baymax's plan at any time.
+/// Baymax's plan at any time. While the Module 4 screening holds the plan back (warning symptoms, or a heart condition without a
+/// doctor's clearance) the workout week stays empty and the screening result is kept, so the member is sent to resolve it first.
 PersonalizedPlan applySpecialistPlans(
   PersonalizedPlan base,
   SpecialistPlans plans,
@@ -25,7 +27,7 @@ PersonalizedPlan applySpecialistPlans(
   if (diet != null && choices.specialistDiet && !diet.approvedAsIs) nutrition = _applyDiet(nutrition, diet);
 
   final workout = plans.workout;
-  if (workout != null && choices.specialistWorkout && !workout.approvedAsIs) {
+  if (workout != null && choices.specialistWorkout && !workout.approvedAsIs && base.workoutAvailable) {
     final built = _buildWeek(workout, exercise, warmUp, coolDown);
     if (built != null) week = built;
   }
@@ -37,6 +39,13 @@ PersonalizedPlan applySpecialistPlans(
     week: week,
     restrictionNotes: base.restrictionNotes,
     nutrition: nutrition,
+    gate: base.gate,
+    rulesVersion: base.rulesVersion,
+    // The specialist's week is measured against the same Module 4 profile, so the weekly targets stay visible.
+    profile: identical(week, base.week)
+        ? base.profile
+        : ClassificationProfiles.summarize(ClassificationProfiles.forCategory(base.category), week, null,
+            extraNotes: const ['This week was set by your specialist; the targets below are shown for reference.']),
   );
 }
 

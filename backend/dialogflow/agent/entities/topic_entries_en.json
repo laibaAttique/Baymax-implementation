@@ -1,0 +1,51 @@
+[
+  {
+    "value": "breathing",
+    "synonyms": [
+      "breathe",
+      "breathing",
+      "inhale",
+      "exhale",
+      "breath"
+    ]
+  },
+  {
+    "value": "rest",
+    "synonyms": [
+      "rest",
+      "recover",
+      "recovery",
+      "sore"
+    ]
+  },
+  {
+    "value": "warmup",
+    "synonyms": [
+      "warm up",
+      "warmup",
+      "cool down",
+      "stretch",
+      "stretching"
+    ]
+  },
+  {
+    "value": "hydration",
+    "synonyms": [
+      "water",
+      "hydrated",
+      "hydration",
+      "drink"
+    ]
+  },
+  {
+    "value": "motivation",
+    "synonyms": [
+      "tired",
+      "exhausted",
+      "give up",
+      "too hard",
+      "motivation",
+      "struggling"
+    ]
+  }
+]

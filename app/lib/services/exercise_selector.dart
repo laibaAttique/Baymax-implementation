@@ -136,6 +136,7 @@ class ExerciseSelector {
   static const complexityPenalty = 0.4; // per step above 1, age 60+
   static const repeatPenalty = 0.9; // per time the exercise was already used this week
   static const jitter = 0.35; // maximum tie-break noise
+  static const unreviewedCuePenalty = 0.3; // Module 4: catalogue entries show the dataset's unreviewed instructions
 
   /// A fixed pseudo-random number in [0, jitter) for this exercise and variant (same inputs -> same plan).
   double _tieBreak(String id) {
@@ -190,14 +191,22 @@ class ExerciseSelector {
     // 4. getting down to and up from the floor
     if (e.position == 'floor' && (body.age >= 65 || body.bmi >= 35)) {
       s -= floorPenalty;
-    } else if (e.position != 'floor' && (body.age >= 65 || body.bmi >= 35)) {
+    } else if (e.position.isNotEmpty && e.position != 'floor' && (body.age >= 65 || body.bmi >= 35)) {
+      // An empty position (catalogue entries) is unknown, so nothing is claimed about the floor.
       reasons.add('Done standing or seated, so no getting down to the floor');
     }
 
     // 5. coordination demand for older adults
     if (body.age >= 60 && e.complexity > 1) s -= complexityPenalty * (e.complexity - 1);
 
-    // 6. variety across the week
+    // 6. Module 4 catalogue entries: prefer the team-reviewed library when both fit, and say why equipment was used
+    if (e.source == 'free-exercise-db') {
+      s -= unreviewedCuePenalty;
+      // Shown first: it is the reason this exercise is in the pool at all.
+      if (e.equipmentKey != 'none') reasons.insert(0, 'Uses equipment you have (${e.equipment})');
+    }
+
+    // 7. variety across the week
     final used = weekUsage[e.id] ?? 0;
     s -= repeatPenalty * used;
     if (used == 0 && weekUsage.isNotEmpty) reasons.add('New this week, for variety');

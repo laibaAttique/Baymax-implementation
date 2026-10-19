@@ -1,0 +1,115 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+
+        "profile": {
+          ".validate": "newData.hasChildren(['fullName', 'height', 'weight'])",
+          "fullName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100" },
+          "dob": { ".validate": "newData.isString() && (newData.val() === '' || newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/))" },
+          "gender": { ".validate": "newData.isString() && newData.val().length <= 20" },
+          "height": {
+            ".validate": "newData.hasChildren(['value', 'unit'])",
+            "value": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000" },
+            "unit": { ".validate": "newData.val() === 'cm' || newData.val() === 'ft'" },
+            "$other": { ".validate": false }
+          },
+          "weight": {
+            ".validate": "newData.hasChildren(['value', 'unit'])",
+            "value": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000" },
+            "unit": { ".validate": "newData.val() === 'kg' || newData.val() === 'lbs'" },
+            "$other": { ".validate": false }
+          },
+          "targetWeight": {
+            "value": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000" },
+            "unit": { ".validate": "newData.val() === 'kg' || newData.val() === 'lbs'" },
+            "$other": { ".validate": false }
+          },
+          "medicalConditions": {
+            "$i": { ".validate": "newData.isString() && newData.val().length <= 50" }
+          },
+          "foodAllergies": {
+            "$i": { ".validate": "newData.isString() && newData.val().length <= 50" }
+          },
+          "medications": { ".validate": "newData.isString() && newData.val().length <= 1000" },
+          "primaryGoal": { ".validate": "newData.isString() && newData.val().length <= 50" },
+          "activityLevel": { ".validate": "newData.isString() && newData.val().length <= 50" },
+          "workoutFrequency": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 7" },
+          "calculatedBMI": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 200" },
+          "healthClassification": { ".validate": "newData.isString() && newData.val().length <= 30" },
+          "planVariant": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+          "updatedAt": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        },
+
+        "foodLog": {
+          "$date": {
+            ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)",
+            "$entry": {
+              ".validate": "newData.hasChildren(['meal', 'name', 'kcal'])",
+              "meal": { ".validate": "newData.val() === 'Breakfast' || newData.val() === 'Lunch' || newData.val() === 'Dinner' || newData.val() === 'Snack'" },
+              "name": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 120" },
+              "quantity": { ".validate": "newData.isNumber() && newData.val() >= 0" },
+              "unit": { ".validate": "newData.isString() && newData.val().length <= 30" },
+              "kcal": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 20000" },
+              "protein": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000" },
+              "carbs": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000" },
+              "fat": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 5000" },
+              "source": { ".validate": "newData.val() === 'text' || newData.val() === 'image' || newData.val() === 'manual'" },
+              "ref": { ".validate": "newData.isString() && newData.val().length <= 40" },
+              "createdAt": { ".validate": "newData.isNumber()" },
+              "$other": { ".validate": false }
+            }
+          }
+        },
+
+        "workoutSessions": {
+          ".indexOn": ["endedAt"],
+          "$session": {
+            ".validate": "newData.hasChildren(['exerciseId', 'exerciseName', 'mode', 'endedAt', 'durationSec', 'reps'])",
+            "exerciseId": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 60" },
+            "exerciseName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 100" },
+            "mode": { ".validate": "newData.val() === 'camera' || newData.val() === 'manual'" },
+            "endedAt": { ".validate": "newData.isNumber()" },
+            "durationSec": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 86400" },
+            "reps": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000" },
+            "partialReps": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000" },
+            "setsCompleted": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+            "targetSets": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+            "targetReps": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000" },
+            "postureScore": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+            "accuracy": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100" },
+            "averageFps": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000" },
+            "skipped": { ".validate": "newData.isBoolean()" },
+            "tooDifficult": { ".validate": "newData.isBoolean()" },
+            "feedback": {
+              "$i": {
+                ".validate": "newData.hasChildren(['id', 'verdict', 'text'])",
+                "id": { ".validate": "newData.isString() && newData.val().length <= 30" },
+                "verdict": { ".validate": "newData.val() === 'passed' || newData.val() === 'failed' || newData.val() === 'notAssessed'" },
+                "text": { ".validate": "newData.isString() && newData.val().length <= 200" },
+                "$other": { ".validate": false }
+              }
+            },
+            "$other": { ".validate": false }
+          }
+        },
+
+        "exerciseFeedback": {
+          "$exerciseId": {
+            ".validate": "$exerciseId.matches(/^[a-z0-9_]{1,60}$/) && newData.hasChildren(['tooDifficult', 'updatedAt'])",
+            "tooDifficult": { ".validate": "newData.isBoolean()" },
+            "updatedAt": { ".validate": "newData.isNumber()" },
+            "$other": { ".validate": false }
+          }
+        },
+
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}

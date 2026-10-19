@@ -66,16 +66,19 @@ class SourcesScreen extends StatelessWidget {
       'Workout plans and safety rules',
       'Weekly volume follows general adult activity guidance (150–300 minutes of moderate activity plus muscle-strengthening on at least 2 days). '
           'Exercises are chosen by your health category: high-impact moves are removed for BMI 30+, heart disease, hypertension and age 55+; high-intensity intervals are removed for heart disease, hypertension, diabetes and asthma; '
-          'static holds (planks, wall sits) are removed for heart disease and capped at 20 seconds for hypertension; balance training is added from age 65.',
+          'static holds (planks, wall sits) are removed for heart disease and capped at 20 seconds for hypertension; balance training is added from age 65. '
+          'Each health category also has a training profile: exercises are graded light, moderate or vigorous by their energy value (MET), plans for the Obese, At-Risk and Cardiac categories stay at moderate or lighter, '
+          'and with diabetes no more than two days in a row pass without exercise.',
       [
         'WHO. Guidelines on physical activity and sedentary behaviour. Geneva, 2020 (weekly volume; balance and strength training for adults 65+).',
         'American College of Sports Medicine. ACSM\'s Guidelines for Exercise Testing and Prescription, 11th ed. Wolters Kluwer, 2021.',
         'Paluch AE, et al. Resistance exercise training in individuals with and without cardiovascular disease: 2023 update — a scientific statement from the American Heart Association. Circulation 2024; 149: e217–e231.',
         'Colberg SR, et al. Physical activity/exercise and diabetes: a position statement of the American Diabetes Association. Diabetes Care 2016; 39(11): 2065–2079.',
         'Pescatello LS, et al. Exercise and hypertension (ACSM position stand). Med Sci Sports Exerc 2004; 36(3): 533–553.',
+        'Teede HJ, et al. Recommendations from the 2023 International Evidence-based Guideline for the Assessment and Management of Polycystic Ovary Syndrome. J Clin Endocrinol Metab 2023; 108(10): 2447–2469.',
       ],
       caveat: 'These guidelines say resistance and aerobic exercise are generally beneficial and advise medical clearance for people with heart disease, diabetes or high blood pressure. '
-          'The specific exclusions and caps above (for example no static holds with heart disease, the 20-second hold cap, no HIIT with asthma, the age-55 impact limit) are conservative precautions chosen by the project team; '
+          'The specific exclusions and caps above (for example no static holds with heart disease, the 20-second hold cap, no HIIT with asthma, the age-55 impact limit, the moderate-intensity cap for the Obese, At-Risk and Cardiac profiles) are conservative precautions chosen by the project team; '
           'they are not quoted from those documents and have not been reviewed by a clinician.',
     ),
     _Source(
@@ -92,6 +95,34 @@ class SourcesScreen extends StatelessWidget {
       caveat: 'free-exercise-db is community-maintained and not clinically reviewed. The curated exercises have no exact Compendium entry of their own: each uses the energy value of the closest movement class already used in the library (marked *). '
           'The body-load fields (which joints a move stresses, whether you need to get down to the floor, how much coordination it needs) are assigned by the team. '
           'All team-written cues and these fields should be reviewed by a qualified trainer or physiotherapist before release.',
+    ),
+    _Source(
+      'Exercise knowledge base and equipment exercises (Module 4)',
+      'The full free-exercise-db dataset (871 of its 876 exercises; 5 have no instructions) is bundled at a fixed version, with its own names, muscles, '
+          'difficulty, instructions and photos kept exactly as published. Each exercise is matched to a 2024 Compendium activity by its category, equipment, '
+          'force and mechanic (and by name only where the Compendium names the movement): 181 exact matches, 606 approximate matches and 84 with no reliable match, '
+          'which get no energy value and are never scheduled. Equipment exercises from the dataset are offered only when you say you own that equipment; '
+          'body-weight plans still use the curated library above.',
+      [
+        'free-exercise-db (Unlicense), github.com/yuhonas/free-exercise-db, commit f00c92c (27 Sep 2026).',
+        'Herrmann SD, et al. 2024 Adult Compendium of Physical Activities. J Sport Health Sci 2024; 13(1): 6–12. Activity codes copied from pacompendium.com (retrieved 17 Oct 2026).',
+      ],
+      caveat: 'Approximate MET matches use a broader activity class (for example "resistance training, multiple exercises, 8–15 reps") and are flagged for review. '
+          'The dataset\'s instructions are shown as published and are labelled as not reviewed; its impact, joint and difficulty fields used for planning are derived by '
+          'documented team rules (ml/exercise_catalog/build_catalog.py). Calories are an approximate gross estimate for active time only (rest excluded).',
+    ),
+    _Source(
+      'Exercise readiness questions and the safety rule repository (Module 4)',
+      'Before a plan is made, you can answer four questions: warning symptoms, whether a doctor has cleared you, current injuries and your equipment. '
+          'Warning symptoms, or a heart condition without a doctor\'s clearance, stop the plan from being generated and you are asked to see a doctor first. '
+          'Injuries remove high-impact moves that load that area and add a pain-free-range reminder to the others. '
+          'All rules are kept in one versioned repository with their sources; when several apply, the most restrictive value is used.',
+      [
+        'Riebe D, et al. Updating ACSM\'s recommendations for exercise preparticipation health screening. Med Sci Sports Exerc 2015; 47(11): 2473–2479.',
+        'Warburton DER, et al. The Physical Activity Readiness Questionnaire for Everyone (PAR-Q+). Health Fit J Can 2011; 4(2): 3–23.',
+      ],
+      caveat: 'The questions follow the topics of these screening tools in our own words; they are a screening aid, not the official questionnaires and not a diagnosis. '
+          'Every rule is pending review by a qualified clinician, and no plan from Baymax is medical clearance.',
     ),
     _Source(
       'How exercises are chosen for you',

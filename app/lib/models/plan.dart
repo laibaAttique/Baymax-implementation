@@ -1,4 +1,5 @@
 import 'food.dart';
+import 'movement_pattern.dart';
 
 /// An exercise in the library (Module 3, FR-2 templates draw from this).
 class Exercise {
@@ -58,6 +59,48 @@ class Exercise {
   /// What you need besides your body: none, or e.g. "sturdy table, counter or wall".
   final String equipment;
 
+  // --- Module 4 knowledge base (free-exercise-db catalogue). Defaults describe the curated library. ---
+
+  /// `baymax` (curated library, team-reviewed cues) or `free-exercise-db` (catalogue entry, dataset instructions).
+  final String source;
+
+  /// The dataset's category (strength, cardio, stretching, plyometrics, …); empty for curated entries.
+  final String category;
+
+  /// Normalised equipment the exercise needs, used to match what the user owns: none, dumbbell, barbell, kettlebell,
+  /// bands, cable, machine, medicine_ball, exercise_ball, ez_bar, foam_roller, other.
+  final String equipmentKey;
+
+  /// Photos of the movement (free-exercise-db, pinned commit). Empty when none are available.
+  final List<String> imageUrls;
+
+  /// How [met] was matched to the 2024 Adult Compendium, when stated explicitly (catalogue entries).
+  final String? metMatchValue;
+
+  /// How [met] was matched to the 2024 Adult Compendium: exact | approximate | unmatched. For curated entries a
+  /// trailing `*` on [compendium] means approximate (closest listed activity).
+  String get metMatch =>
+      metMatchValue ?? (compendium.isEmpty ? 'unmatched' : (compendium.endsWith('*') ? 'approximate' : 'exact'));
+
+  /// The Compendium activity description behind [compendium], when known.
+  final String metDescription;
+
+  /// Review state of the MET mapping and team-derived fields: pending until a qualified reviewer approves them.
+  final String reviewStatus;
+
+  /// Movement pattern for camera tracking (Module 5), when stated explicitly (catalogue entries). Curated exercises use
+  /// [curatedMovements].
+  final MovementPattern? movementValue;
+  final NoTrackingReason? noTrackingValue;
+
+  /// How the camera can follow this exercise; [MovementPattern.none] when it cannot.
+  MovementPattern get movement => movementValue ?? curatedMovements[id] ?? MovementPattern.none;
+
+  /// Why there is no camera tracking, or null when there is.
+  NoTrackingReason? get noTrackingReason => movement != MovementPattern.none
+      ? null
+      : (noTrackingValue ?? curatedNoTracking[id] ?? (group == 'mobility' ? NoTrackingReason.stretch : NoTrackingReason.noTracker));
+
   const Exercise({
     required this.id,
     required this.name,
@@ -81,7 +124,105 @@ class Exercise {
     this.complexity = 1,
     this.mechanic = '',
     this.equipment = 'none',
+    this.source = 'baymax',
+    this.category = '',
+    this.equipmentKey = 'none',
+    this.imageUrls = const [],
+    this.metMatchValue,
+    this.metDescription = '',
+    this.reviewStatus = 'pending',
+    this.movementValue,
+    this.noTrackingValue,
   });
+
+  /// A free-exercise-db catalogue entry (`assets/data/exercise_catalog.json`, built by ml/exercise_catalog/build_catalog.py).
+  /// Dataset fields are used as they are; planning fields come from the documented derivation rules.
+  factory Exercise.fromCatalog(Map<String, dynamic> j) {
+    List<String> list(dynamic v) => (v as List? ?? const []).map((e) => e.toString()).toList();
+    final data = j['dataset'] as Map<String, dynamic>;
+    final derived = j['derived'] as Map<String, dynamic>;
+    final met = j['met'] as Map<String, dynamic>;
+    final movement = derived['movement'] as Map<String, dynamic>?;
+    final timed = derived['timed'] as bool? ?? false;
+    final category = data['category'] as String? ?? '';
+    String title(String m) => m.isEmpty ? m : '${m[0].toUpperCase()}${m.substring(1)}';
+    return Exercise(
+      id: j['id'] as String,
+      name: data['name'] as String,
+      icon: derived['icon'] as String? ?? '🏋️',
+      group: derived['group'] as String,
+      muscles: [...list(data['primaryMuscles']), ...list(data['secondaryMuscles'])].map(title).toList(),
+      impact: derived['impact'] as String? ?? 'unknown',
+      level: (derived['levelNumber'] as num?)?.toInt() ?? 2,
+      met: (met['value'] as num?)?.toDouble() ?? 0,
+      compendium: met['code'] == null ? '' : '${met['code']}${met['match'] == 'exact' ? '' : '*'}',
+      steps: list(data['instructions']),
+      timed: timed,
+      baseReps: 10,
+      baseSeconds: category == 'cardio' ? 600 : 30,
+      tags: list(derived['tags']),
+      techniqueSource: 'free-exercise-db',
+      referenceId: j['id'] as String,
+      referenceMatch: 'exact',
+      joints: list(derived['joints']),
+      position: '',
+      complexity: (derived['complexity'] as num?)?.toInt() ?? 1,
+      mechanic: data['mechanic'] as String? ?? '',
+      equipment: derived['equipmentKey'] == 'none' ? 'none' : (data['equipment'] as String? ?? 'other'),
+      source: 'free-exercise-db',
+      category: category,
+      equipmentKey: derived['equipmentKey'] as String? ?? 'other',
+      imageUrls: list(j['imageUrls']),
+      metMatchValue: met['match'] as String? ?? 'unmatched',
+      metDescription: met['description'] as String? ?? '',
+      reviewStatus: met['reviewStatus'] as String? ?? 'pending',
+      movementValue: MovementPattern.byName(movement?['pattern'] as String?) ?? MovementPattern.none,
+      noTrackingValue: NoTrackingReason.byName(movement?['reason'] as String?),
+    );
+  }
+
+  /// The same exercise with photos and the Compendium wording attached (used to show the dataset photos for
+  /// curated exercises that are an exact match).
+  Exercise withCatalogDetails({List<String>? imageUrls, String? metDescription}) => Exercise(
+        id: id,
+        name: name,
+        icon: icon,
+        group: group,
+        muscles: muscles,
+        impact: impact,
+        level: level,
+        met: met,
+        compendium: compendium,
+        steps: steps,
+        timed: timed,
+        baseReps: baseReps,
+        baseSeconds: baseSeconds,
+        tags: tags,
+        techniqueSource: techniqueSource,
+        referenceId: referenceId,
+        referenceMatch: referenceMatch,
+        joints: joints,
+        position: position,
+        complexity: complexity,
+        mechanic: mechanic,
+        equipment: equipment,
+        source: source,
+        category: category,
+        equipmentKey: equipmentKey,
+        imageUrls: imageUrls ?? this.imageUrls,
+        metMatchValue: metMatchValue,
+        metDescription: metDescription ?? this.metDescription,
+        reviewStatus: reviewStatus,
+        movementValue: movementValue,
+        noTrackingValue: noTrackingValue,
+      );
+
+  /// True when an energy estimate can be made for this exercise.
+  bool get hasMet => met > 0 && metMatch != 'unmatched';
+
+  /// Intensity band of the mapped Compendium activity (WHO 2020: light < 3 MET, moderate 3–5.9, vigorous ≥ 6), or null
+  /// when no MET value is known. Comes from [met] only, never from the name.
+  IntensityBand? get intensityBand => !hasMet ? null : IntensityBand.ofMet(met);
 
   factory Exercise.fromJson(Map<String, dynamic> j) {
     List<String> list(dynamic v) => (v as List? ?? const []).map((e) => e.toString()).toList();
@@ -150,6 +291,9 @@ class PlannedExercise {
   /// Why this exercise was chosen for this person (empty for the fixed warm-up and cool-down).
   final List<String> reasons;
 
+  /// Safety rules that shaped this exercise for this person, e.g. "Hold capped at 20 s (MED-HTN, pending review)".
+  final List<String> ruleNotes;
+
   const PlannedExercise({
     required this.exercise,
     required this.sets,
@@ -157,10 +301,14 @@ class PlannedExercise {
     required this.seconds,
     required this.restSeconds,
     this.reasons = const [],
+    this.ruleNotes = const [],
   });
 
-  PlannedExercise withReasons(List<String> r) =>
-      PlannedExercise(exercise: exercise, sets: sets, reps: reps, seconds: seconds, restSeconds: restSeconds, reasons: r);
+  PlannedExercise withReasons(List<String> r) => PlannedExercise(
+      exercise: exercise, sets: sets, reps: reps, seconds: seconds, restSeconds: restSeconds, reasons: r, ruleNotes: ruleNotes);
+
+  PlannedExercise withRuleNotes(List<String> notes) => PlannedExercise(
+      exercise: exercise, sets: sets, reps: reps, seconds: seconds, restSeconds: restSeconds, reasons: reasons, ruleNotes: notes);
 
   bool get timed => exercise.timed;
 
@@ -275,6 +423,16 @@ class PersonalizedPlan {
   final List<String> restrictionNotes;
   final NutritionPlan nutrition;
 
+  /// Module 4 pre-exercise screening. When it is not [WorkoutGateStatus.eligible] the week is empty and [WorkoutGate.reasons]
+  /// say what is needed (more answers, or a doctor's clearance). Null when the plan was generated without screening.
+  final WorkoutGate? gate;
+
+  /// Version of the safety rule repository the plan was generated with (and of the classification profiles, after a `+`).
+  final String rulesVersion;
+
+  /// The week measured against the classification's training profile (Module 4). Null when no week was generated.
+  final PlanProfileSummary? profile;
+
   const PersonalizedPlan({
     required this.category,
     required this.intensity,
@@ -282,10 +440,99 @@ class PersonalizedPlan {
     required this.week,
     required this.restrictionNotes,
     required this.nutrition,
+    this.gate,
+    this.rulesVersion = '',
+    this.profile,
   });
+
+  /// False when screening stopped the plan from being generated.
+  bool get workoutAvailable => gate == null || gate!.status == WorkoutGateStatus.eligible;
 
   int get workoutDays => week.where((d) => d != null).length;
 
   /// Today's workout (null on a rest day). `DateTime.weekday`: Mon = 1.
   WorkoutDay? workoutFor(DateTime date) => week[date.weekday - 1];
+}
+
+enum WorkoutGateStatus {
+  eligible,
+
+  /// Something the rules need is missing (e.g. the readiness questions); the user can answer it in the app.
+  needsInfo,
+
+  /// A rule requires a doctor's clearance before any plan is generated.
+  needsClearance,
+}
+
+/// The plan-level screening result.
+class WorkoutGate {
+  final WorkoutGateStatus status;
+
+  /// Why, one sentence per rule that applied.
+  final List<String> reasons;
+
+  /// Ids of the rules that decided it.
+  final List<String> ruleIds;
+  const WorkoutGate(this.status, {this.reasons = const [], this.ruleIds = const []});
+}
+
+/// Physical-activity intensity by MET (WHO 2020 guidelines on physical activity and sedentary behaviour).
+enum IntensityBand {
+  light('Light', '< 3 MET'),
+  moderate('Moderate', '3–5.9 MET'),
+  vigorous('Vigorous', '≥ 6 MET');
+
+  final String label;
+  final String range;
+  const IntensityBand(this.label, this.range);
+
+  static IntensityBand ofMet(double met) => met < 3 ? light : (met < 6 ? moderate : vigorous);
+}
+
+/// How the generated week compares with the training profile of the person's Module 2 classification (Module 4).
+class PlanProfileSummary {
+  /// e.g. PRF-CARDIAC.
+  final String profileId;
+  final String category;
+
+  /// What the profile emphasises, in plain words.
+  final String emphasis;
+
+  /// Highest intensity scheduled for this profile.
+  final IntensityBand maxBand;
+
+  /// Planned aerobic minutes this week, moderate-equivalent (a vigorous minute counts as two, as in WHO 2020).
+  final int aerobicMinutes;
+  final int aerobicTargetMin;
+  final int aerobicTargetMax;
+
+  /// Days with muscle-strengthening work / with stretching.
+  final int strengthDays;
+  final int strengthTarget;
+  final int flexibilityDays;
+  final int flexibilityTarget;
+
+  /// Explanations and suggestions, each ending with the id of the profile entry it came from.
+  final List<String> notes;
+  final List<String> evidence;
+
+  const PlanProfileSummary({
+    required this.profileId,
+    required this.category,
+    required this.emphasis,
+    required this.maxBand,
+    required this.aerobicMinutes,
+    required this.aerobicTargetMin,
+    required this.aerobicTargetMax,
+    required this.strengthDays,
+    required this.strengthTarget,
+    required this.flexibilityDays,
+    required this.flexibilityTarget,
+    this.notes = const [],
+    this.evidence = const [],
+  });
+
+  bool get aerobicMet => aerobicMinutes >= aerobicTargetMin;
+  bool get strengthMet => strengthDays >= strengthTarget;
+  bool get flexibilityMet => flexibilityDays >= flexibilityTarget;
 }

@@ -47,6 +47,182 @@ Found while writing the cases: nothing in the app failed; the only defects were 
 
 Newest first. Format: date · what changed · files · why.
 
+### 2026-10-18 — Posture thresholds calibrated on real people (free-exercise-db photos)
+
+- New on-device test `integration_test/dataset_pose_validation_test.dart`: the app's own MediaPipe model and engine on the Redmi Note 11, applied to the two real photos (start/end) of 280 camera-tracked exercises. Person detected in both photos for 94–100 % per pattern. Before calibration only 24 % of real rep pairs were countable and 31 % of correct demonstrations triggered a false correction.
+- Same model file on the PC (MediaPipe Python, isolated venv on D:) to store landmarks for 269 exercises → `test/fixtures/real_poses.json`, replayed through the production engine on every `flutter test` (`test/real_pose_replay_test.dart`). Phone vs PC angles: median 6° apart.
+- Thresholds of the non-validated patterns calibrated on half the exercises (`ml/validation/calibrate_thresholds.py`), reported on the other half: **reps counted 24 % → 66 %, false alarms 31 % → 13 %** (calibration half 69 % / 10 %). One-arm presses now ignore the hanging arm. Regression gate: held-out ≥ 60 % counted, ≤ 18 % false alarms.
+- 8 patterns marked "real-photo checked" in `docs/MODULE5_DEVICE_VALIDATION.md` (squat variants, curl, chest press, overhead press, row, lunge, vertical pull, upright row). The in-app note stays until live validation (fault sensitivity, speed).
+- The 4 tuned configurations were not changed. Tests: 867 pass, 13 skipped, 0 fail.
+- **Side effect:** the on-device test run uninstalled the Baymax app from the phone (MIUI blocked the reinstall without a tap); data is in Firebase; reinstall needs one tap on the phone.
+
+### 2026-10-18 — One consistent camera experience; validation record and test checklist
+
+- The prominent "experimental" wording was removed: all 304 camera exercises show the same description, "Posture score" and corrections as the validated four. Untested patterns get one small note under the score ("Form feedback for this movement hasn't been validated on real users yet."), in the session summary and a short sentence from the voice coach. Nothing untested is called validated.
+- Pipeline, rep counting, scoring and corrections unchanged; Module 4 untouched.
+- Docs: `docs/MODULE5_DEVICE_VALIDATION.md` (per-pattern and per-exercise records: conditions, camera position, observed accuracy, limitations) and `docs/MODULE5_DEVICE_TEST_CHECKLIST.md` (8 major patterns, step by step, pass criteria).
+- Tests: 866 pass, 13 skipped, 0 fail.
+
+### 2026-10-18 — Posture score for every camera exercise
+
+- At the user's request every camera-tracked exercise now behaves like the validated four: reps, FPS, landmarks, live corrections and a posture score (same formula: acceptable reps ÷ attempts; holds: share of hold time in a correct position), on screen, in the summary, saved to `workoutSessions`, and from the voice coach.
+- The 50 rep-only exercises got measurable checks, so all 304 tracked exercises run form checks: validated 4, experimental 300, unsupported 228 (Manual Guidance with the reason).
+- Scores that are not device-validated are labelled "Posture score (experimental)".
+- Tests: 866 pass, 13 skipped, 0 fail.
+
+### 2026-10-17 — Modules 4 + 5: real posture evaluation, personalised Posture Detection, plan completion sync
+
+Report: `docs/MODULE4_5_INTEGRATION_REPORT.md`; validation procedure: `docs/MODULE5_DEVICE_VALIDATION.md`; audit: `docs/review/camera_support_audit.{md,csv,json}`.
+
+- **Posture evaluation:** new measurements (secondary joint angles, upper-arm angle, signed hip offset, arm symmetry, foot spread, torso sway from the person's own starting posture) and reusable checks (`form_checks.dart`), assigned per pattern and variant. Capability levels: validated 4 (unchanged, score shown) · experimental 250 (real checks + live corrections, clearly labelled, no score) · basic 50 · unsupported 228 (with reasons). 4 new patterns (upright row, single-leg hip extension, plank knee drive, knee tuck). No custom exercises were needed.
+- **Unified catalogue:** `ExerciseRepository` (889 exercises, canonical ids, no duplicates, normalised `CatalogEntry`).
+- **Posture Detection home** (Home tile + drawer): Today's workout / My plan / Exercise library; loading, no-plan and screening states; entries start with a plan link.
+- **Completion sync:** sessions that reach their target complete the planned exercise (`PlanProgress`); a fully completed day is marked through the existing `ActivityService.markDone` (feeds fitness score, streaks, badges, analytics); "Done today" in the workout tab and Posture Detection; no duplicates; regenerated plans start fresh; library sessions stay independent.
+- **Database rules:** 5 optional plan fields added to `workoutSessions` in `database.rules.json` (dry run valid, only additions vs live). Deployed 2026-10-17 after confirmation; live rules verified identical to the local file, anonymous read still 401.
+- **Safety:** unchanged order; a test checks camera capability never makes an exercise eligible.
+- **Tests:** 866 pass, 13 skipped, 0 fail. New `posture_evaluation_test.dart` (18), `plan_integration_test.dart` (15).
+- **Device testing:** none for the new checks (phone disconnected); only the squat has a recorded device test (2026-10-15).
+
+### 2026-10-17 — Module 5: camera tracking for generated exercises (movement patterns)
+
+Write-up: `docs/MODULE5_CAMERA_PATTERNS.md`; audit: `docs/review/camera_support_audit.md` / `.csv`.
+
+- **Root cause:** Camera Detection was a fixed list of 4 curated ids (`ExerciseFormRules.supports`); every dataset exercise and 69 curated ones were greyed out. 4 of the 532 schedulable exercises had camera tracking.
+- **Movement patterns:** every exercise now has one (stable-id based): dataset ones from `ml/exercise_catalog/movement_patterns.py` at import (`derived.movement`, rule id recorded), curated ones by hand in `lib/models/movement_pattern.dart`. The pattern travels with the exercise from Module 4 to Module 5.
+- **Trackers:** `MovementPatterns` maps 20 rep patterns and 2 hold patterns to tracker configs; `RepCounter` now also counts opening movements (presses, raises, bridges); new `HoldTracker` times planks and wall sits only while in position. The 4 tuned configurations keep full form scoring, unchanged.
+- **Levels:** 4 full posture evaluation, 281 basic repetition tracking, 3 basic hold tracking, 244 not reliably supported (each shows its reason; Manual Guidance always available). Basic tracking shows and saves no posture score, accuracy or "too shallow" verdict; the voice coach says form is not judged.
+- **Guidance:** missing landmarks are named ("Can't see your knees and ankles — …").
+- **Storage:** unchanged `workoutSessions` schema; no database rule change.
+- **Tests:** full suite 829 pass, 13 skipped, 0 fail. New `test/camera_patterns_test.dart` (39 + voice) and `test/camera_support_report_test.dart`; one old test that asserted a plank could not use the camera now uses calf raises.
+- **Not verified:** basic-tracking thresholds on real people (only synthetic poses); needs device testing per pattern.
+
+### 2026-10-17 — Module 4: training profiles from the Module 2 classification (ledger K2–K8, K10)
+
+Ledger: `docs/MODULE4_PHASE_LEDGER.md`; design: `docs/MODULE4_KB_IMPLEMENTATION_PLAN.md`; write-up: `docs/MODULE4_WORKOUT_KNOWLEDGE_BASE.md` §4a, §6a, §6b.
+
+- **Intensity bands:** every exercise gets a WHO 2020 band (light < 3 / moderate 3–5.9 / vigorous ≥ 6 MET) from its Compendium MET only. Catalogue: 134 light, 528 moderate, 125 vigorous, 84 without a value.
+- **Classification profiles** (`lib/services/workout_rules/classification_profiles.dart`, `profiles-2026.10.1`, pending review): one per Module 2 category. Moderate cap for Obese, At-Risk and Cardiac (team precaution); WHO weekly targets (150–300 aerobic min, 2+ strength, 2+ stretching days); Diabetic: no more than 2 rest days in a row (ADA 2016), so 2 chosen days become 3. Notes for model-flagged At-Risk, PCOS (2023 guideline, citation added) and high risk.
+- **Safety:** the cap is merged by the rule engine and can only restrict; unknown intensity is not scheduled under a cap. The rule repository and its Module 3 oracle are unchanged. A 3,000-person test checks every scheduled exercise passes the rules and the cap.
+- **App:** "Your training profile" card on the workout tab (targets vs. the planned week, walking suggestion when short); band on the exercise detail. Specialist weeks (Module 14) are measured against the same profile.
+- **Module 5:** the safety adaptations now travel with the exercise (`SessionExercise.safetyNotes`) and are shown on mode selection and manual guidance. A test checks no profile removes a camera-supported exercise (squat, chair squat, push-up, knee push-up).
+- **Versions:** plans record `rules-2026.10.1+profiles-2026.10.1`, engine `workout-engine-2026.10.2`. No database rule change, nothing to deploy.
+- **Review sheet:** `docs/review/module4_review_sheet.csv` (65 rules, profiles, notes and MET mappings, with empty reviewer columns), generated from the code; `test/review_sheet_test.dart` fails when it is stale.
+- **Tests:** full suite 787 pass, 13 skipped, 0 fail. New: `test/module4_profiles_test.dart` (19), `test/review_sheet_test.dart` (1).
+- **Still open:** phone verification (Android build blocked by memory, see ledger B1); professional review.
+
+### 2026-10-17 — Rules incident resolved, Aamna merged, dataset analysis + Module 4 phase ledger
+
+- **Database:** no data was lost (sessions and feedback still there); the live rules a teammate deployed had dropped the Module 5/4 sections, so writes were refused. The friend's `database.rules.json` was taken as the base, the 4 Baymax sections (`workoutSessions`, `exerciseFeedback`, `workoutReadiness`, `workoutPlan`) were added before `$other`, all 166 of the friend's rule paths are unchanged; deployed after confirmation and verified identical live. Backups: `firebase-rules-backups/`.
+- **Merge:** Aamna's `bd8a2a1` (consultation split, specialist plans) merged as `d787933`; a specialist workout plan now respects the Module 4 screening gate. Fixed the `community_test` ListTile assertion in `settings_screen.dart` (transparent `Material`).
+- **Dataset analysis** (`docs/MODULE4_KB_IMPLEMENTATION_PLAN.md`): field completeness, distributions, MET intensity bands. Found that `wrist` was never derived for dataset exercises, so the wrist-injury rule could not reach them; importer fixed (58 entries), catalogue rebuilt (MET counts unchanged), test added.
+- **Phase ledger:** `docs/MODULE4_PHASE_LEDGER.md` lists done phases with evidence and the next phases K2–K10 (classification profiles keyed by the Module 2 category, MET intensity bands, explanations, review export).
+- **Tests:** full suite 767 pass, 13 skipped, 0 fail (run with `TEMP=D:\tmp\flutter`, `--concurrency=2`).
+- **Android build still blocked:** the Gradle JVM runs out of memory (crash log: mmap failed; commit charge 24.9 of 27 GB, C: 0.04 GB free so the page file cannot grow). Needs free space on C: or the editors' Java language servers closed during the build.
+
+### 2026-10-17 — Module 4: knowledge-based personalised workout generation (extends the existing plan generator)
+
+Full write-up: `docs/MODULE4_WORKOUT_KNOWLEDGE_BASE.md`. Built on Aamna's Module 3 engine (`PlanGenerator` + `ExerciseSelector`, curated 73-exercise library), which stays in place.
+
+- **Exercise knowledge base:** free-exercise-db (Unlicense) imported at pinned commit `f00c92c` by `ml/exercise_catalog/build_catalog.py` (idempotent, `--check` mode) into `assets/data/exercise_catalog.json`: 876 records → **871 imported** (5 without instructions dropped), 0 invalid image paths, dataset fields unchanged, derived planning fields separate with provenance.
+- **MET:** 27 activities copied verbatim from the public 2024 Adult Compendium pages (`compendium_2024_subset.json`); category/equipment/force/mechanic-based mapping rules → **181 exact, 606 approximate (flagged), 84 unmatched (no MET, never scheduled)**. All curated-library METs were also checked against the Compendium: no disagreements. One calorie formula everywhere (MET × kg × active h).
+- **Safety rule repository** (`lib/services/workout_rules/`, version `rules-2026.10.1`, all rules pending review): the Module 3 restrictions moved unchanged (a test shows identical results for 3,000 random people against a copy of the old code), plus screening (warning symptoms / heart condition without clearance → no plan; missing age/height/weight → needs info), injury rules and a program-scope rule (no maximal lifting, no expert dataset exercises). Conservative merging; unapproved rules cannot relax anything.
+- **Readiness questions** (new screen; `users/{uid}/workoutReadiness`), **plan snapshots** (`users/{uid}/workoutPlan`, versioned, FNV-1a fingerprint), equipment exercises from the catalogue when the user owns that equipment (labelled as dataset instructions, unreviewed).
+- **UI:** gate screen when blocked, readiness prompt, photo thumbnails, "Adapted for you" chips, exercise detail with looping photos, kcal, MET match line, rule notes, technique source. Dashboard, chatbot and voice coach no longer present a blocked plan as rest days.
+- **Fixed while doing this:** the post-merge commit had restored an older exercise detail screen (lost Aamna's reasons/equipment/"Start exercise" version) — rebuilt from hers; the posture mode screen's notification bell did nothing (now the shared bell); `UserSession._rebuildPlan` dropped "Too Difficult" adjustments.
+- **Tests:** 487 pass, 13 skipped, 1 failing (`community_test` settings — fails identically on commit fb98995, not touched here). New: `test/workout_rules_test.dart` (16), `test/module4_test.dart` (26).
+- **Not done / blocked:**
+  - **Database rules:** the live rules changed since 2026-10-15 — someone deployed a version **without** `workoutSessions`/`exerciseFeedback` and with new `dietReviews`, `specialistPlans`, `planChoice` and changed `appointments`/`slots` rules that this branch does not have. Nothing was deployed; the files must be merged with the newest teammate rules first. Until then Module 5 session saving and Module 4 readiness/plan storage are refused by the live database.
+  - **Android build** could not run: drive C: is full (0.04–0.13 GB free) and Gradle keeps its caches there. Tests were run with `TEMP=D:\tmp\flutter`.
+  - No professional review of rules, MET mappings or derived fields; readiness clearance is self-reported.
+
+### 2026-10-15 — Modules 5 and 6 verified on a phone (Redmi Note 11, Android 13)
+
+Checked by the module owner on the device, with logs/Firebase checked from the dev PC:
+- **Camera detection:** live preview, MediaPipe skeleton aligned with the body, reps counted (e.g. 12 counted, 1 shallow attempt rejected as "too shallow"), "Keep your back straight" shown when leaning too far forward, summary with real score/duration.
+- **Frame rate:** ~14 FPS with a person in view indoors in the evening (13.2 FPS measured with nobody in view). Just under the 15 FPS target in dim light; the camera's own frame rate (16–18 FPS in dim light) is the main limit. Re-check in good lighting before reporting NFR-P4 as met.
+- **Voice assistant:** speech-to-text → Dialogflow (`repCount` confirmed in the backend log) → spoken reply with the live rep count. When the backend is not running, it falls back to the on-device rules and the card says so.
+- **Saving:** workout sessions and a "too difficult" mark (Sit-to-Stand) are stored in Firebase under the user's own node.
+- **Running it:** the phone must be on the same Wi-Fi as the PC, and the backend must be running (`cd backend`, then `PORT=3001 node server.js`). The debug app is built with `--dart-define=API_BASE_URL=http://192.168.100.101:3001`; rebuild with the new address if the PC's IP changes.
+
+Remaining (outside these two modules): injury-risk notice waits on the Injury Risk module; iOS code is written but not compiled (needs a Mac).
+
+### 2026-10-14 — Modules 5 and 6: Dialogflow, iOS, saved sessions, "Too Difficult", device tuning aids
+
+Closes most of the open items from the 2026-10-13 entry below (the injury-risk notice stays waiting on that module).
+
+**Dialogflow (report M6 FR-2)**
+- Backend: `POST /api/voice/intent` and `GET /api/voice/status` (`backend/routes/voice.js`, `backend/services/dialogflow.js`). Calls the Dialogflow ES `detectIntent` REST API with a service-account key that stays on the server (`DIALOGFLOW_KEY_FILE` in `.env`; `backend/secrets/` is git-ignored). Only the transcript is sent, with a hashed session id instead of the Firebase uid.
+- Agent: `node tools/build_dialogflow_agent.js` writes `backend/dialogflow/agent/` and `baymax-coach-agent.zip` (18 intents named exactly like `CoachIntent`, plus `@exercise` from the exercise library and `@topic`). A test checks the agent and the app agree on intent names.
+- App: `HybridIntentService` (`lib/services/voice/dialogflow_intent_service.dart`) asks Dialogflow first and falls back to the on-device rules when the server says it is not configured (5-minute back-off), fails or takes over 2.5 s (30-second back-off). Pain/symptom reports are always handled on-device first. The screen shows which engine answered.
+- **Agent created (2026-10-14):** Dialogflow API enabled on `baymax-148da`; ES agent `baymax-coach` (trial/standard tier, English, interaction logging off) created and restored from `baymax-coach-agent.zip` via the API. Checked with the live agent: all 26 phrases from the app's intent tests are classified correctly, with `@exercise`/`@topic` values extracted. The generator now writes the zip itself, because Windows PowerShell's `Compress-Archive` stored backslash paths that Dialogflow rejected. Low-confidence Dialogflow answers (< 0.6) that disagree with a rule match defer to the rules.
+- **Credentials done (2026-10-14):** service account `baymax-dialogflow@baymax-148da.iam.gserviceaccount.com` with role "Dialogflow API Client" (granted by the project owner; Editors cannot grant roles). Its JSON key is at `backend/secrets/dialogflow-key.json` (git-ignored) and `backend/.env` points to it. Verified: the backend's own Dialogflow call returns the right intents (rep count, technique with `exercise=lunge`, pain, fallback). Not yet verified: a signed-in request from the phone app (needs a login).
+
+**iOS camera detection**: `ios/Runner/PoseLandmarkerPlugin.swift` (same channel contract as Android, BGRA frames rotated upright in memory), registered in `AppDelegate.swift` and added to the Xcode project; new `ios/Podfile` adds `MediaPipeTasksVision` and the `permission_handler` macros. The pose model moved to Flutter assets (`assets/models/pose_landmarker_lite.task`) and is passed to native code by Dart on both platforms, so the Gradle download step was removed. **Not compiled** — this needs a Mac with Xcode (`cd ios && pod install`, then `flutter run`).
+
+**Saved sessions**: every finished session is written to `users/{uid}/workoutSessions/{pushId}` (summary numbers and feedback text only — never frames or landmarks) by `lib/services/workout_session/workout_log_service.dart`. The summary screen shows "Saved…" or the error with a retry. `database.rules.json` gained validated `workoutSessions` and `exerciseFeedback` nodes. **The new rules must be deployed** (`firebase deploy --only database`) before saving works on a device.
+
+**"Too Difficult" (FR17.4)**: stored at `users/{uid}/exerciseFeedback/{exerciseId}` and loaded by `UserSession`. `PlanGenerator.generate(…, tooDifficult:)` swaps each flagged exercise for an unflagged one of the same group that is no harder; if none exists it keeps it with one set fewer and ~30% fewer reps/seconds, and adds a note explaining the change. Flags older than 28 days are ignored.
+
+**Threshold tuning aid**: debug builds log angles, phase, inference time, FPS and every counted/partial rep (`adb logcat -s flutter | grep "\[pose\]"`). Only numbers are logged.
+
+**Frame-rate work (NFR-P4, ≥ 15 FPS)** — measured on the Redmi Note 11 with `integration_test/pose_benchmark_test.dart` (`flutter test integration_test/pose_benchmark_test.dart -d <device>`), indoors in the evening, **nobody in view** (so MediaPipe runs its slower person-search step on every frame):
+
+| Change | Camera delivers | Pose analysed |
+|---|---|---|
+| Before (CPU model, full-size frames, 1 frame in flight) | ~11 FPS | 5–7 FPS (user-reported 8) |
+| + model on GPU, frames halved during conversion (3 ms), camera asked for 30 FPS | 16–18 FPS | 7.8 FPS |
+| + two frames in flight (`CameraPoseStream.maxFramesInFlight`) | 16 FPS | **13.2 FPS** |
+
+Model time on the GPU: ~39 ms with synthetic frames, ~52 ms live. **15 FPS is not yet demonstrated**: remaining limits are the camera itself in dim light (16–18 FPS) and the person-search step, which MediaPipe skips while it is tracking a person. Next measurement needed: the same benchmark/app with a person in view in normal light. A 3-frames-in-flight variant could not be tested because the phone blocked the USB install (Xiaomi "Install via USB" confirmation).
+
+**Verification**: 194 automated tests pass (new: Dialogflow mapping/back-off/timeout/safety, agent ↔ app intent names, save/retry, stored fields ⊆ database rules, plan swaps and lighter doses). Android debug APK built and installed on a Redmi Note 11 (Android 13, arm64); the app starts. Camera, pose inference, FPS, voice and threshold tuning on that phone are still pending (see below).
+
+### 2026-10-13 — Real-Time Posture Detection and AI Micro-Coaching Voice Assistant (report Modules 5 and 6)
+
+Module numbers here follow the FYP report (5 = posture, 6 = voice). The five screens existed only as mock-ups (timer-driven reps, hardcoded 85% score, a permanent "Listening…" animation); they now run on real data.
+
+**Navigation (same as the React prototype)**
+Dashboard "Posture Check" tile or Exercise Detail "Start Exercise" → Select Mode → Camera Detection *or* Manual Guidance → Session Summary → "Back to Workout Plan" / "View Analytics". The voice assistant opens from the chatbot's mic icon, and from the camera screen's ⋮ menu and the manual screen's mic icon so it can be used mid-session.
+
+**Posture detection** (`lib/services/posture/`)
+- **MediaPipe Pose Landmarker (33 landmarks)** runs natively on Android: `android/.../PoseLandmarkerChannel.kt` ↔ `pose_estimator.dart` over the `baymax/pose_landmarker` channel. Camera frames (`camera` plugin, NV21) are converted and analysed in memory on a background thread; nothing is saved or uploaded. One frame is in flight at a time, later frames are dropped.
+- `pose_math.dart` — joint angle θ = arccos(BA·BC / |BA||BC|), cosine clamped to [-1, 1], null for zero-length vectors or invalid coordinates. Angles use MediaPipe's 3-D world landmarks.
+- `exercise_form_rules.dart` — per-exercise, editable thresholds. Supported with the camera: **squat, sit-to-stand, push-up, knee push-up**. All other exercises offer Manual Guidance only. *The thresholds are the team's starting values from common coaching cues; they are not validated on test subjects or reviewed by a physiotherapist.*
+- `rep_counter.dart` — state machine top → descending → bottom → ascending → top; a rep counts once, on the return to the top, only if valid depth was reached. Guards: hysteresis, smoothing, single-frame outlier rejection, minimum rep duration, tracking-loss reset.
+- `posture_engine.dart` — form checks per frame, live corrective feedback, scoring:
+  - **Posture score** = 100 × reps with acceptable form ÷ attempted reps (counted + too-shallow attempts) — report FR18.1. Not shown until one attempt has finished.
+  - **Accuracy** = 100 × passed check-frames ÷ assessed check-frames. Frames without confident landmarks are excluded from both.
+- `pose_stream.dart` — camera lifecycle, back-pressure, measured FPS (shown live and on the summary).
+
+**Voice assistant** (`lib/services/voice/`)
+- Pipeline: `speech_to_text` → `IntentService` → `CoachResponder` → `flutter_tts`; states idle / listening / processing / speaking / error / unavailable drive the UI and the waveform (mic level while listening).
+- **Dialogflow is not connected** — there are no credentials and no backend route. Intents come from `RuleBasedIntentService` (on-device keyword rules), and the screen says so. To add Dialogflow, implement `IntentService` against a backend proxy that holds the service-account key, and pass it to `VoiceAssistantController(intents: …)`.
+- Answers use live session state: rep count, latest form correction, score, elapsed time, current exercise and technique steps, today's plan from `UserSession`. With no data it says so. Pause/resume work by voice; ending a session asks for confirmation. Pain or symptoms → "stop and seek help", no diagnosis.
+- `posture_cue_announcer.dart` speaks posture corrections during a camera session, rate-limited (≥5 s apart, same cue not within 15 s, silent while the assistant is open).
+
+**Shared session state** — `lib/services/workout_session/workout_session_controller.dart` (`ChangeNotifier` singleton, like `UserSession`). The posture engine and manual screen write to it; the voice assistant and screens read it. Summaries are kept in memory only.
+
+**Integration points for the Workout Plan module**
+1. Start a session: `Navigator.push(… PostureModeSelection(request: WorkoutSessionRequest.fromPlanned(planned, upNext: restOfTheDay)))`. `exercise_detail.dart` already does this for the tapped exercise (without `upNext`). Passing `upNext` enables "Next Exercise →" and the "what's next?" voice answer.
+2. Read results: `WorkoutSessionController.instance.lastSummary` / `.history` (`SessionSummary`: reps, duration, score, feedback, `skipped`, `tooDifficult`). "Too Difficult" is recorded but nothing consumes it yet (report FR17.4).
+3. `lib/screens/posture_detection/exercise_picker.dart` is a **temporary** test screen behind the dashboard tile; its sets/reps are library defaults, not a prescription. Delete it once the plan passes exercises in.
+
+**Not done / deviations from the mock-up**
+- Sessions are not saved to a backend: no workout-logging endpoint exists and the Realtime Database rules reject unknown fields.
+- The summary's "Injury risk remains Low" banner is replaced by a note that the Injury Risk module is not connected.
+- The camera-consent switch starts **off** (the mock-up had it on) so consent is explicit (FR15.3).
+- **iOS:** no native pose implementation yet (the screen reports "available on Android only"); usage strings were added to `Info.plist`. `permission_handler` also needs its Podfile macros when the iOS project is first built.
+
+**Config changes**: `pubspec.yaml` (+ `camera`, `permission_handler`, `speech_to_text`, `flutter_tts`); Android manifest (+ `CAMERA`, `RECORD_AUDIO`, speech/TTS `<queries>`); `android/app/build.gradle.kts` (+ `com.google.mediapipe:tasks-vision`, and a task that downloads `pose_landmarker_lite.task` into `android/app/src/main/assets/` on first build — git-ignored).
+
+**Verification**
+- `flutter test`: **179 pass** (79 existing + 100 new in `test/posture_test.dart`, `test/voice_test.dart`, `test/posture_screens_test.dart`). The new tests drive the real engine with synthetic landmark sequences and the screens with fake camera/microphone/TTS.
+- `flutter analyze`: no errors or warnings (the new files add no issues).
+- `flutter build apk --debug` succeeds on Windows; the APK contains `libmediapipe_tasks_vision_jni.so`, `assets/pose_landmarker_lite.task` and the `CAMERA` / `RECORD_AUDIO` permissions.
+- **Nothing has been run on a phone.** Live camera preview, real MediaPipe inference, skeleton alignment (incl. front-camera mirroring), FPS, speech recognition and TTS all still need a physical Android device. The 15 FPS target (NFR-P4) is unmeasured; the camera screen shows the live rate and the summary shows the session average, so it can be read off a device.
+- MediaPipe 0.10.26 ships its native library for **arm64-v8a only**: it runs on 64-bit ARM phones, not on x86 emulators or 32-bit devices (those get a "could not start the pose model" message).
+- `permission_handler` is pinned to `^12.0.1`: version 13 requires Android SDK Platform 37, which is not installed on the dev machines.
+
 ### 2026-10-15 — Food search is now a suggestion dropdown
 Typing in "Search foods" shows a scrollable dropdown under the box (compact rows: name, "Also called <other name>" when the match came from another name such as
 "chawal", serving, kcal, source, and a red allergy warning when the food contains something on the user's allergy list). Tapping a row adds it to the meal. Also fixed:

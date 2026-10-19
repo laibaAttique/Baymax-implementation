@@ -1,0 +1,215 @@
+[
+  {
+    "id": "0b9d30fc-b9e9-e532-8176-e2c3d3af5183",
+    "data": [
+      {
+        "text": "how do I do a ",
+        "userDefined": false
+      },
+      {
+        "text": "squat",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "dc6d7f6e-834c-80ba-c169-6c8c869327e2",
+    "data": [
+      {
+        "text": "how to do ",
+        "userDefined": false
+      },
+      {
+        "text": "push-up",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "0e2627f1-8c84-7f45-8871-ae9ac40ab6c4",
+    "data": [
+      {
+        "text": "show me how to do ",
+        "userDefined": false
+      },
+      {
+        "text": "plank",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "780dccbc-c2aa-a683-9979-36710540e869",
+    "data": [
+      {
+        "text": "teach me ",
+        "userDefined": false
+      },
+      {
+        "text": "lunges",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "b1afe408-f80a-88c4-b16c-14e7f9be211b",
+    "data": [
+      {
+        "text": "explain the ",
+        "userDefined": false
+      },
+      {
+        "text": "glute bridge",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "bf0e5897-8bbe-b48a-7086-9bc539e3b047",
+    "data": [
+      {
+        "text": "technique for ",
+        "userDefined": false
+      },
+      {
+        "text": "burpees",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "ece164b6-3797-454a-77eb-d875cce8a995",
+    "data": [
+      {
+        "text": "tips for ",
+        "userDefined": false
+      },
+      {
+        "text": "chair squat",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "9d9323ad-ff8b-b7ce-324b-52c011512f3e",
+    "data": [
+      {
+        "text": "how do I do this",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "15bd9418-7da9-e7fa-1ff0-02209edebf24",
+    "data": [
+      {
+        "text": "show me how",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "569befc2-4acd-8a58-0633-301f1a4d3ccb",
+    "data": [
+      {
+        "text": "what are the steps",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "2101f646-0b24-fce7-aaff-1aee04ccf9a0",
+    "data": [
+      {
+        "text": "form tips",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "f8025759-9b1d-0ff2-b472-676855278f6b",
+    "data": [
+      {
+        "text": "instructions please",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  },
+  {
+    "id": "453a5a3b-74d9-e788-41de-f34d127b432b",
+    "data": [
+      {
+        "text": "burpees",
+        "alias": "exercise",
+        "meta": "@exercise",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0,
+    "lang": "en",
+    "updated": 0
+  }
+]

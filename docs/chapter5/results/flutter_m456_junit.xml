@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="123" failures="0" skipped="0">
+  <testsuite name="test/atc/atc_m456_unit_test.dart" tests="51" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U07 The free-exercise-db dataset is imported with every usable record" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U08 Exercise IDs are unique and a dataset duplicate of a curated exercise is not offered twice" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U09 A missing optional field is tolerated, not invented" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U10 Equipment exercises are offered only for equipment the user owns" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U11 Expert-level dataset exercises are never scheduled (program rule)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U12 Each health category maps to its training profile" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U13 Hypertension excludes high-intensity intervals and names the rule" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U14 Several conditions merge to the most restrictive limits" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U15 Owned equipment brings dataset exercises in, with the reason shown" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U16 The week has the chosen number of training days; the rest are rest days" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U17 The same inputs always give the same plan (deterministic)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U18 MET values are matched to the 2024 Compendium with a recorded match type" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U19 An exercise without a MET value is never offered for planning" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U20 Calories = MET × body weight × active hours" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U21 Intensity bands follow the WHO MET bands at the boundaries" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U22 Diabetes: no more than two rest days in a row" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U23 Warning symptoms stop plan generation and give the reason" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 4 knowledge base and plan generator ATC-M4-U24 A planned exercise counts as completed only when its target is reached" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U01 Joint angle at the middle landmark is computed correctly" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U02 Landmarks below the visibility threshold are not used" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U03 Missing landmarks are named in the guidance" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U04 The movement phases follow top → descending → bottom → ascending → top" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U05 Three full squats count three reps" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U06 A half repetition is not counted" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U07 A movement faster than the minimum rep time is rejected as noise" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U08 The angle is smoothed (exponential average)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U09 A plank hold is timed only while in position" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U10 The back-alignment rule passes upright and fails a deep forward lean" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U11 The hip rule gives the right correction for sagging and piking" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U12 Posture score = acceptable reps ÷ attempted reps" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U13 A correction is shown only after the fault persists for 3 frames" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U14 Exercises map to a movement pattern by movement, not muscle" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U15 An exercise the camera cannot follow is unsupported with a reason" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U16 Camera capability of every schedulable exercise (current code)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U17 Number of movement patterns with a tracker" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 5 posture engine ATC-M5-U18 An opening movement (overhead press) is counted on the mirrored angle" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U01 A rep question is recognised" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U02 A form question is recognised" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U03 A pause command is recognised" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U04 An unrelated question falls back to unknown" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U05 Empty speech input is not treated as a command" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U06 A pain report is recognised as a safety intent" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U07 The reply uses the live rep counter, never an invented number" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U08 With no session the assistant says so instead of inventing numbers" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U09 Quick-action chips are contextual and at most three" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U10 Microphone denied: the assistant never listens" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U11 Microphone permanently denied: the settings link is offered" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U12 Recognition errors give a clear message and nothing is spoken" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U13 A speech-synthesis failure still shows the reply" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U14 Closing releases the microphone and ignores a pending command" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_unit_test.dart" name="Unit Testing: Module 6 voice assistant ATC-M6-U15 Replies never overlap; replay speaks the same reply once more" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_m456_functional_test.dart" tests="21" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 4 workout plan and exercise detail ATC-M4-F03 Exercise detail shows the prescribed dose and a start/end illustration" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 4 workout plan and exercise detail ATC-M4-F04 A dataset exercise shows its photos with the source caption" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name='Functional Testing: Module 4 workout plan and exercise detail ATC-M4-F05 "Start exercise" opens mode selection linked to the planned exercise' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 4 workout plan and exercise detail ATC-M4-F06 The workout tab shows the training profile of the health classification" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F01 Posture Detection offers Today's workout, My plan and the Exercise library" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F02 Without a plan an empty state is shown, not invented exercises" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F03 My plan lists the real plan day with camera capability and starts an entry with its plan link" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F04 The generic exercise library is kept with camera and manual sections" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F05 Camera permission is not requested before the consent toggle is on" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name='Functional Testing: Module 5 posture detection screens ATC-M5-F06 "Skip for now" returns to the previous screen' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F07 Refused camera permission keeps the camera off and offers Manual Guidance" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F08 Camera screen counts reps from pose frames and shows status and privacy notice" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name='Functional Testing: Module 5 posture detection screens ATC-M5-F09 "Stop Session" ends the session and shows the summary with score, stats and feedback' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F10 Manual guidance: confirmed sets add reps; the form checklist and response buttons are shown" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name='Functional Testing: Module 5 posture detection screens ATC-M5-F11 "Next Exercise" advances to the following exercise' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F12 A plank in camera mode shows a hold timer instead of a rep counter" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 5 posture detection screens ATC-M5-F13 An exercise the camera cannot follow explains why and keeps Manual Guidance" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 6 voice assistant screen ATC-M6-F01 Opening the assistant asks for the microphone and shows the listening state" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 6 voice assistant screen ATC-M6-F02 A spoken question shows the transcript, the reply card, at most three chips and is spoken aloud" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 6 voice assistant screen ATC-M6-F03 A refused microphone is explained and a retry is offered" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_functional_test.dart" name="Functional Testing: Module 6 voice assistant screen ATC-M6-F04 Leaving the assistant releases the microphone without running a command" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_m456_rules_test.dart" tests="40" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B01 Screening gate: symptoms No, heart condition No, clearance Not needed, profile data Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B02 Screening gate: symptoms Yes, heart condition No, clearance Not needed, profile data Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B03 Screening gate: symptoms No, heart condition Yes, clearance No, profile data Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B04 Screening gate: symptoms No, heart condition Yes, clearance Yes, profile data Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B05 Screening gate: symptoms No, heart condition No, clearance Not needed, profile data No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B06 Exercise eligibility: Healthy, impact Low, tag None, injury No, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B07 Exercise eligibility: Hypertension, impact Low, tag HIIT, injury No, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B08 Exercise eligibility: Obese, impact High, tag None, injury No, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B09 Exercise eligibility: Healthy, impact High, tag None, injury Knee, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B10 Exercise eligibility: Healthy, impact Low, tag None, injury Knee, MET Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B11 Exercise eligibility: Hypertension, impact Low, tag None, injury No, MET No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B12 Equipment rule: owns Dumbbell, exercise needs Dumbbell" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B13 Equipment rule: owns None, exercise needs Dumbbell" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 4 workout plan generation ATC-M4-B14 Equipment rule: owns Dumbbell, exercise needs Barbell" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B01 Camera capability of squat: validatedForm" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B02 Camera capability of Barbell_Squat: experimentalForm" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B03 Camera capability of Standing_Calf_Raises: notSupported" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B04 Rep acceptance: depth reached Yes, duration ≥ minimum Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B05 Rep acceptance: depth reached No, duration ≥ minimum Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B06 Rep acceptance: depth reached Yes, duration ≥ minimum No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B07 Landmark visibility 0.9 (threshold 0.5)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B08 Landmark visibility 0.3 (threshold 0.5)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B09 Correction trigger: fault No, persists ≥ 3 frames n/a" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B10 Correction trigger: fault Yes, persists ≥ 3 frames No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B11 Correction trigger: fault Yes, persists ≥ 3 frames Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B12 Plan completion: all sets Yes, skipped No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B13 Plan completion: all sets No, skipped No" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 5 posture detection ATC-M5-B14 Plan completion: all sets Yes, skipped Yes" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B01 Voice command "pause workout" with session active' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B02 Voice command "resume workout" with session paused' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B03 Voice command "pause workout" with session none' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B04 Voice command "my knee hurts" with session active' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B05 Microphone permission granted" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B06 Microphone permission denied" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B07 Microphone permission permanently denied" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name='Business Rule Testing: Module 6 voice assistant ATC-M6-B08 Recognition result: final text "how many reps"' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B09 Recognition result: no match" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B10 Recognition result: timeout (silence)" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B11 Text-to-speech works" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_rules_test.dart" name="Business Rule Testing: Module 6 voice assistant ATC-M6-B12 Text-to-speech fails" time="0.000">
+    </testcase>
+  </testsuite>
+  <testsuite name="test/atc/atc_m456_integration_test.dart" tests="11" failures="0" skipped="0">
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 2 → Module 4 (health classification drives the plan) ATC-INT-34 The Module 2 health category sets the intensity ceiling of the generated plan" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 2 → Module 4 (health classification drives the plan) ATC-INT-35 A condition recorded in Module 2 removes restricted exercises from the Module 4 plan" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 4 → Module 5 (plan entries open posture sessions) ATC-INT-36 A planned exercise starts a posture session with the planned dose and a camera configuration" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 4 (sessions complete planned exercises) ATC-INT-37 Completing every main exercise of the day marks the plan day done once" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 4 (sessions complete planned exercises) ATC-INT-38 A skipped or incomplete session does not complete the planned exercise" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 6 (posture results reach the voice assistant) ATC-INT-39 A posture correction from the camera engine is spoken once by the cue announcer" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 6 (posture results reach the voice assistant) ATC-INT-40 Asking &quot;how's my form&quot; answers from the live posture analysis" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 5 → Module 6 (posture results reach the voice assistant) ATC-INT-41 The rep count spoken by the assistant equals the camera counter" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name='Integration Testing: Module 6 → Module 5 (voice commands control the posture session) ATC-INT-42 A spoken "pause" stops rep counting until "resume"' time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: Module 6 → Module 5 (voice commands control the posture session) ATC-INT-43 Ending a session by voice needs confirmation before the session is asked to finish" time="0.000">
+    </testcase>
+    <testcase classname="test/atc/atc_m456_integration_test.dart" name="Integration Testing: end-to-end Modules 2 → 4 → 5 → 6 ATC-INT-44 Profile → plan → posture sessions with voice queries → plan day completed" time="0.000">
+    </testcase>
+  </testsuite>
+</testsuites>

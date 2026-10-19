@@ -3,20 +3,25 @@ import 'package:flutter/services.dart';
 import '../../models/plan.dart';
 import '../../services/activity_service.dart';
 import '../../services/api_client.dart';
+import '../../services/exercise_catalog.dart';
 import '../../services/exercise_library.dart';
 import '../../services/food_log_service.dart';
 import '../../services/gamification.dart';
 import '../../services/notification_service.dart';
 import '../../services/progress_service.dart';
+import '../../services/workout_session/plan_progress.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/exercise_visual.dart';
+import '../../widgets/training_profile_card.dart';
 import '../../widgets/specialist_plan_banner.dart';
 import '../../widgets/notification_bell.dart';
 import '../../widgets/glass.dart';
 import '../health_profiling/health_classification.dart';
 import '../nutrition/nutrition_plan_screen.dart';
 import 'exercise_detail.dart';
+import 'workout_readiness_screen.dart';
 
 /// Module 3: the generated weekly workout schedule (FR-5) with the medical
 /// rules that shaped it (FR-1) and a Regenerate button (FE-7).
@@ -41,6 +46,21 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
   @override
   void initState() {
     super.initState();
+    _loadDone();
+    PlanProgress.instance.addListener(_onProgress);
+    PlanProgress.instance.loadToday();
+  }
+
+  @override
+  void dispose() {
+    PlanProgress.instance.removeListener(_onProgress);
+    super.dispose();
+  }
+
+  /// A session finished: show its tick, and the day's tick if that completed the day.
+  void _onProgress() {
+    if (!mounted) return;
+    setState(() {});
     _loadDone();
   }
 
@@ -118,6 +138,58 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
     );
   }
 
+  Future<void> _openReadiness() async {
+    final changed = await Navigator.push<bool>(context, MaterialPageRoute(builder: (_) => const WorkoutReadinessScreen()));
+    if (changed == true && mounted) setState(() => _selectedDay = null);
+  }
+
+  /// Shown instead of the plan when the safety rules require more information or a doctor's clearance first.
+  Widget _gateScaffold(PersonalizedPlan plan) {
+    final gate = plan.gate!;
+    final clearance = gate.status == WorkoutGateStatus.needsClearance;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Workout'), actions: const [NotificationBell(), SizedBox(width: 8)]),
+      body: ListView(
+        padding: EdgeInsets.fromLTRB(20, 8, 20, AppTheme.navSpace(context) + 16),
+        children: [
+          GlassCard(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconWell(icon: clearance ? Icons.medical_services_rounded : Icons.fact_check_rounded, color: clearance ? AppTheme.error : AppTheme.primary, size: 52),
+                const SizedBox(height: 14),
+                Text(clearance ? 'A doctor\'s clearance comes first' : 'A few answers are needed first',
+                    style: const TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+                const SizedBox(height: 8),
+                for (final r in gate.reasons)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(r, style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary, height: 1.45, fontWeight: FontWeight.w500)),
+                  ),
+                const SizedBox(height: 10),
+                Text('Rules: ${gate.ruleIds.join(', ')} (${plan.rulesVersion}, pending professional review). Baymax does not give medical clearance.',
+                    style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, height: 1.4)),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          GlowButton(
+            icon: Icons.fact_check_rounded,
+            label: UserSession.instance.readiness.answered ? 'Update my answers' : 'Answer the safety questions',
+            onPressed: _openReadiness,
+          ),
+          const SizedBox(height: 8),
+          TextButton.icon(
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NutritionPlanScreen())),
+            icon: const Icon(Icons.set_meal_rounded, size: 18),
+            label: const Text('View nutrition plan'),
+          ),
+        ],
+      ),
+    );
+  }
+
   int _defaultDay(PersonalizedPlan plan) {
     final today = DateTime.now().weekday - 1;
     if (plan.week[today] != null) return today;
@@ -165,8 +237,10 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
     );
   }
 
-  Widget _buildExerciseCard(PlannedExercise p, List<String> notes, int index, List<PlannedExercise> queue) {
+  Widget _buildExerciseCard(PlannedExercise p, List<String> notes, int index, List<PlannedExercise> queue, int weekday) {
     final e = p.exercise;
+    // Module 5 → 4: done today through a camera or guided session that reached its target.
+    final doneToday = weekday == PlanProgress.instance.todayIndex && PlanProgress.instance.isDoneToday(weekday, index);
     final color = e.level == 1 ? AppTheme.success : (e.level == 2 ? AppTheme.warning : AppTheme.error);
     return Reveal(
       index: index,
@@ -175,10 +249,13 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
         child: GlassCard(
           radius: AppTheme.rMedium + 2,
           semanticLabel: '${e.name}, ${p.prescription}. Open details',
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ExerciseDetail(planned: p, safetyNotes: notes, queue: queue))),
+          onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (_) => ExerciseDetail(planned: p, safetyNotes: notes, queue: queue, weekday: weekday))),
           child: Row(
             children: [
-              IconWell(icon: AppIcons.exercise(e.group), size: 50),
+              ExerciseVisualInfo.of(e).kind == VisualKind.none
+                  ? IconWell(icon: AppIcons.exercise(e.group), size: 50)
+                  : SizedBox(width: 50, child: ExerciseVisual(exercise: e, height: 50, radius: 14, animate: false)),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -193,6 +270,8 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                       children: [
                         Text(p.prescription, style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
                         InfoChip(e.levelLabel, color: color),
+                        if (p.ruleNotes.isNotEmpty) const InfoChip('Adapted for you', color: AppTheme.teal),
+                        if (doneToday) const InfoChip('Done today', icon: Icons.check_rounded, color: AppTheme.success),
                       ],
                     ),
                     if (p.reasons.isNotEmpty)
@@ -299,6 +378,8 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
           );
         }
 
+        if (!plan.workoutAvailable) return _gateScaffold(plan);
+
         final selected = _selectedDay ?? _defaultDay(plan);
         final day = plan.week[selected];
         final main = day?.exercises.where((e) => e.exercise.id != 'warmup' && e.exercise.id != 'cooldown').toList() ?? const <PlannedExercise>[];
@@ -345,6 +426,28 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                         ),
                       ),
                     ),
+
+                    if (!session.readiness.answered)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                        child: GlassCard(
+                          tint: AppTheme.tint(AppTheme.primary, 0.10),
+                          onTap: _openReadiness,
+                          semanticLabel: 'Answer the exercise readiness questions',
+                          child: const Row(children: [
+                            IconWell(icon: Icons.fact_check_rounded, size: 40),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                'Answer 4 quick safety questions to tailor this plan to your injuries and equipment. '
+                                'Until then it uses body-weight exercises only.',
+                                style: TextStyle(fontSize: 13, color: AppTheme.textPrimary, height: 1.4, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
+                          ]),
+                        ),
+                      ),
 
                     Reveal(index: 1, child: _dayStrip(plan, selected)),
 
@@ -398,10 +501,14 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
-                          children: [for (var i = 0; i < day.exercises.length; i++) _buildExerciseCard(day.exercises[i], plan.restrictionNotes, i, day.exercises)],
+                          children: [for (var i = 0; i < day.exercises.length; i++) _buildExerciseCard(day.exercises[i], plan.restrictionNotes, i, day.exercises, selected)],
                         ),
                       ),
                     ],
+
+                    // Module 4: the week against the classification's training profile
+                    if (plan.profile != null)
+                      Padding(padding: const EdgeInsets.fromLTRB(20, 14, 20, 0), child: TrainingProfileCard(plan.profile!)),
 
                     // Medical rules applied (FR-1)
                     Padding(
@@ -455,9 +562,20 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                       ),
                     ),
                     Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TextButton.icon(
+                        onPressed: _openReadiness,
+                        icon: const Icon(Icons.fact_check_rounded, size: 18),
+                        label: Text(session.readiness.answered ? 'Update safety & equipment answers' : 'Answer safety & equipment questions'),
+                      ),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
                       child: Text(
-                        '${ExerciseLibrary.originLabel}. Energy values: 2024 Compendium of Physical Activities. See Profile → Sources & methodology.',
+                        '${ExerciseLibrary.originLabel}'
+                        '${ExerciseCatalog.isLoaded ? ', plus ${ExerciseCatalog.all.length} free-exercise-db exercises for the equipment you have' : ''}. '
+                        'Energy values: 2024 Compendium of Physical Activities. Safety rules ${plan.rulesVersion} (pending professional review). '
+                        'See Profile → Sources & methodology.',
                         style: const TextStyle(fontSize: 11.5, color: AppTheme.textSecondary, height: 1.45),
                       ),
                     ),
@@ -475,7 +593,8 @@ class _WorkoutPlanState extends State<WorkoutPlan> {
                     label: isToday ? "Start today's workout" : 'Preview workout',
                     onPressed: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => ExerciseDetail(planned: day.exercises.first, safetyNotes: plan.restrictionNotes, queue: day.exercises)),
+                      MaterialPageRoute(
+                          builder: (_) => ExerciseDetail(planned: day.exercises.first, safetyNotes: plan.restrictionNotes, queue: day.exercises, weekday: selected)),
                     ),
                   ),
                 ),

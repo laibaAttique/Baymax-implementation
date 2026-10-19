@@ -16,6 +16,8 @@ __pycache__/
 .DS_Store
 .idea/
 
+# Service-account keys (e.g. Dialogflow); never commit
+backend/secrets/
 # a plot of scraped training images: built on web images whose licence is unverified, so it is not published
 # (see app/ml/food_classifier/build_final_dataset.py output ATTRIBUTION.md)
 app/ml/food_classifier/results_2026-10-12/flagged_label_noise.png
@@ -26,3 +28,6 @@ app/ml/food_classifier/results_2026-10-12/flagged_label_noise.png
 .next/
 *.tsbuildinfo
 next-env.d.ts
+
+# Kotlin compiler daemon session files (build cache)
+app/android/.kotlin/
