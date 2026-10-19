@@ -6,7 +6,11 @@
 //
 // Optional: --project <firebase project id> (default baymax-148da)
 //
-// Authorisation: reuses your `firebase login` session (the same credentials
+// Several files can be given as a comma-separated list (curated foods + the searchable food list):
+//   node tools/seed_firestore.js "<app>/assets/data/foods.json,<app>/assets/data/foods_bulk.json" --collection foods
+//
+// Authorisation: if GOOGLE_APPLICATION_CREDENTIALS points at a service-account key file, that is used (keep the key OUTSIDE the project and
+// never commit it). Otherwise it reuses your `firebase login` session (the same credentials
 // `firebase deploy` uses), so nothing extra needs to be configured. Admin
 // access bypasses the Firestore security rules, which keep the catalogue
 // read-only for app users.
@@ -51,6 +55,12 @@ function findFirebaseTools() {
 }
 
 async function accessToken() {
+  if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+    const { GoogleAuth } = require('google-auth-library');
+    const client = await new GoogleAuth({ scopes: ['https://www.googleapis.com/auth/datastore'] }).getClient();
+    const t = await client.getAccessToken();
+    return t.token || t;
+  }
   const dir = findFirebaseTools();
   const auth = require(path.join(dir, 'lib', 'auth'));
   const { configstore } = require(path.join(dir, 'lib', 'configstore'));
@@ -100,7 +110,12 @@ async function main() {
   }
   const validate = VALIDATORS[COLLECTION];
   if (!validate) throw new Error(`Unknown collection "${COLLECTION}" (use foods or exercises)`);
-  const foods = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const foods = file.split(',').flatMap((f) => JSON.parse(fs.readFileSync(f.trim(), 'utf8')));
+  const seen = new Set();
+  for (const f of foods) {
+    if (seen.has(f.id)) throw new Error(`Duplicate id ${f.id} across the input files`);
+    seen.add(f.id);
+  }
   if (!Array.isArray(foods) || foods.length === 0) throw new Error('The JSON file is empty or not an array');
 
   const token = await accessToken();
@@ -122,9 +137,12 @@ async function main() {
   const meta = { version: Math.floor(Date.now() / 1000), count: foods.length };
   let summary;
   if (COLLECTION === 'foods') {
-    meta.usda = foods.filter((f) => f.source === 'usda').length;
-    meta.estimate = foods.length - meta.usda;
-    summary = `${meta.usda} USDA-verified, ${meta.estimate} estimates`;
+    const n = (src) => foods.filter((f) => f.source === src).length;
+    meta.usda = n('usda');
+    meta.indb = n('indb');
+    meta.teamList = n('calorica');
+    meta.estimate = foods.length - meta.usda - meta.indb - meta.teamList;
+    summary = `${meta.usda} USDA, ${meta.indb} Indian Nutrient Databank, ${meta.teamList} team list, ${meta.estimate} estimates`;
   } else {
     meta.fromDataset = foods.filter((e) => e.techniqueSource === 'free-exercise-db').length;
     meta.teamWritten = foods.length - meta.fromDataset;
