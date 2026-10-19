@@ -31,6 +31,9 @@ Legend: 🔴 not started · 🟡 in progress / partial · 🟢 done & verified
 
 ## 2. Change log
 
+### 2026-10-17 — Pushed to GitHub
+Commit `bd8a2a1` on `Amna's-work` (branch `main` untouched): `app/`, new `api/`, `portal/` (web only) and `admin/` folders (the old `portal/server`+`web` layout was replaced), `docs/` (Chapters 4 and 5). Left out: all `.env*` files (only `.env.example` is published), Firebase client config, the food model, `foods_bulk.json`, `CLAUDE.md`, raw console logs with local paths; registration numbers removed from the pushed copy of this file.
+
 ### 2026-10-16 — Chapter 5 test cases for the 60% milestone (`~/Downloads/Baymax_Test_Cases/`)
 289 automated test cases with unique IDs (`ATC-M<module>-U|F|B<nn>`, `ATC-INT-<nn>`), all passing, for the modules the user chose (merged numbering 1, 2, 3, 4, 8, 9, 12, 13, 14, 16, 17; Module 10 removed at the user's request): 105 unit, 73 functional, 84 business-rule, 27 integration. The document now holds the test cases and their traceability only, no explanatory text. Module 3 (Home) cases added 2026-10-16 (13). Cases for Modules 10, 11 and 15 stay in the code as regression tests but are filtered out of the report by `INCLUDED` in `generate_report.py`.
 Code: `app/test/atc/` (helper + 4 Dart suites, 241 cases), `baymax-api/test/atc/` (66 API cases), IDs added to the titles of the existing emulator tests in `baymax-api/e2e/` (24 cases).

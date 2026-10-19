@@ -33,6 +33,7 @@ Final-year project (COMSATS University Islamabad). Flutter app, Express API, two
 
 Decision support only — Baymax does not diagnose or treat any condition.
 
-## Note on `app/assets/data/foods_bulk.json`
+## Notes on the food data and the food photo model
 
-The searchable food list (about 2,760 foods) is **not published here**: the usage licence of two of its sources is not yet verified. The file in this repo is an empty placeholder so the app still builds; the app reads the full list from Firestore. Regenerate it with `app/ml/food_catalog/build_catalog.py` once the licences are confirmed.
+* `app/assets/data/foods_bulk.json` is the searchable food list (about 2,760 foods) built from the team's own lists, the Indian Nutrient Databank and USDA FoodData Central SR Legacy. The team has **not independently verified the usage licences of the team list and the Indian Nutrient Databank**; check them before reusing this file elsewhere. Rebuild it with `app/ml/food_catalog/build_catalog.py`.
+* `app/assets/models/food_classifier.tflite` is the experimental food photo model (EfficientNetV2-B0, 22 foods, trained on a cleaned Food-101 subset and two Kaggle Pakistani-dish datasets; the licences of the web-sourced photos are unverified). It failed its per-class check on aloo gobi and paratha, so release builds do not use it: it is loaded only in debug and profile builds. See `app/ml/README.md`.
