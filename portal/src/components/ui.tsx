@@ -16,6 +16,7 @@ export function StatusBadge({ a }: { a: Appointment }) {
 }
 
 export function PaymentBadge({ a }: { a: Appointment }) {
+  if (a.refund) return <Badge tone="neutral">{a.refund.status === 'manual' ? 'Refund due' : 'Refunded'}</Badge>;
   if (!a.payment && a.status === 'requested') return <Badge tone="warn">Payment unknown</Badge>;
   if (!a.payment) return <Badge tone="warn">Payment unknown</Badge>;
   if (a.payment.status === 'pay_at_clinic') return <Badge tone="warn">Pay at clinic</Badge>;
@@ -51,4 +52,21 @@ export function Spinner({ label = 'Loading' }: { label?: string }) {
       <span className="muted">{label}…</span>
     </div>
   );
+}
+
+/** A form field with its label, a hint, and the problem with it (if any) shown right under it. */
+export function Field({ label, error, hint, children }: { label: string; error?: string | null; hint?: string; children: ReactNode }) {
+  return (
+    <label className={error ? 'field field-bad' : 'field'}>
+      {label}
+      {children}
+      {hint && !error && <span className="field-hint">{hint}</span>}
+      {error && <span className="field-error" role="alert">{error}</span>}
+    </label>
+  );
+}
+
+/** "412 / 600" under a text box, turning red when it is over. */
+export function Counter({ value, max }: { value: string; max: number }) {
+  return <span className={value.length > max ? 'field-error' : 'field-hint'} aria-live="polite">{value.length} / {max}</span>;
 }

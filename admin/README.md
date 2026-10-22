@@ -31,3 +31,9 @@ Use an email you can open (it is where "Forgot your password?" sends a reset lin
 * If the email already has an account, its password is **not** changed and nothing is saved. Add `--reset-password` to give it a new generated password, or run `node scripts/make-admin.js --email ...` to make it an administrator and keep its own password.
 * A doctor, nutritionist or trainer account is never converted: use a separate email.
 * Nobody can promote themselves from a browser, and the panel cannot make anyone an administrator.
+
+## Payments and figures
+
+* **Payments** (`/payments`): every consultation payment with totals (taken online, platform fees, refunded, refund due, pay at clinic), per-specialist figures, filters and a CSV download. **Refund** is for paid appointments that are over and not yet refunded (for example the patient cancelled); declined, cancelled and unanswered requests are refunded automatically. A test payment is returned at once; a live one is marked for you to return through the gateway.
+* **Overview** also shows money, video sessions opened (and minutes) and messages exchanged.
+* Every form checks its fields before sending; approving a registration asks for confirmation with the licence number shown.

@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { onAuthStateChanged, signOut as fbSignOut } from 'firebase/auth';
 import { firebaseAuth, firebaseConfigured } from './firebase';
-import { api, ApiError } from './api';
+import { api, ApiError, UNAUTHORIZED_EVENT } from './api';
 import type { Me } from './types';
 
 type State =
@@ -20,6 +20,19 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+const EXPIRED_KEY = 'baymax:session-expired';
+
+/** True once if the person was just signed out because their session ended; the sign-in page then says why. */
+export function takeSessionExpired(): boolean {
+  try {
+    const yes = sessionStorage.getItem(EXPIRED_KEY) === '1';
+    sessionStorage.removeItem(EXPIRED_KEY);
+    return yes;
+  } catch {
+    return false;
+  }
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<State>({ status: 'loading' });
@@ -48,6 +61,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
   }, [loadMe]);
+
+  // The API refused our token in the middle of a session (it expired or the account was closed): go back to the sign-in page.
+  useEffect(() => {
+    const onUnauthorized = () => {
+      try {
+        sessionStorage.setItem(EXPIRED_KEY, '1');
+      } catch {
+        // private browsing may refuse storage; the redirect still happens
+      }
+      setState({ status: 'signedOut' });
+      if (firebaseConfigured) void fbSignOut(firebaseAuth());
+    };
+    window.addEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
+    return () => window.removeEventListener(UNAUTHORIZED_EVENT, onUnauthorized);
+  }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({

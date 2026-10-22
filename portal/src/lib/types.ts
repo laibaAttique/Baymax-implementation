@@ -26,7 +26,8 @@ export interface Appointment {
   notesForSpecialist: string;
   shares: { healthSummary: boolean; foodLog7d: boolean; activity30d: boolean };
   consultation: Consultation | null;
-  payment: { status: 'paid' | 'pay_at_clinic'; method: 'card' | 'wallet' | 'clinic' | null; total: number; test: boolean; transactionId: string } | null;
+  payment: PaymentInfo | null;
+  refund: RefundInfo | null;
   declineReason: string;
   phase: Phase;
   canRespond: boolean;
@@ -34,6 +35,25 @@ export interface Appointment {
   canPrepare: boolean;
   canViewShared: boolean;
   live: boolean;
+}
+
+export interface PaymentInfo {
+  status: 'paid' | 'pay_at_clinic';
+  method: 'card' | 'wallet' | 'clinic' | null;
+  total: number;
+  consultationFee: number;
+  platformFee: number;
+  paidAt: number;
+  test: boolean;
+  transactionId: string;
+}
+
+export interface RefundInfo {
+  status: 'refunded' | 'manual';
+  amount: number;
+  at: number;
+  reason: string;
+  by: 'specialist' | 'admin' | 'system';
 }
 
 export interface Availability {
@@ -121,8 +141,17 @@ export interface Dashboard {
   role: Role;
   roleLabel: string;
   counts: { consultationsToday: number; upcoming7Days: number; patients: number; awaitingNotes: number; pendingRequests: number };
+  cards: RoleCard[];
   requests: Appointment[];
   today: Appointment[];
+}
+
+export interface RoleCard {
+  key: string;
+  label: string;
+  value: number;
+  hint: string;
+  warn: boolean;
 }
 
 export interface SharedData {
@@ -151,6 +180,94 @@ export interface AppointmentDetail {
   appointment: Appointment;
   sharedData: SharedData | null;
   sharedLocked: string | null;
+  call: CallSummary;
+  chat: ChatState;
+}
+
+export interface CallSummary {
+  joins: number;
+  firstJoinAt: number | null;
+  lastLeftAt: number | null;
+  minutes: number;
+}
+
+export interface CallInfo {
+  appointmentId: string;
+  type: 'video' | 'chat';
+  patientName: string;
+  startAt: number;
+  endAt: number;
+  opensAt: number;
+  serverTime: number;
+  canJoin: boolean;
+  reason: string;
+  room?: { domain: string; room: string; startMuted: boolean };
+  displayName: string;
+  summary: CallSummary;
+}
+
+export interface ChatState {
+  canRead: boolean;
+  canSend: boolean;
+  reason: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  side: 'patient' | 'specialist';
+  text: string;
+  at: number;
+}
+
+export interface Conversation {
+  appointmentId: string;
+  patientId: string;
+  patientName: string;
+  type: 'video' | 'chat';
+  status: Status;
+  startAt: number;
+  canSend: boolean;
+  last: { text: string; at: number; side: 'patient' | 'specialist' } | null;
+  unread: number;
+  messageCount: number;
+}
+
+export interface ChatThread {
+  serverTime: number;
+  appointment: { id: string; patientName: string; type: 'video' | 'chat'; status: Status; startAt: number; endAt: number };
+  state: ChatState;
+  messages: ChatMessage[];
+  patientReadAt: number;
+}
+
+export type PaymentBucket = 'held' | 'upcoming' | 'earned' | 'clinic' | 'due' | 'refunded';
+
+export interface PaymentRow {
+  appointmentId: string;
+  patientName: string;
+  specialistId: string;
+  specialistName: string;
+  startAt: number;
+  status: Status;
+  type: 'video' | 'chat';
+  bucket: PaymentBucket | 'void' | 'unpaid';
+  payment: PaymentInfo | null;
+  refund: RefundInfo | null;
+}
+
+export interface Money { count: number; amount: number }
+
+export interface PaymentSummary {
+  count: number;
+  earned: Money;
+  upcoming: Money;
+  held: Money;
+  clinicDue: Money;
+  due: Money;
+  refunded: Money;
+  platformFees: number;
+  gross: number;
+  testPayments: number;
 }
 
 export interface PlanAuthor {

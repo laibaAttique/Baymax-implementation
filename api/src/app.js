@@ -7,6 +7,8 @@ import { authenticate } from './middleware/auth.js';
 import { meRoutes, specialistRoutes } from './routes/specialist.js';
 import { adminRoutes } from './routes/admin.js';
 import { applicationRoutes } from './routes/applications.js';
+import { requireJsonContentType, requireObjectBody } from './lib/validate.js';
+import { makeLimiter } from './lib/limiter.js';
 
 /**
  * Builds the API. [auth] verifies Firebase ID tokens, [db] is the database interface in lib/db.js, [now] is the clock.
@@ -22,7 +24,14 @@ export function createApp({ auth, db, now = Date.now, origin = 'http://localhost
   app.use('/api', rateLimit({ windowMs: 60_000, limit: 300, standardHeaders: true, legacyHeaders: false }));
 
   app.get('/health', (_req, res) => res.json({ ok: true }));
+  // A write must be a JSON object, and one signed-in person cannot make more than 120 writes a minute.
+  app.use('/api', requireJsonContentType, requireObjectBody);
   app.use('/api', authenticate({ auth, db }));
+  const writeLimit = makeLimiter({ limit: 120, windowMs: 60_000, now });
+  app.use('/api', (req, _res, next) => {
+    if (req.method !== 'GET') writeLimit.hit(req.user.uid);
+    next();
+  });
   app.use('/api', meRoutes({ db }));
   app.use('/api/applications', applicationRoutes({ db, now }));
   app.use('/api/admin', adminRoutes({ auth, db, now }));

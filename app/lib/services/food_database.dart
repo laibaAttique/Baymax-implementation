@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart' show rootBundle;
 import '../models/food.dart';
+import 'allergen_dictionary.dart';
 import 'catalog_service.dart';
 import '../utils/fuzzy.dart';
 
@@ -63,6 +64,19 @@ class FoodDatabase {
     }
   }
 
+  /// Adds the allergens the dictionary finds in each food's name and aliases to the ones its data file lists. It only ever adds: a
+  /// warning from the data file or the name guess is never removed. Foods without a dictionary hit keep their list as it is.
+  static List<FoodItem> withDictionaryAllergens(List<FoodItem> items, AllergenDictionary? dict) {
+    if (dict == null || dict.isEmpty) return items;
+    return [
+      for (final f in items)
+        () {
+          final found = dict.detect([f.name, ...f.aliases].join(' , ')).keys.where((a) => !f.allergens.contains(a)).toList();
+          return found.isEmpty ? f : f.withAllergens([...f.allergens, ...found]);
+        }(),
+    ];
+  }
+
   static FoodDatabase? _instance;
   static Future<FoodDatabase>? _loading;
 
@@ -74,6 +88,7 @@ class FoodDatabase {
   }
 
   static Future<FoodDatabase> _loadFresh() async {
+    final dict = await AllergenDictionary.ensureLoaded();
     final remote = await CatalogService.fetch<FoodItem>(
       collection: 'foods',
       metaId: 'foods',
@@ -84,9 +99,11 @@ class FoodDatabase {
       // have it yet (an older catalogue holding just the curated foods), so a failed or partial seed never loses the search.
       final hasList = remote.items.where((i) => i.isBulk).length >= 500;
       final items = hasList ? remote.items : withBulk(remote.items, await _bulkAsset());
-      return _instance = FoodDatabase(items, origin: remote.origin, version: remote.version);
+      return _instance = FoodDatabase(withDictionaryAllergens(items, dict), origin: remote.origin, version: remote.version);
     }
-    return _instance = FoodDatabase.fromJsonString(await rootBundle.loadString('assets/data/foods.json'), bulkJson: await _bulkAsset());
+    return _instance = FoodDatabase(
+      withDictionaryAllergens(FoodDatabase.fromJsonString(await rootBundle.loadString('assets/data/foods.json'), bulkJson: await _bulkAsset()).items, dict),
+    );
   }
 
   static Future<String?> _bulkAsset() async {
@@ -107,7 +124,7 @@ class FoodDatabase {
           : origin == CatalogOrigin.cache
               ? 'saved on this device'
               : 'offline copy bundled with the app';
-      return 'Food database: ${items.length} foods, $where. Allergens of the $bulk searchable foods are estimated from the name.';
+      return 'Food database: ${items.length} foods, $where. Allergens of the $bulk searchable foods are estimated from the name and an ingredient dictionary, not read from a label.';
     }
     switch (origin) {
       case CatalogOrigin.server:

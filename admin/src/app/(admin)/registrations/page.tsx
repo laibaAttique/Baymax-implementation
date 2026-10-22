@@ -34,6 +34,11 @@ export default function RegistrationsPage() {
   }, [load]);
 
   async function decide(a: AdminApplication, kind: 'approve' | 'reject') {
+    if (kind === 'approve' && !window.confirm(`Approve ${a.name} as a ${TYPE_LABEL[a.type] ?? a.type}?\n\nLicence number: ${a.licenseNumber}\n\nPatients will be able to book them in the Baymax app. Only approve if you have checked the licence number with the issuing body.`)) return;
+    if (kind === 'reject' && reason.trim().length > 300) {
+      setError('The reason can be at most 300 characters.');
+      return;
+    }
     setBusy(a.uid);
     setError(null);
     setNotice(null);

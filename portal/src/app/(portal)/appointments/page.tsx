@@ -6,6 +6,7 @@ import { api } from '@/lib/api';
 import { dayStart, fmtDateTime, fromInputDate, pkr, toInputDate } from '@/lib/format';
 import type { Appointment } from '@/lib/types';
 import { Card, Notice, PaymentBadge, Spinner, StatusBadge } from '@/components/ui';
+import { rangeProblem } from '@/lib/validate';
 
 export default function AppointmentsPage() {
   const [status, setStatus] = useState('');
@@ -16,6 +17,11 @@ export default function AppointmentsPage() {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    const badRange = rangeProblem(from, to);
+    if (badRange) {
+      setError(badRange);
+      return;
+    }
     const params = new URLSearchParams();
     if (status) params.set('status', status);
     if (q.trim()) params.set('q', q.trim());
@@ -53,7 +59,7 @@ export default function AppointmentsPage() {
         <form className="filters" onSubmit={(e) => e.preventDefault()}>
           <label>
             Patient name
-            <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name" />
+            <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name" maxLength={80} />
           </label>
           <label>
             Status

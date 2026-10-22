@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/body_forecast.dart';
 import '../services/calorie_optimizer.dart';
 import '../theme/app_theme.dart';
 
@@ -256,4 +257,114 @@ class _DonutPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _DonutPainter old) => old.slices != slices;
+}
+
+
+/// The 30-day forecast: the planned path, a more cautious path, the goal line and a marker for each milestone that falls inside the 30 days.
+class ForecastChart extends StatelessWidget {
+  final BodyForecast forecast;
+  const ForecastChart({Key? key, required this.forecast}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final f = forecast;
+    return Semantics(
+      label: 'Forecast chart: from ${f.inputs.weightKg.toStringAsFixed(1)} kg to ${f.weightIn30.toStringAsFixed(1)} kg in 30 days',
+      child: CustomPaint(painter: _ForecastPainter(f), size: Size.infinite),
+    );
+  }
+}
+
+class _ForecastPainter extends CustomPainter {
+  final BodyForecast f;
+  _ForecastPainter(this.f);
+
+  void _label(Canvas canvas, String text, Offset at, {bool right = false, bool center = false}) {
+    final tp = TextPainter(text: TextSpan(text: text, style: const TextStyle(fontSize: 10.5, color: AppTheme.textSecondary, fontWeight: FontWeight.w600)), textDirection: TextDirection.ltr)..layout();
+    canvas.drawText(tp, right ? at - Offset(tp.width, 0) : (center ? at - Offset(tp.width / 2, 0) : at));
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const left = 34.0, bottom = 18.0, top = 8.0, rightPad = 8.0;
+    final target = f.inputs.targetKg;
+    final values = [...f.days.map((p) => p.kg), ...f.cautious.map((p) => p.kg)];
+    var lo = values.reduce((a, b) => a < b ? a : b), hi = values.reduce((a, b) => a > b ? a : b);
+    // The goal line is drawn only when it is near enough to keep the plan's own curve readable.
+    final showTarget = target != null && (target < lo ? lo - target : target > hi ? target - hi : 0) <= 3 * (hi - lo + 0.5);
+    if (showTarget) {
+      lo = lo < target ? lo : target;
+      hi = hi > target ? hi : target;
+    }
+    if (hi - lo < 1) {
+      lo -= 0.5;
+      hi += 0.5;
+    }
+    final pad = (hi - lo) * 0.08;
+    lo -= pad;
+    hi += pad;
+    final w = size.width - left - rightPad, h = size.height - top - bottom;
+    double x(int day) => left + w * day / 30;
+    double y(double kg) => top + h * (1 - (kg - lo) / (hi - lo));
+
+    final grid = Paint()
+      ..color = AppTheme.border
+      ..strokeWidth = 1;
+    for (final d in [0, 10, 20, 30]) {
+      canvas.drawLine(Offset(x(d), top), Offset(x(d), top + h), grid);
+      _label(canvas, 'Day $d', Offset(x(d), top + h + 3), center: true);
+    }
+    _label(canvas, hi.toStringAsFixed(1), Offset(left - 4, top - 2), right: true);
+    _label(canvas, lo.toStringAsFixed(1), Offset(left - 4, top + h - 10), right: true);
+
+    if (showTarget) {
+      final dash = Paint()
+        ..color = AppTheme.success
+        ..strokeWidth = 1.5;
+      for (double px = left; px < left + w; px += 10) {
+        canvas.drawLine(Offset(px, y(target)), Offset(px + 5, y(target)), dash);
+      }
+    }
+    Path path(List<ForecastPoint> pts) {
+      final p = Path()..moveTo(x(pts.first.day), y(pts.first.kg));
+      for (final q in pts.skip(1)) {
+        p.lineTo(x(q.day), y(q.kg));
+      }
+      return p;
+    }
+
+    final cautious = Paint()
+      ..color = AppTheme.textSecondary
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+    canvas.drawPath(path(f.cautious), cautious);
+    canvas.drawPath(
+        path(f.days),
+        Paint()
+          ..color = AppTheme.glow.withOpacity(0.35)
+          ..strokeWidth = 8
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6));
+    canvas.drawPath(
+        path(f.days),
+        Paint()
+          ..color = AppTheme.primary
+          ..strokeWidth = 3
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round);
+    for (final m in f.milestones.where((m) => m.day <= 30)) {
+      final at = Offset(x(m.day), y(f.days[m.day].kg));
+      canvas.drawCircle(at, 6, Paint()..color = Colors.white);
+      canvas.drawCircle(at, 4, Paint()..color = AppTheme.teal);
+    }
+    canvas.drawCircle(Offset(x(30), y(f.days.last.kg)), 4.5, Paint()..color = AppTheme.primary);
+  }
+
+  @override
+  bool shouldRepaint(covariant _ForecastPainter old) => old.f != f;
+}
+
+extension on Canvas {
+  void drawText(TextPainter tp, Offset at) => tp.paint(this, at);
 }

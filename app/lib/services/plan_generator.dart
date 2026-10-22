@@ -11,6 +11,7 @@ import 'workout_rules/safety_rule_engine.dart';
 import 'workout_rules/safety_rule_repository.dart';
 import 'food_database.dart';
 import 'health_classifier.dart';
+import 'meal_roles.dart';
 import 'ml/gradient_boosting_model.dart';
 
 /// Phase 2 seam: the Gradient Boosting model that fine-tunes calorie targets
@@ -111,6 +112,12 @@ class PlanGenerator {
   final WorkoutCalorieModel? workoutModel;
 
   const PlanGenerator(this.foods, {this.optimizer = const RuleBasedCalorieOptimizer(), this.workoutModel});
+
+  /// The foods a meal plan may use: the curated catalogue and every food of the three datasets that `MealRoles` accepts. Worked out
+  /// once per food database (it looks at about 2,800 foods).
+  static final _planPool = Expando<List<FoodItem>>('planPool');
+
+  List<FoodItem> get planFoods => _planPool[foods] ??= [for (final f in foods.items) ?MealRoles.asPlanFood(f)];
 
   static const _levels = ['Low', 'Moderate', 'High'];
 
@@ -456,6 +463,7 @@ class PlanGenerator {
         allergies: allergies,
         avoidTags: avoidTags,
         variant: variant,
+        goal: p.primaryGoal,
       );
     }
 
@@ -478,6 +486,12 @@ class PlanGenerator {
     );
   }
 
+  /// Share of a meal's calories each role should supply; the foods chosen are the ones whose own serving is closest to that share.
+  static const _roleShare = {
+    'bfast': 0.60, 'fruit': 0.20, 'drink': 0.20,
+    'main': 0.50, 'carb': 0.35, 'veg': 0.15,
+  };
+
   List<MealItem> _buildMeal({
     required String meal,
     required List<String> roles,
@@ -485,20 +499,44 @@ class PlanGenerator {
     required List<String> allergies,
     required Set<String> avoidTags,
     required int variant,
+    required String goal,
   }) {
     final mealKey = meal.toLowerCase();
     final chosen = <FoodItem>[];
+    final shares = {for (final r in roles) r: _roleShare[r] ?? (1 / roles.length)};
+    final shareSum = shares.values.fold(0.0, (a, b) => a + b);
 
     for (final role in roles) {
-      final pool = foods.items.where((f) {
+      final target = budget * shares[role]! / shareSum;
+      final pool = planFoods.where((f) {
         if (f.role != role || !f.meals.contains(mealKey)) return false;
         if (f.allergens.any(allergies.contains)) return false;
         if (f.tags.any(avoidTags.contains)) return false;
+        // A person with an allergy gets only foods whose allergens can be judged from the name: curated foods (checked by hand),
+        // single foods from USDA, fruit and vegetables. A recipe dish from the other lists (a curry, a samosa) does not reveal its
+        // ingredients, so it is left out rather than risked.
+        if (allergies.isNotEmpty && f.fromDataset && !(f.source == 'usda' || f.role == 'fruit' || f.role == 'veg')) return false;
         return true;
       }).toList();
       if (pool.isEmpty) continue;
+
+      // Best fit first: close to this role's share of the meal's calories, and (for a main dish) rich in protein when the goal is
+      // to lose weight or gain muscle. A tie is broken by name so the order never depends on how the data was loaded.
+      double score(FoodItem f) {
+        final fit = 1 - (f.kcal - target).abs() / (f.kcal > target ? f.kcal : target);
+        final proteinShare = f.kcal == 0 ? 0.0 : (f.protein * 4 / f.kcal).clamp(0.0, 0.5) / 0.5;
+        final wantsProtein = role == 'main' && (goal == 'Lose Weight' || goal == 'Gain Muscle');
+        return fit + (wantsProtein ? 0.35 * proteinShare : 0.0) + (f.fromDataset ? 0 : 0.02);
+      }
+
+      pool.sort((a, b) {
+        final c = score(b).compareTo(score(a));
+        return c != 0 ? c : a.id.compareTo(b.id);
+      });
+      // Rotate through the best fits so "Regenerate" and each new variant offers something different, drawn from the whole pool.
+      final top = pool.take(pool.length < 12 ? pool.length : 12).toList();
       final seed = variant + role.codeUnits.fold<int>(0, (s, c) => s + c) + meal.codeUnits.fold<int>(0, (s, c) => s + c);
-      final pick = pool[seed % pool.length];
+      final pick = top[seed % top.length];
       if (chosen.every((c) => c.id != pick.id)) chosen.add(pick);
     }
 

@@ -220,24 +220,40 @@ class SourcesScreen extends StatelessWidget {
           '(1) the project team\'s own food list, with Pakistani and Indian dish names and serving sizes; its rows say where each figure came from (USDA, the Indian Nutrient Databank, a restaurant\'s published figures, or "curated" by the team with no outside source); '
           '(2) recipes from the Indian Nutrient Databank, whose values are calculated from recipe ingredients; '
           '(3) about 1,040 everyday foods from USDA FoodData Central SR Legacy, whose energy, protein, fat and carbohydrate were checked against USDA\'s published tables, scaled to the first household portion USDA lists. '
-          'Every food shows its source when you pick it. These foods never appear in generated meal plans.',
+          'Every food shows its source when you pick it. Meal plans also draw on these lists: a food is used only if it is something eaten as a meal or a side (raw meat, oils, sauces, pork and alcohol are never suggested) and its energy agrees with its own protein, carbohydrate and fat.',
       [
         'U.S. Department of Agriculture, Agricultural Research Service. FoodData Central, SR Legacy (April 2018 release). fdc.nal.usda.gov. Published under CC0 1.0.',
         'Vijayakumar A, Dubasi HB, Awasthi A, Jaacks LM. Development of an Indian Food Composition Database. Current Developments in Nutrition 2024; 8(7): 103790. doi:10.1016/j.cdnut.2024.103790.',
       ],
-      caveat: 'None of these lists has allergen information. For these foods the allergens are guessed from the food\'s name by rules that deliberately over-warn, and the app says so; '
+      caveat: 'None of these lists has allergen information. For these foods the allergens are estimated from the food\'s name (by the ingredient dictionary and by rules that deliberately over-warn), and the app says so; '
           'they can still miss an ingredient, so read the printed label if your allergy is serious. The team list\'s rows marked "curated" cite no outside source, and the usage terms of the team list and of the Indian Nutrient Databank table were not verified. '
           'Recipe-based and restaurant values are averages and can differ from what you eat. Recipes whose energy contradicted their own protein, carbohydrate and fat (30 soups and sauces in the Indian table) were left out.',
     ),
     _Source(
-      'Allergen detection',
-      'Your allergies are matched against the ingredient text using a synonym list (for example "whey" and "casein" for dairy), tolerance for scanning errors, and a separate warning for "may contain" statements. '
-          'The allergen groups follow the major food allergens in the Codex labelling standard.',
+      'Body transformation forecast',
+      'The 30-day forecast is an energy-balance model, not a trained model. Each day it compares what you eat (maintenance minus your chosen deficit, never below the safe minimum) with what your body burns, which falls as you get lighter. '
+          'The difference becomes fat and lean mass in the proportions Forbes described, starting from body fat estimated from your BMI, age and sex. Milestones and the goal date come from running the same days forward.',
       [
-        'Codex Alimentarius. General Standard for the Labelling of Prepackaged Foods (CXS 1-1985), foods and ingredients known to cause hypersensitivity.',
+        'Hall KD, Sacks G, Chandramohan D, et al. Quantification of the effect of energy imbalance on bodyweight. Lancet 2011; 378: 826–837 (expenditure falls about 100 kJ per kg lost; 39.5 MJ per kg of fat and 7.6 MJ per kg of lean mass).',
+        'Hall KD. Body fat and fat-free mass inter-relationships: Forbes\'s theory revisited. British Journal of Nutrition 2007; 97: 1059–1063 (lean share of a weight change = 10.4 / (10.4 + fat mass in kg)).',
+        'Deurenberg P, Weststrate JA, Seidell JC. Body mass index as a measure of body fatness: age- and sex-specific prediction formulas. British Journal of Nutrition 1991; 65: 105–114 (starting body fat; standard error 4.1 percentage points, slightly too high in obesity).',
+        'Project team estimate: the energy of one workout (about 5 METs for 45 minutes, 4 x 0.75 kcal per kg net).',
+      ],
+      caveat: 'Not included: water and glycogen (the first week often drops more than fat alone), how closely you follow the plan, medicines and medical conditions. The scope names Gradient Boosting Regression for this feature; it is not built, because no dataset of weight changes under known calorie deficits is available to train it on. '
+          'Estimates for planning, not a promise and not medical advice.',
+    ),
+    _Source(
+      'Allergen detection',
+      'Your allergies are matched against the ingredient text in three steps. First an ingredient dictionary of about 1,800 names, each with the allergens it carries (for example cheddar and whey are dairy, soy sauce is soy, coconut milk is not dairy); the longest phrase wins, so "peanut butter" is peanut and not dairy. '
+          'Then the app\'s own synonym lists (including words such as paneer, ghee, maida and badam), then tolerance for scanning errors. "May contain" statements get a separate warning. A warning from any step is kept: nothing in one step can cancel a warning from another. '
+          'The same dictionary adds allergens to the foods in the food database from their names. The allergen groups follow the major food allergens in the Codex labelling standard and the EU list of 14.',
+      [
+        'Open Food Facts. Allergens and ingredients taxonomies, openfoodfacts-server/taxonomies (the ingredient names and which allergen each carries). The licence that covers these two taxonomy files was not confirmed from the repository (the repository itself is AGPL-3.0, the Open Food Facts database is ODbL), so the dictionary file is not published with the project\'s public code until that is checked.',
+        'Project team supplement of about 100 common and South Asian food words (naan, roti, dahi, mayonnaise and similar), each a standard ingredient of that food.',
+        'Regulation (EU) No 1169/2011, Annex II (the 14 allergens). Codex Alimentarius. General Standard for the Labelling of Prepackaged Foods (CXS 1-1985).',
         'Google Cloud Vision API (text recognition used to read label photos).',
       ],
-      caveat: 'Text recognition can misread a label and the synonym list cannot cover every ingredient name. Always read the printed label if your allergy is serious.',
+      caveat: 'The dictionary only knows ingredient names. A dish name (a curry, a samosa) does not reveal every ingredient, so allergens for foods are estimates, not a label. Text recognition can misread a label and no list covers every ingredient name. Always read the printed label if your allergy is serious.',
     ),
   ];
 

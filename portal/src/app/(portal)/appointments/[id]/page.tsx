@@ -7,7 +7,7 @@ import { refreshSummary } from '@/lib/events';
 import { useMe } from '@/lib/auth';
 import { fmtDateTime, pkr, safeHttps } from '@/lib/format';
 import type { AppointmentDetail } from '@/lib/types';
-import { Badge, Card, Notice, PaymentBadge, Spinner, StatusBadge } from '@/components/ui';
+import { Badge, Card, Counter, Notice, PaymentBadge, Spinner, StatusBadge } from '@/components/ui';
 import { PatientDashboard } from '@/components/PatientDashboard';
 
 export default function AppointmentPage({ params }: { params: Promise<{ id: string }> }) {
@@ -69,7 +69,7 @@ export default function AppointmentPage({ params }: { params: Promise<{ id: stri
     try {
       await api(`/appointments/${id}/${kind}`, { method: 'POST', body: kind === 'decline' ? { reason } : undefined });
       refreshSummary();
-      setMessage({ tone: 'ok', text: kind === 'accept' ? 'Accepted. The video room was created and the patient was notified.' : 'Declined. The time is free again and the patient was told.' });
+      setMessage({ tone: 'ok', text: kind === 'accept' ? 'Accepted. The video room was created and the patient was notified.' : 'Declined. The time is free again, any payment was refunded and the patient was told.' });
       await load();
     } catch (err) {
       setMessage({ tone: 'error', text: err instanceof Error ? err.message : 'Could not answer this request.' });
@@ -129,7 +129,7 @@ export default function AppointmentPage({ params }: { params: Promise<{ id: stri
             <button className="btn btn-primary" disabled={busy !== null} onClick={() => void respond('accept')}>{busy === 'accept' ? 'Accepting…' : 'Accept and create video room'}</button>
           </div>
           <div className="inline-form">
-            <label>Reason for declining (optional)<input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={200} /></label>
+            <label>Reason for declining (optional)<input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={200} /><Counter value={reason} max={200} /></label>
             <button className="btn btn-danger" disabled={busy !== null} onClick={() => void respond('decline')}>{busy === 'decline' ? 'Declining…' : 'Decline'}</button>
           </div>
         </Card>
@@ -143,7 +143,10 @@ export default function AppointmentPage({ params }: { params: Promise<{ id: stri
           <dl className="facts">
             <dt>Method</dt><dd>{a.payment.method === 'card' ? 'Card' : a.payment.method === 'wallet' ? 'Mobile wallet' : 'Pay at clinic'}</dd>
             <dt>Amount</dt><dd>{pkr(a.payment.total)}{a.payment.status === 'pay_at_clinic' ? ' (to collect at the visit)' : ''}</dd>
+            <dt>Your fee</dt><dd>{pkr(a.payment.consultationFee)}</dd>
+            <dt>Platform fee</dt><dd>{pkr(a.payment.platformFee)} (kept by Baymax)</dd>
             <dt>Transaction</dt><dd>{a.payment.transactionId}</dd>
+            {a.refund && (<><dt>Refund</dt><dd>{a.refund.status === 'manual' ? 'Due: an administrator returns it through the payment gateway' : `${pkr(a.refund.amount)} returned to the patient`}{a.refund.reason ? ` (${a.refund.reason})` : ''}</dd></>)}
           </dl>
         ) : (
           <p className="muted">No payment record is attached to this appointment.</p>
@@ -158,11 +161,22 @@ export default function AppointmentPage({ params }: { params: Promise<{ id: stri
           <p className="muted">This appointment is {a.status === 'no_show' ? 'marked as missed' : a.status}.</p>
         ) : a.canJoin && link ? (
           <>
-            <p>The room is open.{a.type === 'chat' ? ' This is a chat-only booking: it opens with camera and microphone off, and you talk in the room’s chat.' : ''}</p>
-            <a className="btn btn-primary" href={link} target="_blank" rel="noopener noreferrer">Join call ›</a>
+            <p>The room is open.{a.type === 'chat' ? ' This is a chat-only booking: it opens with camera and microphone off, and you can talk in Messages or the room’s chat.' : ''}</p>
+            <div className="actions">
+              <Link className="btn btn-primary" href={`/appointments/${id}/call`}>Join call here ›</Link>
+              <a className="btn" href={link} target="_blank" rel="noopener noreferrer">Open in a new tab</a>
+            </div>
           </>
         ) : (
           <p className="muted">{detail.serverTime < a.startAt ? 'The room opens 5 minutes before the start.' : 'The session time has passed.'}</p>
+        )}
+        {detail.call.joins > 0 && (
+          <p className="muted small">You joined {detail.call.joins} time{detail.call.joins === 1 ? '' : 's'}, first at {fmtDateTime(detail.call.firstJoinAt ?? a.startAt)}, for about {detail.call.minutes} minute{detail.call.minutes === 1 ? '' : 's'} in total.</p>
+        )}
+        {(a.status === 'confirmed' || a.status === 'completed') && (
+          <div className="actions">
+            <Link className="btn btn-small" href={`/messages/${id}`}>{detail.chat.canSend ? 'Message the patient' : 'View messages'}</Link>
+          </div>
         )}
         <p className="muted small">The public Jitsi server may ask the first person in a room to sign in. Use your organisation&apos;s own Jitsi server in production.</p>
       </Card>
@@ -186,11 +200,13 @@ export default function AppointmentPage({ params }: { params: Promise<{ id: stri
             <label>
               Notes for the patient&apos;s profile
               <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={6} maxLength={5000} />
+              <Counter value={notes} max={5000} />
             </label>
             {me.role === 'doctor' ? (
               <label>
                 Prescription
                 <textarea value={prescription} onChange={(e) => setPrescription(e.target.value)} rows={4} maxLength={3000} placeholder="Medicine, dose, how often, for how long" />
+                <Counter value={prescription} max={3000} />
               </label>
             ) : (
               <p className="muted small"><Badge>Doctors only</Badge> Prescriptions can only be written by a doctor.</p>

@@ -1,4 +1,5 @@
 import '../utils/fuzzy.dart';
+import 'allergen_dictionary.dart';
 
 class AllergenHit {
   /// The allergy from the user's profile (e.g. "Dairy").
@@ -81,6 +82,7 @@ class AllergenMatcher {
     ],
     'fish': ['fish', 'salmon', 'tuna', 'cod', 'anchovy', 'anchovies', 'sardine', 'mackerel', 'fish sauce'],
     'sesame': ['sesame', 'tahini', 'til'],
+    'peanuts': ['peanut', 'groundnut', 'groundnuts', 'arachis', 'monkey nut', 'moongphali', 'mungfali'],
   };
 
   /// Phrases that contain an allergen word but are NOT that allergen.
@@ -151,7 +153,15 @@ class AllergenMatcher {
 
   static List<AllergenHit> _hitsIn(String phrase, List<String> allergies) {
     final hits = <AllergenHit>[];
+    // The Open Food Facts based dictionary (about 1,800 ingredient names) is asked first; the built-in word lists and the fuzzy
+    // matching below then catch whatever it does not know, so a warning is never lost by adding the dictionary.
+    final dict = AllergenDictionary.instance?.detect(phrase) ?? const <String, String>{};
     for (final allergy in allergies) {
+      final fromDictionary = dict[_key(allergy)];
+      if (fromDictionary != null) {
+        hits.add(AllergenHit(allergy, fromDictionary, exact: true));
+        continue;
+      }
       final hit = _matchOne(phrase, allergy);
       if (hit != null) hits.add(hit);
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../services/allergen_dictionary.dart';
 import '../../services/allergen_matcher.dart';
 import '../../services/api_client.dart';
 import '../../services/ocr_service.dart';
@@ -61,11 +62,13 @@ class _AllergyScannerState extends State<AllergyScanner> {
     }
   }
 
-  void _analyze(String text) {
+  Future<void> _analyze(String text) async {
     if (text.trim().isEmpty) {
       _snack('Paste or scan an ingredient list first.');
       return;
     }
+    await AllergenDictionary.ensureLoaded(); // the ingredient dictionary (a small bundled file) is read once
+    if (!mounted) return;
     final result = AllergenMatcher.analyze(text, _allergies);
     Navigator.push(context, MaterialPageRoute(builder: (_) => AllergenResultScreen(result: result)));
   }

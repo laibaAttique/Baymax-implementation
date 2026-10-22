@@ -4,8 +4,9 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from 'firebase/auth';
 import { firebaseAuth, firebaseConfigured } from '@/lib/firebase';
-import { useAuth } from '@/lib/auth';
-import { Notice } from '@/components/ui';
+import { takeSessionExpired, useAuth } from '@/lib/auth';
+import { emailProblem } from '@/lib/validate';
+import { Field, Notice } from '@/components/ui';
 
 function friendly(code: string): string {
   switch (code) {
@@ -31,13 +32,27 @@ export default function AdminLoginPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
   useEffect(() => {
     if (state.status === 'ready') router.replace('/overview');
   }, [state.status, router]);
 
+  // If the person was signed out in the middle of a session, say so instead of showing a bare sign-in form.
+  useEffect(() => {
+    if (takeSessionExpired()) setInfo('Your session ended, so you were signed out. Please sign in again.');
+  }, []);
+
   async function submit(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
+    const problem = emailProblem(email);
+    setEmailError(problem);
+    if (problem) return;
+    if (!password) {
+      setError('Enter your password.');
+      return;
+    }
     setBusy(true);
     setError(null);
     setInfo(null);
@@ -53,10 +68,9 @@ export default function AdminLoginPage() {
 
   async function reset() {
     setError(null);
-    if (!email.trim()) {
-      setError('Enter your email above first.');
-      return;
-    }
+    const problem = emailProblem(email);
+    setEmailError(problem);
+    if (problem) return;
     try {
       await sendPasswordResetEmail(firebaseAuth(), email.trim());
     } catch {
@@ -76,8 +90,10 @@ export default function AdminLoginPage() {
         {!firebaseConfigured && <Notice tone="error">Firebase is not configured. Copy <code>.env.example</code> to <code>.env.local</code> and fill in the web app values.</Notice>}
         {error && <Notice tone="error">{error}</Notice>}
         {info && <Notice tone="ok">{info}</Notice>}
-        <label>Email<input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
-        <label>Password<input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
+        <Field label="Email" error={emailError}>
+          <input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => email && setEmailError(emailProblem(email))} aria-invalid={emailError ? true : undefined} />
+        </Field>
+        <label>Password<input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} maxLength={128} /></label>
         <button className="btn btn-primary" disabled={busy || !firebaseConfigured || !email || !password}>{busy ? 'Signing in…' : 'Sign in'}</button>
         <button type="button" className="btn btn-link" onClick={reset}>Forgot your password?</button>
       </form>

@@ -13,6 +13,7 @@ const NAV = [
   { href: '/overview', label: 'Overview' },
   { href: '/registrations', label: 'Registrations', badge: true },
   { href: '/specialists', label: 'Specialists' },
+  { href: '/payments', label: 'Payments' },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {

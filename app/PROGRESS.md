@@ -31,6 +31,57 @@ Legend: 🔴 not started · 🟡 in progress / partial · 🟢 done & verified
 
 ## 2. Change log
 
+### 2026-10-22 — Module 11 (Predictive Body Transformation): forecast, milestones and the two screens (energy-balance model; Gradient Boosting NOT built)
+
+Requested: complete Module 11. Built `services/body_forecast.dart` and `screens/analytics/transform_forecast_screens.dart`; `BodyTransformScreen` is now the hub (offers "Predict my results", keeps the weigh-in trend).
+- **FR30 input screen:** calorie deficit or surplus (whole number, 0 to 1,000 or 0 to 500), workouts a week (2 to 5), optional goal text ("Lose 7 kg" is read as a target), the consistency note, "Predict My Results".
+- **FR31 result screen:** editable summary cards and an "Adjust inputs" panel that recomputes live, predicted weight and fat change after 30 days with body fat % (estimate), a chart (planned path, a path if only 60% is followed, goal line, milestone dots), milestones with dates, safety notes, "Copy My Forecast" (clipboard: no sharing package was added), the method.
+- **Model:** daily energy balance. Expenditure falls 100 kJ (23.9 kcal) per kg lost and energy per kg is 39.5 MJ fat / 7.6 MJ lean (Hall et al., Lancet 2011, read from the paper); lean share of a change = 10.4/(10.4 + fat mass) (Hall, Br J Nutr 2007: Forbes relation, read from the paper); starting fat from BMI, age, sex (Deurenberg 1991, SEE 4.1 points). Intake never goes below the same safe floor as the calorie target; no deficit for BMI under 18.5. One workout = 3 kcal per kg net (estimate, 5 METs for 45 min).
+- **Checks (tests):** no change in diet = no change in weight; a 500 kcal deficit loses 1.5 to 3 kg in 30 days, mostly fat; more deficit or exercise loses more; loss slows down; weight heads for deficit/23.9 kg below the start; a fatter person loses a larger share as fat; floors, underweight, limits; milestone ordering; unreachable and wrong-direction targets.
+- **Gradient Boosting is NOT built, on purpose.** WEEE (Zenodo 6420886) holds energy expenditure during activities for 17 people, not weight changes, so it cannot train this (as already noted for Module 3); no dataset of weight trajectories under known deficits is available. A model trained on this simulator's own output would only copy the simulator. The Sources screen and the result screen say "not a trained model". If the supervisor requires Gradient Boosting, the honest options are real longitudinal data or labelling it a surrogate of this model.
+- Not modelled: water and glycogen, adherence, medicines and conditions. Not validated against anyone's real weight loss. Flutter 677 tests pass (21 new in `test/body_forecast_test.dart`). Not run on a device.
+
+### 2026-10-22 — Allergen dictionary (Module 10) and meal plans drawn from all food datasets
+
+Requested: a dataset for allergies, implemented; and the nutrition plan from all datasets, not only the 97 curated foods.
+
+**Allergen dataset.** Downloaded (with the user's request as the go-ahead) the Open Food Facts `allergens.txt` and `food/ingredients.txt` taxonomies (3 MB) into `ml/data/openfoodfacts/` (git-ignored). `ml/allergen_data/build_allergen_terms.py` turns them into `assets/data/allergen_terms.json` (52 KB): 1,818 ingredient names with their allergens (dairy 559, fish 299, gluten 314, nuts 171, shellfish 160, soy 111, eggs 110, sesame 37, peanuts 36, plus celery, mustard, lupin, sulphites), 24 "not dairy" phrases (coconut milk, cocoa butter) and 105 words the team added (naan, roti, dahi, mayonnaise ...), counted separately. Allergens are inherited down the ingredient graph (cheddar below cheese below milk). **Licence of the two taxonomy files not confirmed** (repo is AGPL-3.0, the Open Food Facts database ODbL): the file must not go into the public GitHub repo until checked (same rule as `foods_bulk.json`); the Sources screen cites Open Food Facts.
+- Scanner: `AllergenMatcher` asks the dictionary first (longest phrase wins: soy milk is soy, peanut butter is peanuts and nuts, coconut milk is not dairy), then the old word lists and fuzzy matching; a warning from any step is kept. Profile allergy choices now include Peanuts, Fish and Sesame.
+- Foods: the allergens of every food (also the 2,700 searchable ones) get the dictionary's findings added to their stored list (it only adds; 119 foods gained at least one). Still estimates, and the app says so.
+- **Still needs:** the Google Vision key for photo scanning (pasting the ingredient text works without it); no on-device OCR package was added.
+
+**Meal plans from all datasets.** `services/meal_roles.dart` decides, from name, serving and numbers, whether and where a dataset food can appear in a plan: 1,105 of the 2,857 foods qualify (curated 97, team list 294, Indian Nutrient Databank 496, USDA 218). Refused: raw meat, fish and eggs, offal and skin, dry grains and pulses (also by energy density), oils, sauces, sugar, spices, supplements, baby food, pork and alcohol, serving under 25 g or in spoonfuls, and numbers that contradict themselves (energy not within 30% of 4P+4C+9F, a serving with over 90 g fat, more nutrients than food). `PlanGenerator._buildMeal` picks, for each role, among the 12 foods whose serving best fits that role's share of the meal's calories (plus protein richness for a main dish when losing weight or gaining muscle), rotated by the plan variant; 12 variants of one profile used 127 different foods from all four sources. The diabetic, hypertension and heart filters apply to the dataset foods through name-based tags.
+- **Allergy policy (errs toward warning):** a person with any allergy gets only curated foods, single USDA foods, and fruit and vegetables from the lists; recipe dishes from the team list and the Indian table are left out because a dish name does not reveal its ingredients.
+- **Limits:** none of the lists has sodium, sugar or fibre, so the health tags are guessed from the name; recipe-based values are averages; roles are rules, not hand review. Nutrition screen shows each item's source and a note.
+- Tests: Flutter 656 pass (new `test/allergen_dictionary_test.dart` 13, `test/meal_plan_datasets_test.dart` 13); `flutter analyze` on the touched files: info-level notes only. Not run on a device.
+- **Not synced to `Baymax-implementation`:** its `plan_generator.dart` and `sources_screen.dart` have diverged from this folder (the merged workout work), so these changes need a careful merge, not a copy.
+
+### 2026-10-22 — Web: checks everywhere, payments, video room and chat (portal, admin panel, API, app)
+
+Requested: put proper checks in all the web dashboards, finish the payment and video parts, and build chat. Phase 2 (specialists editing user plans) was not touched.
+
+**Checks (API, portal, admin)**
+- API (`baymax-api/src/lib/validate.js`, `limiter.js`): ids in addresses are validated (400 before Firebase is touched), query values must make sense (a bad status or date range is a 400 instead of being ignored), bodies must be JSON objects sent as JSON (415), 120 writes a minute per signed-in person, 20 chat messages a minute per conversation (429). Changed behaviour: `GET /appointments?status=weird` is now 400.
+- Portal and admin: field-by-field checks beside each field (login, register, registration form, profile, new-specialist form, diet and workout plan editors, refund reason, chat message), character counters, unsaved-changes warning on the profile, 20-second request timeout, a session that ends mid-use returns to sign-in with a message, error and not-found pages, CSV export neutralises spreadsheet formulas, approving a registration asks for confirmation.
+- Layout fix: wide tables no longer stretch the page.
+
+**Payments (Module 15 on the web)**: specialist Payments page (earned, upcoming, waiting, pay-at-clinic, due, refunded; filters; CSV); admin Payments page (totals, platform fees, per-specialist figures, refund with a reason). Refunds are recorded on `appointments/{id}/refund` (the `payment` record is never rewritten): automatic on decline, specialist cancel, account closing and an expired unanswered request; a patient who cancels is refunded by the administrator. Test gateway only: a live payment is marked `manual`.
+
+**Video**: in-portal call room (`/appointments/:id/call`): device check, Jitsi inside the page, join/leave log (`callLog`), notes beside the call, mark completed afterwards. The room name is given out only inside the join window and only for a room on the configured server. **Not verified:** the Jitsi service itself (needs internet and a camera): only the pre-join screen was checked in a browser.
+
+**Chat**: patient app screen (`consultation_chat_screen.dart`, `consultation_chat.dart`), portal Messages (list, thread, unread counts, polled every 4 s), API routes, rules `chats` and `chatRead` (patient writes only own plain-text messages, 1 to 1000 characters, to an accepted appointment until 24 h after the slot). Specialist overview now shows four role-specific cards (FR10.3, FR11.3, FR12.3); cards needing AI-engine data are still not shown.
+
+**Tests**: API 178 pass (was 142); emulator end-to-end all files pass (rules 14, flow 10, admin-account 3, money-and-messages 4, new); Flutter 630 pass in total including 12 new in `test/consultation_chat_test.dart`; `flutter analyze` on the touched files reports only info-level style notes; both web apps build. Browser walkthrough on the emulators: login checks, role overview, payments, messages (sent a reply), call pre-join, admin refund (with and without a reason).
+
+**Not done / needs the owner**
+- Rules: the new `chats` and `chatRead` nodes were **deployed to `baymax-148da` on 2026-10-22 with the owner's OK**, from the merged snapshot copy (`Baymax-implementation/app/database.rules.json`, which also carries the Module 4 to 6 nodes, so nothing of Laiba's was removed). The chat rules were tested on the emulator only; never exercised against the real project from a signed-in phone.
+- The API on port 4000 and the web dev servers that were already running must be restarted to pick up this code.
+- Test-case report (`Baymax_Test_Cases`) was not regenerated; `e2e_cases.json` has entries for ATC-INT-34..40. No new Dart ATC cases were written for the chat screen.
+- Not pushed to GitHub.
+
+### 2026-10-19 — Viva guide (audit of the merged project, no project file changed)
+`~/Downloads/Baymax_Viva_Guide/FYP_Complete_Technical_Analysis_and_Viva_Guide.docx` (26 sections, 7 diagrams, 36 algorithms, AI/ML audit, Firebase audit, viva Q&A) built by `Baymax_Viva_Guide/build/build_guide.py`. Findings recorded there: live-rules snapshot of 2026-10-17 lacks the Module 4-6 nodes; legacy unauthenticated `POST /api/profile` and `GET /api/profile/:id` in `Baymax-main`; ml/README still says MobileNetV2 (model is EfficientNetV2-B0); all 27 safety rules pending review; merged app not run by the auditor.
+
 ### 2026-10-17 — Pushed to GitHub
 Commit `bd8a2a1` on `Amna's-work` (branch `main` untouched): `app/`, new `api/`, `portal/` (web only) and `admin/` folders (the old `portal/server`+`web` layout was replaced), `docs/` (Chapters 4 and 5). Left out: all `.env*` files (only `.env.example` is published), Firebase client config, the food model, `foods_bulk.json`, `CLAUDE.md`, raw console logs with local paths; registration numbers removed from the pushed copy of this file.
 

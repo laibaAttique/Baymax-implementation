@@ -41,11 +41,47 @@ export interface NewSpecialistResult {
   resetLink: string;
 }
 
+export interface Money { count: number; amount: number }
+
+export interface PaymentSummary {
+  count: number;
+  earned: Money;
+  upcoming: Money;
+  held: Money;
+  clinicDue: Money;
+  due: Money;
+  refunded: Money;
+  platformFees: number;
+  gross: number;
+  testPayments: number;
+}
+
 export interface Overview {
   specialists: { total: number; doctor: number; nutritionist: number; trainer: number };
   applications: { pending: number };
   appointments: { total: number; byStatus: Record<string, number> };
+  payments: { gross: number; platformFees: number; refunded: Money; refundsDue: Money; clinicDue: Money; held: Money; testPayments: number; count: number };
+  calls: { sessions: number; minutes: number };
+  messages: { conversations: number; total: number };
 }
+
+export type PaymentBucket = 'held' | 'upcoming' | 'earned' | 'clinic' | 'due' | 'refunded';
+
+export interface PaymentRow {
+  appointmentId: string;
+  patientId: string;
+  patientName: string;
+  specialistId: string;
+  specialistName: string;
+  startAt: number;
+  status: string;
+  type: 'video' | 'chat';
+  bucket: PaymentBucket | 'void' | 'unpaid';
+  payment: { status: 'paid' | 'pay_at_clinic'; method: 'card' | 'wallet' | 'clinic' | null; total: number; consultationFee: number; platformFee: number; paidAt: number; test: boolean; transactionId: string } | null;
+  refund: { status: 'refunded' | 'manual'; amount: number; at: number; reason: string; by: 'specialist' | 'admin' | 'system' } | null;
+}
+
+export interface SpecialistPayments { specialistId: string; name: string; summary: PaymentSummary }
 
 export interface DeleteResult {
   cancelled: number;

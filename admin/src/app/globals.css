@@ -57,7 +57,7 @@ code { background: var(--primary-soft); padding: 1px 6px; border-radius: 6px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 
-.shell { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.shell { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-height: 100vh; }
 .sidebar {
   background: var(--surface);
   border-right: 1px solid var(--border);
@@ -69,7 +69,7 @@ code { background: var(--primary-soft); padding: 1px 6px; border-radius: 6px; }
   top: 0;
   height: 100vh;
 }
-.content { padding: 28px clamp(16px, 3vw, 40px) 60px; max-width: 1100px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
+.content { min-width: 0; padding: 28px clamp(16px, 3vw, 40px) 60px; max-width: 1100px; width: 100%; display: flex; flex-direction: column; gap: 16px; }
 .brand { display: flex; align-items: center; gap: 12px; }
 .brand-lg { font-size: 1.2rem; }
 .brand-mark {
@@ -208,3 +208,20 @@ fieldset.dayplan legend { font-weight: 700; padding: 0 6px; }
 .review-actions { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; margin: 4px 0 8px; }
 .review-actions label { flex: 1; min-width: 180px; }
 nav .count { margin-left: 6px; background: var(--bad); color: #fff; border-radius: 999px; padding: 1px 8px; font-size: 0.75rem; font-weight: 800; }
+
+/* checks */
+.field-error { color: var(--bad); font-size: 0.82rem; font-weight: 600; }
+.field-hint { color: var(--muted); font-size: 0.8rem; font-weight: 500; }
+.field-bad input, .field-bad select, .field-bad textarea, input[aria-invalid='true'], textarea[aria-invalid='true'] { border-color: var(--bad); }
+
+/* money */
+.money-up { color: var(--good); font-weight: 700; }
+.money-down { color: var(--bad); font-weight: 700; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.metric-hint { color: var(--muted); font-size: 0.78rem; margin-top: 2px; }
+
+/* role overview cards: four across on a wide screen */
+.metrics.four { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+
+.filters > * { min-width: 0; }

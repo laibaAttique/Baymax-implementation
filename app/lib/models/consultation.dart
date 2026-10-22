@@ -223,6 +223,30 @@ class ConsultationNote {
   }
 }
 
+/// A refund the specialist's server recorded on a paid booking (`appointments/{id}/refund`). The phone never writes it.
+class AppointmentRefund {
+  /// `refunded`: the money was returned (a test payment: no real money moved). `manual`: a live payment support must return.
+  final bool returned;
+  final int amount;
+  final DateTime at;
+  final String reason;
+  const AppointmentRefund({required this.returned, required this.amount, required this.at, this.reason = ''});
+
+  Map<String, Object?> toJson() => {'status': returned ? 'refunded' : 'manual', 'amount': amount, 'at': at.millisecondsSinceEpoch, 'reason': reason};
+
+  static AppointmentRefund? fromJson(Object? raw) {
+    if (raw is! Map) return null;
+    final status = raw['status'];
+    if (status != 'refunded' && status != 'manual') return null;
+    return AppointmentRefund(
+      returned: status == 'refunded',
+      amount: ((raw['amount'] as num?) ?? 0).toInt(),
+      at: DateTime.fromMillisecondsSinceEpoch(((raw['at'] as num?) ?? 0).toInt()),
+      reason: (raw['reason'] as String?) ?? '',
+    );
+  }
+}
+
 /// A booking, `appointments/{id}`. Its `slotKey` is the start time in ms and the key of the locked slot in `slots/{specialistId}`.
 class Appointment {
   final String id;
@@ -252,6 +276,9 @@ class Appointment {
   /// Why the specialist declined, if they said.
   final String declineReason;
 
+  /// Set by the portal's server when the payment was returned.
+  final AppointmentRefund? refund;
+
   const Appointment({
     required this.id,
     required this.patientId,
@@ -273,6 +300,7 @@ class Appointment {
     this.holdUntil,
     this.payment,
     this.declineReason = '',
+    this.refund,
   });
 
   /// A booking that was never paid for and whose hold ran out: it never became an appointment and is not shown.
@@ -300,6 +328,7 @@ class Appointment {
         'createdAt': createdAt.millisecondsSinceEpoch,
         if (holdUntil != null) 'holdUntil': holdUntil!.millisecondsSinceEpoch,
         if (payment != null) 'payment': payment!.toJson(),
+        if (refund != null) 'refund': refund!.toJson(),
       };
 
   static Appointment? fromJson(String id, Object? raw) {
@@ -332,6 +361,7 @@ class Appointment {
       holdUntil: raw['holdUntil'] is num ? DateTime.fromMillisecondsSinceEpoch((raw['holdUntil'] as num).toInt()) : null,
       payment: PaymentRecord.fromJson(raw['payment']),
       declineReason: (raw['declineReason'] as String?) ?? '',
+      refund: AppointmentRefund.fromJson(raw['refund']),
     );
   }
 
@@ -356,5 +386,6 @@ class Appointment {
         holdUntil: clearHold ? null : holdUntil,
         payment: payment ?? this.payment,
         declineReason: declineReason,
+        refund: refund,
       );
 }

@@ -21,9 +21,9 @@ test('a booking waiting for payment, or with an unknown status, is never read as
   assert.equal(isListed(normalizeAppointment('x', appointment({ status: 'confirmed' }))), true);
 });
 
-test('payment shows status, method and total, never anything else', () => {
-  const paid = normalizeAppointment('x', appointment({ payment: { status: 'paid', method: 'card', total: 2150, mode: 'sandbox', transactionId: 'TXN-1', brand: 'Visa', last4: '4242', reference: 'r' } }));
-  assert.deepEqual(paid.payment, { status: 'paid', method: 'card', total: 2150, test: true, transactionId: 'TXN-1' });
+test('payment shows status, method, fee split and total, never card details', () => {
+  const paid = normalizeAppointment('x', appointment({ payment: { status: 'paid', method: 'card', total: 2150, consultationFee: 2000, platformFee: 150, paidAt: 1700000000000, mode: 'sandbox', transactionId: 'TXN-1', brand: 'Visa', last4: '4242', reference: 'r' } }));
+  assert.deepEqual(paid.payment, { status: 'paid', method: 'card', total: 2150, consultationFee: 2000, platformFee: 150, paidAt: 1700000000000, test: true, transactionId: 'TXN-1' });
   assert.equal(normalizeAppointment('x', appointment({ payment: { status: 'paid', method: 'card', total: 1, mode: 'live' } })).payment.test, false);
   assert.equal(normalizeAppointment('x', appointment({ payment: { status: 'weird' } })).payment, null);
   assert.equal(normalizeAppointment('x', appointment()).payment, null);

@@ -67,14 +67,30 @@ class FoodItem {
     );
   }
 
+  /// The same food with a different allergen list (the allergen dictionary adds to what the data file says, never removes).
+  FoodItem withAllergens(List<String> allergens) => FoodItem(
+        id: id, name: name, aliases: aliases, icon: icon, servingLabel: servingLabel, grams: grams, kcal: kcal, protein: protein, carbs: carbs,
+        fat: fat, allergens: allergens, meals: meals, role: role, tags: tags, source: source, fdcId: fdcId, sourceNote: sourceNote,
+      );
+
+  /// The same food placed in a meal plan: its role, meals and health tags come from `MealRoles` (the data file has none for these foods).
+  FoodItem withPlan({required String role, required List<String> meals, required List<String> tags}) => FoodItem(
+        id: id, name: name, aliases: aliases, icon: icon, servingLabel: servingLabel, grams: grams, kcal: kcal, protein: protein, carbs: carbs,
+        fat: fat, allergens: allergens, meals: meals, role: role, tags: tags, source: source, fdcId: fdcId, sourceNote: sourceNote,
+      );
+
   bool get fromUsda => source == 'usda';
 
   /// One of the ~2,700 foods from the searchable food list (team list, Indian Nutrient Databank, USDA SR Legacy): for search and logging
-  /// only, never in a generated meal plan (they have no meal slots).
+  /// and meal plans (a plan uses those `MealRoles` accepts, which assigns the role and meals the data files do not have).
   bool get isBulk => role == 'bulk' || role == 'usda';
 
-  /// None of those sources has allergen information, so for these foods [allergens] is a guess made from the name. The app says so.
-  bool get allergensEstimated => isBulk;
+  /// None of the dataset sources has allergen information, so for any food that does not come from the hand-checked curated catalogue
+  /// [allergens] is an estimate made from the name (the ingredient dictionary plus guessing rules that over-warn). The app says so.
+  bool get allergensEstimated => source != 'estimate';
+
+  /// True for a food that comes from one of the datasets (USDA, Indian Nutrient Databank, team list) rather than the curated catalogue.
+  bool get fromDataset => source != 'estimate';
 
   /// Short provenance tag stored with logged entries, e.g. `usda:175254`, `indb:asc079`, `calorica:cal_ric001`.
   String get ref {

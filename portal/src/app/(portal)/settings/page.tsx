@@ -1,11 +1,12 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { firebaseAuth } from '@/lib/firebase';
 import { api } from '@/lib/api';
 import { useAuth, useMe } from '@/lib/auth';
-import { Card, Notice } from '@/components/ui';
+import { Card, Counter, Field, Notice } from '@/components/ui';
+import { hoursProblem, profileProblems, type Problems } from '@/lib/validate';
 import type { SpecialistProfile } from '@/lib/types';
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -27,19 +28,56 @@ export default function SettingsPage() {
   const [emergency, setEmergency] = useState(Boolean(p.emergency));
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ tone: 'ok' | 'error'; text: string } | null>(null);
+  const [problems, setProblems] = useState<Problems>({});
+  const [dirty, setDirty] = useState(false);
+  const touch = () => setDirty(true);
 
-  const toggleDay = (d: number) => setDays((cur) => (cur.includes(d) ? cur.filter((x) => x !== d) : [...cur, d].sort()));
+  // Leaving with unsaved changes asks first.
+  useEffect(() => {
+    if (!dirty) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [dirty]);
+
+  const fields = () => ({ specialty, bio, video, chat, days, start, end, slot });
+  const recheck = (key: string) => setProblems((cur) => {
+    const next = { ...cur };
+    const found = profileProblems(fields())[key];
+    if (found) next[key] = found; else delete next[key];
+    return next;
+  });
+  const bad = (k: string) => (problems[k] ? true : undefined);
+
+  const toggleDay = (d: number) => {
+    const next = days.includes(d) ? days.filter((x) => x !== d) : [...days, d].sort();
+    setDays(next);
+    // Check against the new list of days, not the one from before this click.
+    setProblems((cur) => {
+      const found = hoursProblem(next, start, end);
+      const copy = { ...cur };
+      if (found) copy.hours = found; else delete copy.hours;
+      return copy;
+    });
+  };
 
   async function save(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
+    const found = profileProblems(fields());
+    setProblems(found);
+    if (Object.keys(found).length) {
+      setMessage({ tone: 'error', text: 'Please fix the highlighted fields and save again.' });
+      return;
+    }
     setBusy(true);
     setMessage(null);
     try {
       await api('/me/profile', {
         method: 'PUT',
         body: {
-          specialty,
-          bio,
+          specialty: specialty.trim(),
+          bio: bio.trim(),
           fees: { video: Number(video), chat: Number(chat) },
           availability: { days, start, end, slotMinutes: Number(slot) },
           available,
@@ -47,6 +85,7 @@ export default function SettingsPage() {
         },
       });
       await refreshMe();
+      setDirty(false);
       setMessage({ tone: 'ok', text: 'Saved. Patients see the change in the Baymax app straight away. Appointments already booked are not affected.' });
     } catch (err) {
       setMessage({ tone: 'error', text: err instanceof Error ? err.message : 'Could not save.' });
@@ -95,7 +134,7 @@ export default function SettingsPage() {
         </div>
       </header>
       {message && <Notice tone={message.tone}>{message.text}</Notice>}
-      <form className="stack" onSubmit={save}>
+      <form className="stack" onSubmit={save} noValidate onChange={touch}>
         <Card title="About you">
           <dl className="facts">
             <dt>Name</dt><dd>{p.name}</dd>
@@ -104,14 +143,23 @@ export default function SettingsPage() {
             <dt>Rating</dt><dd>{p.reviewCount ? `${p.rating?.toFixed(1)} from ${p.reviewCount} reviews` : 'No reviews yet'}</dd>
           </dl>
           <p className="muted small">Name, role and rating are set by a Baymax administrator.</p>
-          <label>Specialty<input value={specialty} onChange={(e) => setSpecialty(e.target.value)} maxLength={80} required /></label>
-          <label>Short bio<textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={4} maxLength={600} /></label>
+          <Field label="Specialty" error={problems.specialty}>
+            <input value={specialty} onChange={(e) => setSpecialty(e.target.value)} onBlur={() => recheck('specialty')} maxLength={80} aria-invalid={bad('specialty')} />
+          </Field>
+          <Field label="Short bio" error={problems.bio}>
+            <textarea value={bio} onChange={(e) => setBio(e.target.value)} onBlur={() => recheck('bio')} rows={4} aria-invalid={bad('bio')} />
+            <Counter value={bio} max={600} />
+          </Field>
         </Card>
 
         <Card title="Fees (PKR)">
           <div className="grid2">
-            <label>Video call<input type="number" min={0} max={1000000} step={50} value={video} onChange={(e) => setVideo(e.target.value)} required /></label>
-            <label>Chat only<input type="number" min={0} max={1000000} step={50} value={chat} onChange={(e) => setChat(e.target.value)} required /></label>
+            <Field label="Video call" error={problems.video}>
+              <input type="number" inputMode="numeric" min={0} max={1000000} step={50} value={video} onChange={(e) => setVideo(e.target.value)} onBlur={() => recheck('video')} aria-invalid={bad('video')} />
+            </Field>
+            <Field label="Chat only" error={problems.chat}>
+              <input type="number" inputMode="numeric" min={0} max={1000000} step={50} value={chat} onChange={(e) => setChat(e.target.value)} onBlur={() => recheck('chat')} aria-invalid={bad('chat')} />
+            </Field>
           </div>
         </Card>
 
@@ -126,8 +174,8 @@ export default function SettingsPage() {
             ))}
           </fieldset>
           <div className="grid3">
-            <label>From<input type="time" value={start} onChange={(e) => setStart(e.target.value)} required /></label>
-            <label>Until<input type="time" value={end} onChange={(e) => setEnd(e.target.value)} required /></label>
+            <label>From<input type="time" value={start} onChange={(e) => setStart(e.target.value)} onBlur={() => recheck('hours')} aria-invalid={bad('hours')} /></label>
+            <label>Until<input type="time" value={end} onChange={(e) => setEnd(e.target.value)} onBlur={() => recheck('hours')} aria-invalid={bad('hours')} /></label>
             <label>
               Length of one slot
               <select value={slot} onChange={(e) => setSlot(e.target.value)}>
@@ -135,6 +183,7 @@ export default function SettingsPage() {
               </select>
             </label>
           </div>
+          {problems.hours && <span className="field-error" role="alert">{problems.hours}</span>}
         </Card>
 
         <Card title="Availability">
@@ -142,7 +191,7 @@ export default function SettingsPage() {
           <label className="check"><input type="checkbox" checked={emergency} onChange={(e) => setEmergency(e.target.checked)} /> I take urgent (emergency) bookings</label>
         </Card>
 
-        <div><button className="btn btn-primary" disabled={busy || days.length === 0}>{busy ? 'Saving…' : 'Save changes'}</button></div>
+        <div><button className="btn btn-primary" disabled={busy}>{busy ? 'Saving…' : 'Save changes'}</button>{dirty && <span className="muted small"> You have unsaved changes.</span>}</div>
       </form>
 
       <Card title="Close my account">
@@ -150,7 +199,7 @@ export default function SettingsPage() {
         <form className="stack" onSubmit={closeAccount}>
           {closeError && <Notice tone="error">{closeError}</Notice>}
           <div className="grid2">
-            <label>Your password<input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
+            <label>Your password<input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} maxLength={128} /></label>
             <label>Type DELETE to confirm<input value={typed} onChange={(e) => setTyped(e.target.value)} placeholder="DELETE" /></label>
           </div>
           <div><button className="btn btn-danger" disabled={closing || typed !== 'DELETE' || !password}>{closing ? 'Closing…' : 'Close my account'}</button></div>

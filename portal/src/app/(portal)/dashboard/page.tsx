@@ -123,12 +123,14 @@ export default function DashboardPage() {
 
       {error && <Notice tone="error">{error} Showing the last data we had.</Notice>}
 
-      <div className="metrics">
-        <div className={`metric ${counts.pendingRequests > 0 ? 'metric-warn' : ''}`}><span className="metric-value">{counts.pendingRequests}</span><span className="metric-label">New requests</span></div>
-        <div className="metric"><span className="metric-value">{counts.consultationsToday}</span><span className="metric-label">Consultations today</span></div>
-        <div className="metric"><span className="metric-value">{counts.upcoming7Days}</span><span className="metric-label">Upcoming, next 7 days</span></div>
-        <div className="metric"><span className="metric-value">{counts.patients}</span><span className="metric-label">Patients</span></div>
-        <div className={`metric ${counts.awaitingNotes > 0 ? 'metric-warn' : ''}`}><span className="metric-value">{counts.awaitingNotes}</span><span className="metric-label">Awaiting notes</span></div>
+      <div className="metrics four">
+        {data.cards.map((c) => (
+          <Link key={c.key} href={c.key === 'messages' ? '/messages' : c.key === 'patients' || c.key === 'clients' || c.key === 'trainees' ? '/patients' : c.key === 'prescriptions' ? '/prescriptions' : '/appointments'} className={`metric ${c.warn ? 'metric-warn' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <span className="metric-value">{c.value}</span>
+            <span className="metric-label">{c.label}</span>
+            <span className="metric-hint">{c.hint}</span>
+          </Link>
+        ))}
       </div>
 
       <Card title={`New requests${data.requests.length ? ` (${data.requests.length})` : ''}`}>
@@ -148,7 +150,7 @@ export default function DashboardPage() {
       </Card>
 
       <p className="muted small">
-        <Badge>Not shown yet</Badge> Risk alerts, diet reviews and posture flags need the AI engine&apos;s data, which is not connected to this portal yet.
+        <Badge>Not shown yet</Badge> Risk alerts, clients on track, posture flags and emotion adjustments need the AI engine&apos;s data, which is not connected to this portal yet.
       </p>
     </>
   );

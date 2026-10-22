@@ -512,6 +512,39 @@
         ".read": "auth != null && auth.uid === $uid",
         ".write": false
       }
+    },
+    "chats": {
+      "$id": {
+        ".read": "auth != null && (root.child('appointments').child($id).child('patientId').val() === auth.uid || root.child('appointments').child($id).child('specialistId').val() === auth.uid)",
+        "$mid": {
+          ".write": "auth != null && !data.exists() && newData.exists() && root.child('appointments').child($id).child('patientId').val() === auth.uid && (root.child('appointments').child($id).child('status').val() === 'confirmed' || root.child('appointments').child($id).child('status').val() === 'completed' || root.child('appointments').child($id).child('status').val() === 'no_show') && root.child('appointments').child($id).child('startAt').val() + root.child('appointments').child($id).child('durationMinutes').val() * 60000 + 86400000 > now",
+          ".validate": "newData.hasChildren(['from','side','text','at']) && newData.child('from').val() === auth.uid && newData.child('side').val() === 'patient'",
+          "from": {
+            ".validate": "newData.isString()"
+          },
+          "side": {
+            ".validate": "newData.val() === 'patient'"
+          },
+          "text": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 1000"
+          },
+          "at": {
+            ".validate": "newData.isNumber() && newData.val() === now"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      }
+    },
+    "chatRead": {
+      "$id": {
+        ".read": "auth != null && (root.child('appointments').child($id).child('patientId').val() === auth.uid || root.child('appointments').child($id).child('specialistId').val() === auth.uid)",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid && root.child('appointments').child($id).child('patientId').val() === auth.uid",
+          ".validate": "newData.isNumber() && newData.val() <= now"
+        }
+      }
     }
   }
 }

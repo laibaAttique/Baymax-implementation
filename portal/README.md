@@ -23,7 +23,12 @@ All of them use the same Firebase project, `baymax-148da`, and nothing else is s
 * **Food log review** (nutritionist): approve or flag each day, with a reason to flag.
 * **Prescriptions** (doctor): everything prescribed.
 * **My profile**: specialty, bio, fees, working hours, "taking bookings". **Close my account** (asks for the password and DELETE).
-* **Alerts**: the menu counts waiting requests; the browser can show a desktop alert while the portal is open.
+* **Overview cards per role** (doctor: patients, today, pending prescriptions, unread messages; nutritionist: pending diet reviews, video consultations, active clients, unread messages; trainer: workouts to review, video consultations, active trainees, unread messages).
+* **Payments**: what patients paid you (earned, upcoming, waiting, pay-at-clinic, refunded, refund due), filters, and a CSV download. Test gateway only.
+* **Video call room** (`/appointments/:id/call`): device check, Jitsi inside the portal, join/leave log, notes beside the call, "Mark completed" afterwards.
+* **Messages** (`/messages`): a conversation per accepted appointment, unread counts in the menu, plain text only.
+* **Alerts**: the menu counts waiting requests and unread messages; the browser can show a desktop alert while the portal is open.
+* **Checks**: every form shows its problems next to the field before sending (the API checks again); a session that ends mid-use returns to sign-in with a message; a screen that fails shows a recovery page instead of a blank one.
 
 ## Run
 

@@ -4,7 +4,8 @@ import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import { pkr } from '@/lib/format';
 import type { AdminSpecialist, DeleteResult, NewSpecialistResult, Role } from '@/lib/types';
-import { Badge, Card, Notice, Spinner } from '@/components/ui';
+import { Badge, Card, Field, Notice, Spinner } from '@/components/ui';
+import { applicationProblems, emailProblem, hoursProblem, type Problems } from '@/lib/validate';
 
 const TYPES: { value: Role; label: string }[] = [
   { value: 'doctor', label: 'Doctor' },
@@ -35,6 +36,7 @@ export default function SpecialistsPage() {
   const [result, setResult] = useState<NewSpecialistResult | null>(null);
   const [copied, setCopied] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [problems, setProblems] = useState<Problems>({});
 
   const load = useCallback(async () => {
     try {
@@ -49,10 +51,41 @@ export default function SpecialistsPage() {
     void load();
   }, [load]);
 
-  const toggleDay = (d: number) => setDays((cur) => (cur.includes(d) ? cur.filter((x) => x !== d) : [...cur, d].sort()));
+  const toggleDay = (d: number) => {
+    const next = days.includes(d) ? days.filter((x) => x !== d) : [...days, d].sort();
+    setDays(next);
+    // Check against the new list of days, not the one from before this click.
+    setProblems((cur) => {
+      const found = hoursProblem(next, start, end);
+      const copy = { ...cur };
+      if (found) copy.hours = found; else delete copy.hours;
+      return copy;
+    });
+  };
+
+  /** Everything wrong with the form, by field. The licence is not asked for here: the administrator is adding a person they already know. */
+  const check = (): Problems => {
+    const found = applicationProblems({ name, specialty, license: '', years, bio: '', video, chat, days, start, end }, { license: false });
+    const mail = emailProblem(email);
+    return mail ? { email: mail, ...found } : found;
+  };
+  const recheck = (key: string) => setProblems((cur) => {
+    const copy = { ...cur };
+    const found = check()[key];
+    if (found) copy[key] = found; else delete copy[key];
+    return copy;
+  });
+  const bad = (k: string) => (problems[k] ? true : undefined);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
+    if (busy) return;
+    const found = check();
+    setProblems(found);
+    if (Object.keys(found).length) {
+      setError('Please fix the highlighted fields and add again.');
+      return;
+    }
     setBusy(true);
     setError(null);
     setResult(null);
@@ -60,12 +93,13 @@ export default function SpecialistsPage() {
     try {
       const r = await api<NewSpecialistResult>('/admin/specialists', {
         method: 'POST',
-        body: { email, name, type, specialty, yearsOfExperience: Number(years) || 0, emergency, fees: { video: Number(video), chat: Number(chat) }, availability: { days, start, end, slotMinutes: 30 } },
+        body: { email: email.trim(), name: name.trim(), type, specialty: specialty.trim(), yearsOfExperience: Number(years) || 0, emergency, fees: { video: Number(video), chat: Number(chat) }, availability: { days, start, end, slotMinutes: 30 } },
       });
       setResult(r);
       setEmail('');
       setName('');
       setSpecialty('');
+      setProblems({});
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not add the specialist.');
@@ -141,31 +175,44 @@ export default function SpecialistsPage() {
       )}
 
       <Card title="Add a specialist directly">
-        <form className="stack" onSubmit={submit}>
+        <form className="stack" onSubmit={submit} noValidate>
           {error && <Notice tone="error">{error}</Notice>}
           <div className="grid2">
-            <label>Email<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="off" /></label>
-            <label>Full name<input value={name} onChange={(e) => setName(e.target.value)} required minLength={2} maxLength={80} /></label>
+            <Field label="Email" error={problems.email}>
+              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => recheck('email')} maxLength={120} autoComplete="off" aria-invalid={bad('email')} />
+            </Field>
+            <Field label="Full name" error={problems.name}>
+              <input value={name} onChange={(e) => setName(e.target.value)} onBlur={() => recheck('name')} maxLength={80} aria-invalid={bad('name')} />
+            </Field>
           </div>
           <div className="grid2">
             <label>Type<select value={type} onChange={(e) => setType(e.target.value as Role)}>{TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</select></label>
-            <label>Specialty<input value={specialty} onChange={(e) => setSpecialty(e.target.value)} required maxLength={80} /></label>
+            <Field label="Specialty" error={problems.specialty}>
+              <input value={specialty} onChange={(e) => setSpecialty(e.target.value)} onBlur={() => recheck('specialty')} maxLength={80} aria-invalid={bad('specialty')} />
+            </Field>
           </div>
           <div className="grid3">
-            <label>Video fee (PKR)<input type="number" min={0} max={1000000} step={50} value={video} onChange={(e) => setVideo(e.target.value)} required /></label>
-            <label>Chat fee (PKR)<input type="number" min={0} max={1000000} step={50} value={chat} onChange={(e) => setChat(e.target.value)} required /></label>
-            <label>Years of experience<input type="number" min={0} max={70} value={years} onChange={(e) => setYears(e.target.value)} /></label>
+            <Field label="Video fee (PKR)" error={problems.video}>
+              <input type="number" inputMode="numeric" min={0} max={1000000} step={50} value={video} onChange={(e) => setVideo(e.target.value)} onBlur={() => recheck('video')} aria-invalid={bad('video')} />
+            </Field>
+            <Field label="Chat fee (PKR)" error={problems.chat}>
+              <input type="number" inputMode="numeric" min={0} max={1000000} step={50} value={chat} onChange={(e) => setChat(e.target.value)} onBlur={() => recheck('chat')} aria-invalid={bad('chat')} />
+            </Field>
+            <Field label="Years of experience" error={problems.years}>
+              <input type="number" inputMode="numeric" min={0} max={70} value={years} onChange={(e) => setYears(e.target.value)} onBlur={() => recheck('years')} aria-invalid={bad('years')} />
+            </Field>
           </div>
           <fieldset className="days">
             <legend>Working days</legend>
             {DAYS.map((d, i) => <label key={d} className="check"><input type="checkbox" checked={days.includes(i + 1)} onChange={() => toggleDay(i + 1)} /> {d}</label>)}
           </fieldset>
           <div className="grid2">
-            <label>From<input type="time" value={start} onChange={(e) => setStart(e.target.value)} required /></label>
-            <label>Until<input type="time" value={end} onChange={(e) => setEnd(e.target.value)} required /></label>
+            <label>From<input type="time" value={start} onChange={(e) => setStart(e.target.value)} onBlur={() => recheck('hours')} aria-invalid={bad('hours')} /></label>
+            <label>Until<input type="time" value={end} onChange={(e) => setEnd(e.target.value)} onBlur={() => recheck('hours')} aria-invalid={bad('hours')} /></label>
           </div>
+          {problems.hours && <span className="field-error" role="alert">{problems.hours}</span>}
           <label className="check"><input type="checkbox" checked={emergency} onChange={(e) => setEmergency(e.target.checked)} /> Takes urgent (emergency) bookings</label>
-          <div><button className="btn btn-primary" disabled={busy || days.length === 0}>{busy ? 'Adding…' : 'Add specialist'}</button></div>
+          <div><button className="btn btn-primary" disabled={busy}>{busy ? 'Adding…' : 'Add specialist'}</button></div>
         </form>
       </Card>
     </>

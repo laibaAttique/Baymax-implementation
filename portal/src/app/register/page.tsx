@@ -6,8 +6,9 @@ import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { firebaseAuth, firebaseConfigured } from '@/lib/firebase';
 import { useAuth } from '@/lib/auth';
+import { emailProblem, passwordProblem } from '@/lib/validate';
 import { ApplicationForm } from '@/components/ApplicationForm';
-import { Card, Notice } from '@/components/ui';
+import { Card, Field, Notice } from '@/components/ui';
 
 function friendly(code: string): string {
   switch (code) {
@@ -37,7 +38,8 @@ export default function RegisterPage() {
   }, [state.status, router]);
 
   async function createAccount() {
-    if (password.length < 8) throw new Error('Choose a password of at least 8 characters.');
+    const bad = emailProblem(email) ?? passwordProblem(password);
+    if (bad) throw new Error(bad);
     if (password !== confirm) throw new Error('The two passwords do not match.');
     try {
       await createUserWithEmailAndPassword(firebaseAuth(), email.trim(), password);
@@ -63,10 +65,16 @@ export default function RegisterPage() {
         }}
         extra={
           <Card title="Your account">
-            <label>Email<input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
+            <Field label="Email" error={email ? emailProblem(email) : null}>
+              <input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} maxLength={120} />
+            </Field>
             <div className="grid2">
-              <label>Password<input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} /></label>
-              <label>Repeat password<input type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required minLength={8} /></label>
+              <Field label="Password" error={password ? passwordProblem(password) : null} hint="At least 8 characters with a letter and a number.">
+                <input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} maxLength={128} />
+              </Field>
+              <Field label="Repeat password" error={confirm && confirm !== password ? 'The two passwords do not match.' : null}>
+                <input type="password" autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} maxLength={128} />
+              </Field>
             </div>
             <p className="muted small">Your password goes straight to Firebase. Baymax never sees it.</p>
           </Card>

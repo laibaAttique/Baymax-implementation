@@ -16,7 +16,7 @@ class Step2MedicalHistory extends StatefulWidget {
 
 class _Step2MedicalHistoryState extends State<Step2MedicalHistory> {
   final List<String> _conditions = ['Diabetes', 'Hypertension', 'Heart Disease', 'Asthma', 'Obesity', 'PCOS', 'None', 'Other'];
-  final List<String> _allergies = ['Gluten', 'Dairy', 'Nuts', 'Soy', 'Shellfish', 'Eggs', 'None', 'Other'];
+  final List<String> _allergies = ['Gluten', 'Dairy', 'Nuts', 'Peanuts', 'Soy', 'Shellfish', 'Fish', 'Eggs', 'Sesame', 'None', 'Other'];
   
   final List<String> _selectedConditions = [];
   final List<String> _selectedAllergies = [];

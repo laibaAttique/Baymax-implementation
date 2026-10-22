@@ -1,5 +1,6 @@
 // Closing a specialist account (their own choice, or an administrator's). Used by the portal and the admin panel.
 import { REAL_STATUSES, normalizeAppointment } from './rules.js';
+import { refundInbox, refundWrites } from './payments.js';
 
 export class AccountError extends Error {
   constructor(status, message) {
@@ -32,6 +33,12 @@ export async function deleteSpecialist({ auth, db, now = Date.now }, uid, { by }
     cancelled++;
     updates[`appointments/${id}/status`] = 'cancelled';
     updates[`appointments/${id}/declineReason`] = 'This specialist closed their Baymax account.';
+    // A payment taken for an appointment that will now never happen goes back to the patient.
+    const refund = a ? refundWrites(a, t, { reason: 'The specialist closed their Baymax account.', by: 'system' }) : {};
+    if (Object.keys(refund).length) {
+      Object.assign(updates, refund);
+      updates[`users/${r.patientId}/inbox/refund-${id}`] = refundInbox(a, t, 'Your specialist closed their account.');
+    }
     if (r.status !== 'pending_payment' && r.patientId) {
       updates[`users/${r.patientId}/inbox/closed-${id}`] = {
         type: 'appointment',

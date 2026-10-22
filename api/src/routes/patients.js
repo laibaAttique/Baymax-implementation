@@ -4,6 +4,7 @@ import { loadSharedData } from '../lib/patientData.js';
 import { DIET_REVIEW_ROLES, EXERCISES, PLAN_EDIT_DAYS, PLAN_ROLES, PlanError, parseDietPlan, parseDietReview, parseWorkoutPlan } from '../lib/plans.js';
 import { canEditPlans, openSharedAppointment, patientSummaries, relatedTo } from '../lib/patients.js';
 import { ROLE_LABELS, isListed, normalizeAppointment } from '../lib/rules.js';
+import { DAY, UID, checkParam, queryText } from '../lib/validate.js';
 
 const KINDS = ['diet', 'workout'];
 
@@ -14,6 +15,8 @@ const KINDS = ['diet', 'workout'];
  */
 export function patientRoutes({ db, now }) {
   const router = Router();
+  router.param('pid', checkParam(UID, 'patient'));
+  router.param('date', checkParam(DAY, 'date', 'The date must look like 2026-10-19.'));
 
   const mine = async (req) => {
     const raw = await db.byChild('appointments', 'specialistId', req.user.uid);
@@ -37,7 +40,7 @@ export function patientRoutes({ db, now }) {
   };
 
   router.get('/', async (req, res) => {
-    const q = typeof req.query.q === 'string' ? req.query.q : '';
+    const q = queryText(req.query.q, 'The search', 80);
     res.json({ patients: patientSummaries(await mine(req), now(), q) });
   });
 

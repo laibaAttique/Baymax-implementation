@@ -11,29 +11,37 @@ import { ApplicationForm } from '@/components/ApplicationForm';
 import { fmtDateTime } from '@/lib/format';
 
 const SPECIALIST_NAV = [
-  { href: '/dashboard', label: 'Overview', badge: true },
+  { href: '/dashboard', label: 'Overview', badge: 'requests' },
   { href: '/appointments', label: 'Appointments' },
+  { href: '/messages', label: 'Messages', badge: 'messages' },
   { href: '/patients', label: 'My patients' },
+  { href: '/payments', label: 'Payments' },
   { href: '/prescriptions', label: 'Prescriptions', only: 'doctor' },
   { href: '/settings', label: 'My profile' },
-];
+] as const;
 
-/** New requests waiting for an answer, checked every 30 seconds. A desktop alert fires when a new one arrives (if allowed). */
-function useRequestCount(enabled: boolean) {
-  const [count, setCount] = useState(0);
-  const last = useRef(0);
+/**
+ * New requests and unread messages, checked every 30 seconds. A desktop alert fires when either grows (if allowed). The first check
+ * only sets the starting point, so opening the portal never alerts about things that were already waiting.
+ */
+function useCounts(enabled: boolean) {
+  const [counts, setCounts] = useState({ requests: 0, messages: 0 });
+  const last = useRef<{ requests: number; messages: number } | null>(null);
   useEffect(() => {
     if (!enabled) return;
     let alive = true;
+    const notify = (title: string, body: string) => {
+      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') new Notification(title, { body });
+    };
     const check = async () => {
       try {
-        const r = await api<{ pendingRequests: number }>('/summary');
+        const r = await api<{ pendingRequests: number; unreadMessages: number }>('/summary');
         if (!alive) return;
-        if (r.pendingRequests > last.current && last.current >= 0 && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-          new Notification('Baymax: new appointment request', { body: `${r.pendingRequests} request${r.pendingRequests === 1 ? '' : 's'} waiting for your answer.` });
-        }
-        last.current = r.pendingRequests;
-        setCount(r.pendingRequests);
+        const prev = last.current;
+        if (prev && r.pendingRequests > prev.requests) notify('Baymax: new appointment request', `${r.pendingRequests} request${r.pendingRequests === 1 ? '' : 's'} waiting for your answer.`);
+        if (prev && r.unreadMessages > prev.messages) notify('Baymax: new message', `${r.unreadMessages} unread message${r.unreadMessages === 1 ? '' : 's'} from patients.`);
+        last.current = { requests: r.pendingRequests, messages: r.unreadMessages };
+        setCounts({ requests: r.pendingRequests, messages: r.unreadMessages });
       } catch {
         // the menu badge is a convenience; a failed check is simply skipped
       }
@@ -49,9 +57,10 @@ function useRequestCount(enabled: boolean) {
     };
   }, [enabled]);
   useEffect(() => {
-    document.title = `${count > 0 ? `(${count}) ` : ''}Baymax Specialist Portal`;
-  }, [count]);
-  return count;
+    const n = counts.requests + counts.messages;
+    document.title = `${n > 0 ? `(${n}) ` : ''}Baymax Specialist Portal`;
+  }, [counts]);
+  return counts;
 }
 
 export default function PortalLayout({ children }: { children: ReactNode }) {
@@ -59,7 +68,7 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const path = usePathname();
   const isSpecialist = state.status === 'ready' && ['doctor', 'nutritionist', 'trainer'].includes(state.me.role);
-  const requestCount = useRequestCount(isSpecialist);
+  const counts = useCounts(isSpecialist);
   const [alertsAllowed, setAlertsAllowed] = useState(typeof Notification !== 'undefined' && Notification.permission === 'granted');
 
   useEffect(() => {
@@ -97,10 +106,11 @@ export default function PortalLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
         <nav aria-label="Main">
-          {nav.filter((n) => !n.only || n.only === me.role).map((n) => (
+          {nav.filter((n) => !('only' in n) || n.only === me.role).map((n) => (
             <Link key={n.href} href={n.href} className={path.startsWith(n.href) ? 'nav-link active' : 'nav-link'} aria-current={path.startsWith(n.href) ? 'page' : undefined}>
               {n.label}
-              {n.badge && requestCount > 0 && <span className="count" aria-label={`${requestCount} new requests`}>{requestCount}</span>}
+              {'badge' in n && n.badge === 'requests' && counts.requests > 0 && <span className="count" aria-label={`${counts.requests} new requests`}>{counts.requests}</span>}
+              {'badge' in n && n.badge === 'messages' && counts.messages > 0 && <span className="count" aria-label={`${counts.messages} unread messages`}>{counts.messages}</span>}
             </Link>
           ))}
         </nav>

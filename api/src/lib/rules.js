@@ -65,7 +65,16 @@ export function normalizeAppointment(id, raw) {
     declineReason: typeof raw.declineReason === 'string' ? raw.declineReason : '',
     consultation: normalizeConsultation(raw.consultation),
     payment: normalizePayment(raw.payment),
+    refund: normalizeRefund(raw.refund),
   };
+}
+
+/** A refund recorded on the appointment: `refunded` (sandbox money returned) or `manual` (a live payment an administrator must return through the gateway). */
+function normalizeRefund(r) {
+  if (!r || typeof r !== 'object') return null;
+  const status = r.status === 'refunded' || r.status === 'manual' ? r.status : null;
+  if (!status) return null;
+  return { status, amount: Number(r.amount) || 0, at: Number(r.at) || 0, reason: String(r.reason ?? '').slice(0, 200), by: ['specialist', 'admin', 'system'].includes(r.by) ? r.by : 'system' };
 }
 
 /** What the specialist sees about payment: whether it is paid, how, and how much. Never card details (none are stored). */
@@ -77,6 +86,9 @@ function normalizePayment(p) {
     status,
     method: ['card', 'wallet', 'clinic'].includes(p.method) ? p.method : null,
     total: Number(p.total) || 0,
+    consultationFee: Number(p.consultationFee) || 0,
+    platformFee: Number(p.platformFee) || 0,
+    paidAt: Number(p.paidAt) || 0,
     test: p.mode !== 'live',
     transactionId: String(p.transactionId ?? ''),
   };

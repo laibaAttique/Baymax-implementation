@@ -1,16 +1,24 @@
 import { Router } from 'express';
-import { badRequest, forbidden, notFound } from '../http.js';
+import { badRequest, forbidden } from '../http.js';
 import { randomBytes as nodeRandomBytes } from 'node:crypto';
 import { requireSpecialist } from '../middleware/auth.js';
 import {
-  REAL_STATUSES, ROLE_LABELS, SPECIALIST_ROLES, appointmentState, buildMeetingLink, newRoomName, respondProblem, isListed, dashboardCounts, dayBounds, filterAppointments, greeting, normalizeAppointment,
+  REAL_STATUSES, ROLE_LABELS, SPECIALIST_ROLES, STATUSES, appointmentState, buildMeetingLink, newRoomName, respondProblem, dashboardCounts, dayBounds, filterAppointments, greeting, normalizeAppointment,
   parseConsultationNote, parseProfileUpdate, sortToday, statusChangeProblem,
 } from '../lib/rules.js';
 import { loadSharedData } from '../lib/patientData.js';
 import { publicApplication } from './applications.js';
 import { exerciseList, patientRoutes } from './patients.js';
+import { chatRoutes, unreadTotal } from './chats.js';
+import { specialistPaymentRoutes } from './payments.js';
 import { deleteSpecialist } from '../lib/accounts.js';
 import { HttpError } from '../http.js';
+import { CALL_EVENTS, MAX_CALL_EVENTS, callInfo, callSummary } from '../lib/call.js';
+import { chatState } from '../lib/chat.js';
+import { listAppointments, ownAppointment as loadOwnAppointment } from '../lib/own.js';
+import { refundInbox, refundWrites } from '../lib/payments.js';
+import { activeClientIds, roleCards } from '../lib/roleCards.js';
+import { ID, checkParam, queryChoice, queryRange, queryText } from '../lib/validate.js';
 
 /** The specialist's own profile. A role without a profile (not set up yet) or with a different type cannot use the portal. */
 async function loadSpecialistProfile(db, user) {
@@ -47,31 +55,25 @@ export function specialistRoutes({ auth, db, now, meetingBase = 'https://meet.ji
 
   const tz = (req) => Number(req.profile.tzOffsetMinutes ?? 300);
 
-  async function myAppointments(req) {
-    const raw = await db.byChild('appointments', 'specialistId', req.user.uid);
-    return Object.entries(raw).map(([id, v]) => normalizeAppointment(id, v)).filter((a) => a && isListed(a));
-  }
-
-  async function ownAppointment(req) {
-    const raw = await db.get(`appointments/${req.params.id}`);
-    // Someone else's appointment looks exactly like one that does not exist.
-    if (!raw || raw.specialistId !== req.user.uid) throw notFound('Appointment not found.');
-    const a = normalizeAppointment(req.params.id, raw);
-    if (!a || !isListed(a)) throw notFound('Appointment not found.'); // a booking still waiting for payment is not an appointment yet
-    return a;
-  }
+  const myAppointments = (req) => listAppointments(db, req.user.uid);
+  // Someone else's appointment looks exactly like one that does not exist; a booking still waiting for payment is not an appointment yet.
+  const ownAppointment = (req) => loadOwnAppointment(db, req.user.uid, req.params.id);
 
   const present = (a, t) => ({ ...a, ...appointmentState(a, t) });
 
+  router.param('id', checkParam(ID, 'appointment'));
   router.use('/patients', patientRoutes({ db, now }));
+  router.use('/chats', chatRoutes({ db, now }));
+  router.use('/payments', specialistPaymentRoutes({ db, now }));
 
   router.get('/exercises', (_req, res) => res.json({ exercises: exerciseList() }));
 
   /** The small numbers the portal shows in its menu: requests waiting and sessions awaiting notes. */
   router.get('/summary', async (req, res) => {
     const t = now();
-    const counts = dashboardCounts(await myAppointments(req), t, tz(req));
-    res.json({ pendingRequests: counts.pendingRequests, awaitingNotes: counts.awaitingNotes });
+    const all = await myAppointments(req);
+    const counts = dashboardCounts(all, t, tz(req));
+    res.json({ pendingRequests: counts.pendingRequests, awaitingNotes: counts.awaitingNotes, unreadMessages: await unreadTotal(db, all, req.user.uid, t) });
   });
 
   /** Every prescription this doctor has written (FR-6). */
@@ -104,6 +106,26 @@ export function specialistRoutes({ auth, db, now, meetingBase = 'https://meet.ji
     res.json({ profile: await db.get(`specialists/${req.user.uid}`) });
   });
 
+  /** Patients whose shared food log is open right now and has a day this nutritionist has not reviewed yet. */
+  async function dietReviewsWaiting(all, t) {
+    const open = new Map();
+    for (const a of all) if (a.shares.foodLog7d && appointmentState(a, t).canViewShared) open.set(a.patientId, a);
+    let waiting = 0;
+    for (const pid of open.keys()) {
+      const reviews = (await db.get(`dietReviews/${pid}`)) ?? {};
+      const days = Array.from({ length: 7 }, (_, i) => new Date(t - i * 86_400_000).toISOString().slice(0, 10));
+      if (days.some((d) => !reviews[d])) waiting++;
+    }
+    return waiting;
+  }
+
+  /** Active trainees who have no workout plan from a specialist yet (a trainer or doctor reviewing it would be the first). */
+  async function workoutsToReview(all, t) {
+    let n = 0;
+    for (const pid of activeClientIds(all, t)) if (!(await db.get(`specialistPlans/${pid}/workout`))) n++;
+    return n;
+  }
+
   router.get('/dashboard', async (req, res) => {
     const t = now();
     const all = await myAppointments(req);
@@ -111,13 +133,18 @@ export function specialistRoutes({ auth, db, now, meetingBase = 'https://meet.ji
     // Today's list is real sessions only; requests waiting for an answer have their own list.
     const today = sortToday(all.filter((a) => REAL_STATUSES.includes(a.status) && a.startAt >= day.start && a.startAt < day.end), t);
     const requests = all.filter((a) => a.status === 'requested' && a.startAt > t).sort((a, b) => a.startAt - b.startAt);
+    const counts = dashboardCounts(all, t, tz(req));
+    const extra = { unreadMessages: await unreadTotal(db, all, req.user.uid, t) };
+    if (req.user.role === 'nutritionist') extra.dietReviewsWaiting = await dietReviewsWaiting(all, t);
+    if (req.user.role === 'trainer') extra.workoutsToReview = await workoutsToReview(all, t);
     res.json({
       serverTime: t,
       greeting: greeting(t, tz(req)),
       name: req.profile.name,
       role: req.user.role,
       roleLabel: ROLE_LABELS[req.user.role],
-      counts: dashboardCounts(all, t, tz(req)),
+      counts,
+      cards: roleCards(req.user.role, { all, now: t, counts, extra }),
       requests: requests.map((a) => present(a, t)),
       today: today.map((a) => present(a, t)),
     });
@@ -125,13 +152,10 @@ export function specialistRoutes({ auth, db, now, meetingBase = 'https://meet.ji
 
   router.get('/appointments', async (req, res) => {
     const t = now();
-    const num = (v) => (v === undefined || v === '' ? NaN : Number(v));
-    const list = filterAppointments(await myAppointments(req), {
-      status: req.query.status,
-      from: num(req.query.from),
-      to: num(req.query.to),
-      q: typeof req.query.q === 'string' ? req.query.q : '',
-    });
+    const { from, to } = queryRange(req.query);
+    const status = queryChoice(req.query.status, 'Status', STATUSES);
+    const q = queryText(req.query.q, 'The search', 80);
+    const list = filterAppointments(await myAppointments(req), { status, from: from ?? NaN, to: to ?? NaN, q });
     list.sort((a, b) => b.startAt - a.startAt);
     res.json({ serverTime: t, appointments: list.slice(0, 500).map((a) => present(a, t)) });
   });
@@ -161,7 +185,32 @@ export function specialistRoutes({ auth, db, now, meetingBase = 'https://meet.ji
           : 'The viewing period for this appointment has ended.';
       }
     }
-    res.json({ serverTime: t, appointment: present(a, t), sharedData, sharedLocked });
+    const events = await db.get(`callLog/${a.id}`);
+    res.json({ serverTime: t, appointment: present(a, t), sharedData, sharedLocked, call: callSummary(events, a.endAt), chat: chatState(a, t) });
+  });
+
+  /**
+   * The video room (FR-3, FR10.5). The room's name is handed over only while the person may join, so the page cannot open it early.
+   * The page also reports when the specialist joined and left, which is what the call log (and the administrator's call figures) hold.
+   */
+  router.get('/appointments/:id/call', async (req, res) => {
+    const t = now();
+    const a = await ownAppointment(req);
+    res.json({ ...callInfo(a, t, appointmentState(a, t), meetingBase), displayName: req.profile.name, summary: callSummary(await db.get(`callLog/${a.id}`), a.endAt) });
+  });
+
+  router.post('/appointments/:id/call/event', async (req, res) => {
+    const t = now();
+    const a = await ownAppointment(req);
+    const event = req.body?.event;
+    if (!CALL_EVENTS.includes(event)) throw badRequest(`The event must be one of: ${CALL_EVENTS.join(', ')}.`);
+    if (!['confirmed', 'completed'].includes(a.status)) throw badRequest('There is no call for this appointment.');
+    // Joining is only logged while the room is open; leaving is always logged, so a call that overran the slot still closes.
+    if (event === 'joined' && !appointmentState(a, t).canJoin) throw badRequest('The room is not open right now.');
+    const log = (await db.get(`callLog/${a.id}`)) ?? {};
+    if (Object.keys(log).length >= MAX_CALL_EVENTS) throw badRequest('This call has too many log entries.');
+    await db.update({ [`callLog/${a.id}/${db.newKey(`callLog/${a.id}`)}`]: { uid: req.user.uid, role: req.user.role, event, at: t } });
+    res.status(201).json({ summary: callSummary({ ...log, new: { event, at: t } }, a.endAt) });
   });
 
   router.put('/appointments/:id/consultation', async (req, res) => {
@@ -217,8 +266,11 @@ export function specialistRoutes({ auth, db, now, meetingBase = 'https://meet.ji
     if (problem) throw badRequest(problem);
     const reason = typeof req.body?.reason === 'string' ? req.body.reason.trim() : '';
     if (reason.length > 200) throw badRequest('The reason can be at most 200 characters.');
-    const refund = a.payment?.status === 'paid' && !a.payment.test ? ' Contact support about a refund.' : '';
+    const refunded = refundWrites(a, t, { reason: reason || 'The specialist declined the request.', by: 'specialist' });
+    const refund = Object.keys(refunded).length ? ' Your payment was refunded.' : '';
     await db.update({
+      ...refunded,
+      ...(refund ? { [`users/${a.patientId}/inbox/refund-${a.id}`]: refundInbox(a, t, 'The specialist declined your request.') } : {}),
       [`appointments/${a.id}/status`]: 'declined',
       [`appointments/${a.id}/declineReason`]: reason || null,
       [`appointments/${a.id}/respondedAt`]: t,
@@ -243,7 +295,9 @@ export function specialistRoutes({ auth, db, now, meetingBase = 'https://meet.ji
     if (problem) throw badRequest(problem);
     const updates = { [`appointments/${a.id}/status`]: next };
     if (next === 'cancelled') {
-      // Free the time so someone else can book it, and tell the patient.
+      // Free the time so someone else can book it, return a payment taken for it, and tell the patient.
+      Object.assign(updates, refundWrites(a, t, { reason: 'The specialist cancelled the appointment.', by: 'specialist' }));
+      if (Object.keys(updates).length > 1) updates[`users/${a.patientId}/inbox/refund-${a.id}`] = refundInbox(a, t, 'The specialist cancelled your appointment.');
       updates[`slots/${a.specialistId}/${a.startAt}`] = null;
       updates[`users/${a.patientId}/inbox/cancel-${a.id}`] = {
         type: 'appointment',

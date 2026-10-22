@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { api } from '@/lib/api';
 import type { Overview } from '@/lib/types';
 import { Card, Notice, Spinner } from '@/components/ui';
+import { pkr } from '@/lib/format';
 
 const STATUS_LABELS: Record<string, string> = {
   pending_payment: 'Awaiting payment',
@@ -34,6 +35,7 @@ export default function OverviewPage() {
         <div className="metric"><span className="metric-value">{data.specialists.total}</span><span className="metric-label">Specialists</span></div>
         <div className="metric"><span className="metric-value">{data.appointments.total}</span><span className="metric-label">Appointments, all time</span></div>
       </div>
+      {data.payments.refundsDue.count > 0 && <Notice>{data.payments.refundsDue.count} paid appointment{data.payments.refundsDue.count === 1 ? ' was' : 's were'} cancelled without a refund. <Link className="link" href="/payments?bucket=due">Decide on them ›</Link></Notice>}
       {data.applications.pending > 0 && <Notice>{data.applications.pending} registration{data.applications.pending === 1 ? ' is' : 's are'} waiting for your decision. <Link className="link" href="/registrations">Review them ›</Link></Notice>}
       <Card title="Specialists by type">
         <div className="tiles">
@@ -41,6 +43,17 @@ export default function OverviewPage() {
           <div className="tile"><span className="tile-value">{data.specialists.nutritionist}</span><span className="tile-label">Nutritionists</span></div>
           <div className="tile"><span className="tile-value">{data.specialists.trainer}</span><span className="tile-label">Trainers</span></div>
         </div>
+      </Card>
+      <Card title="Money, calls and messages" action={<Link className="link" href="/payments">All payments ›</Link>}>
+        <div className="tiles">
+          <div className="tile"><span className="tile-value">{pkr(data.payments.gross)}</span><span className="tile-label">Taken online</span></div>
+          <div className="tile"><span className="tile-value">{pkr(data.payments.platformFees)}</span><span className="tile-label">Platform fees</span></div>
+          <div className="tile"><span className="tile-value">{pkr(data.payments.refunded.amount)}</span><span className="tile-label">Refunded ({data.payments.refunded.count})</span></div>
+          <div className="tile"><span className="tile-value">{data.payments.refundsDue.count}</span><span className="tile-label">Refunds for you to decide</span></div>
+          <div className="tile"><span className="tile-value">{data.calls.sessions}</span><span className="tile-label">Video sessions opened ({data.calls.minutes} min)</span></div>
+          <div className="tile"><span className="tile-value">{data.messages.total}</span><span className="tile-label">Messages in {data.messages.conversations} conversation{data.messages.conversations === 1 ? '' : 's'}</span></div>
+        </div>
+        {data.payments.testPayments > 0 && <p className="muted small">{data.payments.testPayments} of the {data.payments.count} payments are test payments: no real money moved.</p>}
       </Card>
       <Card title="Appointments by status">
         {Object.keys(data.appointments.byStatus).length === 0 ? <p className="muted">No appointments yet.</p> : (

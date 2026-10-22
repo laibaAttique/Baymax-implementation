@@ -3,10 +3,12 @@ import 'package:flutter/services.dart';
 import '../../models/consultation.dart';
 import '../../models/payment.dart';
 import '../../services/api_client.dart';
+import '../../services/consultation_chat.dart';
 import '../../services/consultation_rules.dart';
 import '../../services/consultation_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/glass.dart';
+import 'consultation_chat_screen.dart';
 
 Color _statusColor(AppointmentStatus s) => switch (s) {
       AppointmentStatus.confirmed => AppTheme.teal,
@@ -198,6 +200,10 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
     }
   }
 
+  void _openChat() {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => ConsultationChatScreen(appointment: _a, clock: widget.clock)));
+  }
+
   Future<void> _copy() async {
     await Clipboard.setData(ClipboardData(text: _a.meetingLink));
     if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Meeting link copied. Open it in your browser to join.')));
@@ -287,6 +293,21 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
               ]),
             ),
           ],
+          if (ChatRules.hasConversation(a)) ...[
+            const SectionHeader('Messages', padding: EdgeInsets.fromLTRB(2, 22, 0, 10)),
+            GlassCard(
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(
+                  ChatRules.canSend(a, now)
+                      ? 'Send ${a.specialistName} a message. Replies appear here and in your notifications.'
+                      : 'The conversation with ${a.specialistName} is closed, but you can still read it.',
+                  style: const TextStyle(height: 1.4, color: AppTheme.textPrimary, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 12),
+                GlowButton(label: ChatRules.canSend(a, now) ? 'Open messages' : 'Read messages', icon: Icons.chat_bubble_rounded, onPressed: _openChat),
+              ]),
+            ),
+          ],
           if (note != null) ...[
             const SectionHeader('From your specialist', padding: EdgeInsets.fromLTRB(2, 22, 0, 10)),
             GlassCard(
@@ -317,6 +338,8 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen> {
                 _row('Consultation fee', ConsultationService.pkr(a.payment!.consultationFee)),
                 _row('Platform fee', ConsultationService.pkr(a.payment!.platformFee)),
                 _row('Total', ConsultationService.pkr(a.payment!.total)),
+                if (a.refund != null)
+                  _row('Refund', a.refund!.returned ? '${ConsultationService.pkr(a.refund!.amount)} returned' : 'Due: support will contact you'),
                 if (a.payment!.isTest)
                   const Padding(padding: EdgeInsets.only(top: 6), child: Text('Test payment: no money was taken.', style: TextStyle(fontSize: 12.5, color: AppTheme.warning, fontWeight: FontWeight.w700))),
               ]),

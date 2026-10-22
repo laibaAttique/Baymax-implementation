@@ -5,6 +5,7 @@ import { api } from '@/lib/api';
 import { fmtDate } from '@/lib/format';
 import type { DietPlan, LibraryExercise, WorkoutDayPlan, WorkoutItem, WorkoutPlan } from '@/lib/types';
 import { Badge, Card, Notice } from '@/components/ui';
+import { dietPlanProblem, workoutPlanProblem } from '@/lib/validate';
 
 const DAY_NAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
@@ -33,6 +34,14 @@ export function DietPlanEditor({ pid, current, patientChoice, canEdit, days, onC
   const [msg, setMsg] = useState<{ tone: 'ok' | 'error'; text: string } | null>(null);
 
   async function save(status: 'approved' | 'modified') {
+    if (busy) return;
+    if (status === 'modified') {
+      const problem = dietPlanProblem({ kcal, protein, carbs, fat, avoid: lines(avoid), tips: lines(tips), note });
+      if (problem) {
+        setMsg({ tone: 'error', text: problem });
+        return;
+      }
+    }
     setBusy(status);
     setMsg(null);
     try {
@@ -133,6 +142,14 @@ export function WorkoutPlanEditor({ pid, current, patientChoice, canEdit, days, 
   }
 
   async function save(status: 'approved' | 'modified') {
+    if (busy) return;
+    if (status === 'modified') {
+      const problem = workoutPlanProblem(week, note);
+      if (problem) {
+        setMsg({ tone: 'error', text: problem });
+        return;
+      }
+    }
     setBusy(status);
     setMsg(null);
     try {

@@ -78,7 +78,7 @@ class NutritionPlanScreen extends StatelessWidget {
                           children: [
                             Text(i.food.name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14.5, color: AppTheme.textPrimary)),
                             const SizedBox(height: 1),
-                            Text('${i.servingText} · ${i.food.fromUsda ? 'USDA' : 'estimate'}', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
+                            Text('${i.servingText} · ${i.food.sourceTag}', style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary, fontWeight: FontWeight.w500)),
                           ],
                         ),
                       ),
@@ -184,6 +184,15 @@ class NutritionPlanScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 for (var i = 0; i < 4; i++) _mealCard(const ['Breakfast', 'Lunch', 'Dinner', 'Snack'][i], n, i + 1),
+                if (n.meals.values.any((l) => l.any((i) => i.food.fromDataset)))
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 4),
+                    child: Text(
+                      'Foods marked USDA, INDB or team list come from published food tables (the label shows which); the others are the app\'s own typical servings. '
+                      'Allergens of the table foods are estimated from their names, so with an allergy the plan only uses single foods, fruit and vegetables from those tables. Always read the label.',
+                      style: TextStyle(fontSize: 12, height: 1.45, color: AppTheme.textSecondary),
+                    ),
+                  ),
 
                 const SectionHeader('Foods to avoid', padding: EdgeInsets.fromLTRB(0, 14, 0, 10)),
                 Wrap(

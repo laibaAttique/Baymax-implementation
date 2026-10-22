@@ -1,6 +1,7 @@
 // The real database rules (app/database.rules.json), tested with real signed-in users against the emulator.
 import test, { before, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
+import { serverTimestamp } from 'firebase/database';
 import { adminDb, denied, makeUser, reset, signIn, waitForEmulators } from './harness.mjs';
 
 const DAY = 86_400_000;
@@ -201,4 +202,70 @@ test('ATC-INT-30 specialist plans and food log reviews: a member reads only thei
   assert.ok(await denied(a.set(`users/${A.uid}/planChoice/diet`, 'whatever')), 'an unknown choice');
   assert.ok(await denied(a.set(`users/${A.uid}/planChoice/sleep`, 'baymax')), 'an unknown plan kind');
   assert.ok(await denied(b.set(`users/${A.uid}/planChoice/diet`, 'specialist')), 'someone else\'s choice');
+});
+
+/** An accepted appointment between member [c] and the doctor, as the portal server leaves it. */
+async function acceptedAppointment(c, id, { status = 'confirmed', start = START } = {}) {
+  await c.update(holdWrites(c, id, { start }));
+  await c.update(payWrites(id, DOC.uid, start));
+  await adminDb.ref(`appointments/${id}`).update({ status, meetingLink: 'https://meet.jit.si/baymax-abcdefghjkmnpqrstuvw' });
+}
+
+
+test('ATC-INT-34 chat: a member writes only their own messages, to their own accepted appointment, one at a time', async () => {
+  await acceptedAppointment(a, 'appt-a');
+  const mk = (c, text) => ({ from: c.uid, side: 'patient', text, at: serverTimestamp() });
+  await a.set('chats/appt-a/m1', mk(a, 'My back hurts'));
+  assert.equal((await a.get('chats/appt-a/m1')).text, 'My back hurts');
+  assert.equal((await a.get('chats/appt-a/m1')).side, 'patient');
+
+  assert.ok(await denied(a.set('chats/appt-a/m1', mk(a, 'rewritten'))), 'rewriting a sent message');
+  assert.ok(await denied(a.remove('chats/appt-a/m1')), 'deleting a sent message');
+  assert.ok(await denied(a.set('chats/appt-a/m2', { ...mk(a, 'x'), side: 'specialist' })), 'posing as the specialist');
+  assert.ok(await denied(a.set('chats/appt-a/m3', { ...mk(a, 'x'), from: B.uid })), 'posing as another member');
+  assert.ok(await denied(a.set('chats/appt-a/m4', mk(a, ''))), 'an empty message');
+  assert.ok(await denied(a.set('chats/appt-a/m5', mk(a, 'x'.repeat(1001)))), 'a message over 1000 characters');
+  assert.ok(await denied(a.set('chats/appt-a/m6', { ...mk(a, 'x'), at: Date.now() - 86_400_000 })), 'a back-dated message');
+  assert.ok(await denied(a.set('chats/appt-a/m7', { ...mk(a, 'x'), extra: 'field' })), 'an unknown field');
+  assert.ok(await denied(a.set('chats/appt-a/m8', 'just text')), 'a message that is not an object');
+  assert.ok(await denied(b.set('chats/appt-a/m9', mk(b, 'hi'))), 'another member writing into this conversation');
+  assert.ok(await denied(b.set('chats/appt-b/m1', mk(b, 'hi'))), 'a conversation for an appointment that does not exist');
+  assert.equal(Object.keys((await adminDb.ref('chats/appt-a').get()).val()).length, 1);
+});
+
+test('ATC-INT-35 chat: only the two people in the appointment can read it, and only an accepted one can be written to', async () => {
+  await acceptedAppointment(a, 'appt-a');
+  await a.update(holdWrites(a, 'appt-held', { start: START + 1800_000 }));
+  const mk = (c, text) => ({ from: c.uid, side: 'patient', text, at: serverTimestamp() });
+  await a.set('chats/appt-a/m1', mk(a, 'hello'));
+  const doc = await signIn(DOC);
+  assert.equal((await doc.get('chats/appt-a/m1')).text, 'hello', 'the specialist reads it');
+  assert.ok(await denied(b.get('chats/appt-a')), 'another member reading it');
+  assert.ok(await denied(a.get('chats')), 'listing every conversation');
+  assert.ok(await denied(doc.set('chats/appt-a/m2', { from: DOC.uid, side: 'specialist', text: 'hi', at: serverTimestamp() })), 'a specialist writing from a phone: they use the portal server');
+  assert.ok(await denied(a.set('chats/appt-held/m1', mk(a, 'too early'))), 'a booking that is only held');
+
+  // a request that is paid but not yet accepted has no conversation
+  await a.update(holdWrites(a, 'appt-req', { start: START + 3600_000 }));
+  await a.update(payWrites('appt-req', DOC.uid, START + 3600_000));
+  assert.ok(await denied(a.set('chats/appt-req/m1', mk(a, 'before acceptance'))), 'a request nobody accepted');
+
+  // a conversation closes 24 hours after the slot
+  await adminDb.ref('appointments/appt-a').update({ startAt: Date.now() - 3 * 86_400_000, slotKey: String(Date.now() - 3 * 86_400_000) });
+  assert.ok(await denied(a.set('chats/appt-a/m3', mk(a, 'too late'))), 'a message after the conversation closed');
+  assert.equal((await a.get('chats/appt-a/m1')).text, 'hello', 'the history can still be read');
+});
+
+test('ATC-INT-36 chat: a member marks their own messages read, nobody marks them for someone else, and the server\'s callLog and paymentLog stay closed', async () => {
+  await acceptedAppointment(a, 'appt-a');
+  await a.set(`chatRead/appt-a/${A.uid}`, serverTimestamp());
+  assert.ok(await a.get(`chatRead/appt-a/${A.uid}`));
+  assert.ok(await denied(a.set(`chatRead/appt-a/${DOC.uid}`, Date.now())), 'marking read as the specialist');
+  assert.ok(await denied(a.set(`chatRead/appt-a/${A.uid}`, Date.now() + 3_600_000)), 'a read time in the future');
+  assert.ok(await denied(b.set(`chatRead/appt-a/${B.uid}`, Date.now())), 'another member');
+  assert.ok(await denied(b.get('chatRead/appt-a')), 'another member reading the read marks');
+  await adminDb.ref().update({ 'callLog/appt-a/e1': { uid: DOC.uid, role: 'doctor', event: 'joined', at: Date.now() }, 'paymentLog/appt-a/p1': { event: 'refund', by: 'x', at: Date.now() } });
+  for (const path of ['callLog', 'callLog/appt-a', 'paymentLog/appt-a']) assert.ok(await denied(a.get(path)), `read ${path}`);
+  assert.ok(await denied(a.set('callLog/appt-a/e2', { event: 'left' })), 'writing to the call log');
+  assert.ok(await denied(a.set('appointments/appt-a/refund', { status: 'refunded', amount: 2000, at: Date.now(), by: 'system', reason: 'x' })), 'a member refunding themselves');
 });

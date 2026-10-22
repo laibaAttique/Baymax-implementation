@@ -11,17 +11,21 @@ import '../../utils/health_calc.dart';
 import '../../widgets/charts.dart';
 import '../../widgets/glass.dart';
 import '../nutrition/calorie_target_screen.dart';
+import 'transform_forecast_screens.dart';
 
 class BodyTransformData {
   final WeightProjection projection;
   final List<WeightPoint> weights;
   final double? targetKg;
   final double? profileKg;
-  const BodyTransformData(this.projection, this.weights, this.targetKg, this.profileKg);
+
+  /// What the forecast starts from; null when there is no health profile yet.
+  final ForecastSeed? seed;
+  const BodyTransformData(this.projection, this.weights, this.targetKg, this.profileKg, {this.seed});
 }
 
-/// Where the user's own weight trend is heading. A straight-line extrapolation, clearly labelled: it is not the
-/// body-transformation forecasting model named in the project scope (Module 10), which is not built.
+/// Module 11: the forecast (an energy-balance model, see `body_forecast.dart`) and, below it, where the user's own weigh-ins are heading
+/// (a straight line through them, clearly labelled: not a prediction model).
 class BodyTransformScreen extends StatefulWidget {
   final Future<BodyTransformData> Function()? loader;
   const BodyTransformScreen({Key? key, this.loader}) : super(key: key);
@@ -33,7 +37,8 @@ class BodyTransformScreen extends StatefulWidget {
     final from = FoodLogService.dateKey(today.subtract(const Duration(days: projectionWindowDays - 1)));
     final weights = await WeightService.instance.range(from, FoodLogService.dateKey(today));
     final target = p.targetWeightValue > 0 ? HealthCalc.toKg(p.targetWeightValue, p.targetWeightUnit) : null;
-    return BodyTransformData(projectWeight(weights: weights, today: today, targetKg: target), weights, target, p.weightKg);
+    final latest = weights.isEmpty ? null : (List.of(weights)..sort((a, b) => a.date.compareTo(b.date))).last.kg;
+    return BodyTransformData(projectWeight(weights: weights, today: today, targetKg: target), weights, target, p.weightKg, seed: ForecastSeed.fromProfile(p, latestKg: latest));
   }
 
   @override
@@ -92,7 +97,24 @@ class _BodyTransformScreenState extends State<BodyTransformScreen> {
               : ListView(
                   padding: const EdgeInsets.fromLTRB(20, 4, 20, 40),
                   children: [
-                    if (d!.projection.reliable) ...[
+                    if (d!.seed != null) ...[
+                      GlassCard(
+                        margin: const EdgeInsets.only(bottom: 14),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          const Text('Predict my results', style: TextStyle(fontWeight: FontWeight.w800, fontSize: 15, color: AppTheme.textPrimary)),
+                          const SizedBox(height: 4),
+                          const Text('Choose a daily calorie change and how often you work out, and see where your weight and body fat could be in 30 days, with milestones.',
+                              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13, height: 1.4)),
+                          const SizedBox(height: 12),
+                          GlowButton(
+                            label: 'Predict my results',
+                            icon: Icons.auto_graph_rounded,
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => TransformInputScreen(seed: d.seed!))),
+                          ),
+                        ]),
+                      ),
+                    ],
+                    if (d.projection.reliable) ...[
                       Row(children: [
                         _stat('${d.projection.currentKg!.toStringAsFixed(1)} kg', 'Trend weight now'),
                         _stat('${d.projection.kgPerWeek! >= 0 ? '+' : ''}${d.projection.kgPerWeek!.toStringAsFixed(2)} kg', 'Change per week'),
@@ -133,8 +155,8 @@ class _BodyTransformScreenState extends State<BodyTransformScreen> {
                     ),
                     const SizedBox(height: 14),
                     const Text(
-                      'This is a straight line drawn through your own recent weigh-ins, not a prediction model. Weight moves up and down with water, food and sleep. '
-                      'The forecasting model named in the project scope is not part of this version. This is decision support, not medical advice.',
+                      'The "Your trend" section is a straight line drawn through your own recent weigh-ins, not a prediction model. Weight moves up and down with water, food and sleep. '
+                      'The forecast above is an energy-balance estimate, not a trained model. This is decision support, not medical advice.',
                       style: TextStyle(fontSize: 11, color: AppTheme.textSecondary, height: 1.4),
                     ),
                   ],
