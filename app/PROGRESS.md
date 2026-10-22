@@ -31,6 +31,17 @@ Legend: 🔴 not started · 🟡 in progress / partial · 🟢 done & verified
 
 ## 2. Change log
 
+### 2026-10-22 — Module 17: Weekly Report, Progress Tracker and Workout History (built on the merged tree)
+
+Requested: complete the remaining Module 17 parts. Built in `Baymax-implementation/app` (it has the merged workout-session data); NOT copied into the older `untitled folder/app` working folder.
+- **FR-7 Weekly Report and FE-10 weekly/monthly analytics** (`screens/analytics/progress_screens.dart`, `services/activity_reports.dart`): This week / Last week / Last 30 days; workouts done of planned, active minutes, calories eaten per day, fitness score (weeks only) with the change from the week before, form score from camera sessions, weight change, days logged; a written summary and one "focus". **The summary is produced by fixed rules from the user's own numbers, not by an AI model, and the screen says so** (the scope says "AI-generated"). It never praises eating far below the calorie target and says so in plain words. "Copy this report" (clipboard).
+- **FR-9 Workout History:** 12-week calendar heatmap (Monday first, five shades by minutes, future days empty, tap a day to see only it) and one card per workout day with its exercises, reps, minutes and form scores; a day recorded only as "workout done" is listed too.
+- **FR-8 Progress Tracker:** weight chart with the target line, body measurements log (waist, chest, hips, arm, thigh in cm, any subset, checked 10 to 300 cm, change from first to latest). **Progress photo upload is NOT built:** it needs a storage service (firebase_storage or path_provider) that is not in the project and was not approved.
+- Analytics now links to all three screens. The injury-risk trend is still missing (no injury-risk module).
+- **Database rules:** new `users/{uid}/measurements/{date}` node in `database.rules.json` and `api/emulator/database.rules.json`. **NOT deployed** to `baymax-148da`: until it is, saving a measurement is refused (the screen shows the error); the weekly report and the history only read existing nodes.
+- **Tests:** `test/progress_reports_test.dart` (21): period maths, counts, averages, summary wording and the low-intake warning, heatmap shades and layout, history grouping, measurement checks, and the three screens. Found and fixed a real crash (heatmap opacity above 1.0) and layout overflows.
+- **Verification of the merged tree:** the merged `pubspec.yaml` needs a newer Flutter SDK than this Mac has (camera 0.12.1 and speech_to_text 7.5.0 need Dart 3.12). In a temp copy with those two relaxed (camera ^0.11.2, speech_to_text ^7.4.0) and the sibling `backend/dialogflow` folder present, the whole merged suite passes: 1,055 tests, 7 skipped (the dictionary-dependent ones, because the repo carries a placeholder dictionary). Not run on a phone.
+
 ### 2026-10-22 — Module 11 (Predictive Body Transformation): forecast, milestones and the two screens (energy-balance model; Gradient Boosting NOT built)
 
 Requested: complete Module 11. Built `services/body_forecast.dart` and `screens/analytics/transform_forecast_screens.dart`; `BodyTransformScreen` is now the hub (offers "Predict my results", keeps the weigh-in trend).

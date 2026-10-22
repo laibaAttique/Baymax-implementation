@@ -10,6 +10,7 @@ import '../../widgets/charts.dart';
 import '../../widgets/glass.dart';
 import '../nutrition/calorie_target_screen.dart';
 import '../community/community_screen.dart';
+import 'progress_screens.dart';
 
 class AnalyticsData {
   final ProgressSnapshot progress;
@@ -18,7 +19,8 @@ class AnalyticsData {
 }
 
 /// Module 15 (part): charts built from what the app already records. Weight trend, calories against target with a moving average,
-/// and the weekly fitness score. The injury-risk trend (FR-5) needs Module 9 and is not available.
+/// and the weekly fitness score, with links to the Weekly Report, Progress Tracker and Workout History (see progress_screens.dart).
+/// The injury-risk trend needs the injury-risk module, which is not built.
 class AnalyticsScreen extends StatefulWidget {
   final Future<AnalyticsData> Function()? loader;
   const AnalyticsScreen({Key? key, this.loader}) : super(key: key);
@@ -209,6 +211,28 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ),
               ]),
       ),
+      for (final (icon, title, sub, page) in <(IconData, String, String, Widget Function())>[
+        (Icons.summarize_rounded, 'Weekly report', 'Your week or month in numbers, with a written summary', () => const WeeklyReportScreen()),
+        (Icons.trending_up_rounded, 'Progress tracker', 'Weight chart and body measurements', () => const ProgressTrackerScreen()),
+        (Icons.calendar_month_rounded, 'Workout history', 'Calendar heatmap and every workout', () => const WorkoutHistoryScreen()),
+      ])
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: GlassCard(
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => page())),
+            child: Row(children: [
+              IconWell(icon: icon, size: 40),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(title, style: const TextStyle(fontWeight: FontWeight.w800, color: AppTheme.textPrimary)),
+                  Text(sub, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary, height: 1.3)),
+                ]),
+              ),
+              const Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
+            ]),
+          ),
+        ),
       GlassCard(
         onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CommunityScreen())),
         child: const Row(children: [

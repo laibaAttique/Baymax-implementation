@@ -513,6 +513,32 @@
         },
         "$other": {
           ".validate": false
+        },
+        "measurements": {
+          "$date": {
+            ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.hasChildren(['loggedAt'])",
+            "waistCm": {
+              ".validate": "newData.isNumber() && newData.val() >= 10 && newData.val() <= 300"
+            },
+            "chestCm": {
+              ".validate": "newData.isNumber() && newData.val() >= 10 && newData.val() <= 300"
+            },
+            "hipsCm": {
+              ".validate": "newData.isNumber() && newData.val() >= 10 && newData.val() <= 300"
+            },
+            "armCm": {
+              ".validate": "newData.isNumber() && newData.val() >= 10 && newData.val() <= 300"
+            },
+            "thighCm": {
+              ".validate": "newData.isNumber() && newData.val() >= 10 && newData.val() <= 300"
+            },
+            "loggedAt": {
+              ".validate": "newData.isNumber()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
         }
       }
     },
