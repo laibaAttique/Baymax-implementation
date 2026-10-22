@@ -15,6 +15,7 @@ import 'specialist_plan_service.dart';
 import 'food_database.dart';
 import '../models/specialist_plan.dart';
 import 'health_classifier.dart';
+import 'meal_plan_prefs.dart';
 import 'ml/gradient_boosting_model.dart';
 import 'ml/health_risk_model.dart';
 import 'notification_service.dart';
@@ -57,6 +58,9 @@ class UserSession extends ChangeNotifier {
   /// Module 14 (FR-5, FR-9, FR-10): plans set by a doctor, nutritionist or trainer, and whether the member follows them.
   SpecialistPlans specialistPlans = SpecialistPlans.none;
   PlanChoices planChoices = PlanChoices.defaults;
+
+  /// The member's own choices about their nutrition plan: which set of meals, and a calorie target of their own (Module 9).
+  MealPlanPrefs mealPrefs = MealPlanPrefs.none;
 
   /// Module 3 (FR-4): what the user's own weight and food logs say about their maintenance calories (null until first computed).
   CalorieEstimate? calorieEstimate;
@@ -145,6 +149,11 @@ class UserSession extends ChangeNotifier {
     } catch (_) {
       // Offline: keep the last answers this session had (unanswered on a cold start — the conservative choice).
     }
+    try {
+      mealPrefs = await MealPlanPrefsStore.instance.load();
+    } catch (_) {
+      // Offline: the recommended plan is shown until the choices can be read.
+    }
     _fromAccount = true;
     await setProfile(HealthProfile.fromJson(data));
     role = await RoleService.instance.fetchMine();
@@ -172,7 +181,8 @@ class UserSession extends ChangeNotifier {
 
   PersonalizedPlan _generate(FoodDatabase foods, HealthProfile p, ClassificationResult c) {
     final generated = PlanGenerator(foods, workoutModel: workoutModel, optimizer: AdaptiveCalorieOptimizer(calorieEstimate))
-        .generate(p, c, variant: p.planVariant, tooDifficult: tooDifficult, readiness: readiness);
+        .generate(p, c,
+            variant: p.planVariant, tooDifficult: tooDifficult, readiness: readiness, mealVariant: p.planVariant + mealPrefs.variant, customKcal: mealPrefs.customKcal);
     if (_fromAccount) _storeSnapshot(generated, p);
     return generated;
   }
@@ -314,6 +324,39 @@ class UserSession extends ChangeNotifier {
     }
   }
 
+  /// Shows another set of meals for the same calories, leaving the workouts as they are. Saved first; the plan changes either way, and
+  /// false is returned when the choice could not be saved (it then lasts until the app is closed).
+  Future<bool> regenerateMeals() async {
+    mealPrefs = mealPrefs.copyWith(variant: mealPrefs.variant + 1);
+    await _rebuildPlan();
+    notifyListeners();
+    return _saveMealPrefs();
+  }
+
+  /// Uses the member's own daily calories ([kcal]) instead of the recommended target; null goes back to the recommended one. The
+  /// value must be inside `MealPlanPrefs.range`: anything else throws an [ArgumentError] and changes nothing.
+  Future<bool> setCustomKcal(int? kcal) async {
+    final p = profile;
+    if (p == null) return false;
+    if (kcal != null) {
+      final problem = MealPlanPrefs.problem('$kcal', p);
+      if (problem != null) throw ArgumentError(problem);
+    }
+    mealPrefs = kcal == null ? mealPrefs.copyWith(clearKcal: true) : mealPrefs.copyWith(customKcal: kcal);
+    await _rebuildPlan();
+    notifyListeners();
+    return _saveMealPrefs();
+  }
+
+  Future<bool> _saveMealPrefs() async {
+    try {
+      await MealPlanPrefsStore.instance.save(mealPrefs);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   void clear() {
     // Reminders belong to the person who signed out.
     NotificationService.instance.cancelAll();
@@ -329,6 +372,7 @@ class UserSession extends ChangeNotifier {
     basePlan = null;
     specialistPlans = SpecialistPlans.none;
     planChoices = PlanChoices.defaults;
+    mealPrefs = MealPlanPrefs.none;
     calorieEstimate = null;
     role = UserRole.user;
     readiness = WorkoutReadiness.unanswered;

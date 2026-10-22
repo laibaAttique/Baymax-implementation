@@ -11,6 +11,7 @@ import 'workout_rules/safety_rule_engine.dart';
 import 'workout_rules/safety_rule_repository.dart';
 import 'food_database.dart';
 import 'health_classifier.dart';
+import 'meal_plan_prefs.dart';
 import 'meal_roles.dart';
 import 'ml/gradient_boosting_model.dart';
 
@@ -152,6 +153,9 @@ class PlanGenerator {
   /// equally easy exercise of the same group when one is allowed, otherwise it
   /// stays with a lighter dose.
   ///
+  /// [mealVariant] chooses the set of meals independently of the workouts (it follows [variant] when not given): "Regenerate meals"
+  /// changes only the meals. [customKcal] is the member's own daily calorie target (see `MealPlanPrefs.range` for what is allowed).
+  ///
   /// [readiness] turns on Module 4 screening: the plan is only generated when the safety rules allow it (otherwise the
   /// week is empty and [PersonalizedPlan.gate] says why), reported injuries are applied, and catalogue exercises for the
   /// equipment the person owns join the curated library. Without it the plan is generated as in Module 3.
@@ -161,6 +165,8 @@ class PlanGenerator {
     int variant = 0,
     Set<String> tooDifficult = const {},
     WorkoutReadiness? readiness,
+    int? mealVariant,
+    int? customKcal,
   }) {
     final intensity = _intensity(profile, cls);
     // Module 4: the training profile of the Module 2 classification caps the intensity band and sets the weekly targets.
@@ -176,7 +182,7 @@ class PlanGenerator {
         variant: variant,
         week: List<WorkoutDay?>.filled(7, null),
         restrictionNotes: assessment.gate.reasons,
-        nutrition: _nutrition(profile, cls, variant),
+        nutrition: _nutrition(profile, cls, mealVariant ?? variant, customKcal: customKcal),
         gate: assessment.gate,
         rulesVersion: assessment.rulesVersion,
       );
@@ -218,7 +224,7 @@ class PlanGenerator {
         ...restrictions.notes,
         if (adjusted.isNotEmpty) 'Made easier because you marked them as too difficult: ${adjusted.join('; ')}.',
       ],
-      nutrition: _nutrition(profile, cls, variant),
+      nutrition: _nutrition(profile, cls, mealVariant ?? variant, customKcal: customKcal),
       gate: readiness == null ? null : assessment.gate,
       rulesVersion: assessment.rulesVersion,
     );
@@ -424,10 +430,12 @@ class PlanGenerator {
 
   // --- FR-4 / FR-6: calories, macros and meals ------------------------------
 
-  NutritionPlan _nutrition(HealthProfile p, ClassificationResult cls, int variant) {
+  NutritionPlan _nutrition(HealthProfile p, ClassificationResult cls, int variant, {int? customKcal}) {
     final targets = p.calorieTargets;
     final ruleKcal = HealthCalc.targetFor(p.primaryGoal, targets);
-    final kcal = optimizer.optimize(p, ruleKcal);
+    // The member's own target replaces the recommended one (and the adaptive adjustment of it), but never leaves the safe range.
+    final own = customKcal == null ? null : _clampToRange(p, customKcal);
+    final kcal = own ?? optimizer.optimize(p, ruleKcal);
     final diabetic = p.hasCondition('Diabetes');
     final hypertension = p.hasCondition('Hypertension');
     final cardiac = cls.isCardiac;
@@ -482,7 +490,8 @@ class PlanGenerator {
       avoid: _avoidList(p, cls, allergies),
       tips: _tips(p, cls),
       tipPool: tipPoolFor(p, cls),
-      calorieNote: p.primaryGoal == 'Lose Weight' ? targets.safetyNote : null,
+      calorieNote: own != null ? 'You chose this daily target yourself (Baymax recommends $ruleKcal kcal).' : (p.primaryGoal == 'Lose Weight' ? targets.safetyNote : null),
+      custom: own != null,
     );
   }
 
@@ -491,6 +500,11 @@ class PlanGenerator {
     'bfast': 0.60, 'fruit': 0.20, 'drink': 0.20,
     'main': 0.50, 'carb': 0.35, 'veg': 0.15,
   };
+
+  static int _clampToRange(HealthProfile p, int kcal) {
+    final (lo, hi) = MealPlanPrefs.range(p);
+    return kcal.clamp(lo, hi);
+  }
 
   List<MealItem> _buildMeal({
     required String meal,

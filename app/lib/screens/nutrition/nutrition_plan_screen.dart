@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'calorie_target_screen.dart';
+import '../../models/food.dart';
+import '../../models/health_profile.dart';
 import '../../models/plan.dart';
+import '../../services/food_log_service.dart';
+import '../../services/meal_plan_prefs.dart';
 import '../../services/user_session.dart';
 import '../../theme/app_icons.dart';
 import '../../theme/app_theme.dart';
@@ -8,9 +12,115 @@ import '../../widgets/glass.dart';
 import '../../widgets/specialist_plan_banner.dart';
 
 /// Module 3 (FR-4/FR-6): calorie target, macro breakdown and a meal plan that
-/// respects the user's allergies and medical conditions.
-class NutritionPlanScreen extends StatelessWidget {
-  const NutritionPlanScreen({Key? key}) : super(key: key);
+/// respects the user's allergies and medical conditions. The member can show another set of meals ("Regenerate meals"), choose their
+/// own daily calories (inside the safe range), and log a meal or the whole day from the plan into the food log.
+class NutritionPlanScreen extends StatefulWidget {
+  /// Replaceable so the screen can be tested without Firebase. [onRegenerate] and [onSetKcal] return whether the choice was saved.
+  final Future<bool> Function()? onRegenerate;
+  final Future<bool> Function(int? kcal)? onSetKcal;
+  final Future<void> Function(List<FoodEntry> entries)? onLog;
+  final DateTime Function()? clock;
+  const NutritionPlanScreen({Key? key, this.onRegenerate, this.onSetKcal, this.onLog, this.clock}) : super(key: key);
+
+  @override
+  State<NutritionPlanScreen> createState() => _NutritionPlanScreenState();
+}
+
+class _NutritionPlanScreenState extends State<NutritionPlanScreen> {
+  bool _busy = false;
+  final _logged = <String>{};
+
+  DateTime get _now => (widget.clock ?? DateTime.now)();
+
+  void _snack(String text, {SnackBarAction? action}) {
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text), action: action));
+  }
+
+  Future<void> _regenerate() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      final saved = await (widget.onRegenerate ?? UserSession.instance.regenerateMeals)();
+      _logged.clear();
+      _snack(saved ? 'Here is another set of meals for the same calories.' : 'New meals are shown, but the choice could not be saved: it lasts until you close the app.');
+    } catch (_) {
+      _snack('Could not change the meals. Please try again.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _chooseCalories(NutritionPlan n) async {
+    final p = UserSession.instance.profile;
+    if (p == null) return;
+    final result = await showDialog<int?>(context: context, builder: (c) => _CaloriesDialog(profile: p, plan: n));
+    if (result == null || _busy) return;
+    setState(() => _busy = true);
+    try {
+      final saved = await (widget.onSetKcal ?? UserSession.instance.setCustomKcal)(result == -1 ? null : result);
+      _logged.clear();
+      _snack(result == -1 ? 'Back to the recommended calories.' : (saved ? 'Your plan now uses $result kcal a day.' : 'Your plan now uses $result kcal, but it could not be saved: it lasts until you close the app.'));
+    } on ArgumentError catch (e) {
+      _snack('${e.message}');
+    } catch (_) {
+      _snack('Could not change your calories. Please try again.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  /// The plan's meal as food-log entries for today: each food with the servings the plan gives, nutrition already scaled.
+  static List<FoodEntry> entriesFor(NutritionPlan n, String meal, DateTime day) => _entries(n, meal, day);
+
+  static List<FoodEntry> _entries(NutritionPlan n, String meal, DateTime day) => [
+        for (final i in n.meals[meal] ?? const <MealItem>[])
+          FoodEntry(
+            date: FoodLogService.dateKey(day),
+            meal: meal,
+            name: i.food.name,
+            quantity: double.parse(i.servings.toStringAsFixed(2)),
+            unit: 'serving',
+            kcal: double.parse(i.kcal.toStringAsFixed(1)),
+            protein: double.parse(i.protein.toStringAsFixed(1)),
+            carbs: double.parse(i.carbs.toStringAsFixed(1)),
+            fat: double.parse(i.fat.toStringAsFixed(1)),
+            source: 'manual',
+            ref: i.food.ref,
+          ),
+      ];
+
+  Future<void> _log(NutritionPlan n, List<String> meals) async {
+    if (_busy) return;
+    final again = meals.where(_logged.contains).toList();
+    if (again.isNotEmpty) {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (c) => AlertDialog(
+          title: const Text('Log again?'),
+          content: Text('${again.join(', ')} ${again.length == 1 ? 'was' : 'were'} already logged from this plan today. Logging again adds the same food a second time.'),
+          actions: [TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('No')), FilledButton(onPressed: () => Navigator.pop(c, true), child: const Text('Log again'))],
+        ),
+      );
+      if (ok != true) return;
+    }
+    final entries = [for (final m in meals) ...entriesFor(n, m, _now)];
+    if (entries.isEmpty) {
+      _snack('There is nothing to log in that meal.');
+      return;
+    }
+    setState(() => _busy = true);
+    try {
+      await (widget.onLog ?? FoodLogService.instance.add)(entries);
+      _logged.addAll(meals);
+      final kcal = entries.fold(0.0, (s, e) => s + e.kcal).round();
+      _snack('Logged ${meals.length == 1 ? meals.first.toLowerCase() : 'your day'} ($kcal kcal) to today\'s food log.',
+          action: widget.onLog == null ? SnackBarAction(label: 'Undo', onPressed: () => FoodLogService.instance.undoLast().then((_) {}, onError: (_) {})) : null);
+    } catch (_) {
+      _snack('Could not log it. Check your connection and try again.');
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
 
   Widget _macro(String value, String label, Color color) {
     return Expanded(
@@ -85,6 +195,18 @@ class NutritionPlanScreen extends StatelessWidget {
                       Text('${i.kcal.round()}', style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14, fontWeight: FontWeight.w800)),
                       const Padding(padding: EdgeInsets.only(left: 3), child: Text('kcal', style: TextStyle(color: AppTheme.textSecondary, fontSize: 11.5, fontWeight: FontWeight.w600))),
                     ],
+                  ),
+                ),
+              if (items.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton.icon(
+                      onPressed: _busy ? null : () => _log(n, [meal]),
+                      icon: Icon(_logged.contains(meal) ? Icons.check_circle_rounded : Icons.add_circle_outline_rounded, size: 18),
+                      label: Text(_logged.contains(meal) ? 'Logged today' : 'Log this meal'),
+                    ),
                   ),
                 ),
             ],
@@ -183,7 +305,24 @@ class NutritionPlanScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
+                if (UserSession.instance.specialistPlans.diet != null && UserSession.instance.planChoices.specialistDiet)
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: Text('Your calories come from your specialist\'s plan. To choose your own, switch to Baymax\'s plan at the top of this page.', style: TextStyle(fontSize: 12.5, color: AppTheme.textSecondary, height: 1.4)),
+                  )
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Wrap(spacing: 10, runSpacing: 8, children: [
+                      OutlinedButton.icon(onPressed: _busy ? null : _regenerate, icon: const Icon(Icons.shuffle_rounded, size: 18), label: const Text('Regenerate meals')),
+                      OutlinedButton.icon(onPressed: _busy ? null : () => _chooseCalories(n), icon: const Icon(Icons.tune_rounded, size: 18), label: Text(n.custom ? 'Change my calories' : 'Set my calories')),
+                    ]),
+                  ),
                 for (var i = 0; i < 4; i++) _mealCard(const ['Breakfast', 'Lunch', 'Dinner', 'Snack'][i], n, i + 1),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: GlowButton(label: 'Log my whole day', icon: Icons.playlist_add_check_rounded, onPressed: _busy ? null : () => _log(n, const ['Breakfast', 'Lunch', 'Dinner', 'Snack'])),
+                ),
                 if (n.meals.values.any((l) => l.any((i) => i.food.fromDataset)))
                   const Padding(
                     padding: EdgeInsets.only(bottom: 4),
@@ -229,6 +368,71 @@ class NutritionPlanScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// The plan-to-food-log conversion, for tests.
+List<FoodEntry> entriesForTest(NutritionPlan n, String meal, DateTime day) => _NutritionPlanScreenState._entries(n, meal, day);
+
+
+/// Asks for the member's own daily calories. It owns its text field, so the field is only disposed when the dialog is really gone.
+/// Pops the number chosen, -1 for "use the recommended calories", or nothing for cancel.
+class _CaloriesDialog extends StatefulWidget {
+  final HealthProfile profile;
+  final NutritionPlan plan;
+  const _CaloriesDialog({required this.profile, required this.plan});
+
+  @override
+  State<_CaloriesDialog> createState() => _CaloriesDialogState();
+}
+
+class _CaloriesDialogState extends State<_CaloriesDialog> {
+  late final _controller = TextEditingController(text: '${widget.plan.targetKcal}');
+  String? _problem;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final bad = MealPlanPrefs.problem(_controller.text, widget.profile);
+    if (bad != null) {
+      setState(() => _problem = bad);
+    } else {
+      Navigator.pop(context, int.parse(_controller.text.trim()));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final (lo, hi) = MealPlanPrefs.range(widget.profile);
+    final n = widget.plan;
+    return AlertDialog(
+      title: const Text('Your daily calories'),
+      content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text('Choose between $lo and $hi kcal a day. The meals are rebuilt for your number.', style: const TextStyle(height: 1.4)),
+        const SizedBox(height: 12),
+        TextField(
+          controller: _controller,
+          keyboardType: TextInputType.number,
+          autofocus: true,
+          decoration: InputDecoration(labelText: 'Calories a day', errorText: _problem),
+          onChanged: (_) {
+            if (_problem != null) setState(() => _problem = null);
+          },
+          onSubmitted: (_) => _submit(),
+        ),
+        const SizedBox(height: 8),
+        const Text('Eating well below your needs is not safe for most people. If you have a health condition, ask your doctor first.', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary, height: 1.4)),
+      ]),
+      actions: [
+        if (n.custom) TextButton(onPressed: () => Navigator.pop(context, -1), child: const Text('Use recommended')),
+        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+        FilledButton(onPressed: _submit, child: const Text('Use this')),
+      ],
     );
   }
 }

@@ -31,6 +31,16 @@ Legend: 🔴 not started · 🟡 in progress / partial · 🟢 done & verified
 
 ## 2. Change log
 
+### 2026-10-22 — Nutrition plan: Regenerate meals, your own calories, and logging the plan
+
+Requested: a way to change a nutrition plan you do not like, to set it by your own calories, and to log it.
+- **Regenerate meals** (`UserSession.regenerateMeals`): another set of meals for the same calories; the workouts are untouched (the generator now takes a separate `mealVariant`). Tested: new sets differ for several kinds of people and the exercise list is identical.
+- **Set my calories** (`UserSession.setCustomKcal`, `services/meal_plan_prefs.dart`): the plan, macros and meals are rebuilt for the member's own daily target. Allowed range: not below the safe floor (larger of BMR and 1,500 kcal men / 1,200 women, the same floor as the recommended target), at most 1,000 below and 500 above maintenance (the same limits as the body forecast). Anything outside is refused with a reason (never silently used); the generator also clamps. "Use recommended" goes back. A member following a specialist's diet plan is told to switch to Baymax's plan first (the specialist's calories win).
+- **Logging:** "Log this meal" on each meal card and "Log my whole day": one food-log entry per food with the plan's servings and nutrition (source `manual`, an allowed value), Undo for 30 seconds, and a "Log again?" question if the meal was already logged from this plan today.
+- **Stored** at `users/{uid}/mealPlan` ({variant, customKcal}). Rule added to `database.rules.json` and `api/emulator/database.rules.json` and **deployed to `baymax-148da` on 2026-10-22 with the owner's OK** (not yet tried from a signed-in phone).
+- Found and fixed a real bug on the way (the calorie dialog disposed its text field while still on screen); the dialog is now its own widget.
+- Tests: `test/meal_plan_choices_test.dart` (14). Whole merged suite 1,069 pass in the temp copy (camera and speech_to_text relaxed); not run on a phone. Built in `Baymax-implementation/app`; not copied into the older `untitled folder/app`.
+
 ### 2026-10-22 — Module 17: Weekly Report, Progress Tracker and Workout History (built on the merged tree)
 
 Requested: complete the remaining Module 17 parts. Built in `Baymax-implementation/app` (it has the merged workout-session data); NOT copied into the older `untitled folder/app` working folder.

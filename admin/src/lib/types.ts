@@ -60,9 +60,9 @@ export interface Overview {
   specialists: { total: number; doctor: number; nutritionist: number; trainer: number };
   applications: { pending: number };
   appointments: { total: number; byStatus: Record<string, number> };
-  payments: { gross: number; platformFees: number; refunded: Money; refundsDue: Money; clinicDue: Money; held: Money; testPayments: number; count: number };
-  calls: { sessions: number; minutes: number };
-  messages: { conversations: number; total: number };
+  payments?: { gross: number; platformFees: number; refunded: Money; refundsDue: Money; clinicDue: Money; held: Money; testPayments: number; count: number };
+  calls?: { sessions: number; minutes: number };
+  messages?: { conversations: number; total: number };
 }
 
 export type PaymentBucket = 'held' | 'upcoming' | 'earned' | 'clinic' | 'due' | 'refunded';

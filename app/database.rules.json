@@ -539,6 +539,21 @@
               ".validate": false
             }
           }
+        },
+        "mealPlan": {
+          ".validate": "newData.hasChildren(['variant'])",
+          "variant": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+          },
+          "customKcal": {
+            ".validate": "newData.isNumber() && newData.val() >= 800 && newData.val() <= 6000"
+          },
+          "updatedAt": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": false
+          }
         }
       }
     },

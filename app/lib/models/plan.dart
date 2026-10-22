@@ -385,6 +385,9 @@ class NutritionPlan {
   final List<String> tipPool;
   final String? calorieNote;
 
+  /// True when the daily calorie target is the member's own choice, not the one Baymax worked out.
+  final bool custom;
+
   const NutritionPlan({
     required this.goalLabel,
     required this.targetKcal,
@@ -397,6 +400,7 @@ class NutritionPlan {
     required this.tips,
     this.tipPool = const [],
     this.calorieNote,
+    this.custom = false,
   });
 
   /// [count] tips for [day], taken in order from [tipPool] and moved on every day, so no tip repeats inside any 7 consecutive days

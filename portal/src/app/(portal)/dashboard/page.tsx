@@ -124,7 +124,7 @@ export default function DashboardPage() {
       {error && <Notice tone="error">{error} Showing the last data we had.</Notice>}
 
       <div className="metrics four">
-        {data.cards.map((c) => (
+        {(data.cards ?? []).map((c) => (
           <Link key={c.key} href={c.key === 'messages' ? '/messages' : c.key === 'patients' || c.key === 'clients' || c.key === 'trainees' ? '/patients' : c.key === 'prescriptions' ? '/prescriptions' : '/appointments'} className={`metric ${c.warn ? 'metric-warn' : ''}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <span className="metric-value">{c.value}</span>
             <span className="metric-label">{c.label}</span>
